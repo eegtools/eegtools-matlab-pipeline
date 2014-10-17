@@ -1,0 +1,7 @@
+function q = tinv(p,v);
+%function q = tinv(t,v)
+% wrapper for the 
+% inverse t-distribution at p with v degrees of freedom
+% If you have matlab stats toolbox delete this function and put matlab's
+% stats toolbox in your path. 
+q = tq(p,v);

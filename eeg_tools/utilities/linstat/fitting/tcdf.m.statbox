@@ -1,0 +1,7 @@
+function p = tcdf(t,v)
+%function p = tcdf(t,v)
+% wrapper for the 
+% cumulative t-distribution at t with v degrees of freedom
+% If you have matlab stats toolbox delete this function and put matlab's
+% stats toolbox in your path. 
+p = tp(t,v);
