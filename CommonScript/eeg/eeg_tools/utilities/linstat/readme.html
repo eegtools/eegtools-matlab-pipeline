@@ -1,0 +1,315 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <!--
+This HTML is auto-generated from an M-file.
+To make changes, update the M-file and republish this document.
+      -->
+      <title>Disclaimer</title>
+      <meta name="generator" content="MATLAB 7.3">
+      <meta name="date" content="2006-12-27">
+      <meta name="m-file" content="readme"><style>
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head>
+   <body>
+      <div class="content">
+         <h1>Disclaimer</h1>
+         <introduction>
+            <p>This software is offered as is with no warranty expressed or implied.</p>
+         </introduction>
+         <h2>Contents</h2>
+         <div>
+            <ul>
+               <li><a href="#1">What Is Linstats</a></li>
+               <li><a href="#2">Whats new</a></li>
+               <li><a href="#3">Getting Started With Linstats</a></li>
+               <li><a href="#4">Requirements</a></li>
+               <li><a href="#5">Installation</a></li>
+               <li><a href="#6">Statbox Users</a></li>
+               <li><a href="#7">Integration with Other Toolboxes</a></li>
+               <li><a href="#8">References</a></li>
+               <li><a href="#9">Unit tests</a></li>
+            </ul>
+         </div>
+         <h2>What Is Linstats<a name="1"></a></h2>
+         <p>Linstats is a toolbox for building, testing and making statistical inferences from linear models. There are many features
+            in this toolobx that are not available in the matlab statistical toolbox including n-way ANACOVA and n-way MANOVA as well
+            numerous diagnostic plots. There is also support multiple responses and linstats efficiently supports fiting models with up
+            to 100s of thousands of responses. All the features share a unified model building approach.
+         </p>
+         <h2>Whats new<a name="2"></a></h2>
+         <p>mixture of multivariate normal toolkits many new examples for every major function many new functions for plotting, fitting
+            models and for data manipulation
+         </p>
+         <h2>Getting Started With Linstats<a name="3"></a></h2>
+         <p>Unizip linstats.zip into a working directory. There should be four subdirectories. IN each of these is a readme files that
+            document the purpose of each .m file. Additional documentation can be obtained by typing help "function_name" at the Matlab
+            prompt
+         </p>
+         <p>I've include some tutorials to illustrate the major functionality of linstats</p>
+         <p>How to use the mixture of multivariate normal toolkit <a href="tutorials\html\mmvn_tutorial.html">tutorials\html\mmvn_tutorial.html</a></p>
+         <p>how to use encode to build a linear model <a href="tutorials\html\model_building_tutorial.html">tutorials\html\model_building_tutorial.html</a></p>
+         <p>how to perform statistical inference on your model <a href="tutorials\html\model_inference_tutorial.html">tutorials\html\model_inference_tutorial.html</a></p>
+         <p>how to test your model <a href="tutorials\html\model_validation_tutorial.html">tutorials\html\model_validation_tutorial.html</a></p>
+         <h2>Requirements<a name="4"></a></h2>
+         <p>Linstats requires the statistical toolbox for complete functionality. Model building is still present and useful in combination
+            with core matlab functions such as lscov Alternatively, if you have Satbox4.2, available from the matlab file exchange server
+            you can get most of the statistical inference functions See the section below for Statbox users
+         </p>
+         <h2>Installation<a name="5"></a></h2>
+         <p>Unzip the file and move the contents into a directory of your choice. Add the subdirectories to the top of your matlab path.
+            Your done.
+         </p>
+         <p>Linstats has been tested using a series of unit_tests provided with this package. The unit tests are designed to demonstrate
+            that major program functionality is working correctly. Each test compares results from a current run against previously saved
+            hand-checked answers. The tests are run before any release, and any applicable bug reports are incorporated into the tests
+            so that once irradicated they do not return.
+         </p>
+         <p>To run the tests just type unit_tests at the prompt. You should see a series of messages saying passed: testname. If you see
+            any warnings or errors then something has gone wrong. Try moving linstats to the top of your matlab path.
+         </p>
+         <h2>Statbox Users<a name="6"></a></h2><pre> Linstats has been unit tested using Statbox. if you have statbox, you
+ can use its probability and cumulative density function routines to
+ substitute for Matlab's toolbox. There are 4 files in the fitting
+ subdirectory that wrap Statbox density functions. these files all end
+ in '.statbox' Remove the '.statbox' suffix from these files and make
+ sure statbox is in your matlab path. Most linstats functionality should
+ now be available.</pre><h2>Integration with Other Toolboxes<a name="7"></a></h2>
+         <p>Linstats is modular in design and it exposes many of its inner workings though publically available functions and data structures.
+            This allows more flexibility in building and testing models and will allow easier integration with other packages including
+            some in matlab and others available on the file-exchange (e.g. mixed.m, ffmanova.m). For example the design matrix from a
+            full-rank model can be used in a call to regstats. Alternatively the design matrix can be easily split into fixed and random
+            submatrices and used in mixed.m.
+         </p>
+         <h2>References<a name="8"></a></h2>
+         <p>Major sources of information include</p>
+         <p>Applied Linear Satistical Models (5th Edition). Kutner, Nachtsheim, Neter and Li.</p>
+         <p>Multivariate Analysis (2003). Mardia, Kent and Bibby.</p>
+         <p>JMP v5.1 documentation. JMP is a registered trademarks of SAS Institute</p>
+         <p>Matlab v7 documentation</p>
+         <h2>Unit tests<a name="9"></a></h2>
+         <p>these are used for regression testing whenever a change is made to the core statistical routines if you enounter a bug that
+            produces a wrong answer or a model that doesn't build correctly, a test for it will be inserted into one of these files and
+            it will always be tested for after every change
+         </p><pre class="codeinput"><span class="comment">% unit_tests.m	% runs the whole set of unit_tests</span>
+<span class="comment">% test_1way.m</span>
+<span class="comment">% test_2way.m</span>
+<span class="comment">% test_3way.m</span>
+<span class="comment">% test_aoc.m</span>
+<span class="comment">% test_custom.m</span>
+<span class="comment">% test_estimates.m</span>
+<span class="comment">% test_plots.m</span>
+<span class="comment">% test_singularity.m</span>
+<span class="comment">% test_sphericity.m</span>
+<span class="comment">% test_table.m</span>
+<span class="comment">% test_tests.m</span>
+<span class="comment">% test_two.m</span>
+<span class="comment">%</span>
+<span class="comment">% test_vtable.m</span>
+<span class="comment">% vtest_plots.m</span>
+<span class="comment">%</span>
+<span class="comment">% data_sources.m		description of the example data in this directory</span>
+<span class="comment">%</span>
+<span class="comment">% % used in the tutorials</span>
+<span class="comment">% reflines.m</span>
+<span class="comment">% rotate2d.m</span>
+</pre><p class="footer"><br>
+            Published with MATLAB&reg; 7.3<br></p>
+      </div>
+      <!--
+##### SOURCE BEGIN #####
+%% Disclaimer
+% This software is offered as is with no warranty expressed or implied. 
+
+%% What Is Linstats
+% Linstats is a toolbox for building, testing and making statistical
+% inferences from linear models. There are many features in this toolobx
+% that are not available in the matlab statistical toolbox including n-way
+% ANACOVA and n-way MANOVA as well numerous diagnostic plots. There is also
+% support multiple responses and linstats efficiently supports fiting
+% models with up to 100s of thousands of responses. All the features share
+% a unified model building approach. 
+
+%% Whats new 
+% mixture of multivariate normal toolkits
+% many new examples for every major function 
+% many new functions for plotting, fitting models and for data manipulation
+
+%% Getting Started With Linstats
+% Unizip linstats.zip into a working directory. There should be four
+% subdirectories. IN each of these is a readme files that document the 
+% purpose of each .m file. Additional documentation can be obtained by
+% typing help "function_name" at the Matlab prompt 
+% 
+% I've include some tutorials to illustrate the major 
+% functionality of linstats
+%
+% How to use the mixture of multivariate normal toolkit
+% <tutorials\html\mmvn_tutorial.html>	 
+% 
+% how to use encode to build a linear model
+% <tutorials\html\model_building_tutorial.html> 
+%
+% how to perform statistical inference on your model
+% <tutorials\html\model_inference_tutorial.html> 
+%
+% how to test your model
+% <tutorials\html\model_validation_tutorial.html>	    
+%
+
+
+%% Requirements
+% Linstats requires the statistical toolbox for complete functionality.
+% Model building is still present and useful in combination with core
+% matlab functions such as lscov
+% Alternatively, if you have Satbox4.2, available from the matlab file 
+% exchange server you can get most of the statistical inference functions
+% See the section below for Statbox users
+
+%% Installation
+% Unzip the file and move the contents into a directory of your choice. Add
+% the subdirectories to the top of your matlab path. Your done. 
+%
+% Linstats has been tested using a series of unit_tests provided with
+% this package. The unit tests are designed to demonstrate that
+% major program functionality is working correctly. 
+% Each test compares results from a current run against previously saved
+% hand-checked answers. The tests are run before any release, and any
+% applicable bug reports are incorporated into the tests so that once
+% irradicated they do not return. 
+% 
+% To run the tests just type unit_tests at the prompt. You should see a
+% series of messages saying passed: testname. If you see any warnings or
+% errors then something has gone wrong. Try moving linstats to the top of
+% your matlab path. 
+%
+%% Statbox Users
+%   Linstats has been unit tested using Statbox. if you have statbox, you
+%   can use its probability and cumulative density function routines to
+%   substitute for Matlab's toolbox. There are 4 files in the fitting
+%   subdirectory that wrap Statbox density functions. these files all end
+%   in '.statbox' Remove the '.statbox' suffix from these files and make
+%   sure statbox is in your matlab path. Most linstats functionality should
+%   now be available.
+
+
+%% Integration with Other Toolboxes
+% Linstats is modular in design and it exposes many of its
+% inner workings though publically available functions and data structures.
+% This allows more flexibility in building and testing models and will
+% allow easier integration with other packages including some in matlab and
+% others available on the file-exchange (e.g. mixed.m, ffmanova.m). For
+% example the design matrix from a full-rank model can be used in a call to
+% regstats. Alternatively the design matrix can be easily split into fixed
+% and random submatrices and used in mixed.m. 
+% 
+
+
+%% References
+% Major sources of information include
+%
+% Applied Linear Satistical Models (5th Edition). Kutner, Nachtsheim, Neter
+% and Li. 
+%
+% Multivariate Analysis (2003). Mardia, Kent and Bibby. 
+%
+% JMP v5.1 documentation. JMP is a registered trademarks of SAS Institute
+%
+% Matlab v7 documentation
+
+
+%% Unit tests 
+% these are used for regression testing whenever a change is made to the
+% core statistical routines if you enounter a bug that produces a wrong
+% answer or a model that doesn't build correctly, a test for it will be
+% inserted into one of these files and it will always be tested for after
+% every change 
+
+% unit_tests.m	% runs the whole set of unit_tests
+% test_1way.m
+% test_2way.m
+% test_3way.m
+% test_aoc.m
+% test_custom.m
+% test_estimates.m
+% test_plots.m
+% test_singularity.m
+% test_sphericity.m
+% test_table.m
+% test_tests.m
+% test_two.m
+% 
+% test_vtable.m
+% vtest_plots.m
+% 
+% data_sources.m		description of the example data in this directory
+% 
+% % used in the tutorials
+% reflines.m
+% rotate2d.m	 
+
+
+
+
+##### SOURCE END #####
+-->
+   </body>
+</html>

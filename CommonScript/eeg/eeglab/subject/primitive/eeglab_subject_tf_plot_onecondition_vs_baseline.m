@@ -1,0 +1,101 @@
+% freq_bands: must be formatted as it:
+
+function eeglab_subject_tf_plot_onecondition_vs_baseline(input_set, ch_label, varargin)
+   
+
+    [path,name_noext,ext] = fileparts(input_set);
+    
+    EEG = pop_loadset('filename', {[name_noext ext] }, 'filepath', path);
+
+    chanlist={EEG(1).chanlocs.labels};
+    chan_num=find(strcmp(ch_label,chanlist));
+    srate=EEG(1).srate;
+    pnt=EEG(1).pnts;
+    xmin=EEG(1).xmin;  ... in seconds
+    xmax=EEG(1).xmax;
+    bc_type='';
+
+    % default values
+    pvalue = 0.05;
+    correction='none';
+    save_fig=0;
+    fig_output_path='';
+    baseline=[xmin 0]*1000; ...i need it in milliseconds
+    freq_bands = [];
+
+    options_num=size(varargin,2);
+    opt=1;
+    
+    while options_num>0
+        switch varargin{opt}
+            case 'pvalue'
+                opt=opt+1;
+                pvalue=varargin{opt};                  
+            case 'correction'
+                opt=opt+1;
+                correction=varargin{opt};
+            case 'baseline'
+                opt=opt+1;
+                baseline=varargin{opt};
+            case 'save_fig'
+                opt=opt+1;
+                save_fig=varargin{opt};              
+            case 'fig_output_path'
+                opt=opt+1;
+                fig_output_path=varargin{opt};
+            case 'freq_bands'
+                opt=opt+1;
+                freq_bands=varargin{opt};                
+            case 'xmax'
+                opt=opt+1;
+                xmax=varargin{opt}; 
+            case 'bc_type'
+                opt=opt+1;
+                bc_type=varargin{opt}; 
+            otherwise
+                opt=opt+1;
+                disp('input parameter not recognized');
+        end
+        opt=opt+1;
+        options_num=options_num-2;
+    end
+    baseline_point=[round(abs(xmin-baseline(1)/1000)*srate) round(abs(xmin-baseline(2)/1000)*srate)];    
+    %-------------------------------------------------------------------------------------------------------
+    figure
+    title_name=[name_noext ':' ch_label];    
+    [ersp,itc,powbase,times,freqs,erspboot,itcboot,tfdata] = newtimef(EEG.data(chan_num,:,:) ,pnt, [xmin xmax]*1000, srate, [3 0.5],'alpha',pvalue,'erspmax',3,'plotitc','off','mcorrect',correction,'plotersp', 'on', 'baseline', baseline,'trialbase','full');
+    suptitle(title_name);
+    
+    if save_fig
+        hfig=gcf();
+        output_file=fullfile(fig_output_path, [title_name '.jpg']);
+        saveas(hfig,output_file,'jpg');
+        close(hfig);
+    end    
+
+    for fb=1:length(freq_bands)
+        % plot epochs (baselined)
+        sel_freqs=[freqs>freq_bands{fb}(1) & freqs<freq_bands{fb}(2)];
+        data=squeeze(mean(abs(tfdata(sel_freqs,:,:)).^2,1))';  ... trial x tp %   data=squeeze(mean(tfdata(sel_freqs,:,:).*conj(tfdata(sel_freqs,:,:)),1))';
+
+        if strcmp(bc_type, 'trial')
+            
+            mbs             = mean(data(:, baseline_point(1):1:baseline_point(2),:),2); %     mbs: channel, 1, epochs
+            baseline        = repmat(mbs,1,pnt);
+            bs_data         = data-baseline;    
+            
+        else
+    
+            mbs             = mean(data(:, baseline_point(1):1:baseline_point(2)),2); %     mbs=mean(data(:,[baseline(1):baseline(2)]),2);
+            baseline        = repmat(mbs,1,200);
+            bs_data         = data-baseline;
+        end        
+        
+        
+        %mmbs=mean(mbs);%dbs=mbs-mmbs; dbaseline=repmat(dbs,1,200); bs_data=bs_data-baseline;%bs_data=bs_data-mmbs; ...baseline;    
+        figure();
+        imagesc(times,[],bs_data,[-4 4]);
+        title(title_name);    
+    end
+    ...clear EEG
+end    
