@@ -43,7 +43,7 @@ rt_stats.q.upper = [];
 if not(isempty(params.pc.lower))
     
     sel_eve_lowerq   = false(length(rt_cell_noempty),1);
-    sel_eve_upperq   = false(length(rt_cell_noempty),1);
+    
     
     rt_stats.q.lower = quantile(rt_vec, params.pc.lower);
     
@@ -51,7 +51,7 @@ if not(isempty(params.pc.lower))
         sel_eve_lowerq(neve)   = rt_cell_noempty{neve} < rt_stats.q.lower;
     end
     
-    ind_eve_lowerq = find(sel_eve_upperq);
+    ind_eve_lowerq = find(sel_eve_lowerq);
     
     eve_lowerq     = OUTEEG.event(ind_eve_lowerq);
     
@@ -59,7 +59,7 @@ if not(isempty(params.pc.lower))
         
         nn             = length(OUTEEG.event)+1;
         OUTEEG.event(nn)       = eve_lowerq(neq);
-        OUTEEG.event(nn).type = [OUTEEG.event(nn).type, '__upper_q_rt'];
+        OUTEEG.event(nn).type = [OUTEEG.event(nn).type, '__lower_q_rt'];
         
     end
     
@@ -67,6 +67,7 @@ end
 
 
 if not(isempty(params.pc.upper))
+    sel_eve_upperq   = false(length(rt_cell_noempty),1);
     
     rt_stats.q.upper = quantile(rt_vec, params.pc.upper);
     
@@ -76,12 +77,12 @@ if not(isempty(params.pc.upper))
     
     ind_eve_upperq = find(sel_eve_upperq);
     
-    eve_lowerq     = OUTEEG.event(ind_eve_upperq);
+    eve_upperq     = OUTEEG.event(ind_eve_upperq);
     
     for neq = 1 : length(ind_eve_upperq)
         
         nn             = length(OUTEEG.event)+1;
-        OUTEEG.event(nn)       = eve_lowerq(neq);
+        OUTEEG.event(nn)       = eve_upperq(neq);
         OUTEEG.event(nn).type = [OUTEEG.event(nn).type, '__upper_q_rt'];
         
     end
@@ -91,6 +92,7 @@ end
 
 
 end
+
 
 
 
