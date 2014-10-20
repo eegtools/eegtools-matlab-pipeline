@@ -14,9 +14,21 @@
 %
 % params.output_folder      = the folder where the rt files will be placed, if empty the same folder of the eeg data file
 %
-function [OUTEEG, rt_cell] =  eeglab_subject_calculate_rt(EEG, params)
+function [OUTEEG, rt_cell, rt_stats] =  eeglab_subject_calculate_rt(EEG, params)
 
-OUTEEG = EEG;
+
+
+OUTEEG       = EEG;
+rt_cell_data = [];
+rt_stats     = [];
+
+if nargin < 2
+    return;
+end
+
+all_type_eve = {OUTEEG.event.type};
+all_ind_eve  = 1:length(OUTEEG.event);
+
 
 data_filename    = OUTEEG.filename;
 % data_filename    = regexprep(EEG.filename,' ','');
@@ -45,45 +57,55 @@ if ~iscell(params.eve1_type)
     params.eve1 = {params.eve1_type};
 end
 
+if ~iscell(params.eve2_type)
+    params.eve2 = {params.eve1_type};
+end
 
-rt_cell_data = [];
 
 for neve1 = 1:length(params.eve1_type)
     
     
     
     % calculate duration between the each occurence of the first event type(s) (listed in eve1) and the following firt occurrence of the eve2 type
-    [mat_ind_eve1,urnbrs,urnbrtypes,rt_eve1_eve2,tfields,urnfields] = eeg_context(OUTEEG,params.eve1_type(neve1),params.eve2_type,1);
+    [mat_ind_eve1,urnbrs1,urnbrtypes,rt_eve1_eve2,tfields,urnfields] = eeg_context(OUTEEG,params.eve1_type(neve1),params.eve2_type,1);
     
-    % calculate the inverse, to track the indices of eve2
-    [mat_ind_eve2,urnbrs,urnbrtypes,rt_eve2_eve1,tfields,urnfields] = eeg_context(OUTEEG,params.eve2_type,params.eve1_type(neve1),-1);
-    
+%     % calculate the inverse, to track the indices of eve2
+%     [mat_ind_eve2,urnbrs,urnbrtypes,rt_eve2_eve1,tfields,urnfields] = eeg_context(OUTEEG,params.eve2_type,params.eve1_type(neve1),-1);
+%     
     % calculate duration between the each occurence of the first event type(s) and the following firt occurrence of the first event type(s)
-    [mat_ind_eve1,urnbrs,urnbrtypes,rt_eve1_eve1,tfields,urnfields] = eeg_context(OUTEEG,params.eve1_type(neve1),params.eve1_type(neve1),1);
+    [mat_ind_eve1,urnbrs2,urnbrtypes,rt_eve1_eve1,tfields,urnfields] = eeg_context(OUTEEG,params.eve1_type(neve1),params.eve1_type(neve1),1);
     
     % avoid the selection of events which CONTAIN the string of the event
     % types, take only exact match
     
     
     ind_eve1      = mat_ind_eve1(:,1);
-    ind_eve2      = mat_ind_eve2(:,1);
+    ind_eve2      = zeros(length(ind_eve1),1);
+    
+    all_ind_eve2 = all_ind_eve(ismember(all_type_eve, params.eve2_type));
+    
+    for neve1 = 1:length(ind_eve1)
+        
+        ind_eve2(neve1) = all_ind_eve2(min(find(all_ind_eve2 > ind_eve1(neve1))));
+        
+    end
     
     eve1_type   = {OUTEEG.event(ind_eve1).type}';
     eve2_type   = {OUTEEG.event(ind_eve2).type}';
     
     sel_exact_match_eve1 = ismember(eve1_type, params.eve1_type);
-    sel_exact_match_eve2 = ismember(eve2_type, params.eve2_type);
+%     sel_exact_match_eve2 = ismember(eve2_type, params.eve2_type);
     
     
     ind_eve1      = ind_eve1(sel_exact_match_eve1,1);
-    ind_eve2      = ind_eve2(sel_exact_match_eve2,1);
+    ind_eve2      = ind_eve2(sel_exact_match_eve1,1);
     
     rt_eve1_eve2  = rt_eve1_eve2(sel_exact_match_eve1);
-    rt_eve2_eve1  = -rt_eve1_eve2(sel_exact_match_eve2);
+%     rt_eve2_eve1  = -rt_eve1_eve2(sel_exact_match_eve2);
     rt_eve1_eve1  = rt_eve1_eve1(sel_exact_match_eve1);
     
     eve1_type     =  eve1_type(sel_exact_match_eve1);
-    eve2_type     =  eve2_type(sel_exact_match_eve2);
+    eve2_type     =  eve2_type(sel_exact_match_eve1);
     
     eve1_latency  = [OUTEEG.event(ind_eve1).latency]';
     eve2_latency  = [OUTEEG.event(ind_eve2).latency]';
@@ -97,7 +119,7 @@ for neve1 = 1:length(params.eve1_type)
     % create a vector with rt respecting the conditions: rt in the wanted
     % time limits and without intervening eve1 events
     selected_rt_eve1_eve2 = rt_eve1_eve2;
-    selected_rt_eve2_eve1 = rt_eve2_eve1;
+%     selected_rt_eve2_eve1 = rt_eve2_eve1;
     
     % vor each rt, verify if conditions are ok
     for neve=1:length(rt_eve1_eve2) % For each rt between eve1 and eve2,
@@ -120,7 +142,7 @@ for neve1 = 1:length(params.eve1_type)
         if not(condition1 && condition2 && condition3)
             % replace the rt with nan
             selected_rt_eve1_eve2(neve) = nan;
-            selected_rt_eve2_eve1(neve) = nan;
+%             selected_rt_eve2_eve1(neve) = nan;
         else
             % add the rt field to the event structure
             OUTEEG.event(ind_eve1(neve)).rt = rt_eve1_eve2(neve);
@@ -128,7 +150,7 @@ for neve1 = 1:length(params.eve1_type)
         end
     end
     rt_12          = num2cell(rt_eve1_eve2);
-    rt_21          = num2cell(rt_eve2_eve1);
+%     rt_21          = num2cell(rt_eve2_eve1);
     ind_eve1       = num2cell(ind_eve1);
     ind_eve2       = num2cell(ind_eve2);
     eve1_latency   = num2cell(eve1_latency);
@@ -164,5 +186,15 @@ for nn =1:size(rt_cell_data,1)
     fprintf(fid, '%s\t %s\t %s\t %s\t %s\t %s\t %d\t %d\t %d\t %d\t %d\t  %d\r\n',rt_cell_data{nn,:});
 end
 fclose(fid);
+
+rt_vec = cell2mat(rt_cell_data(:,11));
+rt_stats.median          = median(rt_vec);
+rt_stats.q.lower5        = quantile(rt_vec, 0.05);
+rt_stats.q.upper5        = quantile(rt_vec, 0.95);
+rt_stats.mean            = mean(rt_vec);
+rt_stats.min             = min(rt_vec);
+rt_stats.max             = max(rt_vec);
+rt_stats.sd              = std(rt_vec);
+
 
 end
