@@ -17,9 +17,9 @@ function EEG = eeglab_subject_events_add_event_around_other_events(input_file_na
         if isnumeric(original_codes{ev})
             original_codes{ev}=num2str(original_codes{ev});
         end
-        if isnumeric(new_code)
-            new_code=num2str(new_code);
-        end
+    end
+    if isnumeric(new_code)
+        new_code=num2str(new_code);
     end
  
     all_events_latency=[EEG.event.latency];
