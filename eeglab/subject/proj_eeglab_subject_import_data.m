@@ -26,20 +26,25 @@ function EEG = proj_eeglab_subject_import_data(project, subj_name)
         case 'BRAINAMP'
             % load vhdr data
             EEG = pop_loadbv(path, [name_noext,ext]); ..., [], 1:nch_eeg);
+                % EVENT SELECTING
+            % convert events type to string & remove blanks from events' labels
+            for ev=1:size(EEG.event,2)
+                EEG.event(ev).type = regexprep(EEG.event(ev).type,' ','');
+            end
 
    
         case 'BIOSEMI'
             EEG = pop_biosig(input_file_name, 'importannot','off');
+            % EVENT SELECTING
+            % convert events type to string & remove blanks from events' labels
+            for ev=1:size(EEG.event,2)
+                EEG.event(ev).type = num2str(EEG.event(ev).type);               
+            end
             
     ... case 'OTHER SYSTEMS'
     end
 
-    % EVENT SELECTING
-    % convert events type to string & remove blanks from events' labels
-    for ev=1:size(EEG.event,2)
-        EEG.event(ev).type = num2str(EEG.event(ev).type);
-        EEG.event(ev).type = regexprep(EEG.event(ev).type,' ','');
-    end
+    
    
     EEG = pop_chanedit( EEG, 'lookup',eeglab_channels_file);    ...  considering using a same file, suitable for whichever electrodes configuration    
     EEG = eeg_checkset( EEG ); 
