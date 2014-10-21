@@ -174,6 +174,7 @@ project.preproc.ff2_global    = 100;                          % F2:   higher fre
 project.preproc.do_notch      = 1;                            % F3:   define if apply the notch filter at 50 Hz
 project.preproc.notch_fcenter = 50;                           % F4:   center frequency of the notch filter 50 Hz or 60 Hz
 project.preproc.notch_fspan   = 5;                            % F5:   halved frequency range of the notch filters  
+project.preproc.notch_remove_armonics = 'first';               %       'all' | 'first' reemove all or only the first harmonic(s) of the line current
 
 % during pre-processing
 %FURTHER EEG FILTER
@@ -206,7 +207,6 @@ project.preproc.insert_begin_trial.time_shift                 =   [];           
 % =======================================================================================================
 % input file name  = [original_data_prefix subj_name original_data_suffix project.import.output_suffix epoching.input_suffix . set]
 % output file name = [original_data_prefix subj_name original_data_suffix project.import.output_suffix epoching.input_suffix '_' CONDXX. set]
-
 
 project.epoching.baseline_insert.mode                       = 'trial';                      % insert a baseline before/after events to  be epoched and processed: 
                                                                                             %  * 'trial'    use a baseline within each trial
