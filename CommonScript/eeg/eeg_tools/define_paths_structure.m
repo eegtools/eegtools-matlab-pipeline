@@ -1,26 +1,30 @@
-% AIMS:
+%% AIMS:
 % define and create global and project PATHS 
-
+%
 % REQUIREMENTS:
 % it requires the following variables:
 % GLOBALS
-... project.paths.svn_scripts_root              ... e.g. '/data/behavior_lab_svn/behaviourPlatform'
-... project.paths.common_scripts                ... e.g. '/data/behavior_lab_svn/behaviourPlatform/CommonScript'
-... project.paths.eeg_tools                     ... e.g. '/data/behavior_lab_svn/behaviourPlatform/CommonScript/eeg_tools'
-... project.paths.projects_data_root            ... e.g. '/data/projects'
-... project.paths.plugins_root                  ... e.g. '/data/matlab_toolbox'
+...*    project.paths.projects_data_root            ... e.g. '/data/projects'
+...*    project.paths.svn_scripts_root              ... e.g. '/data/behavior_lab_svn/behaviourPlatform'
+...*    project.paths.plugins_root                  ... e.g. '/data/matlab_toolbox'
+
+...*    project.paths.script.common_scripts         ... e.g. '/data/behavior_lab_svn/behaviourPlatform/CommonScript'
+...*    project.paths.script.eeg_tools              ... e.g. '/data/behavior_lab_svn/behaviourPlatform/CommonScript/eeg_tools'
 
 % PROJECT RELATED
-... project.research_group
-... project.research_subgroup    
-... project.name
-... project.conf_file_name
-... project.analysis_name
+...*    project.research_group
+...*    project.research_subgroup    
+...*    project.name
+...*    project.conf_file_name
 
-... project.eegdata.eeglab_channels_file_name
-... project.clustering.channels_file_name   
-... project.brainstorm.channels_file_name
+...**   project.analysis_name
 
+...**   project.eegdata.eeglab_channels_file_name
+...**   project.clustering.channels_file_name   
+...**   project.brainstorm.channels_file_name
+
+...*  defined in main
+...** defined in project structure
 %% ================================================================================================================
 % ==== GLOBAL ===================================================================================================
 %================================================================================================================
@@ -59,45 +63,29 @@ end
 
 % global script path
 
-project.paths.script.CommonScript = fullfile( project.paths.svn_scripts_root,'CommonScript');
-project.paths.script.eeg = fullfile( project.paths.script.CommonScript,'eeg');
+project.paths.script.CommonScript   = fullfile( project.paths.svn_scripts_root,'CommonScript');
+project.paths.script.eeg            = fullfile( project.paths.script.CommonScript,'eeg');
 
+project.paths.script.brainstorm     = fullfile(project.paths.script.eeg,'brainstorm_new');
+project.paths.script.eeglab         = fullfile(project.paths.script.eeg,'eeglab');
+project.paths.script.fieldtrip      = fullfile(project.paths.script.eeg,'fieldtrip');
+project.paths.script.spm            = fullfile(project.paths.script.eeg,'spm');
 
-project.paths.script.brainstorm = fullfile(project.paths.script.eeg,'brainstorm_new');
-project.paths.script.eeglab = fullfile(project.paths.script.eeg,'eeglab');
-project.paths.script.fieldtrip = fullfile(project.paths.script.eeg,'fieldtrip');
-project.paths.script.spm = fullfile(project.paths.script.eeg,'spm');
-
-
-
-project.paths.script.eeg_tools = fullfile(project.paths.script.eeg,'eeg_tools');
-project.paths.script.utilities = fullfile(project.paths.script.eeg_tools,'utilities');
+project.paths.script.eeg_tools      = fullfile(project.paths.script.eeg,'eeg_tools');
+project.paths.script.utilities      = fullfile(project.paths.script.eeg_tools,'utilities');
 
 addpath(genpath2(project.paths.script.brainstorm_new));
 addpath(genpath2(project.paths.script.eeglab));
 addpath(genpath2(project.paths.script.fieldtrip));
 addpath(genpath2(project.paths.script.spm));
 
-
-project.paths.templates.spm = fullfile(project.paths.script.spm,'templates');
-
-
+% other files
+project.paths.templates.spm                 = fullfile(project.paths.script.spm,'templates');
 project.clustering.channels_file_path       = fullfile(project.paths.script.eeg_tools, project.clustering.channels_file_name);
 project.eegdata.eeglab_channels_file_path   = fullfile(project.paths.script.eeg_tools, project.eegdata.eeglab_channels_file_name);
 
 
-% project.paths.global_spm_templates          = fullfile(project.paths.common_scripts, 'spm','templates', '');
-% project.clustering.channels_file_path       = fullfile(project.paths.eeg_tools, project.clustering.channels_file_name);
-% project.eegdata.eeglab_channels_file_path   = fullfile(project.paths.eeg_tools, project.eegdata.eeglab_channels_file_name);
-
-
-
 %%  ------ PROJECT PATHS 
-
-% in the main script, set sub-directory of epochs which will be processed
-% project.import.output_folder = 'OCICA_250c';
-
-
 
 % project path
 project.paths.project                       = fullfile(project.paths.projects_data_root, project.research_group, project.research_subgroup, project.name, '');
