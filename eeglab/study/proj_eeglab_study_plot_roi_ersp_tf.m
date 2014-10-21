@@ -140,6 +140,7 @@ function [STUDY, EEG] = proj_eeglab_study_plot_roi_ersp_tf(project, analysis_nam
      display_pmode=project.results_display.ersp.display_pmode;
 
 
+
     for par=1:2:length(varargin)
        switch varargin{par}
            case {'list_select_subjects', 'design_num_vec', 'roi_list', 'roi_names', 'study_ls', 'num_permutations', 'correction', 'stat_method', 'stat_time_windows_list', ...
@@ -260,7 +261,6 @@ function [STUDY, EEG] = proj_eeglab_study_plot_roi_ersp_tf(project, analysis_nam
                      if (strcmp(do_plots,'on'))                                                                             
                          eeglab_study_roi_ersp_tf_graph(STUDY, design_num, roi_names{nroi}, name_f1, name_f2, levels_f1,levels_f2, ersp_tf, times, freqs, pcond_corr, pgroup_corr, pinter_corr, ...
                                                         set_caxis,study_ls,plot_dir,freq_scale,...
-
                                                         display_only_significant,display_only_significant_mode,ersp_mode, group_time_windows_list,frequency_bands_list,display_pmode)
                      end                            
                     ersp_tf_stat.data(nroi).roi_name=roi_name;

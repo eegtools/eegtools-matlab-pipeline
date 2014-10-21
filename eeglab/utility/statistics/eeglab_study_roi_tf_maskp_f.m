@@ -8,7 +8,7 @@ function [pcond, pgroup, pinter] = eeglab_study_roi_tf_maskp_f(pcond, pgroup, pi
             masked_pcond=pcond{nc};
             
             mask_freqs= zeros(size(masked_pcond,1),1);            
-            for nfb=1:size(freq_bands_list,1) % for each time window
+            for nfb=1:size(freq_bands_list,1) % for each frequency band
                 mask_freqs(freqs>=freq_bands_list(nfb,1) & freqs<=freq_bands_list(nfb,2))=1;
             end
             mask_freqs = mask_freqs==1;           
