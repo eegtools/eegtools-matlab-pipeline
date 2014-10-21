@@ -29,50 +29,75 @@ strpath = path;
 %%  ------ PLUGIN PATH
 
 % eeglab
-project.paths.eeglab                        = fullfile(project.paths.plugins_root, 'eeglab','');
-if isempty(strfind(strpath, project.paths.eeglab))
-    addpath(project.paths.eeglab);
+project.paths.plugin.eeglab                        = fullfile(project.paths.plugins_root, 'eeglab','');
+if isempty(strfind(strpath, project.paths.plugin.eeglab))
+    addpath(project.paths.plugin.eeglab);
 end
 eeglab
-project.paths.shadowing_functions           = fullfile(project.paths.eeglab, 'functions', 'octavefunc', 'optim','');
+project.paths.shadowing_functions           = fullfile(project.paths.plugin.eeglab, 'functions', 'octavefunc', 'optim','');
 
 % brainstorm
-project.paths.brainstorm                    = fullfile(project.paths.plugins_root, 'brainstorm3', '');
-if isempty(strfind(strpath, project.paths.brainstorm)) && exist(project.paths.brainstorm, 'dir')
-    addpath(project.paths.brainstorm);      
+project.paths.plugin.brainstorm                    = fullfile(project.paths.plugins_root, 'brainstorm3', '');
+if isempty(strfind(strpath, project.paths.plugin.brainstorm)) && exist(project.paths.plugin.brainstorm, 'dir')
+    addpath(project.paths.plugin.brainstorm);      
     brainstorm setpath;
 end
 
 % SPM
-project.paths.spm                           = fullfile(project.paths.plugins_root, 'spm8', '');
-if isempty(strfind(strpath, project.paths.spm)) && exist(project.paths.spm, 'dir')
-    addpath(genpath2(project.paths.spm));      
+project.paths.plugin.spm                           = fullfile(project.paths.plugins_root, 'spm8', '');
+if isempty(strfind(strpath, project.paths.plugin.spm)) && exist(project.paths.plugin.spm, 'dir')
+    addpath(genpath2(project.paths.plugin.spm));      
 end
 
-% % fieldtrip
-% project.paths.fieldtrip                     = fullfile(project.paths.plugins_root, 'fieldtrip', '');
-% if isempty(strfind(strpath, project.paths.fieldtrip)) && exist(project.paths.fieldtrip, 'dir')
-%     addpath(genpath2(project.paths.fieldtrip));      
-% end
+% fieldtrip
+project.paths.plugin.fieldtrip                     = fullfile(project.paths.plugins_root, 'fieldtrip-20130423', '');
+if isempty(strfind(strpath, project.paths.plugin.fieldtrip)) && exist(project.paths.plugin.fieldtrip, 'dir')
+    addpath(genpath2(project.paths.plugin.fieldtrip));      
+end
 
-%%  ------ COMMON SCRIPTS PATH
+%%  ------ SCRIPTS PATH
 
 % global script path
-addpath(genpath2(fullfile(project.paths.eeg_tools, 'utilities', '')));
 
-addpath(genpath2(fullfile(project.paths.common_scripts, 'brainstorm_new', '')));
-addpath(genpath2(fullfile(project.paths.common_scripts, 'eeglab','')));
+project.paths.script.CommonScript = fullfile( project.paths.svn_scripts_root,'CommonScript');
+project.paths.script.eeg = fullfile( project.paths.script.CommonScript,'eeg');
 
-addpath(genpath2(fullfile(project.paths.common_scripts, 'spm', '')));
-addpath(genpath2(fullfile(project.paths.common_scripts, 'R', '')));
 
-project.paths.global_spm_templates          = fullfile(project.paths.common_scripts, 'spm','templates', '');
-project.clustering.channels_file_path       = fullfile(project.paths.eeg_tools, project.clustering.channels_file_name);
-project.eegdata.eeglab_channels_file_path   = fullfile(project.paths.eeg_tools, project.eegdata.eeglab_channels_file_name);
+project.paths.script.brainstorm = fullfile(project.paths.script.eeg,'brainstorm_new');
+project.paths.script.eeglab = fullfile(project.paths.script.eeg,'eeglab');
+project.paths.script.fieldtrip = fullfile(project.paths.script.eeg,'fieldtrip');
+project.paths.script.spm = fullfile(project.paths.script.eeg,'spm');
+
+
+
+project.paths.script.eeg_tools = fullfile(project.paths.script.eeg,'eeg_tools');
+project.paths.script.utilities = fullfile(project.paths.script.eeg_tools,'utilities');
+
+addpath(genpath2(project.paths.script.brainstorm_new));
+addpath(genpath2(project.paths.script.eeglab));
+addpath(genpath2(project.paths.script.fieldtrip));
+addpath(genpath2(project.paths.script.spm));
+
+
+project.paths.templates.spm = fullfile(project.paths.script.spm,'templates');
+
+
+project.clustering.channels_file_path       = fullfile(project.paths.script.eeg_tools, project.clustering.channels_file_name);
+project.eegdata.eeglab_channels_file_path   = fullfile(project.paths.script.eeg_tools, project.eegdata.eeglab_channels_file_name);
+
+
+% project.paths.global_spm_templates          = fullfile(project.paths.common_scripts, 'spm','templates', '');
+% project.clustering.channels_file_path       = fullfile(project.paths.eeg_tools, project.clustering.channels_file_name);
+% project.eegdata.eeglab_channels_file_path   = fullfile(project.paths.eeg_tools, project.eegdata.eeglab_channels_file_name);
 
 
 
 %%  ------ PROJECT PATHS 
+
+% in the main script, set sub-directory of epochs which will be processed
+% project.import.output_folder = 'OCICA_250c';
+
+
 
 % project path
 project.paths.project                       = fullfile(project.paths.projects_data_root, project.research_group, project.research_subgroup, project.name, '');
