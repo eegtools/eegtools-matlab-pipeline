@@ -29,7 +29,9 @@ function EEG = eeglab_subject_remove_pauses(input_file_name, start_pause_code, s
     stop_pauses=ceil(all_events_latency(select_stop_pauses)); 
     
     if (length(start_pauses) ~= length(stop_pauses))
-        disp ('error: num start pauses differs from end ones');
+        disp ('!!!!!!!!  ERROR !!!!!!! : num start pauses differs from end ones');
+        start_pauses
+        stop_pauses
         return
     end
     numinterval_removed=num2str(length(start_pauses));
