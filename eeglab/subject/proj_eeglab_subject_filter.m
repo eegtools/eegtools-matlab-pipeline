@@ -57,7 +57,7 @@ switch channels_type
     case 'eog'
         params.channels_list               =  project.eegdata.eog_channels_list;
     case 'emg'
-        params.channels_list               =  project.eegdata.eeg_channels_list;
+        params.channels_list               =  project.eegdata.emg_channels_list;
     otherwise
         disp('Unknown channel type')
         return
