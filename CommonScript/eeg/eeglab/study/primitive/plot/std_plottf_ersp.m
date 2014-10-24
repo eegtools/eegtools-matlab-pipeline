@@ -386,7 +386,7 @@ for g = 1:ng
          
         if nc == 2 && length(unique(pcondplot{g}))<4 
             if strcmp(display_pmode,'raw_diff')
-                pp = sign( (mean(data{g,1},3) - mean(data{g,2},3)) .*  pcondplot{g});
+                pp = sign( (mean(data{1,g},3) - mean(data{2,g},3)) .*  pcondplot{g});
                 imagesc(timevals,freqs,pp)
                 set(gca,'YDir','normal')
                 caxis([-2 2])

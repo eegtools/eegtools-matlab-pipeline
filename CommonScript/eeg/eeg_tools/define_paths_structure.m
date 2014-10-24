@@ -74,7 +74,7 @@ project.paths.script.spm            = fullfile(project.paths.script.eeg,'spm');
 project.paths.script.eeg_tools      = fullfile(project.paths.script.eeg,'eeg_tools');
 project.paths.script.utilities      = fullfile(project.paths.script.eeg_tools,'utilities');
 
-addpath(genpath2(project.paths.script.brainstorm_new));
+addpath(genpath2(project.paths.script.brainstorm));
 addpath(genpath2(project.paths.script.eeglab));
 addpath(genpath2(project.paths.script.fieldtrip));
 addpath(genpath2(project.paths.script.spm));
