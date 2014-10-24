@@ -73,11 +73,11 @@ if strcmp(band_processing, 'bandpass')
             params.ff1                         =  project.preproc.ff1_eeg;
             params.ff2                         =  project.preproc.ff2_eeg;
         case 'eog'
-            params.ff1                         =  project.preproc.ff1_eeg;
-            params.ff2                         =  project.preproc.ff2_eeg;
+            params.ff1                         =  project.preproc.ff1_eog;
+            params.ff2                         =  project.preproc.ff2_eog;
         case 'emg'
-            params.ff1                         =  project.preproc.ff1_eeg;
-            params.ff2                         =  project.preproc.ff2_eeg;
+            params.ff1                         =  project.preproc.ff1_emg;
+            params.ff2                         =  project.preproc.ff2_emg;
         otherwise
             disp('Unknown channel type')
             return
@@ -87,13 +87,12 @@ if strcmp(band_processing, 'bandpass')
 end
 
 if strcmp(band_processing, 'bandstop')
-    
-    params.notch_fcenter = project.preproc.notch_fcenter;  % center frequency of the notch filter 50 Hz or 60 Hz
-    params.notch_fspan   = project.preproc.notch_fspan;    %  halved frequency range of the notch filters
+    params.remove_armonics = project.preproc.notch_remove_armonics;
+    params.notch_fcenter   = project.preproc.notch_fcenter;  % center frequency of the notch filter 50 Hz or 60 Hz
+    params.notch_fspan     = project.preproc.notch_fspan;    %  halved frequency range of the notch filters
    
     EEG = eeglab_subject_bandstop(EEG, params);
 end
 
 
 end
-
