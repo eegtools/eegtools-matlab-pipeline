@@ -13,7 +13,17 @@ function  EEG = eeglab_subject_bandstop(EEG, params)
         help proj_eeglab_subject_bandstop
     end
         
-    notch_fcenter = params.notch_fcenter:params.notch_fcenter:(floor(EEG.srate/2)-params.notch_fcenter);        % frequency center of the notch filters (to remove 50 Hz and harmonics 
+      
+    switch(params.remove_armonics)
+        
+        case 'first'
+            notch_fcenter = params.notch_fcenter;        % frequency center of the notch filters (to remove 50 Hz and harmonics
+            
+        case 'all'
+            
+            notch_fcenter = params.notch_fcenter:params.notch_fcenter:(floor(EEG.srate/2)-params.notch_fcenter);        % frequency center of the notch filters (to remove 50 Hz and harmonics
+    end
+        
     notch_fspan   = 5;                                                                                         % halved frequency range of the notch filters     
     notch_ff1 = notch_fcenter - notch_fspan;                                                                   % low cutoff of the notch
     notch_ff2 = notch_fcenter + notch_fspan;                                                                   % high cutoff of the notch

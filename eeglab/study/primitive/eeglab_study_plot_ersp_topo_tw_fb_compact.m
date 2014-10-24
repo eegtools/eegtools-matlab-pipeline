@@ -60,6 +60,20 @@ pcond=[];
 pgroup=[];
 pinter=[];
 
+
+
+display_compact_plots=project.results_display.ersp.compact_plots;
+compact_display_h0 = project.results_display.ersp.compact_h0;
+compact_display_v0 = project.results_display.ersp.compact_v0;
+compact_display_sem = project.results_display.ersp.compact_sem;
+compact_display_stats = project.results_display.ersp.compact_stats;
+compact_display_xlim = project.results_display.ersp.compact_display_xlim;
+compact_display_ylim = project.results_display.ersp.compact_display_ylim;
+
+
+
+
+
 [study_path,study_name_noext,study_ext] = fileparts(study_path);
 
 % start EEGLab
@@ -355,7 +369,7 @@ for nroi = 1:length(roi_list)
         if (strcmp(do_plots,'on'))
             eeglab_study_roi_ersp_curve_tw_fb_graph(STUDY, design_num, roi_name, name_f1, name_f2, levels_f1,levels_f2, ...
                 ersp_curve_roi_fb, times_plot, frequency_bands_names{nband},group_time_windows_names{design_num},...
-                pcond_corr, pgroup_corr, pinter_corr,study_ls,plot_dir,display_only_significant,display_compact_plots,...
+                pcond_corr, pgroup_corr, pinter_corr,study_ls,plot_dir,display_only_significant_topo,display_compact_plots,...
                 compact_display_h0,compact_display_v0,compact_display_sem,compact_display_stats,...
                 compact_display_xlim,compact_display_ylim,ersp_measure);
         end
@@ -415,57 +429,65 @@ for nroi = 1:length(roi_names)
     
     
     
+    STUDY = pop_statparams(STUDY, 'groupstats','off','condstats','off');
+    
+    % calculate ersp in the channels corresponding to the selected roi
+    [STUDY ersp_topo_tw_fb times freqs]=std_erspplot(STUDY,ALLEEG,'channels',roi_channels,'noplot','on');
+    
+    
+    %                     roi_mask =ones(1,length(locs_labels));
+    roi_mask = ismember(locs_labels,roi_channels);
+    
+    ersp_topo_tw_fb_roi_avg=[];
+    
+    
+    
+    
     for nband=1:length(frequency_bands_list)
         
         frequency_band_name=frequency_bands_names{nband};
         
         
+        for nf1=1:length(levels_f1)
+            for nf2=1:length(levels_f2)
+                ersp_topo_tw_fb_roi_avg{nf1,nf2}=ersp_curve_roi_fb_stat.dataroi(nroi).databand(nband).ersp_curve_roi_fb{nf1,nf2};
+            end
+        end
+        
+        
+        
+        
+        if ~ isempty(design_factors_ordered_levels)
+            if ~ isempty(design_factors_ordered_levels{design_num}{1})
+                levels_f1=STUDY.design(design_num).variable(1).value;
+                [match_lev reorder_lev]=ismember(design_factors_ordered_levels{design_num}{1},levels_f1);
+                levels_f1=levels_f1(reorder_lev);
+                ersp_topo_tw_fb_roi_avg=ersp_topo_tw_fb_roi_avg(reorder_lev,:);
+            end
+            
+            if ~ isempty(design_factors_ordered_levels{design_num}{2})
+                levels_f2=STUDY.design(design_num).variable(2).value;
+                [match_lev reorder_lev]=ismember(design_factors_ordered_levels{design_num}{2},levels_f2);
+                levels_f2=levels_f2(reorder_lev);
+                ersp_topo_tw_fb_roi_avg=ersp_topo_tw_fb_roi_avg{:,reorder_lev};
+            end
+        end
+        
+        
+        
         for nwin=1:length(group_time_windows_list_design)
-            % set parameters for a topographic represntation
             
             
             time_window_name        = group_time_windows_names_design{nwin};
             time_window             = group_time_windows_list_design{nwin};
             
-            STUDY = pop_erspparams(STUDY, 'topotime',group_time_windows_list_design{nwin} ,'topofreq', frequency_bands_list{nband});
-            STUDY = pop_statparams(STUDY, 'groupstats','off','condstats','off');
-            
-            % calculate ersp in the channels corresponding to the selected roi
-            [STUDY ersp_topo_tw_fb times freqs]=std_erspplot(STUDY,ALLEEG,'channels',roi_channels,'noplot','on');
+            STUDY = pop_erspparams(STUDY, 'topotime',time_window{nwin} ,'topofreq', frequency_bands_list{nband});
             
             
-            %                     roi_mask =ones(1,length(locs_labels));
-            roi_mask = ismember(locs_labels,roi_channels);
-            
-            ersp_topo_tw_fb_roi_avg=[];
-            
-            for nf1=1:length(levels_f1)
-                for nf2=1:length(levels_f2)
-                    ersp_topo_tw_fb_roi_avg{nf1,nf2}=ersp_curve_roi_fb_stat.dataroi(nroi).databand(nband).ersp_curve_roi_fb{nf1,nf2};
-                end
+            for nn = 1:length(ersp_topo_tw_fb_roi_avg)
+            ersp_topo_tw_fb_roi_avg_tw = ersp_topo_tw_fb_roi_avg{nn};
+            ersp_topo_tw_fb_roi_avg_tw= ersp_topo_tw_fb_roi_avg_tw(nwin,:);
             end
-            
-            
-            
-            
-            if ~ isempty(design_factors_ordered_levels)
-                if ~ isempty(design_factors_ordered_levels{design_num}{1})
-                    levels_f1=STUDY.design(design_num).variable(1).value;
-                    [match_lev reorder_lev]=ismember(design_factors_ordered_levels{design_num}{1},levels_f1);
-                    levels_f1=levels_f1(reorder_lev);
-                    ersp_topo_tw_fb_roi_avg=ersp_topo_tw_fb_roi_avg(reorder_lev,:);
-                end
-                
-                if ~ isempty(design_factors_ordered_levels{design_num}{2})
-                    levels_f2=STUDY.design(design_num).variable(2).value;
-                    [match_lev reorder_lev]=ismember(design_factors_ordered_levels{design_num}{2},levels_f2);
-                    levels_f2=levels_f2(reorder_lev);
-                    ersp_topo_tw_fb_roi_avg=ersp_topo_tw_fb_roi_avg{:,reorder_lev};
-                end
-            end
-            
-            
-            
             
             [stats.anova.stats_anova, stats.anova.stats.df_anova , stats.anova.p_anova]=statcond_corr(ersp_topo_tw_fb_roi_avg, num_tails,'method', stat_method, 'naccu', num_permutations);
             
@@ -474,10 +496,10 @@ for nroi = 1:length(roi_names)
             % of each factor
             [stats.post_hoc.statscond, stats.post_hoc.statsgroup, stats.post_hoc.dfcond, stats.post_hoc.dfgroup, stats.post_hoc.pcond, ...
                 stats.post_hoc.pgroup, stats.post_hoc.compcond, stats.post_hoc.compgroup]= ...
-                pairwise_compairsons_stats(ersp_topo_tw_fb_roi_avg,stat_method,num_permutations,num_tails);
+                pairwise_compairsons_stats(ersp_topo_tw_fb_roi_avg_tw,stat_method,num_permutations,num_tails);
             
             
-            [stats.pcond_corr, stats.pgroup_corr, stats.pinter_corr] = eeglab_study_correct_pvals(pcond, pgroup, pinter,correction);
+            [stats.post_hoc.pcond_corr, stats.post_hoc.pgroup_corr, stats.post_hoc.pinter_corr] = eeglab_study_correct_pvals(pcond, pgroup, pinter,correction);
             
             
             if (strcmp(do_plots,'on'))

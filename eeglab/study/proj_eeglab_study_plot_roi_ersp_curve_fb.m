@@ -326,15 +326,15 @@ for nroi = 1:length(roi_list)
                     
                     
                     
-                    %                     narrowband_output.adjusted_frequency_band{nf1,nf2}(nsub,:)=[sub_adjusted_fmin, sub_adjusted_fmax];
-                    %                     narrowband_output.realign_freq{nf1,nf2}(nsub)=sub_realign_freq;
-                    %                     narrowband_output.realign_freq_value{nf1,nf2}(nsub)=sub_realign_freq_value;
-                    %                     narrowband_output.realign_freq_value_lat{nf1,nf2}(nsub)=sub_realign_freq_value_lat;
-                    %
-                    %                     narrowband_output.mean_centroid_group_fb{nf1,nf2}(nsub)=mean_centroid_group_fb;
-                    %                     narrowband_output.mean_centroid_sub_realign_fb{nf1,nf2}(nsub)=mean_centroid_sub_realign_fb;
-                    %                     narrowband_output.median_centroid_group_fb{nf1,nf2}(nsub)=median_centroid_group_fb;
-                    %                     narrowband_output.median_centroid_sub_realign_fb{nf1,nf2}(nsub)=median_centroid_sub_realign_fb;
+                                        narrowband_output.adjusted_frequency_band{nf1,nf2}(nsub,:)=[sub_adjusted_fmin, sub_adjusted_fmax];
+                                        narrowband_output.realign_freq{nf1,nf2}(nsub)=sub_realign_freq;
+                                        narrowband_output.realign_freq_value{nf1,nf2}(nsub)=sub_realign_freq_value;
+                                        narrowband_output.realign_freq_value_lat{nf1,nf2}(nsub)=sub_realign_freq_value_lat;
+                    
+                                        narrowband_output.mean_centroid_group_fb{nf1,nf2}(nsub)=mean_centroid_group_fb;
+                                        narrowband_output.mean_centroid_sub_realign_fb{nf1,nf2}(nsub)=mean_centroid_sub_realign_fb;
+                                        narrowband_output.median_centroid_group_fb{nf1,nf2}(nsub)=median_centroid_group_fb;
+                                        narrowband_output.median_centroid_sub_realign_fb{nf1,nf2}(nsub)=median_centroid_sub_realign_fb;
                 end
                 
                 narrowband{nf1,nf2,nsub} = narrowband_output;
