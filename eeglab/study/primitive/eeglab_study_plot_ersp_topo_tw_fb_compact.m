@@ -480,16 +480,21 @@ for nroi = 1:length(roi_names)
             
             time_window_name        = group_time_windows_names_design{nwin};
             time_window             = group_time_windows_list_design{nwin};
+            ersp_topo_tw_fb_roi_avg_tw=[];
             
-            STUDY = pop_erspparams(STUDY, 'topotime',time_window{nwin} ,'topofreq', frequency_bands_list{nband});
+            STUDY = pop_erspparams(STUDY, 'topotime',time_window ,'topofreq', frequency_bands_list{nband});
             
+            [s1,s2] = size(ersp_topo_tw_fb_roi_avg); 
             
-            for nn = 1:length(ersp_topo_tw_fb_roi_avg)
-            ersp_topo_tw_fb_roi_avg_tw = ersp_topo_tw_fb_roi_avg{nn};
-            ersp_topo_tw_fb_roi_avg_tw= ersp_topo_tw_fb_roi_avg_tw(nwin,:);
+            for n1 =1:s1
+            for n2 = 1:s2
+            
+                pluto = ersp_topo_tw_fb_roi_avg{n1,n2};
+            ersp_topo_tw_fb_roi_avg_tw{n1,n2}= pluto(nwin,:);
+            end
             end
             
-            [stats.anova.stats_anova, stats.anova.stats.df_anova , stats.anova.p_anova]=statcond_corr(ersp_topo_tw_fb_roi_avg, num_tails,'method', stat_method, 'naccu', num_permutations);
+            [stats.anova.stats_anova, stats.anova.stats.df_anova , stats.anova.p_anova]=statcond_corr(ersp_topo_tw_fb_roi_avg_tw, num_tails,'method', stat_method, 'naccu', num_permutations);
             
             
             % calculate statistics for each pairwise comparison
@@ -499,18 +504,18 @@ for nroi = 1:length(roi_names)
                 pairwise_compairsons_stats(ersp_topo_tw_fb_roi_avg_tw,stat_method,num_permutations,num_tails);
             
             
-            [stats.post_hoc.pcond_corr, stats.post_hoc.pgroup_corr, stats.post_hoc.pinter_corr] = eeglab_study_correct_pvals(pcond, pgroup, pinter,correction);
+            [stats.post_hoc.pcond_corr, stats.post_hoc.pgroup_corr, stats.post_hoc.pinter_corr] = eeglab_study_correct_pvals( stats.post_hoc.pcond,  stats.post_hoc.pgroup,  [],correction);
             
             
             if (strcmp(do_plots,'on'))
                 
-                eeglab_study_ersp_topo_graph(STUDY, design_num, ersp_topo_tw_fb,set_caxis, locs, name_f1, name_f2, levels_f1,levels_f2,...
+                eeglab_study_ersp_topo_graph(STUDY, design_num, ersp_topo_tw_fb_roi_avg_tw,set_caxis, locs, name_f1, name_f2, levels_f1,levels_f2,...
                     time_window_name,time_window, ...
                     frequency_band_name, ...
                     stats.post_hoc.pcond_corr, stats.post_hoc.pgroup_corr, stats.post_hoc.pinter_corr,study_ls,...
                     plot_dir,display_only_significant_topo,display_only_significant_topo_mode,...
                     display_compact_topo,display_compact_topo_mode,...
-                    ersp_topo_tw_fb_roi_avg,...
+                    ersp_topo_tw_fb_roi_avg_tw,...
                     stats.post_hoc.compcond, stats.post_hoc.compgroup,...
                     roi_name, roi_mask,...
                     ersp_measure,show_head,compact_display_ylim,show_text,z_transform,which_error_measure);
