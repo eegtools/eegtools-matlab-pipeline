@@ -35,9 +35,9 @@ function EEG = proj_eeglab_subject_preprocessing(project, subj_name)
         EEG = eeg_checkset( EEG );       
     end 
     
-    %===============================================================================================
-    % CHANNELS TRANSFORMATION
-    %===============================================================================================
+%     %===============================================================================================
+%     % CHANNELS TRANSFORMATION
+%     %===============================================================================================
     num_ch2transform = length(project.import.ch2transform);
     
     if num_ch2transform
@@ -122,7 +122,7 @@ function EEG = proj_eeglab_subject_preprocessing(project, subj_name)
         EEG             = pop_interp(EEG, [interpolation], 'spherical');
         EEG             = eeg_checkset( EEG ); 
     end   
-
+% 
 %     %===============================================================================================
 %     % RE-REFERENCE
 %     %===============================================================================================
@@ -171,31 +171,7 @@ function EEG = proj_eeglab_subject_preprocessing(project, subj_name)
 
 
     
-%     if ~isempty(EEG.event)
-%         if iscell(project.import.valid_marker)
-%             % cell array containing markers' code to import
-%             selstim=[];
-%             selstim0=[];        
-% 
-%             selstim = ismember({EEG.event.type}, project.import.valid_marker);
-%             EEG.event=EEG.event(selstim);
-%         else
-%             % is a string with values 'stimuli', 'responses', 'all'
-%             evecode={EEG.event.code};
-%             switch project.import.valid_marker
-%                 case 'stimuli'
-%                     selstim=strncmp(evecode,'S',2);                        
-%                 case 'responses'
-%                     selstim2=strncmp(evecode,'R',2);
-%                 case 'all'   
-%                     selstim1=strncmp(evecode,'S',2);
-%                     selstim2=strncmp(evecode,'R',2);                
-%                     selstim=selstim1|selstim2;
-%             end
-%             EEG.event=EEG.event(selstim);    
-%         end
-%         EEG = eeg_checkset( EEG );
-%     end
+
 
     %===============================================================================================
     % SAVE
