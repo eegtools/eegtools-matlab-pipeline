@@ -104,6 +104,17 @@ function [STUDY, EEG] = proj_eeglab_study_plot_erp_topo_tw(project, analysis_nam
     num_tails                           = project.stats.erp.num_tails;
      show_text                          = project.results_display.erp.show_text;
     
+     
+     compact_display_h0=project.results_display.erp.compact_h0;
+compact_display_v0=project.results_display.erp.compact_v0;
+compact_display_sem=project.results_display.erp.compact_sem;
+compact_display_stats=project.results_display.erp.compact_stats;
+
+compact_display_xlim=project.results_display.erp.compact_display_xlim;
+
+ display_single_subjects=project.results_display.erp.single_subjects;
+     
+     
     for par=1:2:length(varargin)
        switch varargin{par}
            case {'design_num_vec', 'design_factors_ordered_levels', 'analysis_name', 'roi_list', 'roi_names', 'study_ls', 'num_permutations', 'correction', 'stat_method', ...
@@ -127,7 +138,8 @@ function [STUDY, EEG] = proj_eeglab_study_plot_erp_topo_tw(project, analysis_nam
                                                               set_caxis,paired_list,stat_method,...
                                                               display_only_significant_topo,display_only_significant_topo_mode,...
                                                               display_compact_topo,display_compact_topo_mode,...
-                                                              list_select_subjects,mode,show_head,do_plots,compact_display_ylim, num_tails,show_text);
+                                                              list_select_subjects,mode,show_head,do_plots,compact_display_ylim, num_tails,show_text,...
+                                                              compact_display_h0,compact_display_v0,compact_display_sem,compact_display_stats,compact_display_xlim,display_single_subjects);
       
       
     end

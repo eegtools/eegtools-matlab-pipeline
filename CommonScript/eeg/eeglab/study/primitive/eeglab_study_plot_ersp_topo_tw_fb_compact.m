@@ -484,14 +484,14 @@ for nroi = 1:length(roi_names)
             
             STUDY = pop_erspparams(STUDY, 'topotime',time_window ,'topofreq', frequency_bands_list{nband});
             
-            [s1,s2] = size(ersp_topo_tw_fb_roi_avg); 
+            [s1,s2] = size(ersp_topo_tw_fb_roi_avg);
             
             for n1 =1:s1
-            for n2 = 1:s2
-            
-                pluto = ersp_topo_tw_fb_roi_avg{n1,n2};
-            ersp_topo_tw_fb_roi_avg_tw{n1,n2}= pluto(nwin,:);
-            end
+                for n2 = 1:s2
+                    
+                    pluto = ersp_topo_tw_fb_roi_avg{n1,n2};
+                    ersp_topo_tw_fb_roi_avg_tw{n1,n2}= pluto(nwin,:);
+                end
             end
             
             [stats.anova.stats_anova, stats.anova.stats.df_anova , stats.anova.p_anova]=statcond_corr(ersp_topo_tw_fb_roi_avg_tw, num_tails,'method', stat_method, 'naccu', num_permutations);
