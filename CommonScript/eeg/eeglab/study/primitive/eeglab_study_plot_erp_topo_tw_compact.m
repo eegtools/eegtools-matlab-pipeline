@@ -349,18 +349,22 @@ for design_num=design_num_vec
             STUDY = pop_statparams(STUDY, 'groupstats','off','condstats','off');
             
             %% calculate erp in the channels corresponding to the selected roi
-            [STUDY,erp_topo_tw times freqs]=std_erpplot_corr(STUDY,ALLEEG,'channels',roi_channels,'noplot','on');
+            %             [STUDY,erp_topo_tw times freqs]=std_erpplot_corr(STUDY,ALLEEG,'channels',roi_channels,'noplot','on');
             
             
-            [s1,s2] = size(erp_topo_tw);
+            erp_topo_tw=erp_curve_roi;
             
-            for n1 =1:s1
-                for n2 = 1:s2
-                    
-                    pluto = erp_topo_tw{n1,n2};
-                    erp_topo_tw{n1,n2}= pluto(nwin,:,:);
-                end
-            end
+            
+            
+                        [s1,s2] = size(erp_topo_tw);
+            
+                        for n1 =1:s1
+                            for n2 = 1:s2
+            
+                                pluto = erp_topo_tw{n1,n2};
+                                erp_topo_tw{n1,n2}= pluto(nwin,:);
+                            end
+                        end
             
             
             for nf1=1:length(levels_f1)
@@ -371,7 +375,7 @@ for design_num=design_num_vec
                             dis('Error: the selected subjects are not represented in the selected design')
                             return;
                         end
-                        erp_topo_tw{nf1,nf2}=erp_topo_tw{nf1,nf2}(:,:,vec_select_subjects);
+                        erp_topo_tw{nf1,nf2}=erp_topo_tw{nf1,nf2}(:,vec_select_subjects);
                     end
                 end
             end
@@ -379,8 +383,7 @@ for design_num=design_num_vec
             roi_mask =ones(1,length(locs_labels));
             
             
-            erp_topo_tw_roi_avg=[];
-            erp_topo_tw_sub_avg=[];
+            
             %                        for nf1=1:length(levels_f1)
             %                             for nf2=1:length(levels_f2)
             %                                 roi_mask = ismember(locs_labels,roi_channels);
@@ -397,10 +400,12 @@ for design_num=design_num_vec
             
             roi_mask = ismember(locs_labels,roi_channels);
             
+            erp_topo_tw_roi_avg=[];
+            erp_topo_tw_sub_avg=[];
             
             for nf1=1:length(levels_f1)
                 for nf2=1:length(levels_f2)
-                    erp_topo_tw_roi_avg{nf1,nf2}=erp_curve_roi_stat.dataroi(nroi).erp_curve_roi{nf1,nf2};
+                    erp_topo_tw_roi_avg{nf1,nf2}=erp_topo_tw{nf1,nf2};
                 end
             end
             
@@ -442,7 +447,7 @@ for design_num=design_num_vec
                     stats.post_hoc.pcond_corr, stats.post_hoc.pgroup_corr, stats.post_hoc.pinter_corr,study_ls,...
                     plot_dir,display_only_significant_topo,display_only_significant_topo_mode,...
                     display_compact_topo,display_compact_topo_mode,...
-                   erp_topo_tw,...
+                    erp_topo_tw,...
                     stats.post_hoc.compcond, stats.post_hoc.compgroup,...
                     roi_name, roi_mask,show_head, compact_display_ylim,show_text...
                     );
@@ -478,7 +483,7 @@ for design_num=design_num_vec
     save([out_file_name,'.mat'],'erp_compact');
     
     if ~ ( strcmp(which_method_find_extrema,'group_noalign') || strcmp(which_method_find_extrema,'continuous') );
-        [dataexpcols, dataexp]=text_export_ersp_struct([out_file_name,'.txt'],erp_curve_roi_stat);
+        [dataexpcols, dataexp]=text_export_erp_struct([out_file_name,'.txt'],erp_curve_roi_stat);
     end
     
     
