@@ -138,8 +138,8 @@ function [STUDY, EEG] = proj_eeglab_study_plot_roi_ersp_tf(project, analysis_nam
     do_plots=project.results_display.ersp.do_plots;
      num_tails                            = project.stats.ersp.num_tails;
      display_pmode=project.results_display.ersp.display_pmode;
-
-
+stat_freq_bands_list=[];
+mask_coef=[];
 
     for par=1:2:length(varargin)
        switch varargin{par}
