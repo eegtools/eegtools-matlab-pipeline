@@ -114,9 +114,9 @@ function [STUDY, EEG] = proj_eeglab_study_plot_roi_ersp_tf(project, analysis_nam
     correction                  = project.stats.eeglab.ersp.correction;
     stat_method                 = project.stats.eeglab.ersp.method;  
     
-   stat_time_windows_list            = project.results_display.ersp.stat_time_windows_list;
+    stat_time_windows_list      = project.results_display.ersp.stat_time_windows_list;
     display_only_significant    = project.results_display.ersp.display_only_significant_tf;
-    display_only_significant_mode= project.results_display.ersp.display_only_significant_tf_mode;
+    display_only_significant_mode = project.results_display.ersp.display_only_significant_tf_mode;
     set_caxis                   = project.results_display.ersp.set_caxis_tf;  
     
     decimation_factor_times     = project.stats.ersp.decimation_factor_times_tf;
@@ -135,11 +135,11 @@ function [STUDY, EEG] = proj_eeglab_study_plot_roi_ersp_tf(project, analysis_nam
     group_time_windows_list     = arrange_structure(project.postprocess.ersp.design, 'group_time_windows');
     group_time_windows_names    = arrange_structure(project.postprocess.ersp.design, 'group_time_windows_names');
     
-    do_plots=project.results_display.ersp.do_plots;
-     num_tails                            = project.stats.ersp.num_tails;
-     display_pmode=project.results_display.ersp.display_pmode;
-stat_freq_bands_list=[];
-mask_coef=[];
+    do_plots                    = project.results_display.ersp.do_plots;
+    num_tails                   = project.stats.ersp.num_tails;
+    display_pmode               = project.results_display.ersp.display_pmode;
+    stat_freq_bands_list        = [];
+    mask_coef                   = [];
 
     for par=1:2:length(varargin)
        switch varargin{par}

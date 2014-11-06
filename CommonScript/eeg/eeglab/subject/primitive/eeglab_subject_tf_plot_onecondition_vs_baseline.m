@@ -31,7 +31,7 @@ function eeglab_subject_tf_plot_onecondition_vs_baseline(input_set, ch_label, va
             case 'pvalue'
                 opt=opt+1;
                 pvalue=varargin{opt};                  
-            case 'correction'
+            case 'correct'
                 opt=opt+1;
                 correction=varargin{opt};
             case 'baseline'
