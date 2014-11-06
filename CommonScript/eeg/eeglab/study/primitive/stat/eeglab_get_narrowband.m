@@ -43,12 +43,12 @@ end
 results.group.ersp.vec_allfreqs     = [];
 results.group.ersp.vec_band         = [];
 results.group.fb.centroid_mean      = [];
+results.group.fb.centroid_median    = [];
 results.group.ersp.mean             = [];
 results.group.ersp.median           = [];
 results.group.ersp.var              = [];
 results.group.ersp.auc_abs          = [];
 results.group.ersp.auc_rel          = [];
-results.group.fb.centroid_median    = [];
 results.group.ersp.low05quantile    = [];
 results.group.ersp.high05quantile   = [];
 
