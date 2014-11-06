@@ -1,4 +1,4 @@
-   function EEG = eeglab_subject_ica(input_file_name, output_path, eeg_ch_list, ch_ref,ica_type, varargin)
+   function EEG = eeglab_subject_ica(input_file_name, output_path, eeg_ch_list, ch_ref, ica_type, varargin)
 %    
 %    function EEG = eeglab_subject_ica(input_file_name, settings_path,  output_path, ica_type)%
 %    computes ica decompositions and saves the data with the decomposition in the same file

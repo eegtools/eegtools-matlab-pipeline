@@ -192,11 +192,6 @@ levels_f2                              = STUDY.design(design_num).variable(2).va
 plot_dir                               = fullfile(results_path, analysis_name,[STUDY.design(design_num).name,'-ersp_curve_roi_',which_method_find_extrema,'-',datestr(now,30)]);
 mkdir(plot_dir);
 
-
-
-
-
-
 %% set representation to time-frequency representation
 STUDY = pop_erspparams(STUDY, 'topotime',[] ,'plotgroups','apart' ,'plotconditions','apart','averagechan','on','method', stat_method);
 
@@ -258,91 +253,82 @@ for nroi = 1:length(roi_list)
                 subjs = length(filtered_individual_fb_bands{nf1,nf2});
                 for nsub=1:subjs
                     
-                    fmin=filtered_individual_fb_bands{nf1,nf2}{nsub}{nband}(1);
-                    fmax=filtered_individual_fb_bands{nf1,nf2}{nsub}{nband}(2);
+                    fmin = filtered_individual_fb_bands{nf1,nf2}{nsub}{nband}(1);
+                    fmax = filtered_individual_fb_bands{nf1,nf2}{nsub}{nband}(2);
                     
                     ...[nfmin, nfmax] = eeglab_get_narrowband(ersp_curve_roi_fb{nf1,nf2}(:,nsub), [fmin fmax], [tmin tmax], [dfmin dfmax]);
-                        sel_freqs = freqs >= fmin & freqs <= fmax;
+                    sel_freqs = freqs >= fmin & freqs <= fmax;
                     
                     % cla sposto qui per il narrowband
                     
-                    group_time_windows_list_design  = group_time_windows_list{design_num};
-                    group_time_windows_names_design = group_time_windows_names{design_num};
+                    group_time_windows_list_design                          = group_time_windows_list{design_num};
+                    group_time_windows_names_design                         = group_time_windows_names{design_num};
                     
-                    ersp_curve_roi_fb_stat.group_time_windows_list_design  = group_time_windows_list_design;
-                    ersp_curve_roi_fb_stat.group_time_windows_names_design = group_time_windows_list_design;
+                    ersp_curve_roi_fb_stat.group_time_windows_list_design   = group_time_windows_list_design;
+                    ersp_curve_roi_fb_stat.group_time_windows_names_design  = group_time_windows_list_design;
                     
-                    which_extrema_design_continuous            = project.postprocess.ersp.design(design_num).which_extrema_curve_continuous; ...which_extrema_ersp_curve_fb{design_num};
+                    which_extrema_design_continuous                         = project.postprocess.ersp.design(design_num).which_extrema_curve_continuous; ...which_extrema_ersp_curve_fb{design_num};
                         
-                which_extrema_design_roi_continuous        = which_extrema_design_continuous{nroi};
-                which_extrema_design_roi_band_continuous   = which_extrema_design_roi_continuous{nband};
-                
-                
-                
-                ersp_matrix_sub=ersp_roi{nf1,nf2}(:,:,nsub);
-                
-                if isempty(group_tmin)
-                    group_tmin=min(times);
-                end
-                %                 if isempty(group_fmin)
-                group_fmin=fmin;
-                %                 end
-                
-                if isempty(group_tmax)
-                    group_tmax=max(times);
-                end
-                
-                %                 if isempty(group_fmax)
-                group_fmax=fmax;
-                %                 end
-                
-                narrowband_output=[];
-                
-                if strcmp(do_narrowband,'on')
-                    group_fmin=fmin;
-                    group_fmax=fmax;
-                    
-                    % narrowband input structure
-                    narrowband_input.times                 = times;
-                    narrowband_input.freqs                 = freqs;
-                    narrowband_input.ersp_matrix_sub       = ersp_matrix_sub;
-                    narrowband_input.group_tmin            = group_tmin;
-                    narrowband_input.group_tmax            = group_tmax;
-                    narrowband_input.group_fmin            = group_fmin;
-                    narrowband_input.group_fmax            = group_fmax ;
-                    narrowband_input.group_dfmin           = group_dfmin;
-                    narrowband_input.group_dfmax           = group_dfmax;
-                    narrowband_input.which_realign_measure = which_realign_measure_cell{nband};
-                    
-                    [project, narrowband_output] = ...
-                        eeglab_get_narrowband(project,narrowband_input);
-                    
-                    
-                    %                     if ~isempty([sub_adjusted_fmin, sub_adjusted_fmax])
-                    fmin=narrowband_output.results.sub.fmin;
-                    fmax=narrowband_output.results.sub.fmax;
-                    %                     end
-                    
-                    
-                    
-                    
-                                        narrowband_output.adjusted_frequency_band{nf1,nf2}(nsub,:)=[sub_adjusted_fmin, sub_adjusted_fmax];
-                                        narrowband_output.realign_freq{nf1,nf2}(nsub)=sub_realign_freq;
-                                        narrowband_output.realign_freq_value{nf1,nf2}(nsub)=sub_realign_freq_value;
-                                        narrowband_output.realign_freq_value_lat{nf1,nf2}(nsub)=sub_realign_freq_value_lat;
-                    
-                                        narrowband_output.mean_centroid_group_fb{nf1,nf2}(nsub)=mean_centroid_group_fb;
-                                        narrowband_output.mean_centroid_sub_realign_fb{nf1,nf2}(nsub)=mean_centroid_sub_realign_fb;
-                                        narrowband_output.median_centroid_group_fb{nf1,nf2}(nsub)=median_centroid_group_fb;
-                                        narrowband_output.median_centroid_sub_realign_fb{nf1,nf2}(nsub)=median_centroid_sub_realign_fb;
-                end
-                
-                narrowband{nf1,nf2,nsub} = narrowband_output;
-                sel_freqs = freqs >= fmin & freqs <= fmax;
-                ersp_curve_roi_fb{nf1,nf2}(:,nsub)=mean(ersp_roi{nf1,nf2}(sel_freqs,:,nsub),1);
-                
-                
-                
+                    which_extrema_design_roi_continuous                     = which_extrema_design_continuous{nroi};
+                    which_extrema_design_roi_band_continuous                = which_extrema_design_roi_continuous{nband};
+
+                    ersp_matrix_sub                                         = ersp_roi{nf1,nf2}(:,:,nsub);
+
+                    if isempty(group_tmin)
+                        group_tmin = min(times);
+                    end
+                    %                 if isempty(group_fmin)
+                    group_fmin = fmin;
+                    %                 end
+
+                    if isempty(group_tmax)
+                        group_tmax = max(times);
+                    end
+
+                    %                 if isempty(group_fmax)
+                    group_fmax = fmax;
+                    %                 end
+
+                    narrowband_output = [];
+
+                    if strcmp(do_narrowband,'on')
+                        group_fmin = fmin;
+                        group_fmax = fmax;
+
+                        % narrowband input structure
+                        narrowband_input.times                  = times;
+                        narrowband_input.freqs                  = freqs;
+                        narrowband_input.ersp_matrix_sub        = ersp_matrix_sub;
+                        narrowband_input.group_tmin             = group_tmin;
+                        narrowband_input.group_tmax             = group_tmax;
+                        narrowband_input.group_fmin             = group_fmin;
+                        narrowband_input.group_fmax             = group_fmax ;
+                        narrowband_input.group_dfmin            = group_dfmin;
+                        narrowband_input.group_dfmax            = group_dfmax;
+                        narrowband_input.which_realign_measure  = which_realign_measure_cell{nband};
+
+                        [project, narrowband_output]            = eeglab_get_narrowband(project,narrowband_input);
+
+
+                        %                     if ~isempty([sub_adjusted_fmin, sub_adjusted_fmax])
+                        fmin                                    = narrowband_output.results.sub.fmin;
+                        fmax                                    = narrowband_output.results.sub.fmax;
+                        %                     end
+
+                        narrowband_output.adjusted_frequency_band{nf1,nf2}(nsub,:)      = [sub_adjusted_fmin, sub_adjusted_fmax];
+                        narrowband_output.realign_freq{nf1,nf2}(nsub)                   = sub_realign_freq;
+                        narrowband_output.realign_freq_value{nf1,nf2}(nsub)             = sub_realign_freq_value;
+                        narrowband_output.realign_freq_value_lat{nf1,nf2}(nsub)         = sub_realign_freq_value_lat;
+
+                        narrowband_output.mean_centroid_group_fb{nf1,nf2}(nsub)         = mean_centroid_group_fb;
+                        narrowband_output.mean_centroid_sub_realign_fb{nf1,nf2}(nsub)   = mean_centroid_sub_realign_fb;
+                        narrowband_output.median_centroid_group_fb{nf1,nf2}(nsub)       = median_centroid_group_fb;
+                        narrowband_output.median_centroid_sub_realign_fb{nf1,nf2}(nsub) = median_centroid_sub_realign_fb;
+                    end
+
+                    narrowband{nf1,nf2,nsub}            = narrowband_output;
+                    sel_freqs                           = freqs >= fmin & freqs <= fmax;
+                    ersp_curve_roi_fb{nf1,nf2}(:,nsub)  = mean(ersp_roi{nf1,nf2}(sel_freqs,:,nsub),1);
                 
                 end
                 
@@ -363,15 +349,15 @@ for nroi = 1:length(roi_list)
             ersp_curve_roi_fb_stat.group_time_windows_names_design = group_time_windows_list_design;
             
             which_extrema_design_tw            = project.postprocess.ersp.design(design_num).which_extrema_curve_tw; ...which_extrema_ersp_curve_fb{design_num};
-                which_extrema_design_roi_tw        = which_extrema_design_tw{nroi};
+            which_extrema_design_roi_tw        = which_extrema_design_tw{nroi};
             which_extrema_design_roi_band_tw   = which_extrema_design_roi_tw{nband};
             
             
             % check if estimated TIMES is contained within intervals of interests
-            max_times=max(times);
-            max_v=-10000;
+            max_times   = max(times);
+            max_v       = -10000;
             for nwin=1:length(group_time_windows_list_design)
-                max_v=max(max_v, group_time_windows_list_design{nwin}(2));
+                max_v = max(max_v, group_time_windows_list_design{nwin}(2));
             end
             if max_v > max_times
                 disp(['error !!: higher latency of available ERSP window' num2str(max_times) 'is less than highest latency of input windows' num2str(max_v)]);
