@@ -5,27 +5,27 @@ function eeglab_subject_tf_plot_onecondition_vs_baseline(input_set, ch_label, va
 
     [path,name_noext,ext] = fileparts(input_set);
     
-    EEG = pop_loadset('filename', {[name_noext ext] }, 'filepath', path);
+    EEG             = pop_loadset('filename', {[name_noext ext] }, 'filepath', path);
 
-    chanlist={EEG(1).chanlocs.labels};
-    chan_num=find(strcmp(ch_label,chanlist));
-    srate=EEG(1).srate;
-    pnt=EEG(1).pnts;
-    xmin=EEG(1).xmin;  ... in seconds
-    xmax=EEG(1).xmax;
-    bc_type='';
+    chanlist        = {EEG(1).chanlocs.labels};
+    chan_num        = find(strcmp(ch_label,chanlist));
+    srate           = EEG(1).srate;
+    pnt             = EEG(1).pnts;
+    xmin            = EEG(1).xmin;  ... in seconds
+    xmax            = EEG(1).xmax;
+    bc_type         = '';
 
     % default values
-    pvalue = 0.05;
-    correction='none';
-    save_fig=0;
-    fig_output_path='';
-    baseline=[xmin 0]*1000; ...i need it in milliseconds
-    freq_bands = [];
+    pvalue          = 0.05;
+    correction      = 'none';
+    save_fig        = 0;
+    fig_output_path = '';
+    baseline        = [xmin 0]*1000; ...i need it in milliseconds
+    freq_bands      = [];
+    cycles          = [3 0.5];
 
-    options_num=size(varargin,2);
-    opt=1;
-    
+    options_num     = size(varargin,2);
+    opt             = 1;
     while options_num>0
         switch varargin{opt}
             case 'pvalue'
@@ -52,6 +52,9 @@ function eeglab_subject_tf_plot_onecondition_vs_baseline(input_set, ch_label, va
             case 'bc_type'
                 opt=opt+1;
                 bc_type=varargin{opt}; 
+            case 'cycles'
+                opt=opt+1;
+                cycles=varargin{opt};               
             otherwise
                 opt=opt+1;
                 disp('input parameter not recognized');
@@ -59,11 +62,11 @@ function eeglab_subject_tf_plot_onecondition_vs_baseline(input_set, ch_label, va
         opt=opt+1;
         options_num=options_num-2;
     end
-    baseline_point=[round(abs(xmin-baseline(1)/1000)*srate) round(abs(xmin-baseline(2)/1000)*srate)];    
+    baseline_point=[round(abs(xmin-baseline(1)/1000)*srate) round(abs(xmin-baseline(2)/1000)*srate)] + 1;    
     %-------------------------------------------------------------------------------------------------------
     figure
-    title_name=[name_noext ':' ch_label];    
-    [ersp,itc,powbase,times,freqs,erspboot,itcboot,tfdata] = newtimef(EEG.data(chan_num,:,:) ,pnt, [xmin xmax]*1000, srate, [3 0.5],'alpha',pvalue,'erspmax',3,'plotitc','off','mcorrect',correction,'plotersp', 'on', 'baseline', baseline,'trialbase','full');
+    title_name=[name_noext '_in_' ch_label];    
+    [ersp,itc,powbase,times,freqs,erspboot,itcboot,tfdata] = newtimef(EEG.data(chan_num,:,:) ,pnt, [xmin xmax]*1000, srate, cycles, 'alpha',pvalue,'erspmax',3,'plotitc','off','mcorrect',correction,'plotersp', 'on', 'baseline', baseline,'trialbase','full'); ... 'timesout', 200, 
     suptitle(title_name);
     
     if save_fig
@@ -74,6 +77,18 @@ function eeglab_subject_tf_plot_onecondition_vs_baseline(input_set, ch_label, va
     end    
 
     for fb=1:length(freq_bands)
+        
+        % newtimef resampled my data vector and removed edge latencies, so I have to recompute start and end baseline_points 
+        
+        new_bs_min = max(times(1), baseline(1));
+        new_bs_max = min(times(end), baseline(2));
+        new_srate   = (1/abs(times(1)-times(2)))*1000;
+        
+        
+        baseline_point=[round(abs((times(1)-new_bs_min)/1000)*new_srate) round(abs((times(1)-new_bs_max)/1000)*new_srate)] + 1;    
+    
+        set(0, 'defaultTextInterpreter', 'none');
+    
         % plot epochs (baselined)
         sel_freqs=[freqs>freq_bands{fb}(1) & freqs<freq_bands{fb}(2)];
         data=squeeze(mean(abs(tfdata(sel_freqs,:,:)).^2,1))';  ... trial x tp %   data=squeeze(mean(tfdata(sel_freqs,:,:).*conj(tfdata(sel_freqs,:,:)),1))';
@@ -96,6 +111,14 @@ function eeglab_subject_tf_plot_onecondition_vs_baseline(input_set, ch_label, va
         figure();
         imagesc(times,[],bs_data,[-4 4]);
         title(title_name);    
+        
+        if save_fig
+            hfig=gcf();
+            output_file=fullfile(fig_output_path, [title_name '_trials' '.jpg']);
+            saveas(hfig,output_file,'jpg');
+            close(hfig);
+        end 
+    
     end
     ...clear EEG
 end    

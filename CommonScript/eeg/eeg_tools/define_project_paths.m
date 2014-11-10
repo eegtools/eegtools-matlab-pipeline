@@ -28,6 +28,8 @@
 %%
 function project = define_project_paths(project, start_toolbox)
 
+    set(0, 'DefaulttextInterpreter', 'none');
+     
     if nargin < 2
         start_toolbox = 1;
     end
