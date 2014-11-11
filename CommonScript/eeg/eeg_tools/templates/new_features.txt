@@ -1,0 +1,3 @@
+This file contains all the new features introduced in the EEG_TOOLS framework starting from 11/11/2014.
+
+11/11/2014: START OF THIS FILE
