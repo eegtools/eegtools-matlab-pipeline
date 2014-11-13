@@ -135,7 +135,9 @@ function EEG = proj_eeglab_subject_epoching(project, subj_name, varargin)
             xmax    = EEG.xmax;
         
             baseline_point  = [round(abs(xmin-baseline_corr_start/1000)*srate) round(abs(xmin-baseline_corr_end/1000)*srate)]; 
-
+            baseline_point(1) = max(baseline_point(1), 1);
+            
+            
             mbs             = mean(EEG.data(:, baseline_point(1):1:baseline_point(2),:),2); %       mbs:        channel, 1,   epochs
             baseline        = repmat(mbs,1,pnt);                                            %       baseline:   channel, pnt, epochs
             EEG.data        = EEG.data-baseline;  

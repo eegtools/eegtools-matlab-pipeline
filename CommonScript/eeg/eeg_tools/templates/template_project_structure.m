@@ -45,9 +45,9 @@ project.do_cluster_analysis=0;                      % A8:
 ...project.paths.svn_scripts_root                   % B2:   folder containing local RBCS script root-folder,  set in main
 ...project.paths.plugins_root                       % B3:   folder containing local MATLAB PLUGING root-folder, set in main
 
-...project.paths.common_scripts                     % B4:
-...project.paths.eeg_tools                          % B5:
-...project.paths.scripts                            % B6:
+...project.paths.script.common_scripts              % B4:
+...project.paths.script.eeg_tools                   % B5:
+...project.paths.script.project                     % B6:
 
 % set by define_paths_structure
 ...project.paths.global_scripts                     % B7:

@@ -12,6 +12,7 @@
 ...*    project.paths.script.eeg_tools              ... e.g. '/data/behavior_lab_svn/behaviourPlatform/CommonScript/eeg_tools'
 
 % PROJECT RELATED
+...*    project.paths.script.project
 ...*    project.research_group
 ...*    project.research_subgroup    
 ...*    project.name
@@ -23,6 +24,7 @@
 ...**   project.clustering.channels_file_name   
 ...**   project.brainstorm.channels_file_name
 
+% LEGENDA
 ...*  defined in main
 ...** defined in project structure
 %%
