@@ -150,7 +150,7 @@ end
 % analyzes and plots of ersp time frequency distribution for all time-frequency points
 if do_study_plot_roi_ersp_tf    
    project.results_display.ersp.display_only_significant_tf_mode='binary';
-   proj_eeglab_study_plot_roi_ersp_tf(project, stat_analysis_suffix, [], 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
+   proj_eeglab_study_plot_roi_ersp_tf(project, stat_analysis_suffix, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
 end
 
 
