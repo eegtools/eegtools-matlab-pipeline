@@ -39,8 +39,8 @@
 %  project.epoching.epo_st.s;
 %  project.epoching.epo_end.s;
 %  project.epoching.mrkcode_cond;
-%  project.epoching.baseline_begin_marker;
-%  project.epoching.baseline_end_marker;
+%  project.epoching.baseline_insert.baseline_begin_marker;
+%  project.epoching.baseline_insert.baseline_end_marker;
 %  project.epoching.bc_st.s;
 %  project.epoching.bc_end.s;
 %  project.epoching.baseline_insert.mode;
