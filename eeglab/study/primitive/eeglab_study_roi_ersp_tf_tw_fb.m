@@ -1,7 +1,7 @@
 function [STUDY ersp_tf times freqs pcond, pgroup, pinter] = eeglab_study_roi_ersp_tf_tw_fb(STUDY, ALLEEG,  channels_list, levels_f1, levels_f2,...
                                                                                                     time_windows_list,frequency_bands_list,...
                                                                                                     num_permutations, paired,stat_method,...
-                                                                                                    list_select_subjects,list_design_subjects,ersp_mode)
+                                                                                                    list_select_subjects,list_design_subjects,ersp_mode,num_tails)
                                                                                           
 % function [ersp times freqs pcond, pgroup, pinter] = eeglab_study_roi_tf_grouptf(STUDY, ALLEEG, channels_list, levels_f1, levels_f2,num_grouped_times,num_grouped_freqs,correction,study_ls,num_permutations)
 % calculate ersp in the channels corresponding to the selected roi grouping times (obtaineing a time-frequency representation with a lowered time resolution) and perform statistics	
@@ -69,7 +69,7 @@ STUDY = pop_statparams(STUDY, 'groupstats','off','condstats','off');
     times=1:final_times_mat;
     freqs=1:final_freqs_mat;
    
-    [pcond, pgroup, pinter, statscond, statsgroup, statsinter] = std_stat_corr(ersp_tf,'groupstats','on','condstats','on','mcorrect','none','threshold',NaN,...
+    [pcond, pgroup, pinter, statscond, statsgroup, statsinter] = std_stat_corr(ersp_tf,num_tails,'groupstats','on','condstats','on','mcorrect','none','threshold',NaN,...
                                                                                'naccu',num_permutations,'method', stat_method,'paired',paired);          
     for ind = 1:length(pcond),  pcond{ind}  =  abs(pcond{ind}) ; end;
     for ind = 1:length(pgroup),  pgroup{ind}  =  abs(pgroup{ind}) ; end;
