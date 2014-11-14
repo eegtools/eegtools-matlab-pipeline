@@ -1,3 +1,9 @@
+disp('amico carooooo, define_paths_structure è obsoleto, fatti un aggiornamento tutto tuo !!');
+disp('usa invece : project = define_project_paths(project); ...che poi lo rivendi a claudio e fai la crana'):
+
+error('....');
+return;
+
 %% AIMS:
 % define and create global and project PATHS 
 %
