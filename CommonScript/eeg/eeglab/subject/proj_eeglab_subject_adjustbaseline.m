@@ -69,6 +69,6 @@ if strcmp(mode, 'trial')
 end
 
 if strcmp(mode, 'external')
-    OUTEEG =  proj_eeglab_subject_adjustbaseline_external(EEG, project);
+    OUTEEG =  proj_eeglab_subject_adjustbaseline_external(EEG, project, subj_name);
 end
 
