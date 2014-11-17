@@ -286,7 +286,11 @@ end
 % 'baseline_file_interval_ms' is MANDATORY non-empty (i.e. must be
 % specified)
 
-
+if isfield(project, 'subjects')
+    if isfield(project.subjects, 'data')
+        project.subjects = rmfield(project.subjects, 'data');
+    end
+end
 
 project.subjects.data(1)  = struct('name', 'CC_01_vittoria', 'group', 'CC', 'age', 13, 'gender', 'f', 'handedness', 'r', 'bad_ch', [],'baseline_file',[],'baseline_file_interval_ms',[]);
 project.subjects.data(2)  = struct('name', 'CC_02_fabio',    'group', 'CC', 'age', 12, 'gender', 'm', 'handedness', 'r', 'bad_ch', [],'baseline_file',[],'baseline_file_interval_ms',[]);
@@ -333,6 +337,12 @@ project.subjects.groups             = {{'CC_01_vittoria', 'CC_02_fabio','CC_03_a
 project.study.filename                          = [project.name project.study_suffix '.study'];
 
 % structures that associates conditions' file with (multiple) factor(s)
+if isfield(project, 'study')
+    if isfield(project.study, 'factors')
+        project.study = rmfield(project.study, 'factors');
+    end
+end
+
 project.study.factors(1)                        = struct('factor', 'motion', 'file_match', [], 'level', 'translating');
 project.study.factors(2)                        = struct('factor', 'motion', 'file_match', [], 'level', 'centered');
 project.study.factors(3)                        = struct('factor', 'shape' , 'file_match', [], 'level', 'walker');
@@ -372,6 +382,10 @@ project.study.precompute.ersp                   = {'interp','off' ,'allcomps','o
 %% ======================================================================================================
 % L:    DESIGN
 % ======================================================================================================
+if isfield(project, 'design')
+    project = rmfield(project, 'design');
+end
+
 project.design(2)                   = struct('name',  'ao_control_ungrouped'   , 'factor1_name', 'condition', 'factor1_levels', [] , 'factor1_pairing', 'on', 'factor2_name', ''       , 'factor2_levels', [], 'factor2_pairing', 'off');
 project.design(3)                   = struct('name',  'aocs_control_ungrouped' , 'factor1_name', 'condition', 'factor1_levels', [] , 'factor1_pairing', 'on', 'factor2_name', ''       , 'factor2_levels', [], 'factor2_pairing', 'off');
 project.design(4)                   = struct('name',  'aocs_ao_ungrouped'      , 'factor1_name', 'condition', 'factor1_levels', [] , 'factor1_pairing', 'on', 'factor2_name', ''       , 'factor2_levels', [], 'factor2_pairing', 'off');
@@ -480,6 +494,14 @@ project.postprocess.erp.roi_list = {  ...
 project.postprocess.erp.roi_names={'left-ifg','right-ifg','left-PMd','right-PMd','left-SM1','right-SM1','SMA'}; ...,'left-ipl','right-ipl','left-spl','right-spl','left-sts','right-sts','left-occipital','right-occipital'};
 project.postprocess.erp.numroi=length(project.postprocess.erp.roi_list);
 
+if isfield(project, 'postprocess')
+    if isfield(project.postprocess, 'erp')
+        if isfield(project.postprocess.erp, 'design')
+            project.postprocess.erp = rmfield(project.postprocess.erp, 'design');
+        end
+    end
+end
+
 
 project.postprocess.erp.design(1).group_time_windows(1)     = struct('name','350-650','min',350, 'max',650);
 project.postprocess.erp.design(1).group_time_windows(2)     = struct('name','750-1500','min',750, 'max',1500);
@@ -540,6 +562,13 @@ project.postprocess.ersp.roi_list = { ...
 project.postprocess.ersp.roi_names                              = {'contralateral-SM1','ipsilateral-SM1','SMA','ipsilateral-PMd','contralateral-PMd','ipsilateral-ifg','contralateral-ifg'}; ... ,'left-ipl','right-ipl','left-spl','right-spl','left-sts','right-sts','left-occipital','right-occipital'};
 project.postprocess.ersp.numroi                                 = length(project.postprocess.ersp.roi_list);
 
+if isfield(project, 'postprocess')
+    if isfield(project.postprocess, 'ersp')
+        if isfield(project.postprocess.ersp, 'design')
+            project.postprocess.ersp = rmfield(project.postprocess.ersp, 'design');
+        end
+    end
+end
 
 project.postprocess.ersp.design(1).group_time_windows(1)        = struct('name','350-650','min',350, 'max',650);
 project.postprocess.ersp.design(1).group_time_windows(2)        = struct('name','750-1500','min',750, 'max',1500);
@@ -851,6 +880,14 @@ project.postprocess.ersp.design(1).which_extrema_curve_tw = {     .... design x 
 
 for ds=2:length(project.design)
     project.postprocess.ersp.design(ds) = project.postprocess.ersp.design(1);
+end
+
+if isfield(project, 'postprocess')
+    if isfield(project.postprocess, 'ersp')
+        if isfield(project.postprocess.ersp, 'frequency_bands')
+            project.postprocess.ersp = rmfield(project.postprocess.ersp, 'frequency_bands');
+        end
+    end
 end
 
 project.postprocess.ersp.frequency_bands(1)         = struct('name','teta','min',3,'max',5);
