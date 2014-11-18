@@ -1,6 +1,6 @@
 %% function OUTEEG =  proj_eeglab_subject_adjustbaseline_external(EEG, project, subj_name)
 %
-% adjust baseline by inserting before / after target events in each trial baseline segments taken outside the same trial and originally placed before / after the target events  
+% adjust baseline by inserting before / after target events in each trial baseline segments taken outside the same trial and originally placed before / after the target events
 %
 % project is a structure with the fields:
 %
@@ -25,7 +25,7 @@ function OUTEEG =  proj_eeglab_subject_adjustbaseline_external(EEG, project, sub
 OUTEEG = EEG;
 
 subj_list                      = {project.subjects.data.name};
-subj_index                     = ismember(subj_list, subj_name); 
+subj_index                     = ismember(subj_list, subj_name);
 baseline_file                  = project.subjects(subj_index).data.baseline_file;
 baseline_file_interval_ms      = project.subjects(subj_index).data.baseline_file_interval_ms';
 baseline_file                  = project.subjects(subj_index).data.baseline_file;
@@ -33,7 +33,7 @@ baseline_file                  = project.subjects(subj_index).data.baseline_file
 data_path = EEG.filepath;
 
 if isempty(baseline_file)
-   
+    
     EEG_baseline =OUTEEG;
 else
     
@@ -43,7 +43,8 @@ end
 % total number of events in the dataset
 tot_eve = length(EEG.event);
 
-% for each event of each trial, insert a baseline taken from the trial itself
+% for each event of each trial, insert a baseline taken from a pool in the
+% same/in another file
 
 % find markers of begin trial followed by another begin trial (to
 % delimit each trial)
@@ -120,133 +121,37 @@ for neve = 1:tot_eve
 end
 
 
-% for each type of target event
-% for nevetype = 1:length(project.import.valid_marker)
-%     
-%     % select the corresponding type (label)
-%     mark_cond_label = project.import.valid_marker{nevetype};
-%     
-%     % for each of all events
-% %     for neve = 1:length(EEG.event)
-% %         EEG.event(neve).trial_with_selected_target =  false;
-%         
-%         % find the selected target events 
-%         
-% %         % if the baseline segments were originally before the target events
-% %         if strcmp(project.epoching.baseline_insert.baseline_originalposition, 'before')   
-% %             
-% %             % find target events precededed by baseline segments
-% %             [target_index,urnbrs,urnbrtypes,duration,tflds,urnflds] = eeg_context(EEG,...
-% %                 mark_cond_label,...
-% %                 project.epoching.baseline_insert.baseline_begin_marker,...
-% %                 -1);
-% %             
-% %             %find baseline segments followed by target events
-% %             [baseline_begin_index,urnbrs,urnbrtypes,duration,tflds,urnflds] = eeg_context(EEG,...
-% %                 project.epoching.baseline_insert.baseline_begin_marker,...
-% %                 mark_cond_label,...
-% %                 1);
-% % 
-% %             % calculate baseline duration for each baseline segment (in
-% %             % principle it could vary)
-% %             [baseline_begin_index,urnbrs,urnbrtypes,all_baseline_duration,tflds,urnflds] = eeg_context(EEG,...
-% %                 project.epoching.baseline_insert.baseline_begin_marker,...
-% %                 project.epoching.baseline_insert.baseline_end_marker,...
-% %                 1);
-% %            
-% %         
-% %         end
-% %         
-% %         % if the baseline segments were originally after the target events
-% %         if strcmp(project.epoching.baseline_insert.baseline_originalposition, 'after')   
-% %             
-% %             % find target events follwed by baseline segments
-% %             [target_index,urnbrs,urnbrtypes,trial_duration,tflds,urnflds] = eeg_context(EEG,...
-% %                 mark_cond_label,...
-% %                 project.epoching.baseline_insert.baseline_begin_marker,...
-% %                 1);
-% %             
-% %             %find baseline segments preceded by target events
-% %             [baseline_begin_index,urnbrs,urnbrtypes,trial_duration,tflds,urnflds] = eeg_context(EEG,...
-% %                 project.epoching.baseline_insert.baseline_begin_marker,...
-% %                 mark_cond_label,...
-% %                 -1);
-% %         end
-%     
-%     end
-        
-    % select and epoch the events 1) within trials without boundaries AND 2) of the selected target type
-    sel_target2epoch = intersect (event_in_trial_without_boundary,target_index);
+% select and epoch the events 1) within trials without boundaries AND 2) of the selected target type
+sel_target2epoch = find(event_in_trial_without_boundary);
+
+% during epoching there is the possibility to selecto events BOTH by
+% type AND by index
+[EEG_target, indices] = pop_epoch( EEG, {mark_cond_label}, ...
+    [project.epoching.epo_st.s project.epoching.epo_end.s],...
+    'eventindices',sel_target2epoch);
+
+
+[EEG_baseline, indices] = pop_epoch( EEG_baseline, {project.epoching.baseline_insert.baseline_begin_marker}, ...
+    [0         project.epoching.baseline_duration.s]);...
     
-    % during epoching there is the possibility to selecto events BOTH by
-    % type AND by index
-    [EEG_target, indices] = pop_epoch( EEG, {mark_cond_label}, ...
-        [project.epoching.epo_st.s project.epoching.epo_end.s],...
-        'eventindices',sel_target2epoch);
-    
-%     % select and epoch the events 1) within trials without boundaries AND 2) of the selected baseline start type
-%     sel_baseline_begin2epoch = intersect (event_in_trial_without_boundary,baseline_begin_index);
-    
-    % select only tha baseline durations of the selected segments (paired
-    % with the selected target events)
-%     baseline_duration = all_baseline_duration(sel_baseline_begin2epoch);
-    
-    
-    [EEG_baseline, indices] = pop_epoch( EEG_baseline, {project.epoching.baseline_insert.baseline_begin_marker}, ...
-        [0         project.epoching.baseline_duration.s],...
-        'eventindices',sel_baseline_begin2epoch);
-        
-    % important: baseline segments could have a different duration for each trial (e.g. if thwy are manually defined)
-    % moreover, some baseline segments could be shorter than the required
-    % duration
-    
-    % therefore:
-    %   1) baseline segments longer than the requested duration are cutted (no problem, already done and ok)
-    %   2) baseline segments shorter than the requested duration must be
-    %      interpolated to reach the requred duraion
-    % actually in EEG_base epochs have the requested baseline duration, but in the case of 2), part of the epochs must be overwritten with baseline points
-    
-%     for ntrial = 1:EEG_baseline.trial
-%         
-%         baseline_duration_trial = baseline_duration(ntrial);
-%         
-%         if baseline_duration_trial < project.epoching.baseline_duration.s
-%             times2rep_trial = EEG_baseline.times <= baseline_duration_trial;
-%             
-%             % replicate the real baseline
-%             nrep         = ceil(project.epoching.baseline_duration.s / baseline_duration_trial);
-%             segment2rep  = EEG_baseline.data(times2rep_trial,:,ntrial);
-%             rep_baseline = rep(segment2rep,1,nrep);
-%             
-%             % remove exceding points
-%             cut_vec                = length(rep_baseline) <= EEG_baseline.times;
-%             cut_baseline           = rep_baseline(cut_vec);
-%             
-%             % replace the baseline of the trial with the interpolated version
-%             EEG_baseline(:,:,ntrial)   = cut_baseline;
-%         end
-%     end
-    
-    % if the new baseline must be added before the target events
-    if strcmp (project.epoching.baseline_insert.baseline_position, 'before')
-        sel_replace_baseline = EEG_target.times < 0;
-    end
-    
-    % if the new baseline must be added after the target events
-    if strcmp (project.epoching.baseline_insert.baseline_position, 'after')
-        sel_replace_baseline = EEG_target.times > 0;
-    end
-    
-    for ntrial = 1: EEG.trials
-        EEG_target(sel_replace_baseline,:,ntrial) = EEG_baseline(:,:,ntrial);
-    end
-    
-    EEG_evetype = EEG_target;
-    
-    ALLEEG2(nevetype) = EEG_evetype;
+
+% if the new baseline must be added before the target events
+if strcmp (project.epoching.baseline_insert.baseline_position, 'before')
+    sel_replace_baseline = EEG_target.times < 0;
 end
 
-OUTEEG = pop_mergeset( ALLEEG2, 1:length(ALLEEG2), 0 );
-OUTEEG = eeg_checkset(OUTEEG);
+% if the new baseline must be added after the target events
+if strcmp (project.epoching.baseline_insert.baseline_position, 'after')
+    sel_replace_baseline = EEG_target.times > 0;
+end
+
+for ntrial = 1: EEG_target.trials
+    EEG_target(sel_replace_baseline,:,ntrial) = EEG_baseline(:,:,ntrial);
+end
+
+OUTEEG = EEG_target;
+
+
+
 
 end
