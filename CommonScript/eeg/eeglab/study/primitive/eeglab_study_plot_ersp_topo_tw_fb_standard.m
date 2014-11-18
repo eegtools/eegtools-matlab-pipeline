@@ -41,7 +41,7 @@ function [STUDY, EEG] = eeglab_study_plot_ersp_topo_tw_fb_standard(study_path, d
                                                                   set_caxis,paired_list,stat_method,...
                                                                   display_only_significant_topo,display_only_significant_topo_mode,...
                                                                   display_compact_topo,display_compact_topo_mode,...
-                                                                  list_select_subjects,ersp_measure, subjects_data,do_plots)
+                                                                  list_select_subjects,ersp_measure, subjects_data,do_plots,num_tails)
     if nargin < 1
        help eeglab_study_plot_ersp_topo_tw_fb_standard;
        return;
@@ -156,7 +156,7 @@ function [STUDY, EEG] = eeglab_study_plot_ersp_topo_tw_fb_standard(study_path, d
                 
                 
                 % calculate statistics
-                [pcond, pgroup, pinter, statscond, statsgroup, statsinter] = std_stat_corr(ersp_topo_tw_fb,'groupstats','on','condstats','on','mcorrect','none','threshold',NaN,...
+                [pcond, pgroup, pinter, statscond, statsgroup, statsinter] = std_stat_corr(ersp_topo_tw_fb,num_tails,'groupstats','on','condstats','on','mcorrect','none','threshold',NaN,...
                     'naccu',num_permutations,'method', stat_method,'paired',paired_list{design_num});
                 for ind = 1:length(pcond),  pcond{ind}  =  abs(pcond{ind}) ; end;
                 for ind = 1:length(pgroup),  pgroup{ind}  =  abs(pgroup{ind}) ; end;
@@ -181,7 +181,7 @@ function [STUDY, EEG] = eeglab_study_plot_ersp_topo_tw_fb_standard(study_path, d
                 
                 
                 ersp_topo_stat.datatw(nwin).databand(nband).time_window_name=time_window_name;
-                ersp_topo_stat.datatw(nwin).databand(nband).time_window=group_time_windows_list{nwin};
+                ersp_topo_stat.datatw(nwin).databand(nband).time_window=time_window;
                 
                 ersp_topo_stat.datatw(nwin).databand(nband).frequency_band_name=frequency_band_name;
                 ersp_topo_stat.datatw(nwin).databand(nband).frequency_band=frequency_bands_list{nband};

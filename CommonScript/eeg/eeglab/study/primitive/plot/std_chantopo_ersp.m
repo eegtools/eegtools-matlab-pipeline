@@ -376,7 +376,7 @@ end;
 
 
 name_embed=fullfile(plot_dir,'esrp_topo'); 
-name_plot=[name_embed,'_',char(roi_name),'_',time_window_name,'_',char(frequency_band_name)];
+name_plot=[name_embed,'_',time_window_name,'_',char(frequency_band_name)];
 set(fig, 'renderer', 'painter');set(gcf, 'Visible', 'off')
 modify_plot(fig);set(gcf, 'Visible', 'off')
 saveas(fig, [name_plot,'.fig']);
