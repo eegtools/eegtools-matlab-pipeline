@@ -14,26 +14,27 @@ function OUTEEG = proj_eeglab_subject_markbaseline(project, subj_name, varargin)
 % t_fine] potrebbe essere lasciato come facoltativo anche per i file di
 % base esterni.
 
-
-OUTEEG = EEG;
-
 switch project.epoching.baseline_insert.mode
     
     case 'none'
         return
         
     case 'trial'
-        baseline_file           = fullfile(project.paths.input_epochs, [project.import.original_data_prefix subj_name project.import.original_data_suffix project.import.output_suffix '.set']);
-        EEG                     = pop_loadset(baseline_file);
-        OUTEEG =  proj_eeglab_subject_markbaseline_trial(EEG, project);
+        baseline_file              = fullfile(project.paths.input_epochs, [project.import.original_data_prefix subj_name project.import.original_data_suffix project.import.output_suffix '.set']);
+        EEG                        = pop_loadset(baseline_file);
+        OUTEEG                     = proj_eeglab_subject_markbaseline_trial(EEG, project);
         
     case 'external'        
-        baseline_file           = project.subjects(subj_index).data.baseline_file;
+        subj_list                  = {project.subjects.data.name};
+        subj_index                 = ismember(subj_list, subj_name);
+        target_events_file         = fullfile(project.paths.input_epochs, [project.import.original_data_prefix subj_name project.import.original_data_suffix project.import.output_suffix '.set']);
+        baseline_file              = project.subjects(subj_index).data.baseline_file;
         
         if isempty(project.subjects(subj_index).data.baseline_file)
-            baseline_file       = fullfile(project.paths.input_epochs, [project.import.original_data_prefix subj_name project.import.original_data_suffix project.import.output_suffix '.set']);
-            EEG                 = pop_loadset(baseline_file);
+            baseline_file          = fullfile(project.paths.input_epochs, [project.import.original_data_prefix subj_name project.import.original_data_suffix project.import.output_suffix '.set']);
         end
         
-        OUTEEG                  = proj_eeglab_subject_markbaseline_external(EEG, project, subj_name);
+        EEG_target                 = pop_loadset(target_events_file);
+        EEG_baseline               = pop_loadset(baseline_file);        
+        OUTEEG                     = proj_eeglab_subject_markbaseline_external(EEG_target,EEG_baseline, project, subj_name);
 end
