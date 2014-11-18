@@ -28,7 +28,7 @@ subj_list                      = {project.subjects.data.name};
 subj_index                     = ismember(subj_list, subj_name);
 baseline_file                  = project.subjects(subj_index).data.baseline_file;
 baseline_file_interval_ms      = project.subjects(subj_index).data.baseline_file_interval_ms';
-baseline_file                  = project.subjects(subj_index).data.baseline_file;
+
 
 data_path = EEG.filepath;
 
@@ -37,7 +37,7 @@ if isempty(baseline_file)
     EEG_baseline =OUTEEG;
 else
     
-    EEG_baseline = pop_loadset(fullfile(EEG.filepath,baseline_file));
+    EEG_baseline = pop_loadset(EEG.filepath,baseline_file);
 end
 
 % total number of events in the dataset
