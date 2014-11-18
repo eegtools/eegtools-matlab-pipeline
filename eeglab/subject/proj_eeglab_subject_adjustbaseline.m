@@ -30,10 +30,10 @@
 %% function OUTEEG = proj_eeglab_subject_adjustbaseline(EEG, project, subj_name,varargin)
 % adjust baseline by inserting before / after target events in each trial baseline segments.
 %
-% in the 'none' mode no baseline adjustement occurs  
+% in the 'none' mode no baseline adjustement occurs
 %
-% in the 'trial' mode baseline segments are taken within the same trial and were originally placed before / after the target events  
-% 
+% in the 'trial' mode baseline segments are taken within the same trial and were originally placed before / after the target events
+%
 % and project is a structure with the fields:
 %
 %  project.epoching.epo_st.s;
@@ -57,18 +57,15 @@
 
 function OUTEEG = proj_eeglab_subject_adjustbaseline(EEG, project, subj_name,varargin)
 
-if strcmp(project.epoching.baseline_insert.mode, 'none')
-    return
-end
+switch project.epoching.baseline_insert.mode
+    case 'none'
+        return
+        
+    case 'trial'        
+        OUTEEG =  proj_eeglab_subject_adjustbaseline_trial(EEG, project);
+        
+    case 'external'
+        OUTEEG =  proj_eeglab_subject_adjustbaseline_external(EEG, project, subj_name);
 
-
-if strcmp(project.epoching.baseline_insert.mode, 'trial')
-    
-    OUTEEG =  proj_eeglab_subject_adjustbaseline_trial(EEG, project);
-    
-end
-
-if strcmp(project.epoching.baseline_insert.mode, 'external')
-    OUTEEG =  proj_eeglab_subject_adjustbaseline_external(EEG, project, subj_name);
 end
 
