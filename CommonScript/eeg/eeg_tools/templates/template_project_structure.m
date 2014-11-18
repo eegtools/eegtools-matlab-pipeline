@@ -209,31 +209,31 @@ project.preproc.insert_begin_trial.time_shift                 =   [];           
 % output file name = [original_data_prefix subj_name original_data_suffix project.import.output_suffix epoching.input_suffix '_' CONDXX. set]
 
 project.epoching.baseline_insert.mode                       = 'trial';                      % insert a baseline before/after events to  be epoched and processed: 
-                                                                                            %  * 'trial'    use a baseline within each trial
-                                                                                            %  * 'external' use a baseline obtained from a period of global baseline, not within the trials, 
-                                                                                            %     extracted from the current recording or from another file
-                                                                                            %  * 'none'do not add a baseline (standard simple case)    
+                                                                                                %  * 'trial'    use a baseline within each trial
+                                                                                                %  * 'external' use a baseline obtained from a period of global baseline, not within the trials, 
+                                                                                                %     extracted from the current recording or from another file
+                                                                                                %  * 'none'do not add a baseline (standard simple case)    
 
 
 project.epoching.baseline_insert.baseline_originalposition  = 'before';                     % when insert the new baseline: the baseline segments to be inserted are originally 'before' or 'after' the events to  be epoched and processed                                                                                                                                                                             
 project.epoching.baseline_insert.baseline_finalposition     = 'before';                     % when insert the new baseline: the baseline segments are inserted 'before' or 'after' the events to  be epoched and processed                                                                                 
 
-project.epoching.baseline_insert.trial_begin_marker                  ='T1';
-project.epoching.baseline_insert.trial_end_marker           ='T2';
+project.epoching.baseline_insert.trial_begin_marker         = 'trial_begin_marker1';
+project.epoching.baseline_insert.trial_end_marker           = 'trial_begin_marker2';
 
-project.epoching.baseline_insert.baseline_begin_marker      ='B1';
-project.epoching.baseline_insert.baseline_end_marker        ='B2';
+project.epoching.baseline_insert.baseline_begin_marker      = 'baseline_begin_marker';
+project.epoching.baseline_insert.baseline_end_marker        = 'baseline_end_marker';
 
-project.epoching.baseline_mark.baseline_begin_target_marker            =  ''                % a target event for placing the baseline markers: baseline begin marker will be placed at the target marker with a selected delay.
-project.epoching.baseline_mark.baseline_begin_target_marker_delay.s   =                  % the delay between the target marker and the begin baseline marker to be placed: 
-                                                                                         % >0 means that baseline begin FOLLOWS the target, 
-                                                                                         % =0 means that baseline begin IS AT THE SAME TIME the target, 
-                                                                                         % <0 means that baseline begin ANTICIPATES the target.
-                                                                                         % IMPOTANT NOTE: The latency information is displayed in seconds for continuous data, 
-                                                                                         % or in milliseconds relative to the epoch's time-locking event for epoched data. 
-                                                                                         % As we will see in the event scripting section, 
-                                                                                         % the latency information is stored internally in data samples (points or EEGLAB 'pnts') 
-                                                                                         % relative to the beginning of the continuous data matrix (EEG.data). 
+project.epoching.baseline_mark.baseline_begin_target_marker            =  {'target_baseline1','target_baseline2'};    % a target event for placing the baseline markers: baseline begin marker will be placed at the target marker with a selected delay.
+project.epoching.baseline_mark.baseline_begin_target_marker_delay.s   =   -0.1;                                       % the delay (in seconds) between the target marker and the begin baseline marker to be placed: 
+                                                                                                                        % >0 means that baseline begin FOLLOWS the target, 
+                                                                                                                        % =0 means that baseline begin IS AT THE SAME TIME the target, 
+                                                                                                                        % <0 means that baseline begin ANTICIPATES the target.
+                                                                                                                        % IMPOTANT NOTE: The latency information is displayed in seconds for continuous data, 
+                                                                                                                        % or in milliseconds relative to the epoch's time-locking event for epoched data. 
+                                                                                                                        % As we will see in the event scripting section, 
+                                                                                                                        % the latency information is stored internally in data samples (points or EEGLAB 'pnts') 
+                                                                                                                        % relative to the beginning of the continuous data matrix (EEG.data). 
 
 
 % EEG
