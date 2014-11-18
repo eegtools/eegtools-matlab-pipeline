@@ -197,11 +197,18 @@ project.preproc.rt.allowed_tw_ms.max    = [];               % F14:
 project.preproc.rt.output_folder        = [];               % F15:
 
 % INSERT BEGIN TRIAL MARKERS
-project.preproc.insert_begin_trial.target_event_types         =   {'targe1','target2'};         % string or cell array of strings denoting the type(s) (i.e. labels) of the target events used to set the the begin trial markers 
-project.preproc.insert_begin_trial.begin_trial_marker_type    =   {'begin_trial_marker_type'};  % string denoting the type (i.e. label) of the new begin trial marker, if empty ([]) begin_trial_marker_type = 'Begin_trial'
-project.preproc.insert_begin_trial.time_shift                 =   [];                           % time shift (in ms) to anticipate (negative values ) or posticipate (positive values) the new begin trial markers
+project.preproc.insert_begin_trial.target_event_types         =   {'target1','target2'};        % string or cell array of strings denoting the type(s) (i.e. labels) of the target events used to set the the begin trial markers 
+project.preproc.insert_begin_trial.begin_trial_marker_type    =   {'begin_trial_marker_type'};  % string denoting the type (i.e. label) of the new begin trial marker, if empty ([]) begin_trial_marker_type = 'begin_trial'
+project.preproc.insert_begin_trial.delay.s                    =   [];                           % time shift (in ms) to anticipate (negative values ) or posticipate (positive values) the new begin trial markers
                                                                                                 %      with respect to the target events, if empty ([]) time shift = 0
 
+% INSERT END TRIAL MARKERS
+project.preproc.insert_end_trial.target_event_types         =     {'target1','target2'};        % string or cell array of strings denoting the type(s) (i.e. labels) of the target events used to set the the end trial markers 
+project.preproc.insert_end_trial.begin_trial_marker_type    =     {'end_trial_marker_type'};    % string denoting the type (i.e. label) of the new end trial marker, if empty ([]) end_trial_marker_type = 'end_trial'
+project.preproc.insert_end_trial.delay.s                    =     [];                           % time shift (in ms) to anticipate (negative values ) or posticipate (positive values) the new end trial markers
+                                                                                                %      with respect to the target events, if empty ([]) time shift = 0
+                                                                                                
+                                                                                                
 %% ======================================================================================================
 % G:    EPOCHING
 % =======================================================================================================
