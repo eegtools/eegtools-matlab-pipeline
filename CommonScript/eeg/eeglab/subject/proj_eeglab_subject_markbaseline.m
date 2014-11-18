@@ -1,4 +1,4 @@
-function EEG = proj_eeglab_subject_markbaseline(project, subj_name, varargin)
+function OUTEEG = proj_eeglab_subject_markbaseline(project, subj_name, varargin)
 
 %      per la base in modalità external bisognerà, per ogni soggetto, poter
 %      selezionare il file da cui prendere la baseline (default, stesso
@@ -14,4 +14,20 @@ function EEG = proj_eeglab_subject_markbaseline(project, subj_name, varargin)
 % t_fine] potrebbe essere lasciato come facoltativo anche per i file di
 % base esterni.
 
+
+OUTEEG = EEG;
+
+if strcmp(project.epoching.baseline_insert.mode, 'none')
+    return
+end
+
+
+if strcmp(project.epoching.baseline_insert.mode, 'trial')
+    
+    OUTEEG =  proj_eeglab_subject_markbaseline_trial(EEG, project);
+    
+end
+
+if strcmp(project.epoching.baseline_insert.mode, 'external')
+    OUTEEG =  proj_eeglab_subject_markbaseline_external(EEG, project, subj_name);
 end

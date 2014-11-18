@@ -1,4 +1,4 @@
-%% function OUTEEG =  proj_eeglab_subject_adjustbaseline_trial(EEG, project)
+%% function OUTEEG =  proj_eeglab_subject_adjustbaseline_trial(EEG, project,varargin)
 %
 % adjust baseline by inserting before / after target events in each trial baseline segments taken within the same trial and originally placed before / after the target events
 %
@@ -18,7 +18,7 @@
 %
 % NOTE: trials with boundary events are discharged from epoching
 %
-function OUTEEG =  proj_eeglab_subject_adjustbaseline_trial(EEG, project)
+function OUTEEG =  proj_eeglab_subject_adjustbaseline_trial(EEG, project,varargin)
 
 % total number of events in the dataset
 tot_eve = length(EEG.event);

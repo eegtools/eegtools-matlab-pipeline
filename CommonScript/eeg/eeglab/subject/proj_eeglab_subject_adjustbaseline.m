@@ -27,7 +27,7 @@
 % removed. If not, proplem occur when aliging newly inserted baselines and target events.
 % ########################################################################
 
-%% function OUTEEG = proj_eeglab_subject_adjustbaseline(EEG, project, subj_name)
+%% function OUTEEG = proj_eeglab_subject_adjustbaseline(EEG, project, subj_name,varargin)
 % adjust baseline by inserting before / after target events in each trial baseline segments.
 %
 % in the 'none' mode no baseline adjustement occurs  
@@ -55,20 +55,20 @@
 % NOTE: trials with boundary events are discharged from epoching
 
 
-function OUTEEG = proj_eeglab_subject_adjustbaseline(EEG, project)
+function OUTEEG = proj_eeglab_subject_adjustbaseline(EEG, project, subj_name,varargin)
 
-if strcmp(mode, 'none')
+if strcmp(project.epoching.baseline_insert.mode, 'none')
     return
 end
 
 
-if strcmp(mode, 'trial')
+if strcmp(project.epoching.baseline_insert.mode, 'trial')
     
     OUTEEG =  proj_eeglab_subject_adjustbaseline_trial(EEG, project);
     
 end
 
-if strcmp(mode, 'external')
+if strcmp(project.epoching.baseline_insert.mode, 'external')
     OUTEEG =  proj_eeglab_subject_adjustbaseline_external(EEG, project, subj_name);
 end
 
