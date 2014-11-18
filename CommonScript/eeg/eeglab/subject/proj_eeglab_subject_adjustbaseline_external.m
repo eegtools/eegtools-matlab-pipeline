@@ -27,7 +27,7 @@ OUTEEG = EEG;
 subj_list                      = {project.subjects.data.name};
 subj_index                     = ismember(subj_list, subj_name);
 baseline_file                  = project.subjects(subj_index).data.baseline_file;
-baseline_file_interval_ms      = project.subjects(subj_index).data.baseline_file_interval_ms';
+
 
 
 data_path = EEG.filepath;
