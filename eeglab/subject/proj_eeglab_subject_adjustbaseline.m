@@ -27,7 +27,7 @@
 % removed. If not, proplem occur when aliging newly inserted baselines and target events.
 % ########################################################################
 
-%% function OUTEEG = proj_eeglab_subject_adjustbaseline(EEG, project, subj_name,varargin)
+%% function OUTEEG = proj_eeglab_subject_adjustbaseline(project, subj_name,varargin)
 % adjust baseline by inserting before / after target events in each trial baseline segments.
 %
 % in the 'none' mode no baseline adjustement occurs
@@ -55,17 +55,34 @@
 % NOTE: trials with boundary events are discharged from epoching
 
 
-function OUTEEG = proj_eeglab_subject_adjustbaseline(EEG, project, subj_name,varargin)
+
+
+function OUTEEG = proj_eeglab_subject_adjustbaseline(project, subj_name,varargin)
+
+eeg_output_path         = project.paths.output_epochs;
+eeg_input_path          = project.paths.input_epochs;
+input_file_suffix       = project.epoching.input_suffix;
+output_file_suffix      = project.epoching.input_suffix;
+
+input_file_name  = fullfile(eeg_input_path,  [project.import.original_data_prefix subj_name project.import.original_data_suffix project.import.output_suffix input_file_suffix '.set']);
+output_file_name = fullfile(eeg_output_path, [project.import.original_data_prefix subj_name project.import.original_data_suffix project.import.output_suffix output_file_suffix '.set']);
+
+[path,in_name_noext,ext]  = fileparts(input_file_name);
+[path,out_name_noext,ext] = fileparts(output_file_name);
+
+EEG = pop_loadset(input_file_name);
 
 switch project.epoching.baseline_insert.mode
     case 'none'
         return
         
-    case 'trial'        
+    case 'trial'
         OUTEEG =  proj_eeglab_subject_adjustbaseline_trial(EEG, project);
         
     case 'external'
         OUTEEG =  proj_eeglab_subject_adjustbaseline_external(EEG, project, subj_name);
-
+        
+end
+OUTEEG = pop_saveset(OUTEEG, 'filename',['test_',OUTEEG.filename], 'filepath', OUTEEG.filepath);
 end
 
