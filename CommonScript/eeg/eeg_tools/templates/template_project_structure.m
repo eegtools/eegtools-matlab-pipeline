@@ -206,9 +206,14 @@ project.preproc.insert_begin_trial.delay.s                    =   [];           
 % INSERT END TRIAL MARKERS (only if both the target and the begin trial
 % types are NOT empty)
 project.preproc.insert_end_trial.target_event_types         =     {'target1','target2'};        % string or cell array of strings denoting the type(s) (i.e. labels) of the target events used to set the the end trial markers 
-project.preproc.insert_end_trial.end_trial_marker_type    =     {'end_trial_marker_type'};    % string denoting the type (i.e. label) of the new end trial marker
+project.preproc.insert_end_trial.end_trial_marker_type      =     {'end_trial_marker_type'};    % string denoting the type (i.e. label) of the new end trial marker
 project.preproc.insert_end_trial.delay.s                    =     [];                           % time shift (in ms) to anticipate (negative values ) or posticipate (positive values) the new end trial markers
                                                                                                 %      with respect to the target events, if empty ([]) time shift = 0
+                                                                                                
+                                                                                                
+% INSERT BLOCK MARKERS (only if
+% project.preproc.insert_end_trial.end_trial_marker_type is non empty)
+project.preproc.insert_block.trials_per_block                                = 40;              % number denoting the number of trials per block  
                                                                                                 
                                                                                                 
 %% ======================================================================================================
