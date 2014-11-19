@@ -20,6 +20,16 @@
 %
 function OUTEEG =  proj_eeglab_subject_adjustbaseline_trial(EEG, project,varargin)
 
+ll=length({EEG.event.urevent});
+for nn =1:ll
+    EEG.event(nn).urevent=nn;
+end
+
+EEG.urevent = EEG.event;
+EEG=eeg_checkset(EEG);
+
+
+
 % total number of events in the dataset
 tot_eve = length(EEG.event);
 
@@ -83,79 +93,82 @@ end
 
 % initialize the array to unselect events in trials with boundaries
 
-event_in_trials_without_boundary_index = true(1,tot_eve);
+event_in_trials_without_boundary = true(1,tot_eve);
 
 % unselect events in trial with boundaries
 
-for neve = 1:tot_eve
-    
-    for nsel = 1:length(begin_trial_boundary_index_corr)
-        if (neve >= begin_trial_boundary_index_corr(nsel) &&  neve <= end_trial_boundary_index_corr(nsel))
-            
-            event_in_trial_without_boundary(neve) =  false;
-            
-        end
-        
-    end
-end
+% for neve = 1:tot_eve
+%     
+%     for nsel = 1:length(begin_trial_boundary_index_corr)
+%         if (neve >= begin_trial_boundary_index_corr(nsel) &&  neve <= end_trial_boundary_index_corr(nsel))
+%             
+%             event_in_trial_without_boundary(neve) =  false;
+%             
+%         end
+%         
+%     end
+% end
 
 % for each type of target event
-for nevetype = 1:length(project.import.valid_marker)
+for nevetype = 1:length(project.epoching.valid_marker)
     
     % select the corresponding type (label)
-    mark_cond_label = project.import.valid_marker{nevetype};
+    mark_cond_label = project.epoching.valid_marker{nevetype};
     
-    % for each of all events
-    for neve = 1:length(EEG.event)
-        EEG.event(neve).trial_with_selected_target =  false;
+%     % for each of all events
+%     for neve = 1:length(EEG.event)
+%         event_in_trial_without_boundary =  false;
+%     end
+    
+    % find the selected target events
+    
+    % if the baseline segments were originally before the target events
+    if strcmp(project.epoching.baseline_insert.baseline_originalposition, 'before')
         
-        % find the selected target events
+        % find target events precededed by baseline segments
+        [target_index,urnbrs,urnbrtypes,duration,tflds,urnflds] = eeg_context(EEG,...
+            mark_cond_label,...
+            project.epoching.baseline_insert.baseline_begin_marker,...
+            -1);
         
-        % if the baseline segments were originally before the target events
-        if strcmp(project.epoching.baseline_insert.baseline_originalposition, 'before')
-            
-            % find target events precededed by baseline segments
-            [target_index,urnbrs,urnbrtypes,duration,tflds,urnflds] = eeg_context(EEG,...
-                mark_cond_label,...
-                project.epoching.baseline_insert.baseline_begin_marker,...
-                -1);
-            
-            %find baseline segments followed by target events
-            [baseline_begin_index,urnbrs,urnbrtypes,duration,tflds,urnflds] = eeg_context(EEG,...
-                project.epoching.baseline_insert.baseline_begin_marker,...
-                mark_cond_label,...
-                1);
-            
-            % calculate baseline duration for each baseline segment (in
-            % principle it could vary)
-            [baseline_begin_index,urnbrs,urnbrtypes,all_baseline_duration,tflds,urnflds] = eeg_context(EEG,...
-                project.epoching.baseline_insert.baseline_begin_marker,...
-                project.epoching.baseline_insert.baseline_end_marker,...
-                1);
-            
-        end
+        %find baseline segments followed by target events
+        [baseline_begin_index,urnbrs,urnbrtypes,duration,tflds,urnflds] = eeg_context(EEG,...
+            project.epoching.baseline_insert.baseline_begin_marker,...
+            mark_cond_label,...
+            1);
         
-        % if the baseline segments were originally after the target events
-        if strcmp(project.epoching.baseline_insert.baseline_originalposition, 'after')
-            
-            % find target events follwed by baseline segments
-            [target_index,urnbrs,urnbrtypes,trial_duration,tflds,urnflds] = eeg_context(EEG,...
-                mark_cond_label,...
-                project.epoching.baseline_insert.baseline_begin_marker,...
-                1);
-            
-            %find baseline segments preceded by target events
-            [baseline_begin_index,urnbrs,urnbrtypes,trial_duration,tflds,urnflds] = eeg_context(EEG,...
-                project.epoching.baseline_insert.baseline_begin_marker,...
-                mark_cond_label,...
-                -1);
-        end
+        % calculate baseline duration for each baseline segment (in
+        % principle it could vary)
+        [baseline_begin_index,urnbrs,urnbrtypes,all_baseline_duration,tflds,urnflds] = eeg_context(EEG,...
+            project.epoching.baseline_insert.baseline_begin_marker,...
+            project.epoching.baseline_insert.baseline_end_marker,...
+            1);
         
     end
     
-    event_in_trial_without_boundary =find(event_in_trial_without_boundary);
-    % select and epoch the events 1) within trials without boundaries AND 2) of the selected target type
-    sel_target2epoch = intersect (event_in_trial_without_boundary,target_index);
+    % if the baseline segments were originally after the target events
+    if strcmp(project.epoching.baseline_insert.baseline_originalposition, 'after')
+        
+        % find target events follwed by baseline segments
+        [target_index,urnbrs,urnbrtypes,trial_duration,tflds,urnflds] = eeg_context(EEG,...
+            mark_cond_label,...
+            project.epoching.baseline_insert.baseline_begin_marker,...
+            1);
+        
+        %find baseline segments preceded by target events
+        [baseline_begin_index,urnbrs,urnbrtypes,trial_duration,tflds,urnflds] = eeg_context(EEG,...
+            project.epoching.baseline_insert.baseline_begin_marker,...
+            mark_cond_label,...
+            -1);
+    end
+    
+    
+    
+%     event_in_trial_without_boundary = find(event_in_trial_without_boundary);
+%     % select and epoch the events 1) within trials without boundaries AND 2) of the selected target type
+%     sel_target2epoch = intersect (event_in_trial_without_boundary,target_index);
+
+ sel_target2epoch = target_index;
     
     % during epoching there is the possibility to selecto events BOTH by
     % type AND by index
@@ -164,7 +177,8 @@ for nevetype = 1:length(project.import.valid_marker)
         'eventindices',sel_target2epoch);
     
     % select and epoch the events 1) within trials without boundaries AND 2) of the selected baseline start type
-    sel_baseline_begin2epoch = intersect (event_in_trial_without_boundary,baseline_begin_index);
+%     sel_baseline_begin2epoch = intersect (event_in_trial_without_boundary,baseline_begin_index);
+sel_baseline_begin2epoch = baseline_begin_index(:,1)';
     
     % select only tha baseline durations of the selected segments (paired
     % with the selected target events)
