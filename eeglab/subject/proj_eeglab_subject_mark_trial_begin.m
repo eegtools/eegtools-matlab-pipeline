@@ -40,14 +40,14 @@ OUTEEG = EEG;
 
 target_marker_begin_delay_pts     =  floor(project.preproc.insert_begin_trial.delay.s * OUTEEG.srate); % convert delay from seconds to points
 
-sel_target_begin = ismember({OUTEEG.event.type},project.preproc.insert_begin_trial.target_event_types);
+sel_target_begin = ismember({OUTEEG.event.type},project.preproc.insert_begin_trial.target_event_types{:});
 
 eve_target_begin = EEG.event(sel_target_begin);
 
 for neve = 1:length(eve_target_begin)
     n1 = length(OUTEEG.event)+1;
     OUTEEG.event(n1)         =   eve_target_begin(neve);
-    OUTEEG.event(n1).latency =   OUTEEG.event(n1).latency + target_marker_begin_delay_pts;
+    OUTEEG.event(n1).latency =   OUTEEG.event(n1).latency + target_marker_begin_delay_pts-1;
     OUTEEG.event(n1).type    =   project.preproc.insert_begin_trial.begin_trial_marker_type;
 end
 

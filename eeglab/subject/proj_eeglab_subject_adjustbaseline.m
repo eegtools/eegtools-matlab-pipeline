@@ -83,6 +83,8 @@ switch project.epoching.baseline_insert.mode
         OUTEEG =  proj_eeglab_subject_adjustbaseline_external(EEG, project, subj_name);
         
 end
-OUTEEG = pop_saveset(OUTEEG, 'filename',['test_',OUTEEG.filename], 'filepath', OUTEEG.filepath);
+% OUTEEG = pop_saveset(OUTEEG, 'filename',['test_',OUTEEG.filename], 'filepath', OUTEEG.filepath);
+OUTEEG = pop_saveset(OUTEEG, 'filename',OUTEEG.filename, 'filepath', OUTEEG.filepath);
+
 end
 
