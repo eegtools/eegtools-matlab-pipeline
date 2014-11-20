@@ -30,7 +30,7 @@ function OUTEEG = proj_eeglab_subject_mark_trial_end(EEG, project,  varargin)
 %
 % % INSERT END TRIAL MARKERS
 % project.preproc.insert_end_trial.target_event_types         =     {'target1','target2'};        % string or cell array of strings denoting the type(s) (i.e. labels) of the target events used to set the the end trial markers
-% project.preproc.insert_end_trial.begin_trial_marker_type    =     {'end_trial_marker_type'};    % string denoting the type (i.e. label) of the new end trial marker, if empty ([]) end_trial_marker_type = 'end_trial'
+% project.preproc.insert_end_trial.end_trial_marker_type    =     {'end_trial_marker_type'};    % string denoting the type (i.e. label) of the new end trial marker, if empty ([]) end_trial_marker_type = 'end_trial'
 % project.preproc.insert_end_trial.delay.s                    =     [];                           % time shift (in ms) to anticipate (negative values ) or posticipate (positive values) the new end trial markers
 %
 
@@ -38,14 +38,14 @@ OUTEEG = EEG;
 
 target_marker_end_delay_pts       =  floor(project.preproc.insert_end_trial.delay.s   * OUTEEG.srate);
 
-sel_target_end   = ismember({OUTEEG.event.type},project.preproc.insert_end_trial.target_event_types);
+sel_target_end   = ismember({OUTEEG.event.type},project.preproc.insert_end_trial.target_event_types{:});
 
 eve_target_end = EEG.event(sel_target_end);
 
 for neve = 1:length(eve_target_end)
     n1 = length(OUTEEG.event)+1;
-    OUTEEG.event(n1)         =   eve_target_begin(neve);
-    OUTEEG.event(n1).latency =   OUTEEG.event(n1).latency + target_marker_end_delay_pts;
+    OUTEEG.event(n1)         =   eve_target_end(neve);
+    OUTEEG.event(n1).latency =   OUTEEG.event(n1).latency + target_marker_end_delay_pts+1;
     OUTEEG.event(n1).type    =   project.preproc.insert_end_trial.end_trial_marker_type;
 end
 
