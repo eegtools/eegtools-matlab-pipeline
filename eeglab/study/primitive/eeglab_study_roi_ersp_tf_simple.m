@@ -1,28 +1,57 @@
-%% [ersp_tf times freqs pcond, pgroup, pinter] = eeglab_study_roi_ersp_tf_simple(STUDY,... 
-%                                                                                ALLEEG,... 
-%                                                                                channels_list, ...
-%                                                                                levels_f1,... 
-%                                                                                levels_f2,...
-%                                                                                num_permutations,...
-%                                                                                masked_times_max,
-%                                                                                paired,
-%                                                                                stat_method,...
-%                                                                                list_select_subjects,...
-%                                                                                list_design_subjects,...
-%                                                                                ersp_mode,
-%                                                                                num_tails...)
+%% [output] = eeglab_study_roi_ersp_tf_simple(input)
+%
 % calculate ersp time frequency and perform standard EEGLAB statistics with
 % the original time-frequency resolution
+% 
+% STUDY                                = input.STUDY;
+% ALLEEG                               = input.ALLEEG; 
+% channels_list                        = input.channels_list;
+% levels_f1                            = input.levels_f1; 
+% levels_f2                            = input.levels_f2;
+% num_permutations                     = input.num_permutations;
+% stat_time_windows_list               = input.stat_time_windows_list;
+% paired                               = input.paired;
+% stat_method                          = input.stat_method;
+% list_select_subjects                 = input.list_select_subjects;
+% list_design_subjects                 = input.list_design_subjects;
+% ersp_mode                            = input.ersp_mode;
+% num_tails                            = input.num_tails;
+% stat_freq_bands_list                 = input.stat_freq_bands_list;
+% mask_coef                            = input.mask_coef;  
+%
+%
+% output.ersp_tf    = ersp_tf;
+% output.times      = times;     
+% output.freqs      = freqs; 
+% output.pcond      = pcond;
+% output.pgroup     = pgroup;
+% output.pinter     = pinter;
 
 
-function [ersp_tf times freqs pcond, pgroup, pinter] = eeglab_study_roi_ersp_tf_simple(STUDY, ALLEEG, ....
-                                                                                       channels_list, ...
-                                                                                       levels_f1, levels_f2,...
-                                                                                       num_permutations,...
-                                                                                       stat_time_windows_list,...
-                                                                                       paired,stat_method,...
-                                                                                       list_select_subjects,...
-                                                                                       list_design_subjects,ersp_mode,num_tails,stat_freq_bands_list,mask_coef)
+function [output] = eeglab_study_roi_ersp_tf_simple(input)
+
+
+
+
+STUDY                                = input.STUDY;
+ALLEEG                               = input.ALLEEG; 
+channels_list                        = input.channels_list;
+levels_f1                            = input.levels_f1; 
+levels_f2                            = input.levels_f2;
+num_permutations                     = input.num_permutations;
+stat_time_windows_list               = input.stat_time_windows_list;
+paired                               = input.paired;
+stat_method                          = input.stat_method;
+list_select_subjects                 = input.list_select_subjects;
+list_design_subjects                 = input.list_design_subjects;
+ersp_mode                            = input.ersp_mode;
+num_tails                            = input.num_tails;
+stat_freq_bands_list                 = input.stat_freq_bands_list;
+mask_coef                            = input.mask_coef;  
+
+
+
+
   if nargin < 1
     help eeglab_study_roi_ersp_tf_simple;
     return;
@@ -74,5 +103,14 @@ STUDY = pop_statparams(STUDY, 'groupstats','off','condstats','off');
     if ~ isempty(stat_time_windows_list)
              [pcond, pgroup, pinter] = eeglab_study_roi_tf_maskp(pcond, pgroup, pinter,times, stat_time_windows_list);           
 
-    end    
+    end
+    
+output.ersp_tf    = ersp_tf;
+output.times      = times;     
+output.freqs      = freqs; 
+output.pcond      = pcond;
+output.pgroup     = pgroup;
+output.pinter     = pinter;
+    
+    
 end
