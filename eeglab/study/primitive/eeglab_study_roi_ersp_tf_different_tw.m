@@ -1,8 +1,8 @@
-function onset_offset = eeglab_study_roi_ersp_tf_different_tw(params,  varargin)
+function all_cell = eeglab_study_roi_ersp_tf_different_tw(params,  varargin)
 %% compare ersp time frequency distributions of different cells of a design (levels of factor 1 and factor 2, as for standard EEGLab computing), but allow different time window for different cells of the design.
 % time windows of different cells are differnt but have must all the same
 % length.
-% it is assumed that, for each subject and cell of tyhe design. input_filename = [sub_list{nsub},common_string,str_f2{nf2},str_f1{nf1},'.set'];
+% 
 %
 %% extract the parameters form the input structure
 
@@ -20,7 +20,7 @@ p_limits            = params.p_limits;                                     % vec
 
 sub_list            = params.sub_list;                                     % cell array of strings. list of subject names
 
-common_string       = params.common_string;                                % string. is a common part of all file names
+% common_string       = params.common_string;                                % string. is a common part of all file names
 
 input_filepath      = params.input_filepath;                               % string. folder with all the data (and where the results will be saved)
 
@@ -44,7 +44,7 @@ correction          = params.correction;                                   % str
 
 num_permutations    = params.num_permutations;                             % number. number of permutations. if empty, 10000
 
-freq_vec            = params.freq_vec;                                      % vector. vector of frequencies of the time frequency decomposition. if empty, [3:1:35], i.e. from 3 to 35 Hz with 1 Hz resolution 
+freq_vec            = params.freq_vec;                                      % vector. vector of frequencies of the time frequency decomposition. if empty, [3:1:35], i.e. from 3 to 35 Hz with 1 Hz resolution
 
 
 
@@ -85,8 +85,8 @@ troi = length(roi_names);
 % second is the level of factor 2;
 % third is the channel
 % so it is a cell array of dimension: (total levels of factor 1)  x (total
-% levels of factor 2) x (total number of channels)
-ersp_cell = cell(tf1,tf2,tch);
+% levels of factor 2) x (total number of rois)
+ersp_cell = cell(tf1,tf2,troi);
 
 
 % cell array with the time points vector used to compute the ERSP (i.e.
@@ -105,6 +105,9 @@ for nf1 = 1:tf1
 end
 
 
+dir_files =dir(input_filepath);
+dir_files = {dir_files.name};
+ld =length(dir_files);
 
 
 
@@ -121,79 +124,97 @@ for nroi = 1:troi
         % for each level of factor 2
         for nf2 = 1:tf2
             
+            nsubcell = 1;
+            
             % for each subject
             for nsub = 1:length(sub_list)
                 
-                % build the string with the name of the file to be loaded and
-                % porcessed
-                input_filename = [sub_list{nsub},common_string,str_f2{nf2},str_f1{nf1},'.set'];
+                sel_sub =strfind(dir_files,sub_list{nsub});
                 
-                % load the file
-                EEG = pop_loadset('filename',input_filename,'filepath',input_filepath);
+                sel_lf1 = true(1,ld);
+                sel_lf2 = true(1,ld);
                 
-                % check consistency
-                EEG = eeg_checkset( EEG );
-                
-                all_ch = EEG.chanlocs.labels;
-                
-                num_chan_vec = find(ismember(all_ch,roi_list{nroi}));               
-                tch_roi =length(num_chan_vec);
-                
-                ersp_cell_roi = cell(tch_roi);
-                
-                % for each channel
-                for nch = 1:length(tch_roi)
-                    
-                    % set the number of channel to process
-                    topovec = num_chan_vec(nch);
-                    
-                    % set the corresponding lavbel
-                    ch_lab = EEG.chanlocs(topovec).labels;
-                    
-                    % open a figure called fig and kept invisible (to avoid
-                    % thrash)
-                    fig=figure('visible','off');
-                    
-                    % set the epoch for the selected level of factor 1 and
-                    % factor 2
-                    epoch = times_epoch_cell{nf1,nf2};
-                    
-                    %                 
-                    
-                    % compute the ersp, the time vector and the frequency vector for the selected level of factor 1, level of factor 2, subject and channel
-                    [ersp_cell_roi{nch},itc,powbase,times,freqs,erspboot,itcboot] = ...
-                        pop_newtimef( EEG , 1 , topovec , [min(epoch), max(epoch)], [0] , ...
-                        'topovec', topovec , 'elocs', EEG.chanlocs ,'chaninfo', EEG.chaninfo,...
-                        'caption', ch_lab ,'baseline',tw_baseline_cell{nf1,nf2} ,'freqs',  freq_vec ,...
-                        'timesout', times_epoch_cell{nf1,nf2} ,'padratio', 64 ,'winsize',100);
-                    
-                    % close the figure with the ERSP plot
-                    close(fig);
-                    
-                    % save the ERSP in the global cell array which was
-                    % initilaized before
-                    % hoocked parenthesis indicate that we are filling the
-                    % element corresponding to a certain level fo fatcor 1
-                    % (nf1), a certain level of factor 2 (nf2) and a certain
-                    % channel (nch).
-                    
-                    % round parenthesis indicate that the current element o the
-                    % cell array is a an array with dimensions : times  x
-                    % frequencies x subjects: mow we are filling the portion
-                    % dedicated to the current subject (nsub)
-                                        
+                if not(isempty(name_f1)) && not(strcmp(name_f1,''))
+                    sel_f1 =strfind(dir_files,str_f1{nf1});
                 end
                 
-                dim = ndims(ersp_cell_roi{1});          %# Get the number of dimensions for your arrays
-                M = cat(dim+1,ersp_cell_roi{:});        %# Convert to a (dim+1)-dimensional matrix
-                mean_ersp_roi = mean(ersp_cell_roi,dim+1);  %# Get the mean across arrays
+                if not(isempty(name_f2)) && not(strcmp(name_f2,''))
+                    sel_f2 =strfind(dir_files,str_f2{nf2});
+                end
                 
-                ersp_cell{nf1,nf2,nroi}(:,:,nsub)=mean_ersp_roi;
+                sel_data = sel_sub & sel_lf1 &  sel_lf2;
                 
+                
+                % build the string with the name of the file to be loaded and
+                % porcessed
+                input_filename = fullfile(input_filepath,dir_files{sel_data});
+                
+                if exist(input_filename,'file')
+                    % load the file
+                    EEG = pop_loadset('filename',input_filename,'filepath',input_filepath);
+                    
+                    % check consistency
+                    EEG = eeg_checkset( EEG );
+                    
+                    all_ch = EEG.chanlocs.labels;
+                    
+                    num_chan_vec = find(ismember(all_ch,roi_list{nroi}));
+                    tch_roi =length(num_chan_vec);
+                    
+                    ersp_cell_roi = cell(tch_roi);
+                    
+                    % for each channel
+                    for nch = 1:length(tch_roi)
+                        
+                        % set the number of channel to process
+                        topovec = num_chan_vec(nch);
+                        
+                        % set the corresponding lavbel
+                        ch_lab = EEG.chanlocs(topovec).labels;
+                        
+                        % open a figure called fig and kept invisible (to avoid
+                        % thrash)
+                        fig=figure('visible','off');
+                        
+                        % set the epoch for the selected level of factor 1 and
+                        % factor 2
+                        epoch = times_epoch_cell{nf1,nf2};
+                                              
+                        % compute the ersp, the time vector and the frequency vector for the selected level of factor 1, level of factor 2, subject and channel
+                        [ersp_cell_roi{nch},itc,powbase,times,freqs,erspboot,itcboot] = ...
+                            pop_newtimef( EEG , 1 , topovec , [min(epoch), max(epoch)], [0] , ...
+                            'topovec', topovec , 'elocs', EEG.chanlocs ,'chaninfo', EEG.chaninfo,...
+                            'caption', ch_lab ,'baseline',tw_baseline_cell{nf1,nf2} ,'freqs',  freq_vec ,...
+                            'timesout', times_epoch_cell{nf1,nf2} ,'padratio', 64 ,'winsize',100);
+                        
+                        % close the figure with the ERSP plot
+                        close(fig);
+                        
+                        % save the ERSP in the global cell array which was
+                        % initilaized before
+                        % hoocked parenthesis indicate that we are filling the
+                        % element corresponding to a certain level fo fatcor 1
+                        % (nf1), a certain level of factor 2 (nf2) and a certain
+                        % channel (nch).
+                        
+                        % round parenthesis indicate that the current element o the
+                        % cell array is a an array with dimensions : times  x
+                        % frequencies x subjects: mow we are filling the portion
+                        % dedicated to the current subject (nsub)
+                        
+                    end
+                    
+                    dim = ndims(ersp_cell_roi{1});          %# Get the number of dimensions for your arrays
+                    M = cat(dim+1,ersp_cell_roi{:});        %# Convert to a (dim+1)-dimensional matrix
+                    mean_ersp_roi = mean(ersp_cell_roi,dim+1);  %# Get the mean across arrays
+                    
+                    ersp_cell{nf1,nf2,nroi}(:,:,nsubcell)=mean_ersp_roi;
+                    nsubcell = nsubcell+1;
+                end
             end
-            
             % save the time vector for the plot for the current levels of factor 1 and 2
             times_cell{nf1,nf2}=times;
+            
         end
         
     end
