@@ -14,7 +14,7 @@ function OUTEEG = proj_eeglab_subject_markbaseline(project, subj_name, varargin)
 % t_fine] potrebbe essere lasciato come facoltativo anche per i file di
 % base esterni.
 
-switch project.epoching.baseline_insert.mode
+switch project.epoching.baseline_replace.mode
     
     case 'none'
         return

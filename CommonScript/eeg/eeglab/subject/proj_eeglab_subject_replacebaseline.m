@@ -24,11 +24,11 @@
 % ########################################################################
 % IMPORTANT NOTE: It is assumed that in the artifact rejection phase, all
 % the trials with the rejection of the baseline OR the target event are
-% removed. If not, proplem occur when aliging newly inserted baselines and target events.
+% removed. If not, proplem occur when aliging newly replaceed baselines and target events.
 % ########################################################################
 
-%% function OUTEEG = proj_eeglab_subject_adjustbaseline(project, subj_name,varargin)
-% adjust baseline by inserting before / after target events in each trial baseline segments.
+%% function OUTEEG = proj_eeglab_subject_replacebaseline(project, subj_name,varargin)
+% adjust baseline by replaceing before / after target events in each trial baseline segments.
 %
 % in the 'none' mode no baseline adjustement occurs
 %
@@ -39,13 +39,13 @@
 %  project.epoching.epo_st.s;
 %  project.epoching.epo_end.s;
 %  project.epoching.mrkcode_cond;
-%  project.epoching.baseline_insert.baseline_begin_marker;
-%  project.epoching.baseline_insert.baseline_end_marker;
+%  project.epoching.baseline_replace.baseline_begin_marker;
+%  project.epoching.baseline_replace.baseline_end_marker;
 %  project.epoching.bc_st.s;
 %  project.epoching.bc_end.s;
-%  project.epoching.baseline_insert.mode;
-%  project.epoching.baseline_insert.baseline_originalposition;
-%  project.epoching.baseline_insert.baseline_finalposition;
+%  project.epoching.baseline_replace.mode;
+%  project.epoching.baseline_replace.baseline_originalposition;
+%  project.epoching.baseline_replace.baseline_finalposition;
 %  project.epoching.baseline_duration.s
 %
 %
@@ -57,7 +57,7 @@
 
 
 
-function OUTEEG = proj_eeglab_subject_adjustbaseline(project, subj_name,varargin)
+function OUTEEG = proj_eeglab_subject_replacebaseline(project, subj_name,varargin)
 
 eeg_output_path         = project.paths.output_epochs;
 eeg_input_path          = project.paths.input_epochs;
@@ -72,15 +72,28 @@ output_file_name = fullfile(eeg_output_path, [project.import.original_data_prefi
 
 EEG = pop_loadset(input_file_name);
 
-switch project.epoching.baseline_insert.mode
+    bck.dir    = fullfile(EEG.filepath, 'hist_pre_replacebaseline');
+    bck.prefix = [];
+    EEG = eeglab_subject_bck_eeghist(EEG,bck);
+
+if strcmp(project.epoching.baseline_replace.create_backup,'on')
+    
+    bck.dir = fullfile(EEG.filepath,'bck_pre_replacebaseline');
+    bck.prefix = [];   
+    EEG = eeglab_subject_bck_eeg(EEG,bck);    
+       
+end
+
+
+switch project.epoching.baseline_replace.mode
     case 'none'
         return
         
     case 'trial'
-        OUTEEG =  proj_eeglab_subject_adjustbaseline_trial(EEG, project);
+        OUTEEG =  proj_eeglab_subject_replacebaseline_trial(EEG, project);
         
     case 'external'
-        OUTEEG =  proj_eeglab_subject_adjustbaseline_external(EEG, project, subj_name);
+        OUTEEG =  proj_eeglab_subject_replacebaseline_external(EEG, project, subj_name);
         
 end
 % OUTEEG = pop_saveset(OUTEEG, 'filename',['test_',OUTEEG.filename], 'filepath', OUTEEG.filepath);
