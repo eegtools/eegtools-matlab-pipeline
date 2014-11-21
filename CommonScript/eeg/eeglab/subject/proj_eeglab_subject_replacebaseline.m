@@ -76,13 +76,13 @@ EEG = pop_loadset(input_file_name);
     bck.prefix = [];
     EEG = eeglab_subject_bck_eeghist(EEG,bck);
 
-if strcmp(project.epoching.baseline_replace.create_backup,'on')
-    
-    bck.dir = fullfile(EEG.filepath,'bck_pre_replacebaseline');
-    bck.prefix = [];   
-    EEG = eeglab_subject_bck_eeg(EEG,bck);    
-       
-end
+% if strcmp(project.epoching.baseline_replace.create_backup,'on')
+%     
+%     bck.dir = fullfile(EEG.filepath,'bck_pre_replacebaseline');
+%     bck.prefix = [];   
+%     EEG = eeglab_subject_bck_eeg(EEG,bck);    
+%        
+% end
 
 
 switch project.epoching.baseline_replace.mode
@@ -97,7 +97,7 @@ switch project.epoching.baseline_replace.mode
         
 end
 % OUTEEG = pop_saveset(OUTEEG, 'filename',['test_',OUTEEG.filename], 'filepath', OUTEEG.filepath);
-OUTEEG = pop_saveset(OUTEEG, 'filename',OUTEEG.filename, 'filepath', OUTEEG.filepath);
+% OUTEEG = pop_saveset(OUTEEG, 'filename',OUTEEG.filename, 'filepath', OUTEEG.filepath);
 
 end
 

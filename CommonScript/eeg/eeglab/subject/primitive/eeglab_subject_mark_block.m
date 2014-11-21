@@ -52,7 +52,8 @@ function OUTEEG = eeglab_subject_mark_block(EEG, params )
           for neve = 1: length(block_events)
             block_events(neve).type = [char(block_events(neve).type), '_block', str2double(nblock)]  ; 
             OUTEEG.event(ntoteve+1) =  block_events(neve);
-            OUTEEG = eeg_checkset(OUTEEG);
+            OUTEEG.event(ntoteve+1).block = nblock; 
+            OUTEEG = eeg_checkset(OUTEEG);            
             ntoteve = ntoteve+1;
           end
     end
