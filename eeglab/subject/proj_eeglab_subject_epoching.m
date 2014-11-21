@@ -79,7 +79,13 @@ function EEG = proj_eeglab_subject_epoching(project, subj_name, varargin)
     
     EEG = pop_loadset(input_file_name);  
     
-   bck.dir    = fullfile(EEG.filepath, 'hist_pre_epoching');
+    if strcmp(project.epoching.baseline_replace.mode,'trial') || strcmp(project.epoching.baseline_replace.mode,'external')    
+        EEG = proj_eeglab_subject_replacebaseline(project, subj_name);
+    end
+    
+    
+    
+    bck.dir    = fullfile(EEG.filepath, 'hist_pre_epoching');
     bck.prefix = [];
     EEG = eeglab_subject_bck_eeghist(EEG,bck);
     
