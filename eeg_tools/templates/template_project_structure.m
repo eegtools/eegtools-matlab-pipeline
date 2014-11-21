@@ -249,6 +249,9 @@ project.preproc.insert_block.trials_per_block                                = 4
 % trial the new baseline begin marker. Or, you can to both mark baseline
 % and trial use the same stimuli marker as target events, giving the right
 % delays.
+%
+
+project.epoching.baseline_replace.create_backup              = 'on';                         % 'on'| 'off' create a backup copy of files before baseline replacement. 
 
 project.epoching.baseline_replace.mode                       = 'trial';                      % replace a baseline before/after events to  be epoched and processed: 
                                                                                                 %  * 'trial'    use a baseline within each trial
@@ -291,6 +294,8 @@ project.epoching.baseline_mark.baseline_end_target_marker_delay.s   =   0;      
                                                                                                                         % the latency information is stored internally in data samples (points or EEGLAB 'pnts') 
                                                                                                                         % relative to the beginning of the continuous data matrix (EEG.data). 
                                                                                                                         
+                                                                                                                        
+                                                                                   
                                                                                                                         
                                                                                                              
                                                                                                                         
