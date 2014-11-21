@@ -1,26 +1,26 @@
-%% function OUTEEG =  proj_eeglab_subject_adjustbaseline_trial(OUTEEG, project,varargin)
+%% function OUTEEG =  proj_eeglab_subject_replacebaseline_trial(OUTEEG, project,varargin)
 %
-% adjust baseline by inserting before / after target events in each trial baseline segments taken within the same trial and originally placed before / after the target events
+% adjust baseline by replacing before / after target events in each trial baseline segments taken within the same trial and originally placed before / after the target events
 %
 % project is a structure with the fields:
 %
 %  project.epoching.epo_st.s;
 %  project.epoching.epo_end.s;
 %  project.epoching.mrkcode_cond;
-%  project.epoching.baseline_insert.baseline_begin_marker;
-%  project.epoching.baseline_insert.baseline_end_marker;
+%  project.epoching.baseline_replace.baseline_begin_marker;
+%  project.epoching.baseline_replace.baseline_end_marker;
 %  project.epoching.bc_st.s;
 %  project.epoching.bc_end.s;
-%  project.epoching.baseline_insert.mode;
-%  project.epoching.baseline_insert.baseline_originalposition;
-%  project.epoching.baseline_insert.baseline_finalposition;
+%  project.epoching.baseline_replace.mode;
+%  project.epoching.baseline_replace.baseline_originalposition;
+%  project.epoching.baseline_replace.baseline_finalposition;
 %  project.epoching.baseline_duration.s
 %
 % NOTE: trials with boundary events are discharged from epoching
 %
-% function OUTEEG =  proj_eeglab_subject_adjustbaseline_trial(EEG, project,varargin)
+% function OUTEEG =  proj_eeglab_subject_replacebaseline_trial(EEG, project,varargin)
 
-function OUTEEG =  proj_eeglab_subject_adjustbaseline_trial(EEG, project,varargin)
+function OUTEEG =  proj_eeglab_subject_replacebaseline_trial(EEG, project,varargin)
 
 
 OUTEEG = EEG;
@@ -31,18 +31,18 @@ OUTEEG.event = OUTEEG.event (sort_order);
 
 OUTEEG = eeg_checkset(OUTEEG);
 
-begin_trial      = project.epoching.baseline_insert.trial_begin_marker;
-end_trial        = project.epoching.baseline_insert.trial_end_marker;
-begin_baseline   = project.epoching.baseline_insert.baseline_begin_marker;
-end_baseline     = project.epoching.baseline_insert.baseline_end_marker;
+begin_trial      = project.epoching.baseline_replace.trial_begin_marker;
+end_trial        = project.epoching.baseline_replace.trial_end_marker;
+begin_baseline   = project.epoching.baseline_replace.baseline_begin_marker;
+end_baseline     = project.epoching.baseline_replace.baseline_end_marker;
 
-original_baseline     = project.epoching.baseline_insert.baseline_originalposition;
-final_baseline        = project.epoching.baseline_insert.baseline_finalposition;
+original_baseline     = project.epoching.baseline_replace.baseline_originalposition;
+final_baseline        = project.epoching.baseline_replace.baseline_finalposition;
 
 epoch_tw           = [project.epoching.epo_st.s project.epoching.epo_end.s];
 baseline_tw        = [0         project.epoching.baseline_duration.s];
 
-mode                           = project.epoching.baseline_insert.insert_mode;
+replace                           = project.epoching.baseline_replace.replace;
 
 
 type_list   = project.epoching.valid_marker;
@@ -108,21 +108,28 @@ for ntype = 1:length(type_list)
     
     if ltt < lbt
         data4replace =  OUTEEG_baseline.data(:,1:ltt,:);
+    
     elseif ltt > lbt
         
-        switch mode
-            case 'overwrite'
-                dlt = ltt -lbt;
-%                 data4replace = cat(2, OUTEEG_baseline.data, OUTEEG_baseline.data(:,1:dlt,:));
-            case 'insert'
+        dlt = ltt -lbt;
+        
+        switch replace
+            case 'all'               
+                data4replace = cat(2, OUTEEG_baseline.data, OUTEEG_baseline.data(:,1:dlt,:));
+            
+            case 'part'
                 data4replace = OUTEEG_target.data(:,sel_replace_baseline,:);
                 
                 if strcmp(final_baseline,'before')
                     data4replace(:,1:lbt,:) = OUTEEG_baseline.data(:,:,:);
-                end
                 
-                if strcmp(final_baseline,'after')
+                
+                elseif strcmp(final_baseline,'after')
                     data4replace(:,	dlt+1:ltt,:) = OUTEEG_baseline.data(:,:,:);
+                
+                else
+                    disp('select a valid project.epoching.baseline_replace.replace');
+                    return
                 end
                 
                 
@@ -147,27 +154,27 @@ OUTEEG = eeg_checkset(OUTEEG);
 end
 
 
-%% function OUTEEG =  proj_eeglab_subject_adjustbaseline_trial(OUTEEG, project,varargin)
+%% function OUTEEG =  proj_eeglab_subject_replacebaseline_trial(OUTEEG, project,varargin)
 %
-% adjust baseline by inserting before / after target events in each trial baseline segments taken within the same trial and originally placed before / after the target events
+% replace baseline by replaceing before / after target events in each trial baseline segments taken within the same trial and originally placed before / after the target events
 %
 % project is a structure with the fields:
 %
 %  project.epoching.epo_st.s;
 %  project.epoching.epo_end.s;
 %  project.epoching.mrkcode_cond;
-%  project.epoching.baseline_insert.baseline_begin_marker;
-%  project.epoching.baseline_insert.baseline_end_marker;
+%  project.epoching.baseline_replace.baseline_begin_marker;
+%  project.epoching.baseline_replace.baseline_end_marker;
 %  project.epoching.bc_st.s;
 %  project.epoching.bc_end.s;
-%  project.epoching.baseline_insert.mode;
-%  project.epoching.baseline_insert.baseline_originalposition;
-%  project.epoching.baseline_insert.baseline_finalposition;
+%  project.epoching.baseline_replace.mode;
+%  project.epoching.baseline_replace.baseline_originalposition;
+%  project.epoching.baseline_replace.baseline_finalposition;
 %  project.epoching.baseline_duration.s
 %
 % NOTE: trials with boundary events are discharged from epoching
 %
-% function OUTEEG =  proj_eeglab_subject_adjustbaseline_trial(OUTEEG, project,varargin)
+% function OUTEEG =  proj_eeglab_subject_replacebaseline_trial(OUTEEG, project,varargin)
 %
 % ll=length({OUTEEG.event.urevent});
 % for nn =1:ll
@@ -182,19 +189,19 @@ end
 % % total number of events in the dataset
 % tot_eve = length(OUTEEG.event);
 %
-% % for each event of each trial, insert a baseline taken from the trial itself
+% % for each event of each trial, replace a baseline taken from the trial itself
 %
 % % find markers of begin trial followed by another begin trial (to
 % % delimit each trial)
 % [begin_trial_all_index ,urnbrs,urnbrtypes,begin_trial_all_duration,tflds,urnflds] = eeg_context(OUTEEG,...
-%     project.epoching.baseline_insert.trial_begin_marker,...
-%     project.epoching.baseline_insert.trial_begin_marker,...
+%     project.epoching.baseline_replace.trial_begin_marker,...
+%     project.epoching.baseline_replace.trial_begin_marker,...
 %     1);
 %
 %
 % % find markers of begin trial followed a boundary event
 % [begin_trial_boundary_index,urnbrs,urnbrtypes,begin_trial_boundary_duration,tflds,urnflds] = eeg_context(OUTEEG,...
-%     project.epoching.baseline_insert.trial_begin_marker,...
+%     project.epoching.baseline_replace.trial_begin_marker,...
 %     'boundary',...
 %     1);
 %
@@ -272,41 +279,41 @@ end
 %     % find the selected target events
 %
 %     % if the baseline segments were originally before the target events
-%     if strcmp(project.epoching.baseline_insert.baseline_originalposition, 'before')
+%     if strcmp(project.epoching.baseline_replace.baseline_originalposition, 'before')
 %
 %         % find target events precededed by baseline segments
 %         [target_index,baseline_begin_index,urnbrtypes,duration,tflds,urnflds] = eeg_context(OUTEEG,...
 %             mark_cond_label,...
-%             project.epoching.baseline_insert.baseline_begin_marker,...
+%             project.epoching.baseline_replace.baseline_begin_marker,...
 %             -1);
 %
 % %         %find baseline segments followed by target events
 % %         [baseline_begin_index,baseline_begin_index,urnbrtypes,duration,tflds,urnflds] = eeg_context(OUTEEG,...
-% %             project.epoching.baseline_insert.baseline_begin_marker,...
+% %             project.epoching.baseline_replace.baseline_begin_marker,...
 % %             mark_cond_label,...
 % %             1);
 %
 %         % calculate baseline duration for each baseline segment (in
 %         % principle it could vary)
 %         [all_baseline_begin_index,urnbrs,urnbrtypes,all_baseline_duration,tflds,urnflds] = eeg_context(OUTEEG,...
-%             project.epoching.baseline_insert.baseline_begin_marker,...
-%             project.epoching.baseline_insert.baseline_end_marker,...
+%             project.epoching.baseline_replace.baseline_begin_marker,...
+%             project.epoching.baseline_replace.baseline_end_marker,...
 %             1);
 %
 %     end
 %
 %     % if the baseline segments were originally after the target events
-%     if strcmp(project.epoching.baseline_insert.baseline_originalposition, 'after')
+%     if strcmp(project.epoching.baseline_replace.baseline_originalposition, 'after')
 %
 %         % find target events follwed by baseline segments
 %         [target_index,urnbrs,urnbrtypes,trial_duration,tflds,urnflds] = eeg_context(OUTEEG,...
 %             mark_cond_label,...
-%             project.epoching.baseline_insert.baseline_begin_marker,...
+%             project.epoching.baseline_replace.baseline_begin_marker,...
 %             1);
 %
 %         %find baseline segments preceded by target events
 %         [all_baseline_begin_index,urnbrs,urnbrtypes,trial_duration,tflds,urnflds] = eeg_context(OUTEEG,...
-%             project.epoching.baseline_insert.baseline_begin_marker,...
+%             project.epoching.baseline_replace.baseline_begin_marker,...
 %             mark_cond_label,...
 %             -1);
 %     end
@@ -334,7 +341,7 @@ end
 %     baseline_duration = all_baseline_duration(ismember(all_baseline_begin_index,sel_baseline_begin2epoch));
 %
 %
-%     [OUTEEG_baseline, indices] = pop_epoch( OUTEEG, {project.epoching.baseline_insert.baseline_begin_marker}, ...
+%     [OUTEEG_baseline, indices] = pop_epoch( OUTEEG, {project.epoching.baseline_replace.baseline_begin_marker}, ...
 %         [0         project.epoching.baseline_duration.s],...
 %         'eventindices',sel_baseline_begin2epoch);
 %
@@ -370,12 +377,12 @@ end
 %     end
 %
 %     % if the new baseline must be added before the target events
-%     if strcmp (project.epoching.baseline_insert.baseline_position, 'before')
+%     if strcmp (project.epoching.baseline_replace.baseline_position, 'before')
 %         sel_replace_baseline = OUTEEG_target.times < 0;
 %     end
 %
 %     % if the new baseline must be added after the target events
-%     if strcmp (project.epoching.baseline_insert.baseline_position, 'after')
+%     if strcmp (project.epoching.baseline_replace.baseline_position, 'after')
 %         sel_replace_baseline = OUTEEG_target.times > 0;
 %     end
 %
