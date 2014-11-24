@@ -28,14 +28,15 @@
     % ......................................................................................................
   
     EEG = pop_loadset(input_file_name);
+    
     if length(ch_ref) == 1
         sel_ch_ref = ismember({EEG.chanlocs.labels},ch_ref);        
-        ch_ref_ind = find(sel_ch_ref);
-        eeg_ch_list = eeg_ch_list(not(sel_ch_ref(eeg_ch_list)));
+        ...ch_ref_ind = find(sel_ch_ref);
+        eeg_ch_list = eeg_ch_list(not(sel_ch_ref)); ...(eeg_ch_list)));
     end
-    
-    
-    
+
+
+        
     if gpu_id>0
         EEG = pop_runica_octave_matlab(EEG, 'icatype',ica_type,'chanind',eeg_ch_list,'options',{'extended' 1 'd' gpu_id});
     else
