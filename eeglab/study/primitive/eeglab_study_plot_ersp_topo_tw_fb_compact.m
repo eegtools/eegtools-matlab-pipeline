@@ -1,58 +1,94 @@
-%% [STUDY, EEG] = eeglab_study_plot_ersp_topo_tw_fb_compact(project,...
-%                                                           study_path,...
-%                                                           design_num_vec,...
-%                                                           design_factors_ordered_levels,...
-%                                                           results_path,...
-%                                                           stat_analysis_suffix,...
-%                                                           roi_list,...
-%                                                           roi_names,...
-%                                                           group_time_windows_list,...
-%                                                           group_time_windows_names,...
-%                                                           frequency_bands_list,...
-%                                                           frequency_bands_names,...
-%                                                           study_ls,...
-%                                                           num_permutations,...
-%                                                           correction,...
-%                                                           set_caxis,...
-%                                                           paired_list,...
-%                                                           stat_method,...
-%                                                           display_only_significant_topo,
-%                                                           display_only_significant_topo_mode,...
-%                                                           display_compact_topo,
-%                                                           display_compact_topo_mode,...
-%                                                           list_select_subjects,...
-%                                                           ersp_measure,...
-%                                                           subjects_data,...%
-%                                                           mode,...
-%                                                           show_head,...
-%                                                           do_plots
-%                                                           compact_display_ylim
-%                                                           num_tails)
+%% [output] = eeglab_study_plot_ersp_topo_tw_fb_compact(input)
 % calculate and display ersp topographic distribution (in a set of frequency bands)
 % for groups of scalp channels considered as regions of interests (ROI) in
 % an EEGLAB STUDY with statistical comparisons based on the factors in the selected design.
 % Use a representation with both time series (boxplot or errorbar) and
 % topographic location with pairwise statistic comparisons
+%
+% project                                                                    = input.project;
+% study_path                                                                 = input.study_path;
+% design_num_vec                                                             = input.design_num_vec;
+% design_factors_ordered_levels                                              = input.design_factors_ordered_levels;
+% results_path                                                               = input.results_path;
+% stat_analysis_suffix                                                       = input.stat_analysis_suffix;
+% roi_list                                                                   = input.roi_list;
+% roi_names                                                                  = input.roi_names;
+% group_time_windows_list                                                    = input.group_time_windows_list;
+% group_time_windows_names                                                   = input.group_time_windows_names;
+% subject_time_windows_list                                                  = input.subject_time_windows_list;
+% frequency_bands_list                                                       = input.frequency_bands_list;
+% frequency_bands_names                                                      = input.frequency_bands_names;
+% study_ls                                                                   = input.study_ls;
+% num_permutations                                                           = input.num_permutations;
+% correction                                                                 = input.correction;
+% set_caxis                                                                  = input.set_caxis;
+% paired_list                                                                = input.paired_list;
+% stat_method                                                                = input.stat_method;
+% display_only_significant_topo                                              = input.display_only_significant_topo;
+% display_only_significant_topo_mode                                         = input.display_only_significant_topo_mode;
+% display_compact_topo                                                       = input.display_compact_topo;
+% display_compact_topo_mode                                                  = input.display_compact_topo_mode;
+% list_select_subjects                                                       = input.list_select_subjects;
+% ersp_measure                                                               = input.ersp_measure;
+% subjects_data                                                              = input.subjects_data;
+% mode                                                                       = input.mode;
+% show_head                                                                  = input.show_head;
+% do_plots                                                                   = input.do_plots;
+% compact_display_ylim                                                       = input.compact_display_ylim;
+% num_tails                                                                  = input.num_tails;
+% show_text                                                                  = input.show_text;
+% z_transform                                                                = input.z_transform;
+% which_error_measure                                                        = input.which_error_measure;
+% do_narrowband                                                              = input.do_narrowband;
+% 
+% output.STUDY                                                               = STUDY;
+% output.EEG                                                                 = EEG;
 
 
-
-function [STUDY, EEG] = eeglab_study_plot_ersp_topo_tw_fb_compact(project,study_path, design_num_vec, design_factors_ordered_levels,...
-    results_path,stat_analysis_suffix,...
-    roi_list, roi_names,...
-    group_time_windows_list,group_time_windows_names,subject_time_windows_list,...
-    frequency_bands_list,frequency_bands_names,...
-    study_ls,num_permutations,correction,...
-    set_caxis,paired_list,stat_method,...
-    display_only_significant_topo,display_only_significant_topo_mode,...
-    display_compact_topo,display_compact_topo_mode,...
-    list_select_subjects,ersp_measure, subjects_data,...
-    mode,show_head,do_plots,compact_display_ylim,num_tails,show_text,z_transform,which_error_measure,do_narrowband...
-    )
+function [output] = eeglab_study_plot_ersp_topo_tw_fb_compact(input)
 
 if nargin < 1
     help eeglab_study_plot_ersp_topo_tw_fb_compact;
     return;
 end;
+
+
+
+project                                                                    = input.project;
+study_path                                                                 = input.study_path;
+design_num_vec                                                             = input.design_num_vec;
+design_factors_ordered_levels                                              = input.design_factors_ordered_levels;
+results_path                                                               = input.results_path;
+stat_analysis_suffix                                                       = input.stat_analysis_suffix;
+roi_list                                                                   = input.roi_list;
+roi_names                                                                  = input.roi_names;
+group_time_windows_list                                                    = input.group_time_windows_list;
+group_time_windows_names                                                   = input.group_time_windows_names;
+subject_time_windows_list                                                  = input.subject_time_windows_list;
+frequency_bands_list                                                       = input.frequency_bands_list;
+frequency_bands_names                                                      = input.frequency_bands_names;
+study_ls                                                                   = input.study_ls;
+num_permutations                                                           = input.num_permutations;
+correction                                                                 = input.correction;
+set_caxis                                                                  = input.set_caxis;
+paired_list                                                                = input.paired_list;
+stat_method                                                                = input.stat_method;
+display_only_significant_topo                                              = input.display_only_significant_topo;
+display_only_significant_topo_mode                                         = input.display_only_significant_topo_mode;
+display_compact_topo                                                       = input.display_compact_topo;
+display_compact_topo_mode                                                  = input.display_compact_topo_mode;
+list_select_subjects                                                       = input.list_select_subjects;
+ersp_measure                                                               = input.ersp_measure;
+subjects_data                                                              = input.subjects_data;
+mode                                                                       = input.mode;
+show_head                                                                  = input.show_head;
+do_plots                                                                   = input.do_plots;
+compact_display_ylim                                                       = input.compact_display_ylim;
+num_tails                                                                  = input.num_tails;
+show_text                                                                  = input.show_text;
+z_transform                                                                = input.z_transform;
+which_error_measure                                                        = input.which_error_measure;
+do_narrowband                                                              = input.do_narrowband;
 
 
 
@@ -550,5 +586,7 @@ if ~ ( strcmp(which_method_find_extrema,'group_noalign') || strcmp(which_method_
     [dataexpcols, dataexp]=text_export_ersp_struct([out_file_name,'.txt'],ersp_curve_roi_fb_stat);
 end
 
+output.STUDY = STUDY;
+output.EEG   = EEG;
 end
 end
