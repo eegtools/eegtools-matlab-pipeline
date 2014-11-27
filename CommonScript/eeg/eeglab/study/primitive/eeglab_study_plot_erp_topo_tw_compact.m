@@ -1,26 +1,4 @@
-%% [STUDY, EEG] = eeglab_study_plot_erp_topo_tw_compact(project,study_path,
-%                                                       design_num_vec,...
-%                                                       design_factors_ordered_levels,...
-%                                                       results_path,stat_analysis_suffix,...
-%                                                       roi_list, roi_names,...
-%                                                       group_time_windows_list,...
-%                                                       group_time_windows_names,...
-%                                                       study_ls,...
-%                                                       num_permutations,...
-%                                                       correction,...
-%                                                       set_caxis,...
-%                                                       paired_list,stat_method,...
-%                                                       display_only_significant_topo,...
-%                                                       display_only_significant_topo_mode,...
-%                                                       display_compact_topo,...
-%                                                       display_compact_topo_mode,...
-%                                                       list_select_subjects,
-%                                                       mode
-%                                                       show_head
-%                                                       do_plots,
-%                                                       num_tails
-%                                                       ,
-%                                                       show_text)
+%% [output] = eeglab_study_plot_erp_topo_tw_compact(input)
 %
 %
 % calculate and display erp topographic distribution for groups of scalp channels
@@ -28,23 +6,87 @@
 % comparisons based on the factors in the selected design.
 % Use a representation with both time series (boxplot or errorbar) and
 % topographic location with pairwise statistic comparisons
+%
+% project                                                                    = input.project;
+% study_path                                                                 = input.study_path; 
+% design_num_vec                                                             = input.design_num_vec; 
+% design_factors_ordered_levels                                              = input.design_factors_ordered_levels;
+% results_path                                                               = input.results_path;
+% stat_analysis_suffix                                                       = input.stat_analysis_suffix;
+% roi_list                                                                   = input.roi_list; 
+% roi_names                                                                  = input.roi_names;
+% group_time_windows_list                                                    = input.group_time_windows_list;
+% group_time_windows_names                                                   = input.group_time_windows_names;
+% subject_time_windows_list                                                  = input.subject_time_windows_list;
+% study_ls                                                                   = input.study_ls;
+% num_permutations                                                           = input.num_permutations;
+% correction                                                                 = input.correction;
+% set_caxis                                                                  = input.set_caxis;
+% paired_list                                                                = input.paired_list;
+% stat_method                                                                = input.stat_method;
+% display_only_significant_topo                                              = input.display_only_significant_topo;
+% display_only_significant_topo_mode                                         = input.display_only_significant_topo_mode;
+% display_compact_topo                                                       = input.display_compact_topo;
+% display_compact_topo_mode                                                  = input.display_compact_topo_mode;
+% list_select_subjects                                                       = input.list_select_subjects;
+% mode                                                                       = input.mode;
+% show_head                                                                  = input.show_head;
+% do_plots                                                                   = input.do_plots;
+% compact_display_ylim                                                       = input.compact_display_ylim; 
+% num_tails                                                                  = input.num_tails;
+% show_text                                                                  = input.show_text;
+% compact_display_h0                                                         = input.compact_display_h0;
+% compact_display_v0                                                         = input.compact_display_v0;
+% compact_display_sem                                                        = input.compact_display_sem;
+% compact_display_stats                                                      = input.compact_display_stats;
+% compact_display_xlim                                                       = input.compact_display_xlim;
+% display_single_subjects                                                    = input.display_single_subjects;
+%
 
 
-function [STUDY, EEG] = eeglab_study_plot_erp_topo_tw_compact(project,study_path, design_num_vec, design_factors_ordered_levels,...
-    results_path,stat_analysis_suffix,...
-    roi_list, roi_names,...
-    group_time_windows_list,group_time_windows_names,subject_time_windows_list,...
-    study_ls,num_permutations,correction,...
-    set_caxis,paired_list,stat_method,...
-    display_only_significant_topo,display_only_significant_topo_mode,...
-    display_compact_topo,display_compact_topo_mode,...
-    list_select_subjects,mode,show_head,do_plots,compact_display_ylim, num_tails,show_text,...
-    compact_display_h0,compact_display_v0,compact_display_sem,compact_display_stats,compact_display_xlim,display_single_subjects)
+function [output] = eeglab_study_plot_erp_topo_tw_compact(input)
 
 if nargin < 1
     help eeglab_study_plot_erp_topo_tw_compact;
     return;
 end;
+
+
+
+project                                                                    = input.project;
+study_path                                                                 = input.study_path; 
+design_num_vec                                                             = input.design_num_vec; 
+design_factors_ordered_levels                                              = input.design_factors_ordered_levels;
+results_path                                                               = input.results_path;
+stat_analysis_suffix                                                       = input.stat_analysis_suffix;
+roi_list                                                                   = input.roi_list; 
+roi_names                                                                  = input.roi_names;
+group_time_windows_list                                                    = input.group_time_windows_list;
+group_time_windows_names                                                   = input.group_time_windows_names;
+subject_time_windows_list                                                  = input.subject_time_windows_list;
+study_ls                                                                   = input.study_ls;
+num_permutations                                                           = input.num_permutations;
+correction                                                                 = input.correction;
+set_caxis                                                                  = input.set_caxis;
+paired_list                                                                = input.paired_list;
+stat_method                                                                = input.stat_method;
+display_only_significant_topo                                              = input.display_only_significant_topo;
+display_only_significant_topo_mode                                         = input.display_only_significant_topo_mode;
+display_compact_topo                                                       = input.display_compact_topo;
+display_compact_topo_mode                                                  = input.display_compact_topo_mode;
+list_select_subjects                                                       = input.list_select_subjects;
+mode                                                                       = input.mode;
+show_head                                                                  = input.show_head;
+do_plots                                                                   = input.do_plots;
+compact_display_ylim                                                       = input.compact_display_ylim; 
+num_tails                                                                  = input.num_tails;
+show_text                                                                  = input.show_text;
+compact_display_h0                                                         = input.compact_display_h0;
+compact_display_v0                                                         = input.compact_display_v0;
+compact_display_sem                                                        = input.compact_display_sem;
+compact_display_stats                                                      = input.compact_display_stats;
+compact_display_xlim                                                       = input.compact_display_xlim;
+display_single_subjects                                                    = input.display_single_subjects;
 
 pcond=[];
 pgroup=[];
@@ -486,6 +528,7 @@ for design_num=design_num_vec
         [dataexpcols, dataexp]=text_export_erp_struct([out_file_name,'.txt'],erp_curve_roi_stat);
     end
     
-    
+    output.STUDY =  STUDY;
+    output.EEG   =  EEG;
 end
 end
