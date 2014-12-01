@@ -179,7 +179,7 @@ STUDY                                  = std_selectdesign(STUDY, ALLEEG, design_
 ersp_curve_roi_fb_stat.study_des       = STUDY.design(design_num);
 ersp_curve_roi_fb_stat.study_des.num   = design_num;
 
-ersp_curve_roi_fb_stat.list_design_subjects = list_design_subjects;
+
 ersp_curve_roi_fb_stat.individual_fb_bands  = individual_fb_bands;
 
 
@@ -606,7 +606,7 @@ ersp_curve_roi_fb_stat.list_select_subjects=list_select_subjects;
 
 
 
-
+ersp_curve_roi_fb_stat.list_design_subjects = list_design_subjects;
 %% EXPORTING DATA AND RESULTS OF ANALYSIS
 out_file_name=fullfile(plot_dir,'ersp_curve_roi_fb-stat')
 save([out_file_name,'.mat'],'ersp_curve_roi_fb_stat');

@@ -190,7 +190,7 @@ for design_num=design_num_vec
     list_design_subjects   = eeglab_generate_subjects_list_by_factor_levels(STUDY, design_num);
     individual_fb_bands    = eeglab_generate_subjects_bands_by_factor_levels(STUDY, design_num, subjects_data, frequency_bands_list);  ... {factor1,factor2}{subj}{band}
         
-ersp_topo_stat.list_design_subjects=list_design_subjects;
+
 ersp_topo_stat.individual_fb_bands=individual_fb_bands;
 
 %         group_time_windows_list     = arrange_structure(project.postprocess.ersp.design, 'group_time_windows');
@@ -259,12 +259,15 @@ for nroi = 1:length(roi_list)
                 end
                 ersp{nf1,nf2}=ersp{nf1,nf2}(:,:,:,vec_select_subjects);
                 filtered_individual_fb_bands{nf1,nf2} = {individual_fb_bands{nf1,nf2}{vec_select_subjects}};
+                list_design_subjects{nf1,nf2}=list_design_subjects{nf1,nf2}(vec_select_subjects);
             else
                 filtered_individual_fb_bands{nf1,nf2} = individual_fb_bands{nf1,nf2};
+                
             end
         end
     end
     
+    ersp_topo_stat.list_design_subjects=list_design_subjects;
     %% averaging channels in the roi
     ersp_roi=[];
     for nf1=1:length(levels_f1)

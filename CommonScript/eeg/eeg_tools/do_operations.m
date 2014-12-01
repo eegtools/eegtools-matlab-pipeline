@@ -107,7 +107,7 @@ if do_design
 end
 
 if do_study_compute_channels_measures   
-    proj_eeglab_study_compute_channels_measures(project, 'recompute', 'on', 'do_erp', '1', 'do_ersp', '1', 'do_erpim', '1', 'do_spec', '1', 'design_num_vec', design_num_vec); ..., 'sel_cell_string', 'CC_01'); ... ,
+    proj_eeglab_study_compute_channels_measures(project, 'recompute', 'on', 'do_erp', '1', 'do_ersp', '1', 'do_erpim', '0', 'do_spec', '1', 'design_num_vec', design_num_vec); ..., 'sel_cell_string', 'CC_01'); ... ,
 end
 
 %==================================================================================

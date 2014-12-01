@@ -162,7 +162,7 @@ for design_num=design_num_vec
     group_time_windows_names_design            = group_time_windows_names{design_num};
     
     list_design_subjects                       = eeglab_generate_subjects_list_by_factor_levels(STUDY, design_num);
-    erp_topo_stat.list_design_subjects         = list_design_subjects;
+    
     erp_curve_roi_stat.list_design_subjects    = list_design_subjects;
     
     
@@ -202,10 +202,12 @@ for design_num=design_num_vec
                         return;
                     end
                     erp_curve_roi{nf1,nf2}=erp_curve_roi{nf1,nf2}(:,vec_select_subjects);
+                    list_design_subjects{nf1,nf2}=list_design_subjects{nf1,nf2}(vec_select_subjects);
+
                 end
             end
         end
-        
+        erp_topo_stat.list_design_subjects         = list_design_subjects;
         
         group_time_windows_list_design  = group_time_windows_list{design_num};
         group_time_windows_names_design = group_time_windows_names{design_num};
