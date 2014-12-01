@@ -257,7 +257,7 @@ for nroi = 1:length(roi_list)
                     fmax = filtered_individual_fb_bands{nf1,nf2}{nsub}{nband}(2);
                     
                     ...[nfmin, nfmax] = eeglab_get_narrowband(ersp_curve_roi_fb{nf1,nf2}(:,nsub), [fmin fmax], [tmin tmax], [dfmin dfmax]);
-                    sel_freqs = freqs >= fmin & freqs <= fmax;
+                        sel_freqs = freqs >= fmin & freqs <= fmax;
                     
                     % cla sposto qui per il narrowband
                     
@@ -269,67 +269,67 @@ for nroi = 1:length(roi_list)
                     
                     which_extrema_design_continuous                         = project.postprocess.ersp.design(design_num).which_extrema_curve_continuous; ...which_extrema_ersp_curve_fb{design_num};
                         
-                    which_extrema_design_roi_continuous                     = which_extrema_design_continuous{nroi};
-                    which_extrema_design_roi_band_continuous                = which_extrema_design_roi_continuous{nband};
-
-                    ersp_matrix_sub                                         = ersp_roi{nf1,nf2}(:,:,nsub);
-
-                    if isempty(group_tmin)
-                        group_tmin = min(times);
-                    end
-                    %                 if isempty(group_fmin)
+                which_extrema_design_roi_continuous                     = which_extrema_design_continuous{nroi};
+                which_extrema_design_roi_band_continuous                = which_extrema_design_roi_continuous{nband};
+                
+                ersp_matrix_sub                                         = ersp_roi{nf1,nf2}(:,:,nsub);
+                
+                if isempty(group_tmin)
+                    group_tmin = min(times);
+                end
+                %                 if isempty(group_fmin)
+                group_fmin = fmin;
+                %                 end
+                
+                if isempty(group_tmax)
+                    group_tmax = max(times);
+                end
+                
+                %                 if isempty(group_fmax)
+                group_fmax = fmax;
+                %                 end
+                
+                narrowband_output = [];
+                
+                if strcmp(do_narrowband,'on')
                     group_fmin = fmin;
-                    %                 end
-
-                    if isempty(group_tmax)
-                        group_tmax = max(times);
-                    end
-
-                    %                 if isempty(group_fmax)
                     group_fmax = fmax;
-                    %                 end
-
-                    narrowband_output = [];
-
-                    if strcmp(do_narrowband,'on')
-                        group_fmin = fmin;
-                        group_fmax = fmax;
-
-                        % narrowband input structure
-                        narrowband_input.times                  = times;
-                        narrowband_input.freqs                  = freqs;
-                        narrowband_input.ersp_matrix_sub        = ersp_matrix_sub;
-                        narrowband_input.group_tmin             = group_tmin;
-                        narrowband_input.group_tmax             = group_tmax;
-                        narrowband_input.group_fmin             = group_fmin;
-                        narrowband_input.group_fmax             = group_fmax ;
-                        narrowband_input.group_dfmin            = group_dfmin;
-                        narrowband_input.group_dfmax            = group_dfmax;
-                        narrowband_input.which_realign_measure  = which_realign_measure_cell{nband};
-
-                        [project, narrowband_output]            = eeglab_get_narrowband(project,narrowband_input);
-
-
-                        %                     if ~isempty([sub_adjusted_fmin, sub_adjusted_fmax])
-                        fmin                                    = narrowband_output.results.sub.fmin;
-                        fmax                                    = narrowband_output.results.sub.fmax;
-                        %                     end
-
-                        narrowband_output.adjusted_frequency_band{nf1,nf2}(nsub,:)      = [narrowband_output.results.sub.fmin, narrowband_output.results.sub.fmax];
-                        narrowband_output.realign_freq{nf1,nf2}(nsub)                   = narrowband_output.results.sub.realign_freq;
-                        narrowband_output.realign_freq_value{nf1,nf2}(nsub)             = narrowband_output.results.sub.realign_freq;
-                        narrowband_output.realign_freq_value_lat{nf1,nf2}{nsub}         = narrowband_output.results.sub.realign_freq_value_lat;
-
-                        narrowband_output.mean_centroid_group_fb{nf1,nf2}(nsub)         = narrowband_output.results.group.fb.centroid_mean; ...   mean_centroid_group_fb;
+                    
+                    % narrowband input structure
+                    narrowband_input.times                  = times;
+                    narrowband_input.freqs                  = freqs;
+                    narrowband_input.ersp_matrix_sub        = ersp_matrix_sub;
+                    narrowband_input.group_tmin             = group_tmin;
+                    narrowband_input.group_tmax             = group_tmax;
+                    narrowband_input.group_fmin             = group_fmin;
+                    narrowband_input.group_fmax             = group_fmax ;
+                    narrowband_input.group_dfmin            = group_dfmin;
+                    narrowband_input.group_dfmax            = group_dfmax;
+                    narrowband_input.which_realign_measure  = which_realign_measure_cell{nband};
+                    
+                    [project, narrowband_output]            = eeglab_get_narrowband(project,narrowband_input);
+                    
+                    
+                    %                     if ~isempty([sub_adjusted_fmin, sub_adjusted_fmax])
+                    fmin                                    = narrowband_output.results.sub.fmin;
+                    fmax                                    = narrowband_output.results.sub.fmax;
+                    %                     end
+                    
+                    narrowband_output.adjusted_frequency_band{nf1,nf2}(nsub,:)      = [narrowband_output.results.sub.fmin, narrowband_output.results.sub.fmax];
+                    narrowband_output.realign_freq{nf1,nf2}(nsub)                   = narrowband_output.results.sub.realign_freq;
+                    narrowband_output.realign_freq_value{nf1,nf2}(nsub)             = narrowband_output.results.sub.realign_freq;
+                    narrowband_output.realign_freq_value_lat{nf1,nf2}{nsub}         = narrowband_output.results.sub.realign_freq_value_lat;
+                    
+                    narrowband_output.mean_centroid_group_fb{nf1,nf2}(nsub)         = narrowband_output.results.group.fb.centroid_mean; ...   mean_centroid_group_fb;
                         narrowband_output.mean_centroid_sub_realign_fb{nf1,nf2}(nsub)   = narrowband_output.results.sub.fb.centroid_mean;   ...mean_centroid_sub_realign_fb;
                         narrowband_output.median_centroid_group_fb{nf1,nf2}(nsub)       = narrowband_output.results.group.fb.centroid_median;  ...results.group.fb.centroid_median ...median_centroid_group_fb;
                         ...narrowband_output.median_centroid_sub_realign_fb{nf1,nf2}(nsub) = 0; ...narrowband_output.results.sub.fb.centroid_median;  ...median_centroid_sub_realign_fb;
-                    end
-
-                    narrowband{nf1,nf2,nsub}            = narrowband_output;
-                    sel_freqs                           = freqs >= fmin & freqs <= fmax;
-                    ersp_curve_roi_fb{nf1,nf2}(:,nsub)  = mean(ersp_roi{nf1,nf2}(sel_freqs,:,nsub),1);
-                
+                end
+            
+            narrowband{nf1,nf2,nsub}            = narrowband_output;
+            sel_freqs                           = freqs >= fmin & freqs <= fmax;
+            ersp_curve_roi_fb{nf1,nf2}(:,nsub)  = mean(ersp_roi{nf1,nf2}(sel_freqs,:,nsub),1);
+            
                 end
                 
             end
@@ -349,7 +349,7 @@ for nroi = 1:length(roi_list)
             ersp_curve_roi_fb_stat.group_time_windows_names_design = group_time_windows_list_design;
             
             which_extrema_design_tw            = project.postprocess.ersp.design(design_num).which_extrema_curve_tw; ...which_extrema_ersp_curve_fb{design_num};
-            which_extrema_design_roi_tw        = which_extrema_design_tw{nroi};
+                which_extrema_design_roi_tw        = which_extrema_design_tw{nroi};
             which_extrema_design_roi_band_tw   = which_extrema_design_roi_tw{nband};
             
             
@@ -413,12 +413,36 @@ for nroi = 1:length(roi_list)
             
             [pcond_corr, pgroup_corr, pinter_corr] = eeglab_study_correct_pvals(pcond, pgroup, pinter,correction);
             
+            
+            input_graph.STUDY                                              = STUDY;
+            input_graph.design_num                                         = design_num;
+            input_graph.roi_name                                           = roi_name;
+            input_graph.name_f1                                            = name_f1;
+            input_graph.name_f2                                            = name_f2;
+            input_graph.levels_f1                                          = levels_f1;
+            input_graph.levels_f2                                          = levels_f2;
+            input_graph.ersp_curve_fb                                      = ersp_curve_roi_fb;
+            input_graph.times                                              = times_plot;
+            input_graph.frequency_band_name                                = frequency_bands_names{nband};
+            input_graph.time_windows_design_names                          = group_time_windows_names{design_num};
+            input_graph.pcond                                              = pcond_corr;
+            input_graph.pgroup                                             = pgroup_corr;
+            input_graph.pinter                                             = pinter_corr;
+            input_graph.study_ls                                           = study_ls;
+            input_graph.plot_dir                                           = plot_dir;
+            input_graph.display_only_significant                           = display_only_significant;
+            input_graph.display_compact_plots                              = display_compact_plots;
+            input_graph.compact_display_h0                                 = compact_display_h0;
+            input_graph.compact_display_v0                                 = compact_display_v0;
+            input_graph.compact_display_sem                                = compact_display_sem;
+            input_graph.compact_display_stats                              = compact_display_stats;
+            input_graph.compact_display_xlim                               = compact_display_xlim;
+            input_graph.compact_display_ylim                               = compact_display_ylim;
+            input_graph.ersp_measure                                       = ersp_measure;
+            
+            
             if (strcmp(do_plots,'on'))
-                eeglab_study_roi_ersp_curve_tw_fb_graph(STUDY, design_num, roi_name, name_f1, name_f2, levels_f1,levels_f2, ...
-                    ersp_curve_roi_fb, times_plot, frequency_bands_names{nband},group_time_windows_names{design_num},...
-                    pcond_corr, pgroup_corr, pinter_corr,study_ls,plot_dir,display_only_significant,display_compact_plots,...
-                    compact_display_h0,compact_display_v0,compact_display_sem,compact_display_stats,...
-                    compact_display_xlim,compact_display_ylim,ersp_measure);
+                eeglab_study_roi_ersp_curve_tw_fb_graph(input_graph);
             end
             
             
@@ -494,10 +518,40 @@ for nroi = 1:length(roi_list)
                 [pcond, pgroup, pinter] = eeglab_study_roi_curve_maskp(pcond, pgroup, pinter,times_plot, masked_times_max);
             end
             if (strcmp(do_plots,'on'))
-                eeglab_study_roi_ersp_curve_fb_graph(STUDY, design_num, roi_name, name_f1, name_f2, levels_f1,levels_f2, ersp_curve_roi_fb, times_plot, frequency_bands_names{nband}, ...
-                    pcond_corr, pgroup_corr, pinter_corr,study_ls,plot_dir,display_only_significant,...
-                    display_compact_plots, compact_display_h0,compact_display_v0,compact_display_sem,compact_display_stats,...
-                    display_single_subjects,compact_display_xlim,compact_display_ylim,ersp_measure);
+                %
+                %                 STUDY, design_num, roi_name, name_f1, name_f2, levels_f1,levels_f2, ersp_curve_roi_fb, times_plot, frequency_bands_names{nband}, ...
+                %                     pcond_corr, pgroup_corr, pinter_corr,study_ls,plot_dir,display_only_significant,...
+                %                     display_compact_plots, compact_display_h0,compact_display_v0,compact_display_sem,compact_display_stats,...
+                %                     display_single_subjects,compact_display_xlim,compact_display_ylim,ersp_measure
+                
+                input_graph.STUDY                                          = STUDY;
+                input_graph.design_num                                     = design_num;
+                input_graph.roi_name                                       = roi_name;
+                input_graph.name_f1                                        = name_f1;
+                input_graph.name_f2                                        = name_f2;
+                input_graph.levels_f1                                      = levels_f1;
+                input_graph.levels_f2                                      = levels_f2;
+                input_graph.ersp_curve_fb                                  = ersp_curve_roi_fb;
+                input_graph.times                                          = times_plot;
+                input_graph.frequency_band_name                            = frequency_bands_names{nband};
+                input_graph.pcond                                          = pcond_corr;
+                input_graph.pgroup                                         = pgroup_corr;
+                input_graph.pinter                                         = pinter_corr;
+                input_graph.study_ls                                       = study_ls;
+                input_graph.plot_dir                                       = plot_dir;
+                input_graph.display_only_significant                       = display_only_significant;
+                input_graph.display_compact_plots                          = display_compact_plots;
+                input_graph.compact_display_h0                             = compact_display_h0;
+                input_graph.compact_display_v0                             = compact_display_v0;
+                input_graph.compact_display_sem                            = compact_display_sem;
+                input_graph.compact_display_stats                          = compact_display_stats;
+                input_graph.display_single_subjects                        = display_single_subjects;
+                input_graph.compact_display_xlim                           = compact_display_xlim;
+                input_graph.compact_display_ylim                           = compact_display_ylim;
+                input_graph.ersp_measure                                   = ersp_measure;
+                input_graph.time_windows_design_names                      = group_time_windows_names{design_num};
+                
+                eeglab_study_roi_ersp_curve_fb_graph(input_graph);
                 
             end
         end

@@ -40,7 +40,7 @@
 % z_transform                                                                = input.z_transform;
 % which_error_measure                                                        = input.which_error_measure;
 % do_narrowband                                                              = input.do_narrowband;
-% 
+%
 % output.STUDY                                                               = STUDY;
 % output.EEG                                                                 = EEG;
 
@@ -403,11 +403,40 @@ for nroi = 1:length(roi_list)
         [pcond_corr, pgroup_corr, pinter_corr] = eeglab_study_correct_pvals(pcond, pgroup, pinter,correction);
         
         if (strcmp(do_plots,'on'))
-            eeglab_study_roi_ersp_curve_tw_fb_graph(STUDY, design_num, roi_name, name_f1, name_f2, levels_f1,levels_f2, ...
-                ersp_curve_roi_fb, times_plot, frequency_bands_names{nband},group_time_windows_names{design_num},...
-                pcond_corr, pgroup_corr, pinter_corr,study_ls,plot_dir,display_only_significant_topo,display_compact_plots,...
-                compact_display_h0,compact_display_v0,compact_display_sem,compact_display_stats,...
-                compact_display_xlim,compact_display_ylim,ersp_measure);
+            %             STUDY, design_num, roi_name, name_f1, name_f2, levels_f1,levels_f2, ...
+            %                 ersp_curve_roi_fb, times_plot, frequency_bands_names{nband},group_time_windows_names{design_num},...
+            %                 pcond_corr, pgroup_corr, pinter_corr,study_ls,plot_dir,display_only_significant_topo,display_compact_plots,...
+            %                 compact_display_h0,compact_display_v0,compact_display_sem,compact_display_stats,...
+            %                 compact_display_xlim,compact_display_ylim,ersp_measure
+            
+            input_graph.STUDY                                                          = STUDY;
+            input_graph.design_num                                                     = design_num;
+            input_graph.roi_name                                                       = roi_name;
+            input_graph.name_f1                                                        = name_f1;
+            input_graph.name_f2                                                        = name_f2;
+            input_graph.levels_f1                                                      = levels_f1;
+            input_graph.levels_f2                                                      = levels_f2;
+            input_graph.ersp_curve_fb                                                  = ersp_curve_roi_fb;
+            input_graph.times                                                          = times_plot;
+            input_graph.frequency_band_name                                            = frequency_bands_names{nband};
+            input_graph.group_time_windows_name                                        = group_time_windows_names{design_num};
+            input_graph.pcond                                                          = pcond_corr;
+            input_graph.pgroup                                                         = pgroup_corr;
+            input_graph.pinter                                                         = pinter_corr;
+            input_graph.study_ls                                                       = study_ls;
+            input_graph.plot_dir                                                       = plot_dir;
+            input_graph.display_only_significant_topo                                  = display_only_significant_topo;
+            input_graph.display_compact_plots                                          = display_compact_plots;
+            input_graph.compact_display_h0                                             = compact_display_h0;
+            input_graph.compact_display_v0                                             = compact_display_v0;
+            input_graph.compact_display_sem                                            = compact_display_sem;
+            input_graph.compact_display_stats                                          = compact_display_stats;
+            input_graph.compact_display_xlim                                           = compact_display_xlim;
+            input_graph.compact_display_ylim                                           = compact_display_ylim;
+            input_graph.ersp_measure                                                   = ersp_measure;
+            
+            
+            eeglab_study_roi_ersp_curve_tw_fb_graph(input_graph);
         end
         
         
@@ -545,7 +574,7 @@ for nroi = 1:length(roi_names)
             
             if (strcmp(do_plots,'on'))
                 
-                input_topo.STUDY                                           = STUDY; 
+                input_topo.STUDY                                           = STUDY;
                 input_topo.design_num                                      = design_num;
                 input_topo.ersp_topo_tw_fb                                 = ersp_topo_tw_fb_roi_avg_tw;
                 input_topo.set_caxis                                       = set_caxis;
@@ -578,16 +607,16 @@ for nroi = 1:length(roi_names)
                 input_topo.z_transform                                     = z_transform;
                 input_topo.which_error_measure                             = which_error_measure;
                 
-%                 STUDY, design_num, ersp_topo_tw_fb_roi_avg_tw,set_caxis, locs, name_f1, name_f2, levels_f1,levels_f2,...
-%                     time_window_name,time_window, ...
-%                     frequency_band_name, ...
-%                     stats.post_hoc.pcond_corr, stats.post_hoc.pgroup_corr, stats.post_hoc.pinter_corr,study_ls,...
-%                     plot_dir,display_only_significant_topo,display_only_significant_topo_mode,...
-%                     display_compact_topo,display_compact_topo_mode,...
-%                     ersp_topo_tw_fb_roi_avg_tw,...
-%                     stats.post_hoc.compcond, stats.post_hoc.compgroup,...
-%                     roi_name, roi_mask,...
-%                     ersp_measure,show_head,compact_display_ylim,show_text,z_transform,which_error_measure
+                %                 STUDY, design_num, ersp_topo_tw_fb_roi_avg_tw,set_caxis, locs, name_f1, name_f2, levels_f1,levels_f2,...
+                %                     time_window_name,time_window, ...
+                %                     frequency_band_name, ...
+                %                     stats.post_hoc.pcond_corr, stats.post_hoc.pgroup_corr, stats.post_hoc.pinter_corr,study_ls,...
+                %                     plot_dir,display_only_significant_topo,display_only_significant_topo_mode,...
+                %                     display_compact_topo,display_compact_topo_mode,...
+                %                     ersp_topo_tw_fb_roi_avg_tw,...
+                %                     stats.post_hoc.compcond, stats.post_hoc.compgroup,...
+                %                     roi_name, roi_mask,...
+                %                     ersp_measure,show_head,compact_display_ylim,show_text,z_transform,which_error_measure
                 
                 eeglab_study_ersp_topo_graph(input_topo);
             end
