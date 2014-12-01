@@ -104,7 +104,7 @@ for design_num=design_num_vec
     list_design_subjects   = eeglab_generate_subjects_list_by_factor_levels(STUDY, design_num);
     individual_fb_bands    = eeglab_generate_subjects_bands_by_factor_levels(STUDY, design_num, subjects_data, frequency_bands_list);  ... {factor1,factor2}{subj}{band}
         
-ersp_topo_stat.list_design_subjects     = list_design_subjects;
+
 ersp_topo_stat.individual_fb_bands      = individual_fb_bands;
 
 ersp_topo_stat.study_des                = STUDY.design(design_num);
@@ -165,12 +165,14 @@ for nband=1:length(frequency_bands_list)
                     end
                     ersp_topo_tw_fb{nf1,nf2}=ersp_topo_tw_fb{nf1,nf2}(:,:,vec_select_subjects);
                     filtered_individual_fb_bands{nf1,nf2} = {individual_fb_bands{nf1,nf2}{vec_select_subjects}};
+                    list_design_subjects{nf1,nf2}=list_design_subjects{nf1,nf2}(vec_select_subjects);
                 else
                     filtered_individual_fb_bands{nf1,nf2} = individual_fb_bands{nf1,nf2};
                 end
             end
         end
-        
+       ersp_topo_stat.list_design_subjects     = list_design_subjects;
+       
         if strcmp(ersp_measure, 'Pfu')
             for nf1=1:length(levels_f1)
                 for nf2=1:length(levels_f2)

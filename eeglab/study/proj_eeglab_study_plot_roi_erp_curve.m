@@ -181,7 +181,7 @@ function [STUDY, EEG] = proj_eeglab_study_plot_roi_erp_curve(project, analysis_n
 
         % lista dei soggetti suddivisi per fattori
          list_design_subjects               = eeglab_generate_subjects_list_by_factor_levels(STUDY, design_num);
-         erp_curve_roi_stat.list_design_subjects = list_design_subjects;    
+           
         
          % select the study design for the analyses
          STUDY                              = std_selectdesign(STUDY, ALLEEG, design_num);
@@ -220,10 +220,13 @@ function [STUDY, EEG] = proj_eeglab_study_plot_roi_erp_curve(project, analysis_n
                             return;
                         end                        
                         erp_curve_roi{nf1,nf2}=erp_curve_roi{nf1,nf2}(:,vec_select_subjects);
+                        list_design_subjects{nf1,nf2}=list_design_subjects{nf1,nf2}(vec_select_subjects);
                     end
                 end
             end
 
+            erp_curve_roi_stat.list_design_subjects = list_design_subjects;  
+            
             if strcmp(time_resolution_mode,'tw')  
                 group_time_windows_list_design  = group_time_windows_list{design_num};
                 group_time_windows_names_design = group_time_windows_names{design_num};

@@ -71,6 +71,7 @@ STUDY = pop_statparams(STUDY, 'groupstats','off','condstats','off');
                     return;
                 end                        
                 ersp_tf{nf1,nf2}=ersp_tf{nf1,nf2}(:,:,:,vec_select_subjects);
+                list_design_subjects{nf1,nf2}=list_design_subjects{nf1,nf2}(vec_select_subjects);
             end
         end
     end  
