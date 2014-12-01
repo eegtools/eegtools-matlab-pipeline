@@ -118,27 +118,28 @@ display_single_subjects=project.results_display.erp.single_subjects;
 for par=1:2:length(varargin)
     switch varargin{par}
         case {'design_num_vec', ...
-              'design_factors_ordered_levels', ...
-              'analysis_name', ...
-              'roi_list', ...
-              'roi_names', ...
-              'study_ls', ...
-              'num_permutations', ...
-              'correction', ...
-              'stat_method', ...
-              'display_only_significant_topo', ...
-              'display_only_significant_topo_mode', ...
-              'set_caxis', 'display_compact_topo', ...
-              'display_compact_topo_mode', ...
-              'group_time_windows_list',...
-              'group_time_windows_names', ...
-              'subject_time_windows_list', ...
-              'list_select_subjects', ...
-              'show_head', ...
-              'do_plots', ...
-              'compact_display_ylim', ...
-              'num_tails', ...
-              'show_text'}
+                'design_factors_ordered_levels', ...
+                'analysis_name', ...
+                'roi_list', ...
+                'roi_names', ...
+                'study_ls', ...
+                'num_permutations', ...
+                'correction', ...
+                'stat_method', ...
+                'display_only_significant_topo', ...
+                'display_only_significant_topo_mode', ...
+                'set_caxis', 'display_compact_topo', ...
+                'display_compact_topo_mode', ...
+                'group_time_windows_list',...
+                'group_time_windows_names', ...
+                'subject_time_windows_list', ...
+                'list_select_subjects', ...
+                'show_head', ...
+                'do_plots', ...
+                'compact_display_ylim', ...
+                'num_tails', ...
+                'show_text'}
+            
             if isempty(varargin{par+1})
                 continue;
             else
@@ -151,75 +152,76 @@ end
 if strcmp(display_compact_topo,'on')
     
     
-input_topo.project                                                         = project;
-input_topo.study_path                                                      = study_path; 
-input_topo.design_num_vec                                                  = design_num_vec;
-input_topo.design_factors_ordered_levels                                   = design_factors_ordered_levels;
-input_topo.results_path                                                    = results_path;
-input_topo.analysis_name                                                   = analysis_name;
-input_topo.roi_list                                                        = roi_list;
-input_topo.roi_names                                                       = roi_names;
-input_topo.group_time_windows_list                                         = group_time_windows_list;
-input_topo.group_time_windows_names                                        = group_time_windows_names;
-input_topo.subject_time_windows_list                                       = subject_time_windows_list;
-input_topo.study_ls                                                        = study_ls;
-input_topo.num_permutations                                                = num_permutations;
-input_topo.correction                                                      = correction;
-input_topo.set_caxis                                                       = set_caxis;
-input_topo.paired_list                                                     = paired_list;
-input_topo.stat_method                                                     = stat_method;
-input_topo.display_only_significant_topo                                   = display_only_significant_topo;
-input_topo.display_only_significant_topo_mode                              = display_only_significant_topo_mode;
-input_topo.display_compact_topo                                            = display_compact_topo;
-input_topo.display_compact_topo_mode                                       = display_compact_topo_mode;
-input_topo.list_select_subjects                                            = list_select_subjects;
-input_topo.mode                                                            = mode;
-input_topo.show_head                                                       = show_head;
-input_topo.do_plots                                                        = do_plots;
-input_topo.compact_display_ylim                                            = compact_display_ylim; 
-input_topo.num_tails                                                       = num_tails;
-input_topo.show_text                                                       = show_text;
-input_topo.compact_display_h0                                              = compact_display_h0;
-input_topo.compact_display_v0                                              = compact_display_v0;
-input_topo.compact_display_sem                                             = compact_display_sem;
-input_topo.compact_display_stats                                           = compact_display_stats;
-input_topo.compact_display_xlim                                            = compact_display_xlim;
-input_topo.display_single_subjects                                         = display_single_subjects;
+    input_topo.project                                                         = project;
+    input_topo.study_path                                                      = study_path;
+    input_topo.design_num_vec                                                  = design_num_vec;
+    input_topo.design_factors_ordered_levels                                   = design_factors_ordered_levels;
+    input_topo.results_path                                                    = results_path;
+    input_topo.analysis_name                                                   = analysis_name;
+    input_topo.roi_list                                                        = roi_list;
+    input_topo.roi_names                                                       = roi_names;
+    input_topo.group_time_windows_list                                         = group_time_windows_list;
+    input_topo.group_time_windows_names                                        = group_time_windows_names;
+    input_topo.subject_time_windows_list                                       = subject_time_windows_list;
+    input_topo.study_ls                                                        = study_ls;
+    input_topo.num_permutations                                                = num_permutations;
+    input_topo.correction                                                      = correction;
+    input_topo.set_caxis                                                       = set_caxis;
+    input_topo.paired_list                                                     = paired_list;
+    input_topo.stat_method                                                     = stat_method;
+    input_topo.display_only_significant_topo                                   = display_only_significant_topo;
+    input_topo.display_only_significant_topo_mode                              = display_only_significant_topo_mode;
+    input_topo.display_compact_topo                                            = display_compact_topo;
+    input_topo.display_compact_topo_mode                                       = display_compact_topo_mode;
+    input_topo.list_select_subjects                                            = list_select_subjects;
+    input_topo.mode                                                            = mode;
+    input_topo.show_head                                                       = show_head;
+    input_topo.do_plots                                                        = do_plots;
+    input_topo.compact_display_ylim                                            = compact_display_ylim;
+    input_topo.num_tails                                                       = num_tails;
+    input_topo.show_text                                                       = show_text;
+    input_topo.compact_display_h0                                              = compact_display_h0;
+    input_topo.compact_display_v0                                              = compact_display_v0;
+    input_topo.compact_display_sem                                             = compact_display_sem;
+    input_topo.compact_display_stats                                           = compact_display_stats;
+    input_topo.compact_display_xlim                                            = compact_display_xlim;
+    input_topo.display_single_subjects                                         = display_single_subjects;
     
     
     [output_topo] = eeglab_study_plot_erp_topo_tw_compact(input_topo);
-    STUDY         = output_topo.STUDY; 
-    EEG           = output_topo.EEG; 
+    STUDY         = output_topo.STUDY;
+    EEG           = output_topo.EEG;
     
 end
 
 %% standard EEGLAB representation and statistics: only time topographic representation
 if strcmp(display_compact_topo,'off')
     
-input_topo.study_path                                                      = study_path; 
-input_topo.design_num_vec                                                  = design_num_vec;
-input_topo.results_path                                                    = results_path;
-input_topo.analysis_name                                                   = analysis_name;
-input_topo.group_time_windows_list                                         = group_time_windows_list;
-input_topo.group_time_windows_names                                        = group_time_windows_names;
-input_topo.study_ls                                                        = study_ls;
-input_topo.num_permutations                                                = num_permutations;
-input_topo.correction                                                      = correction;
-input_topo.set_caxis                                                       = set_caxis;
-input_topo.paired_list                                                     = paired_list;
-input_topo.stat_method                                                     = stat_method;
-input_topo.display_only_significant_topo                                   = display_only_significant_topo;
-input_topo.display_only_significant_topo_mode                              = display_only_significant_topo_mode;
-input_topo.display_compact_topo                                            = display_compact_topo;
-input_topo.display_compact_topo_mode                                       = display_compact_topo_mode;
-input_topo.list_select_subjects                                            = list_select_subjects;
-input_topo.do_plots                                                        = do_plots;
-input_topo.num_tails                                                       = num_tails;
-
+    input_topo.study_path                                                      = study_path;
+    input_topo.design_num_vec                                                  = design_num_vec;
+    input_topo.results_path                                                    = results_path;
+    input_topo.analysis_name                                                   = analysis_name;
+    input_topo.group_time_windows_list                                         = group_time_windows_list;
+    input_topo.group_time_windows_names                                        = group_time_windows_names;
+    input_topo.study_ls                                                        = study_ls;
+    input_topo.num_permutations                                                = num_permutations;
+    input_topo.correction                                                      = correction;
+    input_topo.set_caxis                                                       = set_caxis;
+    input_topo.paired_list                                                     = paired_list;
+    input_topo.stat_method                                                     = stat_method;
+    input_topo.display_only_significant_topo                                   = display_only_significant_topo;
+    input_topo.display_only_significant_topo_mode                              = display_only_significant_topo_mode;
+    input_topo.display_compact_topo                                            = display_compact_topo;
+    input_topo.display_compact_topo_mode                                       = display_compact_topo_mode;
+    input_topo.list_select_subjects                                            = list_select_subjects;
+    input_topo.do_plots                                                        = do_plots;
+    input_topo.num_tails                                                       = num_tails;
+    input_topo.roi_list                                                        = roi_list;
+    input_topo.roi_names                                                       = roi_names;
     
     [output_topo] = eeglab_study_plot_erp_topo_tw_standard(input_topo);
-    STUDY         = output_topo.STUDY; 
-    EEG           = output_topo.EEG; 
+    STUDY         = output_topo.STUDY;
+    EEG           = output_topo.EEG;
 end
 
 

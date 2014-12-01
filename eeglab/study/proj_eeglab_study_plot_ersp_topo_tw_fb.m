@@ -160,7 +160,7 @@ input_topo.study_path                                                      = stu
 input_topo.design_num_vec                                                  = design_num_vec; 
 input_topo.design_factors_ordered_levels                                   = design_factors_ordered_levels;
 input_topo.results_path                                                    = results_path;
-input_topo.analysis_name                                                   = analysis_name;
+input_topo.stat_analysis_suffix                                            = analysis_name;
 input_topo.roi_list                                                        = roi_list; 
 input_topo.roi_names                                                       = roi_names;
 input_topo.group_time_windows_list                                         = group_time_windows_list;
@@ -184,7 +184,7 @@ input_topo.subjects_data                                                   = sub
 input_topo.mode                                                            = mode;
 input_topo.show_head                                                       = show_head;
 input_topo.do_plots                                                        = do_plots;
-input_topo.compact_display_ylim                                            = compact_display_ylim;s
+input_topo.compact_display_ylim                                            = compact_display_ylim;
 input_topo.num_tails                                                       = num_tails;
 input_topo.show_text                                                       = show_text;
 input_topo.z_transform                                                     = z_transform;
@@ -205,7 +205,7 @@ if strcmp(display_compact_topo,'off')
     input_topo.study_path                                              = study_path;
     input_topo.design_num_vec                                          = design_num_vec;
     input_topo.results_path                                            = results_path;
-    input_topo.analysis_name                                           = analysis_name;
+    input_topo.stat_analysis_suffix                                           = analysis_name;
     input_topo.group_time_windows_list                                 = group_time_windows_list;
     input_topo.group_time_windows_names                                = group_time_windows_names;
     input_topo.frequency_bands_list                                    = frequency_bands_list;
@@ -225,6 +225,8 @@ if strcmp(display_compact_topo,'off')
     input_topo.subjects_data                                           = subjects_data;
     input_topo.do_plots                                                = do_plots;
     input_topo.num_tails                                               = num_tails;
+    input_topo.roi_list                                                = roi_list;
+    input_topo.roi_names                                               = roi_names;
     
     [output_topo] = eeglab_study_plot_ersp_topo_tw_fb_standard(input_topo);
     

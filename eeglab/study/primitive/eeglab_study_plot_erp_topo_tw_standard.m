@@ -56,6 +56,9 @@ display_compact_mode_topo                                                  = inp
 list_select_subjects                                                       = input.list_select_subjects;
 do_plots                                                                   = input.do_plots;
 num_tails                                                                  = input.num_tails;
+roi_list                                                                   = input.roi_list;
+roi_names                                                                  = input.roi_names;
+
 
 erp_topo_tw_roi_avg=[];
 compcond=[];
@@ -151,15 +154,35 @@ for design_num=design_num_vec
         [pcond_corr, pgroup_corr, pinter_corr] = eeglab_study_correct_pvals(pcond, pgroup, pinter,correction);
         
         if (strcmp(do_plots,'on'))
-            eeglab_study_erp_topo_graph(STUDY, design_num,erp_topo_tw,set_caxis, chanlocs, name_f1, name_f2, levels_f1,levels_f2,...
-                time_window_name,time_window, ...
-                pcond, pgroup, pinter,study_ls,...
-                plot_dir,display_only_significant,display_only_significant_mode,...
-                display_compact_topo,display_compact_mode_topo,...
-                erp_topo_tw_roi_avg,...
-                compcond, compgroup,...
-                roi_name, roi_mask...
-                );
+            
+            input_graph.STUDY                                              = STUDY;
+            input_graph.design_num                                         = design_num;
+            input_graph.erp_topo_tw                                        = erp_topo_tw;
+            input_graph.set_caxis                                          = set_caxis; 
+            input_graph.chanlocs                                           = chanlocs; 
+            input_graph.name_f1                                            = name_f1; 
+            input_graph.name_f2                                            = name_f2; 
+            input_graph.levels_f1                                          = levels_f1;
+            input_graph.levels_f2                                          = levels_f2;
+            input_graph.time_window_name                                   = time_window_name;
+            input_graph.time_window                                        = time_window;
+            input_graph.pcond                                              = pcond; 
+            input_graph.pgroup                                             = pgroup; 
+            input_graph.pinter                                             = pinter;
+            input_graph.study_ls                                           = study_ls;
+            input_graph.plot_dir                                           = plot_dir;
+            input_graph.display_only_significant                           = display_only_significant;
+            input_graph.display_only_significant_mode                      = display_only_significant_mode;
+            input_graph.display_compact_topo                               = display_compact_topo;
+            input_graph.display_compact_mode_topo                          = display_compact_mode_topo;
+            input_graph.erp_topo_tw_roi_avg                                = erp_topo_tw_roi_avg;
+            input_graph.compcond                                           = compcond; 
+            input_graph.compgroup                                          = compgroup;
+            input_graph.roi_name                                           = roi_name; 
+            input_graph.roi_mask                                           = roi_mask;
+
+            
+            eeglab_study_erp_topo_graph(input_graph);
         end
         
         erp_topo_tw_stat.datatw(nwin).time_window_name= time_window_name;

@@ -69,7 +69,8 @@ ersp_measure                                                               = inp
 subjects_data                                                              = input.subjects_data;
 do_plots                                                                   = input.do_plots;
 num_tails                                                                  = input.num_tails;
-
+roi_list                                                                   = input.roi_list;
+roi_names                                                                  = input.roi_names;
 
 ersp_topo_tw_fb_roi_avg=[];
 compcond=[];
@@ -191,14 +192,36 @@ for nband=1:length(frequency_bands_list)
         
         if (strcmp(do_plots,'on'))
             
-            eeglab_study_ersp_topo_graph(STUDY, design_num, ersp_topo_tw_fb,set_caxis, locs, name_f1, name_f2, levels_f1,levels_f2,time_window_name,time_window, frequency_band_name, ...
-                pcond_corr, pgroup_corr, pinter_corr,study_ls, plot_dir,...
-                display_only_significant_topo,display_only_significant_topo_mode,...
-                display_compact_topo,display_compact_topo_mode,...
-                ersp_topo_tw_fb_roi_avg,...
-                compcond, compgroup,...
-                roi_name,roi_mask,...
-                ersp_measure,z_transform)
+            input_graph.STUDY                                              = STUDY;
+            input_graph.design_num                                         = design_num; 
+            input_graph.ersp_topo_tw_fb                                    = ersp_topo_tw_fb;
+            input_graph.set_caxis                                          = set_caxis; 
+            input_graph.locs                                               = locs; 
+            input_graph.name_f1                                            = name_f1; 
+            input_graph.name_f2                                            = name_f2; 
+            input_graph.levels_f1                                          = levels_f1;
+            input_graph.levels_f2                                          = levels_f2;
+            input_graph.time_window_name                                   = time_window_name;
+            input_graph.time_window                                        = time_window; 
+            input_graph.frequency_band_name                                = frequency_band_name;
+            input_graph.pcond_corr                                         = pcond_corr; 
+            input_graph.pgroup_corr                                        = pgroup_corr; 
+            input_graph.pinter_corr                                        = pinter_corr;
+            input_graph.study_ls                                           = study_ls; 
+            input_graph.plot_dir                                           = plot_dir;
+            input_graph.display_only_significant_topo                      = display_only_significant_topo;
+            input_graph.display_only_significant_topo_mode                 = display_only_significant_topo_mode;
+            input_graph.display_compact_topo                               = display_compact_topo;
+            input_graph.display_compact_topo_mode                          = display_compact_topo_mode;            
+            input_graph.ersp_topo_tw_fb_roi_avg                            = ersp_topo_tw_fb_roi_avg;
+            input_graph.compcond                                           = compcond; 
+            input_graph.compgroup                                          = compgroup;
+            input_graph.roi_name                                           = roi_name;
+            input_graph.roi_mask                                           = roi_mask;
+            input_graph.ersp_measure                                       = ersp_measure;
+            input_graph.z_transform                                        = z_transform;
+            
+            eeglab_study_ersp_topo_graph(input_graph)
         end
         
         

@@ -545,16 +545,51 @@ for nroi = 1:length(roi_names)
             
             if (strcmp(do_plots,'on'))
                 
-                eeglab_study_ersp_topo_graph(STUDY, design_num, ersp_topo_tw_fb_roi_avg_tw,set_caxis, locs, name_f1, name_f2, levels_f1,levels_f2,...
-                    time_window_name,time_window, ...
-                    frequency_band_name, ...
-                    stats.post_hoc.pcond_corr, stats.post_hoc.pgroup_corr, stats.post_hoc.pinter_corr,study_ls,...
-                    plot_dir,display_only_significant_topo,display_only_significant_topo_mode,...
-                    display_compact_topo,display_compact_topo_mode,...
-                    ersp_topo_tw_fb_roi_avg_tw,...
-                    stats.post_hoc.compcond, stats.post_hoc.compgroup,...
-                    roi_name, roi_mask,...
-                    ersp_measure,show_head,compact_display_ylim,show_text,z_transform,which_error_measure);
+                input_topo.STUDY                                           = STUDY; 
+                input_topo.design_num                                      = design_num;
+                input_topo.ersp_topo_tw_fb                                 = ersp_topo_tw_fb_roi_avg_tw;
+                input_topo.set_caxis                                       = set_caxis;
+                input_topo.chanlocs                                        = locs;
+                input_topo.name_f1                                         = name_f1;
+                input_topo.name_f2                                         = name_f2;
+                input_topo.levels_f1                                       = levels_f1;
+                input_topo.levels_f2                                       = levels_f2;
+                input_topo.time_window_name                                = time_window_name;
+                input_topo.time_window                                     = time_window;
+                input_topo.frequency_band_name                             = frequency_band_name;
+                input_topo.pcond                                           = stats.post_hoc.pcond_corr;
+                input_topo.pgroup                                          = stats.post_hoc.pgroup_corr;
+                input_topo.pinter                                          = stats.post_hoc.pinter_corr;
+                input_topo.study_ls                                        = study_ls;
+                input_topo.plot_dir                                        = plot_dir;
+                input_topo.display_only_significant                        = display_only_significant_topo;
+                input_topo.display_only_significant_mode                   = display_only_significant_topo_mode;
+                input_topo.display_compact                                 = display_compact_topo;
+                input_topo.display_compact_mode                            = display_compact_topo_mode;
+                input_topo.ersp_topo_tw_fb_roi_avg                         = ersp_topo_tw_fb_roi_avg_tw;
+                input_topo.compcond                                        = stats.post_hoc.compcond;
+                input_topo.compgroup                                       = stats.post_hoc.compgroup;
+                input_topo.roi_name                                        = roi_name;
+                input_topo.roi_mask                                        = roi_mask;
+                input_topo.ersp_measure                                       = ersp_measure;
+                input_topo.show_head                                       = show_head;
+                input_topo.compact_display_ylim                            = compact_display_ylim;
+                input_topo.show_text                                       = show_text;
+                input_topo.z_transform                                     = z_transform;
+                input_topo.which_error_measure                             = which_error_measure;
+                
+%                 STUDY, design_num, ersp_topo_tw_fb_roi_avg_tw,set_caxis, locs, name_f1, name_f2, levels_f1,levels_f2,...
+%                     time_window_name,time_window, ...
+%                     frequency_band_name, ...
+%                     stats.post_hoc.pcond_corr, stats.post_hoc.pgroup_corr, stats.post_hoc.pinter_corr,study_ls,...
+%                     plot_dir,display_only_significant_topo,display_only_significant_topo_mode,...
+%                     display_compact_topo,display_compact_topo_mode,...
+%                     ersp_topo_tw_fb_roi_avg_tw,...
+%                     stats.post_hoc.compcond, stats.post_hoc.compgroup,...
+%                     roi_name, roi_mask,...
+%                     ersp_measure,show_head,compact_display_ylim,show_text,z_transform,which_error_measure
+                
+                eeglab_study_ersp_topo_graph(input_topo);
             end
             
             
