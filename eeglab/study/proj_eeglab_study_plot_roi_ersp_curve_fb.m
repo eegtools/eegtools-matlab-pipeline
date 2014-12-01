@@ -225,6 +225,7 @@ for nroi = 1:length(roi_list)
                 end
                 ersp{nf1,nf2}=ersp{nf1,nf2}(:,:,:,vec_select_subjects);
                 filtered_individual_fb_bands{nf1,nf2} = {individual_fb_bands{nf1,nf2}{vec_select_subjects}};
+                list_design_subjects{nf1,nf2} = {list_design_subjects{nf1,nf2}{vec_select_subjects}};
             else
                 filtered_individual_fb_bands{nf1,nf2} = individual_fb_bands{nf1,nf2};
             end
