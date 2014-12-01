@@ -32,7 +32,7 @@ compact_display_stats                                                = input.com
 display_single_subjects                                              = input.display_single_subjects;
 compact_display_xlim                                                 = input.compact_display_xlim;
 compact_display_ylim                                                 = input.compact_display_ylim;
-ersp_measure                                                            = input.ersp_measure;                                                 
+ersp_measure                                                         = input.ersp_measure;                                                 
 
 
 % display(levels_f2)
