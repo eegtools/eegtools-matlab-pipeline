@@ -12,7 +12,7 @@
 % design_num_vec                                                             = input.design_num_vec;
 % design_factors_ordered_levels                                              = input.design_factors_ordered_levels;
 % results_path                                                               = input.results_path;
-% stat_analysis_suffix                                                       = input.stat_analysis_suffix;
+% analysis_name                                                       = input.analysis_name;
 % roi_list                                                                   = input.roi_list;
 % roi_names                                                                  = input.roi_names;
 % group_time_windows_list                                                    = input.group_time_windows_list;
@@ -56,7 +56,7 @@ study_path                                                                 = inp
 design_num_vec                                                             = input.design_num_vec;
 design_factors_ordered_levels                                              = input.design_factors_ordered_levels;
 results_path                                                               = input.results_path;
-stat_analysis_suffix                                                       = input.stat_analysis_suffix;
+analysis_name                                                              = input.analysis_name;
 roi_list                                                                   = input.roi_list;
 roi_names                                                                  = input.roi_names;
 group_time_windows_list                                                    = input.group_time_windows_list;
@@ -138,7 +138,7 @@ erp_topo_stat.roi_names     = roi_names;
 for design_num=design_num_vec
     
     
-    plot_dir=fullfile(results_path,stat_analysis_suffix,[STUDY.design(design_num).name,'-erp_topo_tw','-',which_method_find_extrema,'_',datestr(now,30)]);
+    plot_dir=fullfile(results_path,analysis_name,[STUDY.design(design_num).name,'-erp_topo_tw','-',which_method_find_extrema,'_',datestr(now,30)]);
     mkdir(plot_dir);
     
     
@@ -301,9 +301,9 @@ for design_num=design_num_vec
             input_graph.name_f2                                                        = name_f2;
             input_graph.levels_f1                                                      = levels_f1;
             input_graph.levels_f2                                                      = levels_f2;
-            input_graph.erp                                                            = erp_curve_roi;
+            input_graph.erp_curve                                                      = erp_curve_roi;
             input_graph.times                                                          = times_plot;
-            input.time_windows_design_names                                            = group_time_windows_names{design_num};
+            input_graph.time_windows_design_names                                            = group_time_windows_names{design_num};
             input_graph.pcond                                                          = pcond_corr;
             input_graph.pgroup                                                         = pgroup_corr;
             input_graph.pinter                                                         = pinter_corr;
@@ -383,7 +383,7 @@ for design_num=design_num_vec
         roi_channels=roi_list{nroi};
         roi_name=roi_names{nroi};
         %
-        %                 plot_dir=fullfile(results_path,stat_analysis_suffix,[STUDY.design(design_num).name,'-erp_topo_tw','-',roi_name,'-',which_method_find_extrema,'_',datestr(now,30)]);
+        %                 plot_dir=fullfile(results_path,analysis_name,[STUDY.design(design_num).name,'-erp_topo_tw','-',roi_name,'-',which_method_find_extrema,'_',datestr(now,30)]);
         %                 mkdir(plot_dir);
         
         %% select the study design for the analyses

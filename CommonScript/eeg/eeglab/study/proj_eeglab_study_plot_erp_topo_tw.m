@@ -209,10 +209,10 @@ if strcmp(display_compact_topo,'off')
     input_topo.set_caxis                                                       = set_caxis;
     input_topo.paired_list                                                     = paired_list;
     input_topo.stat_method                                                     = stat_method;
-    input_topo.display_only_significant_topo                                   = display_only_significant_topo;
-    input_topo.display_only_significant_topo_mode                              = display_only_significant_topo_mode;
+    input_topo.display_only_significant                                        = display_only_significant_topo;
+    input_topo.display_only_significant_mode                                   = display_only_significant_topo_mode;
     input_topo.display_compact_topo                                            = display_compact_topo;
-    input_topo.display_compact_topo_mode                                       = display_compact_topo_mode;
+    input_topo.display_compact_mode_topo                                            = display_compact_topo_mode;
     input_topo.list_select_subjects                                            = list_select_subjects;
     input_topo.do_plots                                                        = do_plots;
     input_topo.num_tails                                                       = num_tails;
