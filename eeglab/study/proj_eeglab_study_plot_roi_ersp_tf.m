@@ -200,7 +200,7 @@ for design_num=design_num_vec
             for nroi = 1:length(roi_list)
                 
                 roi_channels=roi_list{nroi};
-                roi_name=roi_names(nroi);
+                roi_name=roi_names{nroi};
                 
                 input_calc.STUDY                         = STUDY;
                 input_calc.ALLEEG                        = ALLEEG;
@@ -274,7 +274,7 @@ for design_num=design_num_vec
             for nroi = 1:length(roi_names)
                 
                 roi_channels=roi_list{nroi};
-                roi_name=roi_names(nroi);
+                roi_name=roi_names{nroi};
                 
                 input_calc.STUDY                         = STUDY;
                 input_calc.ALLEEG                        = ALLEEG;
@@ -348,7 +348,7 @@ for design_num=design_num_vec
             for nroi = 1:length(roi_names)
                 
                 roi_channels=roi_list{nroi};
-                roi_name=roi_names(nroi);
+                roi_name=roi_names{nroi};
                 
                 input_calc.STUDY                            = STUDY;
                 input_calc.ALLEEG                           = ALLEEG;
@@ -421,7 +421,7 @@ for design_num=design_num_vec
             for nroi = 1:length(roi_names)
                 
                 roi_channels=roi_list{nroi};
-                roi_name=roi_names(nroi);
+                roi_name=roi_names{nroi};
                 
                 input_calc.STUDY                   = STUDY;
                 input_calc.ALLEEG                  = ALLEEG;
@@ -498,7 +498,7 @@ for design_num=design_num_vec
             for nroi = 1:length(roi_names)
                 
                 roi_channels=roi_list{nroi};
-                roi_name=roi_names(nroi);
+                roi_name=roi_names{nroi};
                 
                 input_calc.STUDY=STUDY;
                 input_calc.ALLEEG=ALLEEG;
