@@ -45,7 +45,21 @@
 % See also: pop_erspparams(), pop_erpparams(), pop_specparams(), statcond()
 % Unfortunately in some recent versions of Matlab, saving vectorized version of figures has become difficult (artefacts in STUDY scalp topographies). Let us know if you find better solutions. 
 
-function std_chantopo_erp(data, plot_dir, time_window_name, time_window,name_f1, name_f2, levels_f1,levels_f2, pmaskcond, pmaskgru, pmaskinter,study_ls,varargin)
+function std_chantopo_erp(input, varargin)
+
+
+data                                                                       = input.data;
+plot_dir                                                                   = input.plot_dir;
+time_window_name                                                           = input.time_window_name; 
+time_window                                                                = input.time_window;
+name_f1                                                                    = input.name_f1; 
+name_f2                                                                    = input.name_f2; 
+levels_f1                                                                  = input.levels_f1;
+levels_f2                                                                  = input.levels_f2; 
+pmaskcond                                                                  = input.pmaskcond; 
+pmaskgru                                                                   = input.pmaskgru; 
+pmaskinter                                                                 = input.pmaskinter;
+study_ls                                                                   = input.study_ls;
 
 pgroup = [];
 pcond  = [];
