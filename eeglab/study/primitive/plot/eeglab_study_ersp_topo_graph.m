@@ -153,7 +153,7 @@ switch display_compact
         
         std_chantopo_ersp(ersp_topo_tw_fb, plot_dir, time_window_name, time_window, frequency_band_name, name_f1, name_f2, levels_f1,levels_f2, ...
             pmaskcond, pmaskgru, pmaskinter,ersp_measure,study_ls,...
-            'groupstats', pgroup, 'condstats', pcond, 'interstats', pinter, 'caxis', set_caxis, 'chanlocs', chanlocs, 'threshold', tr, 'titles', titles);
+            'groupstats', pgroup, 'condstats', pcond, 'interstats', pinter, 'caxis', set_caxis, 'chanlocs', chanlocs(roi_mask), 'threshold', tr, 'titles', titles);
         
 end
 end

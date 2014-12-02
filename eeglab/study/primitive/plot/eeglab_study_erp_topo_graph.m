@@ -77,25 +77,25 @@ switch display_compact
         
         if strcmp(display_compact_mode,'errorbar')
             
-            input_plot.erp_topo_tw_roi_avg=erp_topo_tw_roi_avg;
-            input_plot.plot_dir=plot_dir;
-            input_plot.roi_name=roi_name;
-            input_plot.chanlocs=chanlocs;
-            input_plot.time_window_name=time_window_name;
-            input_plot.time_window=time_window;
-            input_plot.name_f1=name_f1;
-            input_plot.name_f2=name_f2;
-            input_plot.levels_f1=levels_f1;
-            input_plot.levels_f2=levels_f2;
-            input_plot.pgroup=pgroup;
-            input_plot.pcond=pcond;
-            input_plot.study_ls=study_ls;
-            input_plot.roi_mask=roi_mask;
-            input_plot.compcond=compcond;
-            input_plot.compgroup=compgroup;
-            input_plot.show_head=show_head;
-            input_plot.compact_display_ylim=compact_display_ylim;
-            input_plot.show_text=show_text;
+            input_plot.erp_topo_tw_roi_avg                                 = erp_topo_tw_roi_avg;
+            input_plot.plot_dir                                            = plot_dir;
+            input_plot.roi_name                                            = roi_name;
+            input_plot.chanlocs                                            = chanlocs;
+            input_plot.time_window_name                                    = time_window_name;
+            input_plot.time_window                                         = time_window;
+            input_plot.name_f1                                             = name_f1;
+            input_plot.name_f2                                             = name_f2;
+            input_plot.levels_f1                                           = levels_f1;
+            input_plot.levels_f2                                           = levels_f2;
+            input_plot.pgroup                                              = pgroup;
+            input_plot.pcond                                               = pcond;
+            input_plot.study_ls                                            = study_ls;
+            input_plot.roi_mask                                            = roi_mask;
+            input_plot.compcond                                            = compcond;
+            input_plot.compgroup                                           = compgroup;
+            input_plot.show_head                                           = show_head;
+            input_plot.compact_display_ylim                                = compact_display_ylim;
+            input_plot.show_text                                           = show_text;
             
             std_chantopo_erp_compact_errorbar(input_plot);
             
@@ -126,25 +126,28 @@ switch display_compact
         end
         
         
-        input_plot.data=erp_topo;
-        input_plot.plot_dir=plot_dir;
-        input_plot.time_window_name=time_window_name;
-        input_plot.time_window=time_window;
-        input_plot.name_f1=name_f1;
-        input_plot.name_f2=name_f2;
-        input_plot.levels_f1=levels_f1;
-        input_plot.levels_f2=levels_f2;
-        input_plot.pmaskcond= pmaskcond;
-        input_plot.pmaskgru=pmaskgru;
-        input_plot.pmaskinter=pmaskinter;
-        input_plot.study_ls=study_ls;
+        input_plot.data                                                    = erp_topo;
+        input_plot.plot_dir                                                = plot_dir;
+        input_plot.time_window_name                                        = time_window_name;
+        input_plot.time_window                                             = time_window;
+        input_plot.name_f1                                                 = name_f1;
+        input_plot.name_f2                                                 = name_f2;
+        input_plot.levels_f1                                               = levels_f1;
+        input_plot.levels_f2                                               = levels_f2;
+        input_plot.pmaskcond                                               = pmaskcond;
+        input_plot.pmaskgru                                                = pmaskgru;
+        input_plot.pmaskinter                                              = pmaskinter;
+        input_plot.study_ls                                                = study_ls;
+        input_plot.show_head                                               = show_head;
+        input_plot.compact_display_ylim                                    = compact_display_ylim;
+        input_plot.show_text                                               = show_text;
         
         std_chantopo_erp(input_plot,...
             'groupstats', pgroup, ...
             'condstats' , pcond, ...
             'interstats', pinter, ...
             'caxis',      set_caxis, ...
-            'chanlocs',   chanlocs, ...
+            'chanlocs',   chanlocs(roi_mask), ...
             'threshold', tr,...
             'titles', titles ...
             );
