@@ -8,12 +8,12 @@
 % topographic location with pairwise statistic comparisons
 %
 % project                                                                    = input.project;
-% study_path                                                                 = input.study_path; 
-% design_num_vec                                                             = input.design_num_vec; 
+% study_path                                                                 = input.study_path;
+% design_num_vec                                                             = input.design_num_vec;
 % design_factors_ordered_levels                                              = input.design_factors_ordered_levels;
 % results_path                                                               = input.results_path;
 % stat_analysis_suffix                                                       = input.stat_analysis_suffix;
-% roi_list                                                                   = input.roi_list; 
+% roi_list                                                                   = input.roi_list;
 % roi_names                                                                  = input.roi_names;
 % group_time_windows_list                                                    = input.group_time_windows_list;
 % group_time_windows_names                                                   = input.group_time_windows_names;
@@ -32,7 +32,7 @@
 % mode                                                                       = input.mode;
 % show_head                                                                  = input.show_head;
 % do_plots                                                                   = input.do_plots;
-% compact_display_ylim                                                       = input.compact_display_ylim; 
+% compact_display_ylim                                                       = input.compact_display_ylim;
 % num_tails                                                                  = input.num_tails;
 % show_text                                                                  = input.show_text;
 % compact_display_h0                                                         = input.compact_display_h0;
@@ -51,15 +51,13 @@ if nargin < 1
     return;
 end;
 
-
-
 project                                                                    = input.project;
-study_path                                                                 = input.study_path; 
-design_num_vec                                                             = input.design_num_vec; 
+study_path                                                                 = input.study_path;
+design_num_vec                                                             = input.design_num_vec;
 design_factors_ordered_levels                                              = input.design_factors_ordered_levels;
 results_path                                                               = input.results_path;
 stat_analysis_suffix                                                       = input.stat_analysis_suffix;
-roi_list                                                                   = input.roi_list; 
+roi_list                                                                   = input.roi_list;
 roi_names                                                                  = input.roi_names;
 group_time_windows_list                                                    = input.group_time_windows_list;
 group_time_windows_names                                                   = input.group_time_windows_names;
@@ -78,7 +76,7 @@ list_select_subjects                                                       = inp
 mode                                                                       = input.mode;
 show_head                                                                  = input.show_head;
 do_plots                                                                   = input.do_plots;
-compact_display_ylim                                                       = input.compact_display_ylim; 
+compact_display_ylim                                                       = input.compact_display_ylim;
 num_tails                                                                  = input.num_tails;
 show_text                                                                  = input.show_text;
 compact_display_h0                                                         = input.compact_display_h0;
@@ -203,7 +201,7 @@ for design_num=design_num_vec
                     end
                     erp_curve_roi{nf1,nf2}=erp_curve_roi{nf1,nf2}(:,vec_select_subjects);
                     list_design_subjects{nf1,nf2}=list_design_subjects{nf1,nf2}(vec_select_subjects);
-
+                    
                 end
             end
         end
@@ -295,9 +293,33 @@ for design_num=design_num_vec
         
         if (strcmp(do_plots,'on'))
             
-            eeglab_study_roi_erp_curve_tw_graph(STUDY, design_num, roi_name, name_f1, name_f2, levels_f1,levels_f2, ...
-                erp_curve_roi, times_plot,group_time_windows_names{design_num}, pcond_corr, pgroup_corr, pinter_corr,study_ls,plot_dir,display_only_significant_topo,...
-                display_compact_topo, compact_display_h0,compact_display_v0,compact_display_sem,compact_display_stats,display_single_subjects,compact_display_xlim,compact_display_ylim);
+            
+            input_graph.STUDY                                                          = STUDY;
+            input_graph.design_num                                                     = design_num;
+            input_graph.roi_name                                                       = roi_name;
+            input_graph.name_f1                                                        = name_f1;
+            input_graph.name_f2                                                        = name_f2;
+            input_graph.levels_f1                                                      = levels_f1;
+            input_graph.levels_f2                                                      = levels_f2;
+            input_graph.erp                                                            = erp_curve_roi;
+            input_graph.times                                                          = times_plot;
+            input.time_windows_design_names                                            = group_time_windows_names{design_num};
+            input_graph.pcond                                                          = pcond_corr;
+            input_graph.pgroup                                                         = pgroup_corr;
+            input_graph.pinter                                                         = pinter_corr;
+            input_graph.study_ls                                                       = study_ls;
+            input_graph.plot_dir                                                       = plot_dir;
+            input_graph.display_only_significant                                       = display_only_significant_topo;
+            input_graph.display_compact_plots                                          = display_compact_topo;
+            input_graph.compact_display_h0                                             = compact_display_h0;
+            input_graph.compact_display_v0                                             = compact_display_v0;
+            input_graph.compact_display_sem                                            = compact_display_sem;
+            input_graph.compact_display_stats                                          = compact_display_stats;
+            input_graph.display_single_subjects                                        = display_single_subjects;
+            input_graph.compact_display_xlim                                           = compact_display_xlim;
+            input_graph.compact_display_ylim                                           = compact_display_ylim;
+            
+            eeglab_study_roi_erp_curve_tw_graph(input_graph);
             
             
         end
@@ -400,15 +422,15 @@ for design_num=design_num_vec
             
             
             
-                        [s1,s2] = size(erp_topo_tw);
+            [s1,s2] = size(erp_topo_tw);
             
-                        for n1 =1:s1
-                            for n2 = 1:s2
-            
-                                pluto = erp_topo_tw{n1,n2};
-                                erp_topo_tw{n1,n2}= pluto(nwin,:);
-                            end
-                        end
+            for n1 =1:s1
+                for n2 = 1:s2
+                    
+                    pluto = erp_topo_tw{n1,n2};
+                    erp_topo_tw{n1,n2}= pluto(nwin,:);
+                end
+            end
             
             
             for nf1=1:length(levels_f1)
@@ -486,15 +508,36 @@ for design_num=design_num_vec
             
             if (strcmp(do_plots,'on'))
                 
-                eeglab_study_erp_topo_graph(STUDY, design_num,erp_topo_tw,set_caxis, locs, name_f1, name_f2, levels_f1,levels_f2,...
-                    time_window_name,time_window, ...
-                    stats.post_hoc.pcond_corr, stats.post_hoc.pgroup_corr, stats.post_hoc.pinter_corr,study_ls,...
-                    plot_dir,display_only_significant_topo,display_only_significant_topo_mode,...
-                    display_compact_topo,display_compact_topo_mode,...
-                    erp_topo_tw,...
-                    stats.post_hoc.compcond, stats.post_hoc.compgroup,...
-                    roi_name, roi_mask,show_head, compact_display_ylim,show_text...
-                    );
+                input_graph.STUDY                                          = STUDY;
+                input_graph.design_num                                     = design_num;
+                input_graph.erp_topo                                       = erp_topo_tw;
+                input_graph.set_caxis                                      = set_caxis;
+                input_graph.chanlocs                                       = locs;
+                input_graph.name_f1                                        = name_f1;
+                input_graph.name_f2                                        = name_f2;
+                input_graph.levels_f1                                      = levels_f1;
+                input_graph.levels_f2                                      = levels_f2;
+                input_graph.time_window_name                               = time_window_name;
+                input_graph.time_window                                    = time_window;
+                input_graph.pcond                                          = stats.post_hoc.pcond_corr;
+                input_graph.pgroup                                         = stats.post_hoc.pgroup_corr;
+                input_graph.pinter                                         = stats.post_hoc.pinter_corr;
+                input_graph.study_ls                                       = study_ls;
+                input_graph.plot_dir                                       = plot_dir;
+                input_graph.display_only_significant                       = display_only_significant_topo;
+                input_graph.display_only_significant_mode                  = display_only_significant_topo_mode;
+                input_graph.display_compact                                = display_compact_topo;
+                input_graph.display_compact_mode                           = display_compact_topo_mode;
+                input_graph.erp_topo_tw_roi_avg                            = erp_topo_tw;
+                input_graph.compcond                                       = stats.post_hoc.compcond;
+                input_graph.compgroup                                      = stats.post_hoc.compgroup;
+                input_graph.roi_name                                       = roi_name;
+                input_graph.roi_mask                                       = roi_mask;
+                input_graph.show_head                                      = show_head;
+                input_graph.compact_display_ylim                           = compact_display_ylim;
+                input_graph.show_text                                      = show_text;
+                
+                eeglab_study_erp_topo_graph(input_graph);
                 
             end
             
