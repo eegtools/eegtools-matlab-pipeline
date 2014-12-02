@@ -1,8 +1,30 @@
- function  eeglab_study_roi_erp_curve_tw_graph(STUDY, design_num, roi_name, name_f1, name_f2, levels_f1,levels_f2, erp_curve, times,time_windows_design_names, ...
-                                                    pcond, pgroup, pinter,study_ls, plot_dir,display_only_significant,...
-                                                    display_compact_plots, compact_display_h0,compact_display_v0,compact_display_sem,compact_display_stats,...
-                                                    display_single_subjects,compact_display_xlim,compact_display_ylim)
+ function  eeglab_study_roi_erp_curve_tw_graph(input)
   
+STUDY                                                                      = input.STUDY; 
+design_num                                                                 = input.design_num; 
+roi_name                                                                   = input.roi_name; 
+name_f1                                                                    = input.name_f1; 
+name_f2                                                                    = input.name_f2; 
+levels_f1                                                                  = input.levels_f1;
+levels_f2                                                                  = input.levels_f2; 
+erp_curve                                                                  = input.erp_curve; 
+times                                                                      = input.times;
+time_windows_design_names                                                  = input.time_windows_design_names;
+pcond                                                                      = input.pcond; 
+pgroup                                                                     = input.pgroup; 
+pinter                                                                     = input.pinter;
+study_ls                                                                   = input.study_ls; 
+plot_dir                                                                   = input.plot_dir;
+display_only_significant                                                   = input.display_only_significant;
+display_compact_plots                                                      = input.display_compact_plots; 
+compact_display_h0                                                         = input.compact_display_h0;
+compact_display_v0                                                         = input.compact_display_v0;
+compact_display_sem                                                        = input.compact_display_sem;
+compact_display_stats                                                      = input.compact_display_stats;
+display_single_subjects                                                    = input.display_single_subjects;
+compact_display_xlim                                                       = input.compact_display_xlim;
+compact_display_ylim                                                       = input.compact_display_ylim;                                             
+
 
      titles=eeglab_study_set_subplot_titles(STUDY,design_num); 
 %           
