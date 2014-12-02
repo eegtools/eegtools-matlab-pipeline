@@ -1,11 +1,27 @@
-function std_chantopo_erp_compact_errorbar(erp_topo_tw_roi_avg, ... 
-                                   plot_dir, roi_name, ...
-                                   chanlocs,...
-                                   time_window_name, time_window, ...                                 
-                                   name_f1, name_f2, levels_f1,levels_f2,... 
-                                   pgroup,  pcond, study_ls, ...
-                                   roi_mask, compcond, compgroup,show_head,compact_display_ylim,show_text)
+function std_chantopo_erp_compact_errorbar(input)
+                               
+                               
+erp_topo_tw_roi_avg                                                        = input.erp_topo_tw_roi_avg;
+plot_dir                                                                   = input.plot_dir;
+roi_name                                                                   = input.roi_name;
+chanlocs                                                                   = input.chanlocs;
+time_window_name                                                           = input.time_window_name;
+time_window                                                                = input.time_window;
+name_f1                                                                    = input.name_f1;
+name_f2                                                                    = input.name_f2;
+levels_f1                                                                  = input.levels_f1;
+levels_f2                                                                  = input.levels_f2;
+pgroup                                                                     = input.pgroup;
+pcond                                                                      = input.pcond; 
+study_ls                                                                   = input.study_ls;
+roi_mask                                                                   = input.roi_mask;
+compcond                                                                   = input.compcond;
+compgroup                                                                  = input.compgroup;
+show_head                                                                  = input.show_head;
+compact_display_ylim                                                       = input.compact_display_ylim;
+show_text                                                                  = input.show_text;
 
+                               
 %  data  -  [cell array] mean data for each subject group and/or data
 %           condition. For example, to compute mean ERPs statistics from a
 %           STUDY for epochs of 800 frames in two conditions from three
