@@ -1,3 +1,7 @@
 This file contains all the new features introduced in the EEG_TOOLS framework starting from 11/11/2014.
 
 11/11/2014: START OF THIS FILE
+
+3/12/2014:
+added init_flags.m file, which initializae (set to 0) all the processing flags.
+is called by both main_eeglab_group_processing and main_eeglab_subject_processing after project_structure call and before actual flag selection

@@ -39,7 +39,7 @@ project.paths.script.project            = fullfile(project.paths.svn_scripts_roo
 
 eval(project.conf_file_name);                                               ... project structure
 project                                 = define_project_paths(project);    ... global and project paths definition. If 2nd param is 0, is faster, as it does not call eeglab
-
+init_flags
 %% =====================================================================================================================================================================
 %  OVERRIDE
 %=====================================================================================================================================================================
