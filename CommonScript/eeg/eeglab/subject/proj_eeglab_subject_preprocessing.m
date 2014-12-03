@@ -1,7 +1,6 @@
 %% EEG = proj_eeglab_subject_preprocessing(project, subj_name)
 %
 % SUBSAMPLING
-% DISCARD TAIL ELECTRODES
 % CHANNELS TRANSFORMATION
 % INTERPOLATION
 % RE-REFERENCE
