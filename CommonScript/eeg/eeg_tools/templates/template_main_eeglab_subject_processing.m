@@ -39,7 +39,7 @@ project.paths.script.project            = fullfile(project.paths.svn_scripts_roo
 
 eval(project.conf_file_name);                                               ... project structure
 project                                 = define_project_paths(project);    ... global and project paths definition. If 2nd param is 0, is faster, as it does not call eeglab
-init_flags
+init_operations_flags
 %% =====================================================================================================================================================================
 %  OVERRIDE
 %=====================================================================================================================================================================
@@ -54,15 +54,42 @@ pre_epoching_input_file_name = '_raw_er2';   ... file name suffix used for non-s
 %=====================================================================================================================================================================
 % OPERATIONS LIST 
 %=====================================================================================================================================================================
-do_import=0;
-do_preproc=0;
-do_patch_triggers=0;
-do_auto_pauses_removal=0;
-do_ica=0; 
-do_epochs=0;
-do_custom_epochs=0;
-do_factors=0;
-do_singlesubjects_band_comparison=0;
+
+%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+% import raw data and write set/fdt file into epochs subfolder, perform: import, event to string, channel lookup, global filtering
+project.operations.do_import                                                        = 0;
+
+%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+% preprocessing of the imported file: SUBSAMPLING, CHANNELS TRANSFORMATION, INTERPOLATION, RE-REFERENCE, SPECIFIC FILTERING
+project.operations.do_preproc                                                       = 0;
+
+%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+% do custom modification to event triggers
+project.operations.do_patch_triggers                                                = 0;
+
+%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+% remove pauses and undesidered time interval marked by specific markers
+project.operations.do_auto_pauses_removal                                           = 0;
+
+%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+% perform ICA
+project.operations.do_ica                                                           = 0; 
+
+%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+% epoching
+project.operations.do_epochs                                                        = 0;
+
+%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+% custom epoching
+project.operations.do_custom_epochs                                                 = 0;
+
+%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+% add experimental factors information to the data
+project.operations.do_factors                                                       = 0;
+
+%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+% perform basic single-subject plotting and analysis, basically 1 condition spectral graphs, single epochs desynch, or 2 conditions comparisons
+project.operations.do_singlesubjects_band_comparison                                = 0;
 
 %=====================================================================================================================================================================
 % S T A R T    P R O C E S S I N G  
