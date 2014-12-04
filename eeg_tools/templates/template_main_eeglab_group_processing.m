@@ -39,7 +39,7 @@ project.paths.script.project            = fullfile(project.paths.svn_scripts_roo
 
 eval(project.conf_file_name);                                               ... project structure
 project                                 = define_project_paths(project);    ... global and project paths definition. If 2nd param is 0, is faster, as it does not call eeglab
-init_flags
+init_operations_flags
 %% =====================================================================================================================================================================
 %  OVERRIDE
 %=====================================================================================================================================================================
@@ -49,7 +49,7 @@ if ~ isempty(stat_analysis_suffix)
     stat_analysis_suffix=[stat_analysis_suffix,'-',datestr(now,30)];
 end
 
-design_num_vec = [8:12 2:7];
+design_num_vec          = [8:12 2:7];
 list_select_subjects    = {'CC_01_vittoria', 'CC_02_fabio', 'CC_03_anna', 'CC_04_giacomo', 'CC_05_stefano', 'CC_06_giovanni', 'CC_07_davide', 'CC_08_jonathan', 'CC_09_antonella', 'CC_10_chiara', 'CP_01_riccardo', 'CP_02_ester', 'CP_03_sara', 'CP_04_matteo', 'CP_05_gregorio', 'CP_06_fernando', 'CP_07_roberta', 'CP_08_mattia', 'CP_09_alessia', 'CP_10_livia'}; ...project.subjects.sublist;
 
 %% =====================================================================================================================================================================
