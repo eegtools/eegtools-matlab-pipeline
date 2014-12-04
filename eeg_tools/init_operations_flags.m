@@ -66,18 +66,27 @@ project.operations.do_study_compute_channels_measures                           
 %---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-%%=====================================================================================================================================================================
-% Time domain (ERP)
-%=====================================================================================================================================================================
+%% ******************************************************************************************************************************************
+%==========================================================================================================================================
+% E R P  analysis
+%==========================================================================================================================================
+%******************************************************************************************************************************************
+% 13 modalities based on 2 functions
+%
+% proj_eeglab_study_plot_roi_erp_curve
+% proj_eeglab_study_plot_erp_topo_tw
+%==========================================================================================================================================
 
-%% erp_curve_standard, standard curve erp modality: evaluate and represent standard EEGLab statistics on the curve of ERP, plot together levels of design factors 
-% master-function: proj_eeglab_study_plot_roi_erp_curve
 
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-% CONTINUOUS: perform (and save) statistics based the whole ERP curve
+
+%% -------------------------------------------------------------------------------------------
+% ERP CURVE_standard, standard curve erp modality: evaluate and represent standard EEGLab statistics on the curve of ERP, plot together levels of design factors 
+%--------------------------------------------------------------------------------------------
+% master-function:                                      proj_eeglab_study_plot_roi_erp_curve
+
+% CONTINUOUS: analyzes and plots of erp curve for all time points
 project.operations.do_study_plot_roi_erp_curve_continous                            = 0;
 
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 % TIMEWINDOW: perform (and save) statistics based time windows
 
 % perform (and save) statistics based on grand-mean of subjects within group time windows
@@ -94,12 +103,20 @@ project.operations.do_study_plot_roi_erp_curve_tw_individual_noalign            
 % adjusting the group time windows to time windws which are re-aligned to the latencies of time window extrema
 project.operations.do_study_plot_roi_erp_curve_tw_individual_align                  = 0;
 
-%% erp_topo_tw_standard, standard topographical erp modality
-% master-function: proj_eeglab_study_plot_ersp_topo_tw_fb
-% settings:
-% project.results_display.erp.display_compact_topo_mode to represent comparisons: 'boxplot'/'errorbar'  
 
-% perform (and save) additional statistics based on grand-mean of subjects within time windows
+%% -------------------------------------------------------------------------------------------
+% ERP_TOPO_TW
+%--------------------------------------------------------------------------------------------
+% master-function:                                      proj_eeglab_study_plot_erp_topo_tw
+% settings:
+% project.results_display.erp.display_compact_topo_mode to represent comparisons: 'boxplot'/'errorbar' 
+% TIMEWINDOW: perform (and save) statistics based time windows
+
+%--------------------------------------------------------
+% STANDARD, topographical erp modality
+%--------------------------------------------------------
+
+% analyzes and plots of erp topographical maps for the selected bands in the time windows of the selected design
 project.operations.do_study_plot_erp_topo_tw_group_noalign                          = 0; 
 
 % perform (and save) additional statistics based on grand-mean of subjects within time windows, 
@@ -112,13 +129,10 @@ project.operations.do_study_plot_erp_topo_tw_individual_noalign                 
 % perform (and save) additional statistics based on individual subjects within time windows, 
 % adjusting the group time windows to time windws which are re-aligned to the latencies of time window extrema
 project.operations.do_study_plot_erp_topo_tw_individual_align                       = 0;
-% ===================================================================================================================================================================== 
 
-
-%% erp_topo_tw_compact, compact topographical erp modality: evaluate and represent multiple comparisons within each time window 
-% master-function: proj_eeglab_study_plot_ersp_topo_tw_fb
-% settings:
-% project.results_display.erp.display_compact_topo_mode to represent comparisons: 'boxplot'/'errorbar'  
+%--------------------------------------------------------
+% COMPACT, topographical erp modality
+%--------------------------------------------------------
 
 % perform (and save) additional statistics based on grand-mean of subjects within time windows
 project.operations.do_study_plot_erp_topo_compact_tw_group_noalign                  = 0; 
@@ -134,89 +148,135 @@ project.operations.do_study_plot_erp_topo_compact_tw_individual_noalign         
 % adjusting the group time windows to time windws which are re-aligned to the latencies of time window extrema
 project.operations.do_study_plot_erp_topo_compact_tw_individual_align               = 0;
 
-%%====================================================================================================================================================================== 
-% Time-frequency domain (ERSP)
-%=======================================================================================================================================================================
 
-%% ersp_tf, standard ersp time frequency: evaluate and represent standard EEGLab statistics on the time-frequency distribution of ERSP, plot together levels of design factors  
-% master-function: proj_eeglab_study_plot_roi_ersp_tf
+%% ******************************************************************************************************************************************
+%==========================================================================================================================================
+% E R S P  analysis (Time-frequency domain)
+%==========================================================================================================================================
+%******************************************************************************************************************************************
+% 23 modalities based on 3 main functions:
+% 
+% proj_eeglab_study_plot_roi_ersp_tf
+% proj_eeglab_study_plot_roi_ersp_curve_fb
+% proj_eeglab_study_plot_ersp_topo_tw_fb
+%==========================================================================================================================================
 
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-% CONTINUOUS: perform (and save) statistics based the whole ERSP
-% time-frequency distribution (possibly decimated in the frequency and/or in the time domain)
+
+
+
+%%-------------------------------------------------------------------------------------------
+% ERSP_TF, standard ersp time frequency: evaluate and represent standard EEGLab statistics on the time-frequency distribution of ERSP  
+%--------------------------------------------------------------------------------------------
+% master-function:                                      proj_eeglab_study_plot_roi_ersp_tf
+% perform (and save) statistics based the whole ERSP, time-frequency distribution (possibly decimated in the frequency and/or in the time domain)
+
+% continuous
 project.operations.do_study_plot_roi_ersp_tf_continuous                             = 0;
 
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-% TIMEWINDOW_FREQUENCYBAND: perform (and save) statistics based the ERSP
+% decimate_times 
+project.operations.do_study_plot_roi_ersp_tf_decimate_times                         = 0;
+
+% decimate_freqs 
+project.operations.do_study_plot_roi_ersp_tf_decimate_freqs                         = 0;
+
+% decimate_times_freqs
+project.operations.do_study_plot_roi_ersp_tf_decimate_times_freqs                   = 0;
+
 % time-frequency distribution freely binned in the frequency and/or in the time domain
 project.operations.do_study_plot_roi_ersp_tf_tw_fb                                  = 0;
 
-%% ersp_curve_fb_standard, standard curve ersp modality: evaluate and represent standard EEGLab statistics on the curve of ERSP in a selected frequency, plot together levels of design factors 
-% master-function: proj_eeglab_study_plot_roi_ersp_curve_fb
 
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-% continuous: perform (and save) statistics based the whole ERSP curve
+%% ------------------------------------------------------------------------------------------
+% ERSP_CURVE, evaluate and represent standard EEGLab statistics on the curve of ERSP in a selected frequency, plot together levels of design factors 
+%--------------------------------------------------------------------------------------------
+% master-function:                                      proj_eeglab_study_plot_roi_ersp_curve_fb
+
+%--------------------------------------------------------
+% STANDARD
+%--------------------------------------------------------
+
+% continuous
 project.operations.do_study_plot_roi_ersp_curve_continous_standard                  = 0;
 
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-% TIMEWINDOW: perform (and save) statistics based time windows
+% TIMEWINDOW: perform (and save) statistics based on time windows
 
-% perform (and save) statistics based on grand-mean of subjects within group time windows
+% grand-mean of subjects within group time windows
 project.operations.do_study_plot_roi_ersp_curve_tw_group_noalign_standard           = 0;
 
-% perform (and save) statistics based on grand-mean of subjects within time windows, 
-% adjusting the group time windows to time windws which are re-aligned to the latencies of time window extrema
+% grand-mean of subjects within time windows,adjusting the group time windows to time windws which are re-aligned to the latencies of time window extrema
 project.operations.do_study_plot_roi_ersp_curve_tw_group_align_standard             = 0;
 
 % perform (and save) statistics based on individual subjects within time windows
 project.operations.do_study_plot_roi_ersp_curve_tw_individual_noalign_standard      = 0;
 
-% perform (and save) statistics based on individual subjects within time windows, 
-% adjusting the group time windows to time windws which are re-aligned to the latencies of time window extrema
+% perform (and save) statistics based on individual subjects within time windows, adjusting the group time windows to time windws which are re-aligned to the latencies of time window extrema
 project.operations.do_study_plot_roi_ersp_curve_tw_individual_align_standard        = 0;
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-%% ersp_curve_fb_compact, compact curve ersp modality: evaluate and represent standard EEGLab statistics on the curve of ERSP in a selected frequency band, plot separately levels of design factors 
-% master-function: proj_eeglab_study_plot_roi_ersp_curve_fb
 
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-% CONTINUOUS: perform (and save) statistics based the whole ERSP curve
+%--------------------------------------------------------
+% COMPACT
+%--------------------------------------------------------
+
+% continuous
 project.operations.do_study_plot_roi_ersp_curve_continous_compact                   = 0;
 
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-% TIMEWINDOW: perform (and save) statistics based time windows
+% TIMEWINDOW: perform (and save) statistics based on time windows
 
 % perform (and save) statistics based on grand-mean of subjects within time windows
 project.operations.do_study_plot_roi_ersp_curve_tw_group_noalign_compact            = 0;
 
-% perform (and save) statistics based on grand-mean of subjects within time windows, 
-% adjusting the group time windows to time windws which are re-aligned to the latencies of time window extrema
+% perform (and save) statistics based on grand-mean of subjects within time windows, adjusting the group time windows to time windws which are re-aligned to the latencies of time window extrema
 project.operations.do_study_plot_roi_ersp_curve_tw_group_align_compact              = 0;
 
 % perform (and save) statistics based on individual subjects within time windows
 project.operations.do_study_plot_roi_ersp_curve_tw_individual_noalign_compact       = 0;
 
-% perform (and save) statistics based on individual subjects within time windows, 
-% adjusting the group time windows to time windws which are re-aligned to the latencies of time window extrema
+% perform (and save) statistics based on individual subjects within time windows, adjusting the group time windows to time windws which are re-aligned to the latencies of time window extrema
 project.operations.do_study_plot_roi_ersp_curve_tw_individual_align_compact         = 0;
 
-%% ersp_topo_tw_fb_compact, compact topographical ersp modality: evaluate and represent multiple comparisons within each time window 
-% master-function: proj_eeglab_study_plot_ersp_topo_tw_fb
-% TIMEWINDOW_FREQUENCYBAND
+
+
+%% ------------------------------------------------------------------------------------------
+% ERSP_TOPO_TW_FB, evaluate and represent standard EEGLab statistics on the curve of ERSP in a selected frequency, plot together levels of design factors 
+%--------------------------------------------------------------------------------------------
+% master-function:                                      proj_eeglab_study_plot_ersp_topo_tw_fb
+
+
+
+%--------------------------------------------------------
+% STANDARD, topographical ersp modality
+%--------------------------------------------------------
 
 % perform (and save) additional statistics based on grand-mean of subjects within time windows
 project.operations.do_study_plot_ersp_topo_tw_fb_group_noalign                      = 0; 
 
-% perform (and save) additional statistics based on grand-mean of subjects within time windows, 
-% adjusting the group time windows to time windws which are re-aligned to the latencies of time window extrema
+% perform (and save) additional statistics based on grand-mean of subjects within time windows. adjusting the group time windows to time windws which are re-aligned to the latencies of time window extrema
 project.operations.do_study_plot_ersp_topo_tw_fb_group_align                        = 0; 
 
 % perform (and save) additional statistics based on individual subjects within time windows
 project.operations.do_study_plot_ersp_topo_tw_fb_individual_noalign                 = 0;
 
-% perform (and save) additional statistics based on individual subjects within time windows, 
-% adjusting the group time windows to time windws which are re-aligned to the latencies of time window extrema
+% perform (and save) additional statistics based on individual subjects within time windows, adjusting the group time windows to time windws which are re-aligned to the latencies of time window extrema
 project.operations.do_study_plot_ersp_topo_tw_fb_individual_align                   = 0;
-% ===================================================================================================================================================================== 
+
+
+%--------------------------------------------------------
+% COMPACT, topographical ersp modality
+%--------------------------------------------------------
+
+% perform (and save) additional statistics based on grand-mean of subjects within time windows
+project.operations.do_study_plot_ersp_topo_tw_fb_group_noalign_compact              = 0; 
+
+% perform (and save) additional statistics based on grand-mean of subjects within time windows. adjusting the group time windows to time windws which are re-aligned to the latencies of time window extrema
+project.operations.do_study_plot_ersp_topo_tw_fb_group_align_compact                = 0; 
+
+% perform (and save) additional statistics based on individual subjects within time windows
+project.operations.do_study_plot_ersp_topo_tw_fb_individual_noalign_compact         = 0;
+
+% perform (and save) additional statistics based on individual subjects within time windows, adjusting the group time windows to time windws which are re-aligned to the latencies of time window extrema
+project.operations.do_study_plot_ersp_topo_tw_fb_individual_align_compact           = 0;
+
+
+
 
 project.operations.do_eeglab_study_export_ersp_tf_r                                 = 0;

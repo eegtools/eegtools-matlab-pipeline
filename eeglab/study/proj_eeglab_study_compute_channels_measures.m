@@ -95,25 +95,25 @@ end
             vec_sel_cell=1:length(list_cell_design);
         end
         
-        if strcmp(do_erp, '1')
+        if strcmp(do_erp, 'on')
             for ncell=vec_sel_cell
                 erp_param=[erp 'cell' ncell];
                 [STUDY ALLEEG] = std_precomp(STUDY, ALLEEG, {}, erp_param{:});
             end
         end
-        if strcmp(do_erpim, '1')
+        if strcmp(do_erpim, 'on')
             for ncell=vec_sel_cell
                 erpim_param=[erpim 'cell' ncell];
                 [STUDY ALLEEG] = std_precomp(STUDY, ALLEEG, {}, erpim_param{:});
             end
         end
-        if strcmp(do_spec, '1')
+        if strcmp(do_spec, 'on')
             for ncell=vec_sel_cell
                 spec_param=[spec 'cell' ncell];
                 [STUDY ALLEEG] = std_precomp(STUDY, ALLEEG, {}, spec_param{:});
             end
         end
-        if strcmp(do_ersp, '1')
+        if strcmp(do_ersp, 'on')
             for ncell=vec_sel_cell
                 ersp_param=[ersp 'cell' ncell];
                 [STUDY ALLEEG] = std_precomp(STUDY, ALLEEG, {}, ersp_param{:});             

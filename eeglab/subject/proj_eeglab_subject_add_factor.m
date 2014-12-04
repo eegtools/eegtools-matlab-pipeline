@@ -1,9 +1,8 @@
 function EEG = proj_eeglab_subject_add_factor(project, subj_name)
     
 
-    eeg_input_path=project.paths.input_epochs;
-    input_suffix=project.epoching.input_suffix;
-    add_factor_list=project.study.factors;
+    eeg_input_path  = project.paths.output_epochs;
+    add_factor_list = project.study.factors;
     % ----------------------------------------------------------------------------------------------------------------------------
     if ~isempty(add_factor_list)
         for nc=1:project.epoching.numcond

@@ -26,7 +26,7 @@ display_single_subjects                                                    = inp
 compact_display_xlim                                                       = input.compact_display_xlim;
 compact_display_ylim                                                       = input.compact_display_ylim;
 
-titles=eeglab_study_set_subplot_titles(STUDY,design_num);
+titles                                                                     = eeglab_study_set_subplot_titles(STUDY,design_num);
 
 % if required, correct for multiple comparisons
 %      for ind = 1:length(pcond),  pcond{ind}  =  mcorrect(pcond{ind},correction) ; end;
