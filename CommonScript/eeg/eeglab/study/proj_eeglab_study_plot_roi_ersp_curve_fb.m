@@ -103,17 +103,17 @@ group_time_windows_names    = arrange_structure(project.postprocess.ersp.design,
 
 ersp_measure                = project.stats.ersp.measure;
 
-do_plots=project.results_display.ersp.do_plots;
+do_plots                    = project.results_display.ersp.do_plots;
 
-num_tails=project.stats.ersp.num_tails;
+num_tails                   = project.stats.ersp.num_tails;
 
-do_narrowband=project.stats.ersp.do_narrowband;
+do_narrowband               = project.stats.ersp.do_narrowband;
 
-group_tmin            = project.stats.ersp.narrowband.group_tmin;
-group_tmax            = project.stats.ersp.narrowband.group_tmax;
+group_tmin                  = project.stats.ersp.narrowband.group_tmin;
+group_tmax                  = project.stats.ersp.narrowband.group_tmax;
 group_dfmin                 = project.stats.ersp.narrowband.dfmin;
 group_dfmax                 = project.stats.ersp.narrowband.dfmax;
-which_realign_measure_cell = project.stats.ersp.narrowband.which_realign_measure;
+which_realign_measure_cell  = project.stats.ersp.narrowband.which_realign_measure;
 
 
 
@@ -133,8 +133,8 @@ elseif strcmp(mode.peak_type, 'off')
 end
 
 tw_stat_estimator           = mode.tw_stat_estimator;       ... mean, extremum
-    time_resolution_mode        = mode.time_resolution_mode;    ... continous, tw
-    sel_extrema                 = project.postprocess.ersp.sel_extrema;
+time_resolution_mode        = mode.time_resolution_mode;    ... continous, tw
+sel_extrema                 = project.postprocess.ersp.sel_extrema;
 
 for par=1:2:length(varargin)
     switch varargin{par}
@@ -350,7 +350,7 @@ for nroi = 1:length(roi_list)
             ersp_curve_roi_fb_stat.group_time_windows_names_design = group_time_windows_list_design;
             
             which_extrema_design_tw            = project.postprocess.ersp.design(design_num).which_extrema_curve_tw; ...which_extrema_ersp_curve_fb{design_num};
-                which_extrema_design_roi_tw        = which_extrema_design_tw{nroi};
+                which_extrema_design_roi_tw    = which_extrema_design_tw{nroi};
             which_extrema_design_roi_band_tw   = which_extrema_design_roi_tw{nband};
             
             
