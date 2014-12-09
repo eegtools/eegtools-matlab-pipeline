@@ -167,7 +167,7 @@ if strcmpi(opt.plotmode, 'condensed')
         
     if strcmpi(opt.freqscale, 'log'), options = { options{:} 'logfreq', 'native' }; end;
     fig=figure('Visible', 'off');set(gcf, 'Visible', 'off')
-    tftopo( meanplot', timevals, freqs, 'title', opt.titles{1}, options{:}); set(gcf, 'Visible', 'off');
+   tftopo_tw_fb( meanplot', timevals, freqs, 'title', opt.titles{1}, options{:}); set(gcf, 'Visible', 'off');
     currentHangle = gca;
     if ~isempty( opt.caxis )
         caxis( currentHangle, opt.caxis )
@@ -337,7 +337,7 @@ for c = 1:nc
                     caxis([-2 2])
                     title(['P(',levels_f2{1},' - ',levels_f2{2},')'])
                     hold on
-                    plot(zeros(length(freqs)),freqs,'-.')
+%                     plot(zeros(length(freqs)),freqs,'-.')
                     hold off
                 elseif strcmp(display_pmode,'abs_diff')                       
                     pp = sign( (abs(mean(data{c,1},3)) - abs(mean(data{c,2},3))) .* pgroupplot{c});
@@ -346,14 +346,14 @@ for c = 1:nc
                     caxis([-2 2])
                     title(['P(|',levels_f2{1},'| - |',levels_f2{2},'|)'])
                     hold on
-                    plot(zeros(length(freqs)),freqs,'-.')
+%                     plot(zeros(length(freqs)),freqs,'-.')
                     hold off
 		else
-		        tftopo( pgroupplot{c}, timevals, freqs, 'title', opt.titles{c,g+1}, options{:});
+		        tftopo_tw_fb( pgroupplot{c}, timevals, freqs, 'title', opt.titles{c,g+1}, options{:});
 		        caxis([-maxplot maxplot]);
                 end
             else
-                tftopo( pgroupplot{c}, timevals, freqs, 'title', opt.titles{c,g+1}, options{:});
+               tftopo_tw_fb( pgroupplot{c}, timevals, freqs, 'title', opt.titles{c,g+1}, options{:});
                 caxis([-maxplot maxplot]);
             end
 
@@ -393,7 +393,7 @@ for g = 1:ng
                 caxis([-2 2])
                 title(['P(',levels_f1{1},' - ',levels_f1{2},')'])
                 hold on
-                plot(zeros(length(freqs)),freqs,'-.')
+%                 plot(zeros(length(freqs)),freqs,'-.')
                 hold off
            elseif strcmp(display_pmode,'abs_diff')   
                 pp = sign( (abs(mean(data{g,1},3)) - abs(mean(data{g,2},3))) .*  pcondplot{g});
@@ -402,14 +402,14 @@ for g = 1:ng
                 caxis([-2 2])
                 title(['P(|',levels_f1{1},'| - |',levels_f1{2},'|)'])
                 hold on
-                plot(zeros(length(freqs)),freqs,'-.')
+%                 plot(zeros(length(freqs)),freqs,'-.')
                 hold off
 		else
-				tftopo( pgroupplot{c}, timevals, freqs, 'title', opt.titles{c,g+1}, options{:});
+				tftopo_tw_fb( pgroupplot{c}, timevals, freqs, 'title', opt.titles{c,g+1}, options{:});
 				caxis([-maxplot maxplot]);
             end
         else
-            tftopo( pcondplot{g}, timevals, freqs, 'title', opt.titles{nc+1,g}, options{:});
+           tftopo_tw_fb( pcondplot{g}, timevals, freqs, 'title', opt.titles{nc+1,g}, options{:});
             caxis([-maxplot maxplot]);
         end
         xlabel('Time window','FontSize',12);
