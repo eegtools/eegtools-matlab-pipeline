@@ -176,23 +176,31 @@ function [] = std_plotcurve_ersp_tw_fb_compact(times, ersp_curve_fb, plot_dir, r
 % %          print(fig,fullfile(plot_dir,file_tiff),'-dtiff')
 
 
-name_embed=fullfile(plot_dir,'ersp_curve_fb'); 
-name_plot=[name_embed,'_',char(roi_name),'_',char(name_f),'_',char(frequency_band_name)];
-set(fig, 'renderer', 'painter')
-modify_plot(fig);
-saveas(fig, [name_plot,'.fig']);
-print([name_plot,'.eps'],'-depsc2','-r300');
-plot2svg([name_plot,'.svg'])
-os = system_dependent('getos');
-if ~ strncmp(os,'Linux',2) 
-    print(fig,[name_embed,'.ps'],'-append','-dwinc')
-    saveppt2(fullfile(plot_dir,'ersp_tf.ppt'),'f',fig);   
-else
-    print(fig,[name_embed,'.ps'],'-append','-painter','-r300')
-end
-export_fig([name_embed,'.pdf'], '-pdf', '-append')   
-         close(fig)
-         
+% name_embed=fullfile(plot_dir,'ersp_curve_fb'); 
+% name_plot=[name_embed,'_',char(roi_name),'_',char(name_f),'_',char(frequency_band_name)];
+% set(fig, 'renderer', 'painter')
+% modify_plot(fig);
+% saveas(fig, [name_plot,'.fig']);
+% print([name_plot,'.eps'],'-depsc2','-r300');
+% plot2svg([name_plot,'.svg'])
+% os = system_dependent('getos');
+% if ~ strncmp(os,'Linux',2) 
+%     print(fig,[name_embed,'.ps'],'-append','-dwinc')
+%     saveppt2(fullfile(plot_dir,'ersp_tf.ppt'),'f',fig);   
+% else
+%     print(fig,[name_embed,'.ps'],'-append','-painter','-r300')
+% end
+% export_fig([name_embed,'.pdf'], '-pdf', '-append')   
+%          close(fig)
+%          
+
+
+input_save_fig.plot_dir               = plot_dir;
+input_save_fig.fig                    = fig;
+input_save_fig.name_embed             = 'ersp_curve_fb';
+input_save_fig.suffix_plot            = [ char(roi_name),'_',char(name_f),'_',char(frequency_band_name)];
+
+save_figures( input_save_fig )
          
     end
          
@@ -351,25 +359,30 @@ export_fig([name_embed,'.pdf'], '-pdf', '-append')
 % %              print(fig,fullfile(plot_dir,file_tiff),'-dtiff')
 
 
-name_embed=fullfile(plot_dir,'ersp_curve_fb'); 
-name_plot=[name_embed,'_',char(roi_name),'_',char(levels_f1{nlf1}),'_',char(frequency_band_name)];
-set(fig, 'renderer', 'painter')
-modify_plot(fig);
-saveas(fig, [name_plot,'.fig']);
-print([name_plot,'.eps'],'-depsc2','-r300');
-plot2svg([name_plot,'.svg'])
-os = system_dependent('getos');
-if ~ strncmp(os,'Linux',2) 
-    print(fig,[name_embed,'.ps'],'-append','-dwinc')
-    saveppt2(fullfile(plot_dir,'ersp_tf.ppt'),'f',fig);   
-else
-    print(fig,[name_embed,'.ps'],'-append','-painter','-r300')
-end
-export_fig([name_embed,'.pdf'], '-pdf', '-append')   
+% name_embed=fullfile(plot_dir,'ersp_curve_fb'); 
+% name_plot=[name_embed,'_',char(roi_name),'_',char(levels_f1{nlf1}),'_',char(frequency_band_name)];
+% set(fig, 'renderer', 'painter')
+% modify_plot(fig);
+% saveas(fig, [name_plot,'.fig']);
+% print([name_plot,'.eps'],'-depsc2','-r300');
+% plot2svg([name_plot,'.svg'])
+% os = system_dependent('getos');
+% if ~ strncmp(os,'Linux',2) 
+%     print(fig,[name_embed,'.ps'],'-append','-dwinc')
+%     saveppt2(fullfile(plot_dir,'ersp_tf.ppt'),'f',fig);   
+% else
+%     print(fig,[name_embed,'.ps'],'-append','-painter','-r300')
+% end
+% export_fig([name_embed,'.pdf'], '-pdf', '-append')   
+% 
+%              close(fig)
 
-             close(fig)
+ input_save_fig.plot_dir               = plot_dir;
+input_save_fig.fig                    = fig;
+input_save_fig.name_embed             = 'ersp_curve_fb';
+input_save_fig.suffix_plot            = [char(roi_name),'_',char(levels_f1{nlf1}),'_',char(frequency_band_name)];
 
-        
+save_figures( input_save_fig )       
         end
         
         % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
@@ -520,24 +533,31 @@ export_fig([name_embed,'.pdf'], '-pdf', '-append')
 % %              file_tiff=['ersp_curve_',char(roi_name),'_',char(levels_f2{nlf2}),'_',char(frequency_band_name),'.tif'];
 % %              print(fig,fullfile(plot_dir,file_tiff),'-dtiff')
 
-  name_embed=fullfile(plot_dir,'ersp_curve_fb'); 
-name_plot=[name_embed,'_',char(roi_name),'_',char(levels_f2{nlf2}),'_',char(frequency_band_name)];
-set(fig, 'renderer', 'painter')
-modify_plot(fig);
-saveas(fig, [name_plot,'.fig']);
-print([name_plot,'.eps'],'-depsc2','-r300');
-plot2svg([name_plot,'.svg'])
-os = system_dependent('getos');
-if ~ strncmp(os,'Linux',2) 
-    print(fig,[name_embed,'.ps'],'-append','-dwinc')
-    saveppt2(fullfile(plot_dir,'ersp_tf.ppt'),'f',fig);   
-else
-    print(fig,[name_embed,'.ps'],'-append','-painter','-r300')
-end
-export_fig([name_embed,'.pdf'], '-pdf', '-append')              
+%   name_embed=fullfile(plot_dir,'ersp_curve_fb'); 
+% name_plot=[name_embed,'_',char(roi_name),'_',char(levels_f2{nlf2}),'_',char(frequency_band_name)];
+% set(fig, 'renderer', 'painter')
+% modify_plot(fig);
+% saveas(fig, [name_plot,'.fig']);
+% print([name_plot,'.eps'],'-depsc2','-r300');
+% plot2svg([name_plot,'.svg'])
+% os = system_dependent('getos');
+% if ~ strncmp(os,'Linux',2) 
+%     print(fig,[name_embed,'.ps'],'-append','-dwinc')
+%     saveppt2(fullfile(plot_dir,'ersp_tf.ppt'),'f',fig);   
+% else
+%     print(fig,[name_embed,'.ps'],'-append','-painter','-r300')
+% end
+% export_fig([name_embed,'.pdf'], '-pdf', '-append')              
+% 
+% 
+% close(fig)
 
+input_save_fig.plot_dir               = plot_dir;
+input_save_fig.fig                    = fig;
+input_save_fig.name_embed             = 'ersp_curve_fb';
+input_save_fig.suffix_plot            = [char(roi_name),'_',char(levels_f2{nlf2}),'_',char(frequency_band_name)];
 
-close(fig)
+save_figures( input_save_fig )     
         end
      end
 end

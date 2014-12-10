@@ -684,21 +684,29 @@ if tlf1 > 1 && tlf2 <= 1
  end 
 
  
-name_embed=fullfile(plot_dir,'erp_curve_tw'); 
-name_plot=[name_embed,'_',char(roi_name)];
-set(fig, 'renderer', 'painter');set(gcf, 'Visible', 'off');
-modify_plot(fig);set(gcf, 'Visible', 'off');
-saveas(fig, [name_plot,'.fig']);
-print([name_plot,'.eps'],'-depsc2','-r300');
-%plot2svg([name_plot,'.svg'])
-os = system_dependent('getos');
-if ~ strncmp(os,'Linux',2) 
-    print(fig,[name_embed,'.ps'],'-append','-dwinc')
-    saveppt2(fullfile(plot_dir,'ersp_tf.ppt'),'f',fig);   
-else
-    print(fig,[name_embed,'.ps'],'-append','-painter','-r300')
-end
-export_fig(fig,[name_embed,'.pdf'], '-pdf', '-append')       
+% name_embed=fullfile(plot_dir,'erp_curve_tw'); 
+% name_plot=[name_embed,'_',char(roi_name)];
+% set(fig, 'renderer', 'painter');set(gcf, 'Visible', 'off');
+% modify_plot(fig);set(gcf, 'Visible', 'off');
+% saveas(fig, [name_plot,'.fig']);
+% print([name_plot,'.eps'],'-depsc2','-r300');
+% %plot2svg([name_plot,'.svg'])
+% os = system_dependent('getos');
+% if ~ strncmp(os,'Linux',2) 
+%     print(fig,[name_embed,'.ps'],'-append','-dwinc')
+%     saveppt2(fullfile(plot_dir,'ersp_tf.ppt'),'f',fig);   
+% else
+%     print(fig,[name_embed,'.ps'],'-append','-painter','-r300')
+% end
+% export_fig(fig,[name_embed,'.pdf'], '-pdf', '-append')       
+
+input_save_fig.plot_dir               = plot_dir;
+input_save_fig.fig                    = fig;
+input_save_fig.name_embed             = 'erp_curve_tw';
+input_save_fig.suffix_plot            = [char(roi_name)];
+
+save_figures( input_save_fig )
+
  
  
 % set(fig, 'paperpositionmode', 'auto');

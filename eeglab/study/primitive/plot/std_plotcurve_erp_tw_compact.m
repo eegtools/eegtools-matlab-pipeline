@@ -171,25 +171,32 @@ function [] = std_plotcurve_erp_tw_compact(times, erp, plot_dir, roi_name, study
 %          
          
          
-name_embed=fullfile(plot_dir,'erp_curve'); 
-name_plot=[name_embed,'_',char(roi_name),'_',char(name_f)];
-set(fig, 'renderer', 'painter')
-modify_plot(fig);
-saveas(fig, [name_plot,'.fig']);
-print([name_plot,'.eps'],'-depsc2','-r300');
-%plot2svg([name_plot,'.svg'])
-os = system_dependent('getos');
-if ~ strncmp(os,'Linux',2) 
-    print(fig,[name_embed,'.ps'],'-append','-dwinc')
-    saveppt2(fullfile(plot_dir,'ersp_tf.ppt'),'f',fig);   
-else
-    print(fig,[name_embed,'.ps'],'-append','-painter','-r300')
-end
-export_fig([name_embed,'.pdf'], '-pdf', '-append')
+% name_embed=fullfile(plot_dir,'erp_curve'); 
+% name_plot=[name_embed,'_',char(roi_name),'_',char(name_f)];
+% set(fig, 'renderer', 'painter')
+% modify_plot(fig);
+% saveas(fig, [name_plot,'.fig']);
+% print([name_plot,'.eps'],'-depsc2','-r300');
+% %plot2svg([name_plot,'.svg'])
+% os = system_dependent('getos');
+% if ~ strncmp(os,'Linux',2) 
+%     print(fig,[name_embed,'.ps'],'-append','-dwinc')
+%     saveppt2(fullfile(plot_dir,'ersp_tf.ppt'),'f',fig);   
+% else
+%     print(fig,[name_embed,'.ps'],'-append','-painter','-r300')
+% end
+% export_fig([name_embed,'.pdf'], '-pdf', '-append')
+% 
+% 
+% close(fig)
+        
 
+input_save_fig.plot_dir               = plot_dir;
+input_save_fig.fig                    = fig;
+input_save_fig.name_embed             = 'erp_curve';
+input_save_fig.suffix_plot            = [ char(roi_name),'_',char(name_f)];
 
-close(fig)
-         
+save_figures( input_save_fig )
          
     end
          
@@ -337,26 +344,31 @@ close(fig)
 %              close all
 
 
-name_embed=fullfile(plot_dir,'erp_curve'); 
-name_plot=[name_embed,'_',char(roi_name),'_',char(levels_f1{nlf1})];
-set(fig, 'renderer', 'painter')
-modify_plot(fig);
-saveas(fig, [name_plot,'.fig']);
-print([name_plot,'.eps'],'-depsc2','-r300');
-%plot2svg([name_plot,'.svg'])
-os = system_dependent('getos');
-if ~ strncmp(os,'Linux',2) 
-    print(fig,[name_embed,'.ps'],'-append','-dwinc')
-    saveppt2(fullfile(plot_dir,'ersp_tf.ppt'),'f',fig);   
-else
-    print(fig,[name_embed,'.ps'],'-append','-painter','-r300')
-end
-export_fig([name_embed,'.pdf'], '-pdf', '-append')
+% name_embed=fullfile(plot_dir,'erp_curve'); 
+% name_plot=[name_embed,'_',char(roi_name),'_',char(levels_f1{nlf1})];
+% set(fig, 'renderer', 'painter')
+% modify_plot(fig);
+% saveas(fig, [name_plot,'.fig']);
+% print([name_plot,'.eps'],'-depsc2','-r300');
+% %plot2svg([name_plot,'.svg'])
+% os = system_dependent('getos');
+% if ~ strncmp(os,'Linux',2) 
+%     print(fig,[name_embed,'.ps'],'-append','-dwinc')
+%     saveppt2(fullfile(plot_dir,'ersp_tf.ppt'),'f',fig);   
+% else
+%     print(fig,[name_embed,'.ps'],'-append','-painter','-r300')
+% end
+% export_fig([name_embed,'.pdf'], '-pdf', '-append')
+% 
+% 
+% close(fig)
 
+input_save_fig.plot_dir               = plot_dir;
+input_save_fig.fig                    = fig;
+input_save_fig.name_embed             = 'erp_curve';
+input_save_fig.suffix_plot            = [ char(roi_name),'_',char(levels_f1{nlf1})];
 
-close(fig)
-
-
+save_figures( input_save_fig )
         
         end
         
@@ -502,26 +514,31 @@ close(fig)
 %             
 %              close all
 
-name_embed=fullfile(plot_dir,'erp_curve'); 
-name_plot=[name_embed,'_',char(roi_name),'_',char(levels_f2{nlf2})];
-set(fig, 'renderer', 'painter')
-modify_plot(fig);
-saveas(fig, [name_plot,'.fig']);
-print([name_plot,'.eps'],'-depsc2','-r300');
-%plot2svg([name_plot,'.svg'])
-os = system_dependent('getos');
-if ~ strncmp(os,'Linux',2) 
-    print(fig,[name_embed,'.ps'],'-append','-dwinc')
-    saveppt2(fullfile(plot_dir,'ersp_tf.ppt'),'f',fig);   
-else
-    print(fig,[name_embed,'.ps'],'-append','-painter','-r300')
-end
-export_fig([name_embed,'.pdf'], '-pdf', '-append')
+% name_embed=fullfile(plot_dir,'erp_curve'); 
+% name_plot=[name_embed,'_',char(roi_name),'_',char(levels_f2{nlf2})];
+% set(fig, 'renderer', 'painter')
+% modify_plot(fig);
+% saveas(fig, [name_plot,'.fig']);
+% print([name_plot,'.eps'],'-depsc2','-r300');
+% %plot2svg([name_plot,'.svg'])
+% os = system_dependent('getos');
+% if ~ strncmp(os,'Linux',2) 
+%     print(fig,[name_embed,'.ps'],'-append','-dwinc')
+%     saveppt2(fullfile(plot_dir,'ersp_tf.ppt'),'f',fig);   
+% else
+%     print(fig,[name_embed,'.ps'],'-append','-painter','-r300')
+% end
+% export_fig([name_embed,'.pdf'], '-pdf', '-append')
+% 
+% 
+% close(fig)
 
+input_save_fig.plot_dir               = plot_dir;
+input_save_fig.fig                    = fig;
+input_save_fig.name_embed             = 'erp_curve';
+input_save_fig.suffix_plot            = [ char(roi_name),'_',char(levels_f2{nlf2})];
 
-close(fig)
-
-
+save_figures( input_save_fig )
         end
      end
 end
