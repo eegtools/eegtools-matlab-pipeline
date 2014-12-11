@@ -527,14 +527,11 @@ project.design(4).factor2_levels    = {'centered','translating'};
 % M:    STATS
 % ======================================================================================================
 % ERP
-project.stats.erp.pvalue                        = 0.025; ...0.01;       % level of significance applied in ERP statistical analysis
 project.stats.erp.num_permutations              = 3;                    % number of permutations applied in ERP statistical analysis
 project.stats.erp.num_tails                     = 2;
 project.stats.eeglab.erp.method                 = 'bootstrap';          % method applied in ERP statistical analysis
-project.stats.eeglab.erp.correction             = 'fdr';                % multiple comparison correction applied in ERP statistical analysis
 
 % ERSP
-project.stats.ersp.pvalue                       = 0.05; ...0.01;        % level of significance applied in ERSP statistical analysis
 project.stats.ersp.num_permutations             = 3;                    % number of permutations applied in ERP statistical analysis
 project.stats.ersp.num_tails                    = 2;
 project.stats.ersp.decimation_factor_times_tf   = 10;
@@ -547,10 +544,9 @@ project.stats.ersp.narrowband.group_tmin        = [];                     % lowe
 project.stats.ersp.narrowband.group_tmax        = [];                     % highest time of the time windows considered to select the narrow band. if empty, consider the end of the epoch
 project.stats.ersp.narrowband.dfmin             =  2  ;                         % low variation in Hz from the barycenter frequency
 project.stats.ersp.narrowband.dfmax             =  2  ;                         % high variation in Hz from the barycenter frequency
-project.stats.ersp.narrowband.which_realign_measure ={'max','min','min','auc'}; % min |max |auc for each band, select the frequency with the maximum or the minumum ersp or the largest area under the curve to reallign the narrowband
+project.stats.ersp.narrowband.which_realign_measure = {'max','min','min','auc'}; % min |max |auc for each band, select the frequency with the maximum or the minumum ersp or the largest area under the curve to reallign the narrowband
 
 project.stats.eeglab.ersp.method                = 'bootstrap';          % method applied in ERP statistical analysis
-project.stats.eeglab.ersp.correction            = 'none';               % multiple comparison correction applied in ERP statistical analysis
 
 
 % BRAINSTORM 
@@ -567,6 +563,14 @@ project.stats.show_statistics_list              = {'on','on','on','on','on','on'
 %% ======================================================================================================
 % N:    POSTPROCESS
 % ======================================================================================================
+
+project.postprocess.erp.pvalue                        = 0.025; ...0.01;       % level of significance applied in ERP statistical analysis
+project.postprocess.eeglab.erp.correction             = 'fdr';                % multiple comparison correction applied in ERP statistical analysis
+
+project.postprocess.ersp.pvalue                       = 0.05; ...0.01;        % level of significance applied in ERSP statistical analysis
+project.postprocess.eeglab.ersp.correction            = 'none';               % multiple comparison correction applied in ERP statistical analysis
+
+
 
 % ERP
 

@@ -10,16 +10,11 @@ function EEG = proj_eeglab_subject_import_data(project, subj_name)
     % project structure containing all the project info
     % subjects name
 
-    input_file_name=fullfile(project.paths.original_data, [project.import.original_data_prefix subj_name project.import.original_data_suffix '.' project.import.original_data_extension]);
-    [path,name_noext,ext] = fileparts(input_file_name);
     
-    ff1_global=project.preproc.ff1_global;
-    ff2_global=project.preproc.ff2_global;
+    input_file_name         = fullfile(project.paths.original_data, [project.import.original_data_prefix subj_name project.import.original_data_suffix '.' project.import.original_data_extension]);
+    [path,name_noext,ext]   = fileparts(input_file_name);
     
-    nch=project.eegdata.nch;
-    nch_eeg=project.eegdata.nch_eeg;
-    
-    eeglab_channels_file=project.eegdata.eeglab_channels_file_path;
+    eeglab_channels_file    = project.eegdata.eeglab_channels_file_path;
     % --------------------------------------------------------------------------------------------------------------------------------------------
     
     switch project.import.acquisition_system
@@ -31,7 +26,6 @@ function EEG = proj_eeglab_subject_import_data(project, subj_name)
             for ev=1:size(EEG.event,2)
                 EEG.event(ev).type = regexprep(EEG.event(ev).type,' ','');
             end
-
    
         case 'BIOSEMI'
             EEG = pop_biosig(input_file_name, 'importannot','off');
@@ -41,11 +35,10 @@ function EEG = proj_eeglab_subject_import_data(project, subj_name)
                 EEG.event(ev).type = num2str(EEG.event(ev).type);               
             end
             
-    ... case 'OTHER SYSTEMS'
+        otherwise
+            error(['unrecognized device (' project.import.acquisition_system ')']);
     end
 
-    
-   
     EEG = pop_chanedit( EEG, 'lookup',eeglab_channels_file);    ...  considering using a same file, suitable for whichever electrodes configuration    
     EEG = eeg_checkset( EEG ); 
 
@@ -68,6 +61,9 @@ end
 % CHANGE LOG
 % ====================================================================================================
 % ====================================================================================================
+% 11/12/2014
+% added 'otherwise' case in switch statement, variable cleaning
+
 % 1/10/2014
 % modified filtering section
 % blank removed from events' labels

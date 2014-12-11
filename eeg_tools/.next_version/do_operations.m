@@ -105,6 +105,9 @@ if project.operations.do_study_compute_channels_measures
     proj_eeglab_study_compute_channels_measures(project, 'recompute', project.study.precompute.recompute, 'do_erp', project.study.precompute.do_erp, 'do_ersp', project.study.precompute.do_ersp, 'do_erpim', project.study.precompute.do_erpim, 'do_spec', project.study.precompute.do_spec, 'design_num_vec', design_num_vec); ..., 'sel_cell_string', 'CC_01'); ... ,
 end
 %==================================================================================
+if project.operations.do_study_compute_statistics
+    proj_eeglab_study_compute_statistics(project, 'recompute', project.stats.recompute, 'do_erp_time', project.stats.do_erp_time, 'do_ersp_time', project.stats.do_ersp_time, 'do_erp_topo', project.stats.do_erp_topo, 'do_ersp_topo', project.stats.do_erp_topo, 'design_num_vec', design_num_vec, 'sel_cell_string', 'CC_01');
+end
 
 
 

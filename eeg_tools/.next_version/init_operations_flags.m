@@ -63,7 +63,14 @@ project.operations.do_design                                                    
 % precompute channels measures for a set of designs: these measures are used in group statistics. 
 % Mandatory if some dataset of the study is changed.
 project.operations.do_study_compute_channels_measures                               = 0;
+
 %---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+% compute all statistics defined in the project structure.
+project.operations.do_study_compute_statistics                                      = 0;
+
+%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+% plot design curves without applying any statistical threshold.
+project.operations.do_study_plot_data                                               = 0;
 
 
 %% ******************************************************************************************************************************************
