@@ -53,7 +53,7 @@ function [fig] = modify_plot(fig, varargin)
     plot_box_width = NaN;
     new_linewidth = NaN;
     new_markersize = NaN;                 
-    new_fontsize = 6;               
+    new_fontsize = 8;               
     
     
 %% check optional arguments
