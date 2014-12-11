@@ -1,58 +1,58 @@
-% std_plotcurve_erp_tw() - plot ERP or spectral traces for a STUDY component 
-%                   or channel cluster 
+% std_plotcurve_erp_tw() - plot ERP or spectral traces for a STUDY component
+%                   or channel cluster
 % Usage:
 %          >> std_plotcurve( axvals, data, 'key', 'val', ...)
 % Inputs:
-%  axvals - [vector or cell array] axis values for the data. 
+%  axvals - [vector or cell array] axis values for the data.
 %  data  -  [cell array] mean data for each subject group and/or data
-%           condition. For example, to plot mean ERPs from a STUDY 
-%           for epochs of 800 frames in two conditions from three groups 
+%           condition. For example, to plot mean ERPs from a STUDY
+%           for epochs of 800 frames in two conditions from three groups
 %           of 12 subjects:
 %
 %           >> data = { [800x12] [800x12] [800x12];... % 3 groups, cond 1
 %                       [800x12] [800x12] [800x12] };  % 3 groups, cond 2
 %           >> std_plotcurve(erp_ms,data);
 %
-%           By default, parametric statistics are computed across subjects 
-%           in the three groups. (group,condition) ERP averages are plotted. 
-%           See below and >> help statcond 
-%           for more information about the statistical computations. For 
+%           By default, parametric statistics are computed across subjects
+%           in the three groups. (group,condition) ERP averages are plotted.
+%           See below and >> help statcond
+%           for more information about the statistical computations. For
 %           plotting multiple channels, use the second dimension. For
-%           example data = { [800x64x12] [800x64x12] } for 12 subjects, 
+%           example data = { [800x64x12] [800x64x12] } for 12 subjects,
 %           64 channels and 800 data points. The 'chanlocs' option must be
 %           used as well to specify channel positions.
 %
 % Optional display parameters:
 %  'datatype'    - ['erp'|'spec'] data type {default: 'erp'}
-%  'titles'      - [cell array of string] titles for each of the subplots. 
+%  'titles'      - [cell array of string] titles for each of the subplots.
 %                  { default: none}
 %
 % Statistics options:
 %  'groupstats'  - [cell] One p-value array per group {default: {}}
 %  'condstats'   - [cell] One p-value array per condition {default: {}}
 %  'interstats'  - [cell] Interaction p-value arrays {default: {}}
-%  'threshold'   - [NaN|real<<1] Significance threshold. NaN -> plot the 
-%                  p-values themselves on a different figure. When possible, 
+%  'threshold'   - [NaN|real<<1] Significance threshold. NaN -> plot the
+%                  p-values themselves on a different figure. When possible,
 %                  significance regions are indicated below the data.
 %                  {default: NaN}
 %
 % Curve plotting options (ERP and spectrum):
-%  'plotgroups'  - ['together'|'apart'] 'together' -> plot mean results 
-%                  for subject groups in the same figure panel in different 
+%  'plotgroups'  - ['together'|'apart'] 'together' -> plot mean results
+%                  for subject groups in the same figure panel in different
 %                  colors. 'apart' -> plot group results on different figure
 %                  panels {default: 'apart'}
-%  'plotconditions' - ['together'|'apart'] 'together' -> plot mean results 
+%  'plotconditions' - ['together'|'apart'] 'together' -> plot mean results
 %                  for data conditions on the same figure panel in
-%                  different 
+%                  different
 %                  colors. 'apart' -> plot conditions on different figure
-%                  panel. Note: 'plotgroups' and 'plotconditions' arguments 
+%                  panel. Note: 'plotgroups' and 'plotconditions' arguments
 %                  cannot both be 'together' {default: 'apart'}
 %  'legend'      - ['on'|'off'] turn plot legend on/off {default: 'off'}
 %  'plotdiff'    - ['on'|'off'] plot difference between two groups
-%                  or conditions plotted together. 
-%  'plotstderr'  - ['on'|'off'|'diff'|'nocurve'|'diffnocurve'] plots in 
-%                  a surface indicating the standard error. 'diff' only 
-%                  does it for the difference (requires 'plotdiff' 'on' 
+%                  or conditions plotted together.
+%  'plotstderr'  - ['on'|'off'|'diff'|'nocurve'|'diffnocurve'] plots in
+%                  a surface indicating the standard error. 'diff' only
+%                  does it for the difference (requires 'plotdiff' 'on'
 %                  above). 'nocurve' does not plot the mean. This functionality
 %                  does not work for all data configuration {default: 'off'}
 %  'figure'      - ['on'|'off'] creates a new figure ('on'). The 'off' mode
@@ -71,7 +71,7 @@
 %
 % See also: pop_erspparams(), pop_erpparams(), pop_specparams(), statcond()
 
-function std_plotcurve_erp_tw(allx, data, plot_dir, roi_name, study_ls,time_windows_design_names, name_f1, name_f2, levels_f1,levels_f2,pcond_nomask,pgroup_nomask,pinter_nomask,varargin) 
+function std_plotcurve_erp_tw(allx, data, plot_dir, roi_name, study_ls,time_windows_design_names, name_f1, name_f2, levels_f1,levels_f2,pcond_nomask,pgroup_nomask,pinter_nomask,varargin)
 
 pgroup = [];
 pcond  = [];
@@ -82,26 +82,26 @@ if nargin < 2
 end;
 
 opt = finputcheck( varargin, { 'ylim'          'real'   []              [];
-                               'filter'        'real'   []              [];
-                               'threshold'     'real'   []              NaN;
-                               'unitx'         'string' []              'ms';
-                               'chanlocs'      'struct' []              struct('labels', {});
-                               'plotsubjects'  'string' { 'on','off' }  'off';
-                               'condnames'     'cell'   []              {}; % just for legends
-                               'groupnames'    'cell'   []              {}; % just for legends
-                               'groupstats'    'cell'   []              {};
-                               'condstats'     'cell'   []              {};
-                               'interstats'    'cell'   []              {};
-                               'titles'        'cell'   []              {};
-                               'figure'        'string' { 'on','off' }   'on';
-                               'plottopo'      'string' { 'on','off' }   'off';
-                               'plotstderr'    'string' { 'on','off','diff','nocurve' }   'off';
-                               'plotdiff'      'string' { 'on','off' }   'off';
-                               'legend'        { 'string','cell' } { { 'on','off' } {} }  'off';
-                               'datatype'      'string' { 'ersp','itc','erp','spec' }    'erp';
-                               'plotgroups'    'string' { 'together','apart' }  'apart';
-                               'plotmode'      'string' { 'test','condensed' }  'test'; % deprecated
-                               'plotconditions'    'string' { 'together','apart' }  'apart' }, 'std_plotcurve');
+    'filter'        'real'   []              [];
+    'threshold'     'real'   []              NaN;
+    'unitx'         'string' []              'ms';
+    'chanlocs'      'struct' []              struct('labels', {});
+    'plotsubjects'  'string' { 'on','off' }  'off';
+    'condnames'     'cell'   []              {}; % just for legends
+    'groupnames'    'cell'   []              {}; % just for legends
+    'groupstats'    'cell'   []              {};
+    'condstats'     'cell'   []              {};
+    'interstats'    'cell'   []              {};
+    'titles'        'cell'   []              {};
+    'figure'        'string' { 'on','off' }   'on';
+    'plottopo'      'string' { 'on','off' }   'off';
+    'plotstderr'    'string' { 'on','off','diff','nocurve' }   'off';
+    'plotdiff'      'string' { 'on','off' }   'off';
+    'legend'        { 'string','cell' } { { 'on','off' } {} }  'off';
+    'datatype'      'string' { 'ersp','itc','erp','spec' }    'erp';
+    'plotgroups'    'string' { 'together','apart' }  'apart';
+    'plotmode'      'string' { 'test','condensed' }  'test'; % deprecated
+    'plotconditions'    'string' { 'together','apart' }  'apart' }, 'std_plotcurve');
 
 % opt.figure =  'off'; % test by nima
 if isstr(opt), error(opt); end;
@@ -120,9 +120,9 @@ if strcmpi(opt.plotconditions, 'together') &&  ~isempty(opt.groupstats), opt.plo
 if strcmpi(opt.plotgroups,     'together') &&  ~isempty(opt.condstats) , opt.plotgroups     = 'apart'; end;
 if isstr(opt.legend), opt.legend = {}; end;
 if isempty(opt.titles), opt.titles = cell(10,10); opt.titles(:) = { '' }; end;
-if length(data(:)) == length(opt.legend(:)), 
-    opt.legend = reshape(opt.legend, size(data))'; 
-    opt.legend(cellfun(@isempty, data)) = []; 
+if length(data(:)) == length(opt.legend(:)),
+    opt.legend = reshape(opt.legend, size(data))';
+    opt.legend(cellfun(@isempty, data)) = [];
     opt.legend = (opt.legend)';
 end;
 
@@ -130,10 +130,10 @@ end;
 % -----------------------
 onecol  = { 'b' 'b' 'b' 'b' 'b' 'b' 'b' 'b' 'b' 'b' };
 manycol = { 'b' 'g' 'm' 'c' 'r' 'k' 'y' 'b' 'g' 'c' 'm' 'r' 'b' 'g' 'c' 'm' 'r' 'b' ...
-                   'g' 'c' 'm' 'r' 'b' 'g' 'c' 'm' 'r' 'b' 'g' 'c' 'm' 'r' 'b' 'g' 'c' 'm' };
+    'g' 'c' 'm' 'r' 'b' 'g' 'c' 'm' 'r' 'b' 'g' 'c' 'm' 'r' 'b' 'g' 'c' 'm' };
 modifier = { '-' '--' '-.' ':' '-' '--' '-.' ':' '-' '--' '-.' ':'  };
 if strcmpi(opt.plotgroups, 'together') || strcmpi(opt.plotconditions, 'together') || strcmpi(opt.figure, 'off')
-     col = manycol;
+    col = manycol;
 else col = onecol;
 end;
 nonemptycell = find(~cellfun(@isempty, data));
@@ -156,7 +156,7 @@ if strcmpi(opt.plotsubjects, 'off')
     else
         coldata = manycol;
     end;
-       
+    
     %coldata = col(mod([0:maxdim-1], length(col))+1);
     %coldata = col(mod([0:maxdim-1], length(col))+1);
     %coldata = reshape(coldata(1:length(data(:))), size(data));
@@ -176,7 +176,7 @@ if strcmpi(opt.plotsubjects, 'off'), tmpcol = coldata'; tmpcol = tmpcol(:)'; end
 nc = size(data,1);
 ng = size(data,2);
 if strcmpi(opt.plotgroups, 'together'),      ngplot = 1; else ngplot = ng; end;
-if strcmpi(opt.plotconditions,  'together'), ncplot = 1; else ncplot = nc; end;     
+if strcmpi(opt.plotconditions,  'together'), ncplot = 1; else ncplot = nc; end;
 if nc >= ng, opt.subplot = 'transpose';
 else         opt.subplot = 'normal';
 end;
@@ -218,10 +218,10 @@ end;
 
 % compute significance mask
 % --------------------------
-if ~isempty(opt.interstats), pinter = opt.interstats{3}; 
-
+if ~isempty(opt.interstats), pinter = opt.interstats{3};
+    
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% CORREGGO BACO INTERAZIONE
-    pinter_corr=[];    
+    pinter_corr=[];
     for ind = 1:length(opt.condstats)
         pinter_corr(:,:,ind)  = opt.condstats{ind};
         pinter_nomask_corr(:,:,ind)  = pcond_nomask{ind};
@@ -229,24 +229,24 @@ if ~isempty(opt.interstats), pinter = opt.interstats{3};
     end;
     
     for ind = 1:length(opt.groupstats)
-        pinter_corr(:,:,(ind+length(opt.condstats))) = opt.groupstats{ind}; 
-        pinter_nomask_corr(:,:,(ind+length(opt.condstats))) =  pgroup_nomask{ind}; 
-    end;    
+        pinter_corr(:,:,(ind+length(opt.condstats))) = opt.groupstats{ind};
+        pinter_nomask_corr(:,:,(ind+length(opt.condstats))) =  pgroup_nomask{ind};
+    end;
     if isnan(opt.threshold)
         pinter=min(pinter_corr,[],3);
     else
-       pinter=max(pinter_corr,[],3); 
+        pinter=max(pinter_corr,[],3);
     end
     pinter_nomask=min(pinter_nomask_corr,[],3);
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+    
 end;
 
 
 
 
-if ~isnan(opt.threshold) && ( ~isempty(opt.groupstats) || ~isempty(opt.condstats) )    
+if ~isnan(opt.threshold) && ( ~isempty(opt.groupstats) || ~isempty(opt.condstats) )
     pcondplot  = opt.condstats;
     pgroupplot = opt.groupstats;
     
@@ -262,7 +262,7 @@ end;
 % labels
 % ------
 if strcmpi(opt.unitx, 'ms'), xlab = 'Time (ms)';      ylab = 'Potential (\muV)';
-else                         xlab = 'Frequency (Hz)'; ylab = 'Power (10*log_{10}(\muV^{2}))'; 
+else                         xlab = 'Frequency (Hz)'; ylab = 'Power (10*log_{10}(\muV^{2}))';
 end;
 if ~isnan(opt.threshold), statopt = {  'xlabel' xlab };
 else                      statopt = { 'logpval' 'on' 'xlabel' xlab 'ylabel' '-log10(p)' 'ylim' [0 maxplot] };
@@ -283,7 +283,7 @@ if strcmpi(opt.figure, 'on')
     if strcmpi(opt.subplot, 'transpose'), set(gcf, 'position', [ pos(1) pos(2) pos(4) pos(3)]);set(gcf, 'Visible', 'off');
     else                                  set(gcf, 'position', pos);
     end;
-%     set(fig, 'Position', [1, 1, 1680, 1000])
+    %     set(fig, 'Position', [1, 1, 1680, 1000])
 else
     opt.subplot = 'noplot';
 end;
@@ -298,7 +298,7 @@ for c = 1:ncplot
         end;
         
         if ~isempty(data{c,g})
-
+            
             % read all data from one condition or group
             % -----------------------------------------
             dimreduced_sizediffers = 0;
@@ -373,11 +373,11 @@ for c = 1:ncplot
             % -----------------------------------------------------------------
             if strcmpi(opt.plottopo, 'on'), highlight = 'background'; else highlight = 'bottom'; end;
             if strcmpi(opt.plotgroups, 'together') &&  isempty(opt.condstats) && ...
-                             ~isnan(opt.threshold) && ~isempty(opt.groupstats)
+                    ~isnan(opt.threshold) && ~isempty(opt.groupstats)
                 plotopt = { plotopt{:} 'maskarray' };
                 tmpdata = { tmpdata pgroupplot{c}' };
             elseif strcmpi(opt.plotconditions, 'together') &&  isempty(opt.groupstats) && ...
-                                     ~isnan(opt.threshold) && ~isempty(opt.condstats)
+                    ~isnan(opt.threshold) && ~isempty(opt.condstats)
                 plotopt = { plotopt{:} 'maskarray' };
                 tmpdata = { tmpdata pcondplot{g}' };
             end;
@@ -401,7 +401,7 @@ for c = 1:ncplot
                 if isempty(findstr(opt.plotstderr, 'nocurve'))
                     plotcurve( allx, tmpdata, 'colors', tmpcol, plotopt{2:end}, 'traceinfo', 'on', 'title', opt.titles{c,g});
                 end;
-                if ~strcmpi(opt.plotstderr, 'off') 
+                if ~strcmpi(opt.plotstderr, 'off')
                     if ~dimreduced_sizediffers
                         if ~isempty(findstr(opt.plotstderr, 'diff')), begind = 3; else begind = 1; end;
                         set(gcf, 'renderer', 'OpenGL')
@@ -422,20 +422,20 @@ for c = 1:ncplot
             if isempty(opt.ylim)
                 tmp = ylim;
                 tmplim = [ min(tmplim(1), tmp(1)) max(tmplim(2), tmp(2)) ];
-            else 
+            else
                 ylim(opt.ylim);
             end;
         end;
-
+        
         xlabel('Time window','FontSize',12);
-set(gca,'XLim',[0.5 length(time_windows_design_names)+0.5]);set(gcf, 'Visible', 'off');
-set(gca,'XTick',1:(length(time_windows_design_names)));set(gcf, 'Visible', 'off');
-set(gca,'XTickLabel',char(time_windows_design_names));set(gcf, 'Visible', 'off');
+        set(gca,'XLim',[0.5 length(time_windows_design_names)+0.5]);set(gcf, 'Visible', 'off');
+        set(gca,'XTick',1:(length(time_windows_design_names)));set(gcf, 'Visible', 'off');
+        set(gca,'XTickLabel',char(time_windows_design_names));set(gcf, 'Visible', 'off');
         
         
         % statistics accross groups
         % -------------------------
-        if g == ngplot && ng > 1 && ~isempty(opt.groupstats)            
+        if g == ngplot && ng > 1 && ~isempty(opt.groupstats)
             if ~strcmpi(opt.plotgroups, 'together') || ~isempty(opt.condstats) || isnan(opt.threshold)
                 if strcmpi(opt.plotgroups, 'together'),         mysubplot(ncplot+addr, ngplot+addc, 2 + (c-1)*(ngplot+addc), opt.subplot); ci = g;set(gcf, 'Visible', 'off');
                 elseif strcmpi(opt.plotconditions, 'together'), mysubplot(ncplot+addr, ngplot+addc, ngplot + 1, opt.subplot); ci = c;set(gcf, 'Visible', 'off');
@@ -443,61 +443,73 @@ set(gca,'XTickLabel',char(time_windows_design_names));set(gcf, 'Visible', 'off')
                 end;
                 if strcmpi(opt.plotconditions, 'together'), condnames = 'Conditions'; else condnames = opt.condnames{c}; end;
                 if ~isnan(opt.threshold)
-                     if strcmpi(opt.plottopo, 'on'), 
-                          metaplottopo({zeros(size(pgroupplot{c}')) pgroupplot{c}'}, 'chanlocs', opt.chanlocs, 'plotfunc', 'plotcurve', ...
-                              'plotargs', { allx 'maskarray' statopt{:} }, 'datapos', [2 3], 'title', opt.titles{c, g+1});
-                     else
-%                          plotcurve(allx, zeros(size(allx)), 'maskarray', mean(pgroupplot{c},2), 'ylim', [0.1 1], 'title', opt.titles{c, g+1}, statopt{:});
-                     sel_star=mean(pgroupplot{c},2)==1;
-                     xx=allx(sel_star);
-                     yy=mean(pgroupplot{c},2);yy=yy(sel_star);
-                     scatter(xx,yy,200,'*','LineWidth',2);box()
-                     xl=get(gca,'xlim');
-                     yl=get(gca,'ylim');
-                     for nn=1:length(xx)                     
-                         hold on
-                         line([xx(nn) xx(nn)], [0 1])
-                     end
-                     set(gca,'xlim',xl,'ylim',[0 2]);set(gcf, 'Visible', 'off');
-                     title(['P < ',num2str(study_ls)]) 
-                     
-                      pvec=mean(pgroup_nomask{c},2);
-                        for nss=1:length(pvec)
-                            pstr= sprintf('P=\n%0.1e',pvec(nss));
-                            text(allx(nss),1.5,pstr);
+                    if strcmpi(opt.plottopo, 'on'),
+                        metaplottopo({zeros(size(pgroupplot{c}')) pgroupplot{c}'}, 'chanlocs', opt.chanlocs, 'plotfunc', 'plotcurve', ...
+                            'plotargs', { allx 'maskarray' statopt{:} }, 'datapos', [2 3], 'title', opt.titles{c, g+1});
+                    else
+                        %                          plotcurve(allx, zeros(size(allx)), 'maskarray', mean(pgroupplot{c},2), 'ylim', [0.1 1], 'title', opt.titles{c, g+1}, statopt{:});
+                        sel_star=mean(pgroupplot{c},2)==1;
+                        xx=allx(sel_star);
+                        yy=mean(pgroupplot{c},2);yy=yy(sel_star);
+                        scatter(xx,yy,200,'*','LineWidth',2);box()
+                        xl=get(gca,'xlim');
+                        yl=get(gca,'ylim');
+                        for nn=1:length(xx)
+                            hold on
+                            line([xx(nn) xx(nn)], [0 1])
                         end
-                     
-                     
-                     end;
+                        set(gca,'xlim',xl,'ylim',[0 2]);set(gcf, 'Visible', 'off');
+                        title(['P < ',num2str(study_ls)])
+                        
+                        pvec=mean(pgroup_nomask{c},2);
+                        %                         for nss=1:length(pvec)
+                        %                             pstr= sprintf('%0.1e',pvec(nss));
+                        %                             text(allx(nss),1.5,pstr);
+                        %                         end
+                        lv=length(pvec);
+                        sh=repmat([1.3,1.6,1.9],1,round(lv/3));
+                        sh = sh(1:lv);
+                        for nss=1:length(pvec)
+                            pstr= sprintf('%0.1e',pvec(nss));
+                            text(allx(nss),sh(nss),pstr);
+                        end
+                        
+                    end;
                 else
-                     if strcmpi(opt.plottopo, 'on'), 
-                          metaplottopo(pgroupplot{c}', 'chanlocs', opt.chanlocs, 'plotfunc', 'plotcurve', ...
-                              'plotargs', { allx statopt{:} }, 'datapos', [2 3], 'title', opt.titles{c, g+1});
-                     else
-                         plotcurve(allx, mean(pgroupplot{c},2), 'title', opt.titles{c, g+1}, statopt{:});
-                         yl1=get(gca,'ylim'); 
-                         yylim=[-.1 yl1(2)+3];
-                         set(gca,'ylim',yylim);set(gcf, 'Visible', 'off');
-                         hold on  
-                         th2=-log10(study_ls);
-                         plot(allx,ones(1,length(allx))* th2,'--','color','blue','linewidth',3,'color','blue')             
-                         hold on                       
-                         pvec=10.^-(mean(pgroupplot{c},2));
-                            for nss=1:length(pvec)
-                                pstr= sprintf('P=\n%0.1e',pvec(nss));
-                                text(allx(nss),(yylim(2)-0.5),pstr);
-                            end
-
-
-                     end;
+                    if strcmpi(opt.plottopo, 'on'),
+                        metaplottopo(pgroupplot{c}', 'chanlocs', opt.chanlocs, 'plotfunc', 'plotcurve', ...
+                            'plotargs', { allx statopt{:} }, 'datapos', [2 3], 'title', opt.titles{c, g+1});
+                    else
+                        plotcurve(allx, mean(pgroupplot{c},2), 'title', opt.titles{c, g+1}, statopt{:});
+                        yl1=get(gca,'ylim');
+                        yylim=[-.1 yl1(2)+3];
+                        set(gca,'ylim',yylim);set(gcf, 'Visible', 'off');
+                        hold on
+                        th2=-log10(study_ls);
+                        plot(allx,ones(1,length(allx))* th2,'--','color','blue','linewidth',3,'color','blue')
+                        hold on
+                        pvec=10.^-(mean(pgroupplot{c},2));
+%                         for nss=1:length(pvec)
+%                             pstr= sprintf('%0.1e',pvec(nss));
+%                             text(allx(nss),(yylim(2)-0.5),pstr);
+%                         end
+                         lv=length(pvec);
+                        sh=repmat([-0.5,-0.7,-0.9],1,round(lv/3));
+                        sh = yylim(2)+sh(1:lv);
+                        for nss=1:length(pvec)
+                            pstr= sprintf('%0.1e',pvec(nss));
+                            text(allx(nss),sh(nss),pstr);
+                        end
+                        
+                    end;
                 end;
             end;
         end;
     end;
-xlabel('Time window','FontSize',12);
-set(gca,'XLim',[0.5 length(time_windows_design_names)+0.5]);set(gcf, 'Visible', 'off');
-set(gca,'XTick',1:(length(time_windows_design_names)));set(gcf, 'Visible', 'off');
-set(gca,'XTickLabel',char(time_windows_design_names));set(gcf, 'Visible', 'off');
+    xlabel('Time window','FontSize',12);
+    set(gca,'XLim',[0.5 length(time_windows_design_names)+0.5]);set(gcf, 'Visible', 'off');
+    set(gca,'XTick',1:(length(time_windows_design_names)));set(gcf, 'Visible', 'off');
+    set(gca,'XTickLabel',char(time_windows_design_names));set(gcf, 'Visible', 'off');
 end;
 
 
@@ -513,64 +525,77 @@ for g = 1:ng
             end;
             if strcmpi(opt.plotgroups, 'together'), groupnames = 'Groups'; else groupnames = opt.groupnames{g}; end;
             if ~isnan(opt.threshold)
-                 if strcmpi(opt.plottopo, 'on'), 
-                      metaplottopo({zeros(size(pcondplot{g}')) pcondplot{g}'}, 'chanlocs', opt.chanlocs, 'plotfunc', 'plotcurve', ...
-                          'plotargs', { allx 'maskarray' statopt{:} }, 'datapos', [2 3], 'title', opt.titles{end, g});
-                 else
-%                      plotcurve(allx, zeros(size(allx)), 'maskarray', mean(pcondplot{g},2), 'ylim', [0.1 1], 'title', opt.titles{end, g}, statopt{:});
-                     sel_star=mean(pcondplot{g},2)==1;
-                     xx=allx(sel_star);
-                     yy=mean(pcondplot{g},2);yy=yy(sel_star);
-                     scatter(xx,yy,200,'*','LineWidth',2);box()
-                     xl=get(gca,'xlim');
-                     yl=get(gca,'ylim');                     
-                     for nn=1:length(xx)                     
-                         hold on
-                         line([xx(nn) xx(nn)], [0 1])
-                     end
-                     set(gca,'xlim',xl,'ylim',[0 2]);set(gcf, 'Visible', 'off');
-                     title(['P < ',num2str(study_ls)]) 
-                     
-                     
-                     pvec=mean(pcond_nomask{g},2);
-                     for nss=1:length(pvec)
-                                pstr= sprintf('P=\n%0.1e',pvec(nss));
-                                text(allx(nss),1.5,pstr);
-                            
-                     end
-                     
-                     
-                     
-                 end;
+                if strcmpi(opt.plottopo, 'on'),
+                    metaplottopo({zeros(size(pcondplot{g}')) pcondplot{g}'}, 'chanlocs', opt.chanlocs, 'plotfunc', 'plotcurve', ...
+                        'plotargs', { allx 'maskarray' statopt{:} }, 'datapos', [2 3], 'title', opt.titles{end, g});
+                else
+                    %                      plotcurve(allx, zeros(size(allx)), 'maskarray', mean(pcondplot{g},2), 'ylim', [0.1 1], 'title', opt.titles{end, g}, statopt{:});
+                    sel_star=mean(pcondplot{g},2)==1;
+                    xx=allx(sel_star);
+                    yy=mean(pcondplot{g},2);yy=yy(sel_star);
+                    scatter(xx,yy,200,'*','LineWidth',2);box()
+                    xl=get(gca,'xlim');
+                    yl=get(gca,'ylim');
+                    for nn=1:length(xx)
+                        hold on
+                        line([xx(nn) xx(nn)], [0 1])
+                    end
+                    set(gca,'xlim',xl,'ylim',[0 2]);set(gcf, 'Visible', 'off');
+                    title(['P < ',num2str(study_ls)])
+                    
+                    
+                    pvec=mean(pcond_nomask{g},2);
+                    %                      for nss=1:length(pvec)
+                    %                                 pstr= sprintf('%0.1e',pvec(nss));
+                    %                                 text(allx(nss),1.5,pstr);
+                    %
+                    %                      end
+                    lv=length(pvec);
+                    sh=repmat([1.3,1.6,1.9],1,round(lv/3));
+                    sh = sh(1:lv);
+                    for nss=1:length(pvec)
+                        pstr= sprintf('%0.1e',pvec(nss));
+                        text(allx(nss),sh(nss),pstr);
+                    end
+                    
+                    
+                end;
             else
-                 if strcmpi(opt.plottopo, 'on'), 
-                      metaplottopo(pcondplot{g}', 'chanlocs', opt.chanlocs, 'plotfunc', 'plotcurve', ...
-                          'plotargs', { allx statopt{:} }, 'datapos', [2 3], 'title', opt.titles{end, g});
-                 else
-                       plotcurve(allx, mean(pcondplot{g},2), 'title',  opt.titles{end, g}, statopt{:});
-                     yl1=get(gca,'ylim'); 
-                     yylim=[-.1 yl1(2)+3];
-                     set(gca,'ylim',yylim)
-                     hold on  
-                     th2=-log10(study_ls);
-                     plot(allx,ones(1,length(allx))* th2,'--','color','blue','linewidth',3,'color','blue')             
-                     hold on                       
-                     pvec=10.^-(mean(pcondplot{g},2));
-                     for nss=1:length(pvec)
-                                pstr= sprintf('P=\n%0.1e',pvec(nss));
-                                text(allx(nss),(yylim(2)-0.5),pstr);
-                            
-                     end
+                if strcmpi(opt.plottopo, 'on'),
+                    metaplottopo(pcondplot{g}', 'chanlocs', opt.chanlocs, 'plotfunc', 'plotcurve', ...
+                        'plotargs', { allx statopt{:} }, 'datapos', [2 3], 'title', opt.titles{end, g});
+                else
+                    plotcurve(allx, mean(pcondplot{g},2), 'title',  opt.titles{end, g}, statopt{:});
+                    yl1=get(gca,'ylim');
+                    yylim=[-.1 yl1(2)+3];
+                    set(gca,'ylim',yylim)
+                    hold on
+                    th2=-log10(study_ls);
+                    plot(allx,ones(1,length(allx))* th2,'--','color','blue','linewidth',3,'color','blue')
+                    hold on
+                    pvec=10.^-(mean(pcondplot{g},2));
+%                     for nss=1:length(pvec)
+%                         pstr= sprintf('%0.1e',pvec(nss));
+%                         text(allx(nss),(yylim(2)-0.5),pstr);
+%                         
+%                     end
+                     lv=length(pvec);
+                        sh=repmat([-0.5,-0.7,-0.9],1,round(lv/3));
+                        sh = yylim(2)+sh(1:lv);
+                        for nss=1:length(pvec)
+                            pstr= sprintf('%0.1e',pvec(nss));
+                            text(allx(nss),sh(nss),pstr);
+                        end
 
-                 end;
+                end;
             end;
         end;
     end;
-xlabel('Time window','FontSize',12);
-set(gca,'XLim',[0.5 length(time_windows_design_names)+0.5]);set(gcf, 'Visible', 'off');
-set(gca,'XTick',1:(length(time_windows_design_names)));set(gcf, 'Visible', 'off');
-set(gca,'XTickLabel',char(time_windows_design_names));set(gcf, 'Visible', 'off');
-
+    xlabel('Time window','FontSize',12);
+    set(gca,'XLim',[0.5 length(time_windows_design_names)+0.5]);set(gcf, 'Visible', 'off');
+    set(gca,'XTick',1:(length(time_windows_design_names)));set(gcf, 'Visible', 'off');
+    set(gca,'XTickLabel',char(time_windows_design_names));set(gcf, 'Visible', 'off');
+    
 end;
 
 
@@ -579,63 +604,77 @@ end;
 if ~isempty(opt.groupstats) && ~isempty(opt.condstats) && ng > 1 && nc > 1
     mysubplot(ncplot+addr, ngplot+addc, ngplot + 1 + ncplot*(ngplot+addr), opt.subplot);
     if ~isnan(opt.threshold)
-         if strcmpi(opt.plottopo, 'on'), 
-              metaplottopo({zeros(size(pinterplot')) pinterplot'}, 'chanlocs', opt.chanlocs, 'plotfunc', 'plotcurve', ...
-                  'plotargs', { allx 'maskarray' statopt{:} }, 'datapos', [2 3], 'title', opt.titles{end, end});
-         else
-%              plotcurve(allx, zeros(size(allx)), 'maskarray', mean(pinterplot,2), 'ylim', [0.1 1], 'title', opt.titles{end, end}, statopt{:});
-                sel_star=mean(pinterplot,2)==1;
-                 xx=allx(sel_star);
-                 yy=mean(pinterplot,2);yy=yy(sel_star);
-                 scatter(xx,yy,200,'*','LineWidth',2);box()
-                 xl=get(gca,'xlim');
-                 yl=get(gca,'ylim');
-                 for nn=1:length(xx)                     
-                      hold on
-                      line([xx(nn) xx(nn)], [0 1])
-                 end
-                 title(['P < ',num2str(study_ls)]) 
-                 set(gca,'xlim',xl,'ylim',[0 2]);  set(gcf, 'Visible', 'off');  
-
-              xlabel(xlab); %ylabel('-log10(p)');
-               
-              pvec=mean(pinter_nomask,2);
-              
-              for nss=1:length(pvec)
-                    pstr= sprintf('P=\n%0.1e',pvec(nss));
-                    text(allx(nss),1.5,pstr);
-             end
-              
-              
-              
+        if strcmpi(opt.plottopo, 'on'),
+            metaplottopo({zeros(size(pinterplot')) pinterplot'}, 'chanlocs', opt.chanlocs, 'plotfunc', 'plotcurve', ...
+                'plotargs', { allx 'maskarray' statopt{:} }, 'datapos', [2 3], 'title', opt.titles{end, end});
+        else
+            %              plotcurve(allx, zeros(size(allx)), 'maskarray', mean(pinterplot,2), 'ylim', [0.1 1], 'title', opt.titles{end, end}, statopt{:});
+            sel_star=mean(pinterplot,2)==1;
+            xx=allx(sel_star);
+            yy=mean(pinterplot,2);yy=yy(sel_star);
+            scatter(xx,yy,200,'*','LineWidth',2);box()
+            xl=get(gca,'xlim');
+            yl=get(gca,'ylim');
+            for nn=1:length(xx)
+                hold on
+                line([xx(nn) xx(nn)], [0 1])
+            end
+            title(['P < ',num2str(study_ls)])
+            set(gca,'xlim',xl,'ylim',[0 2]);  set(gcf, 'Visible', 'off');
+            
+            xlabel(xlab); %ylabel('-log10(p)');
+            
+            pvec=mean(pinter_nomask,2);
+            
+            %               for nss=1:length(pvec)
+            %                     pstr= sprintf('%0.1e',pvec(nss));
+            %                     text(allx(nss),1.5,pstr);
+            %              end
+            
+            lv=length(pvec);
+            sh=repmat([1.3,1.6,1.9],1,round(lv/3));
+            sh = sh(1:lv);
+            for nss=1:length(pvec)
+                pstr= sprintf('%0.1e',pvec(nss));
+                text(allx(nss),sh(nss),pstr);
+            end
+            
         end;
     else
-         if strcmpi(opt.plottopo, 'on'), 
-              metaplottopo(pinterplot', 'chanlocs', opt.chanlocs, 'plotfunc', 'plotcurve', ...
-                  'plotargs', { allx statopt{:} }, 'datapos', [2 3], 'title', opt.titles{end, end});
-         else
-             plotcurve(allx, mean(pinterplot,2), 'title', opt.titles{end, end}, statopt{:});
-             yl1=get(gca,'ylim'); 
-             yylim=[-.1 yl1(2)+3];
-             set(gca,'ylim',yylim);set(gcf, 'Visible', 'off');
-             hold on  
-             th2=-log10(study_ls);
-             plot(allx,ones(1,length(allx))* th2,'--','color','blue','linewidth',3,'color','blue')             
-             hold on      
-             pvec=10.^-(mean(pinterplot,2));
-             for nss=1:length(pvec)
-                    pstr= sprintf('P=\n%0.1e',pvec(nss));
-                    text(allx(nss),(yylim(2)-0.5),pstr);
-
-             end
-
-         end;
+        if strcmpi(opt.plottopo, 'on'),
+            metaplottopo(pinterplot', 'chanlocs', opt.chanlocs, 'plotfunc', 'plotcurve', ...
+                'plotargs', { allx statopt{:} }, 'datapos', [2 3], 'title', opt.titles{end, end});
+        else
+            plotcurve(allx, mean(pinterplot,2), 'title', opt.titles{end, end}, statopt{:});
+            yl1=get(gca,'ylim');
+            yylim=[-.1 yl1(2)+3];
+            set(gca,'ylim',yylim);set(gcf, 'Visible', 'off');
+            hold on
+            th2=-log10(study_ls);
+            plot(allx,ones(1,length(allx))* th2,'--','color','blue','linewidth',3,'color','blue')
+            hold on
+            pvec=10.^-(mean(pinterplot,2));
+            %              for nss=1:length(pvec)
+            %                     pstr= sprintf('%0.1e',pvec(nss));
+            %                     text(allx(nss),(yylim(2)-0.5),pstr);
+            %
+            %              end
+            
+            lv=length(pvec);
+            sh=repmat([-0.5,-0.7,-0.9],1,round(lv/3));
+            sh = yylim(2)+sh(1:lv);
+            for nss=1:length(pvec)
+                pstr= sprintf('%0.1e',pvec(nss));
+                text(allx(nss),sh(nss),pstr);
+            end
+            
+        end;
     end;
     xlabel('Time window','FontSize',12);
     set(gca,'XLim',[0.5 length(time_windows_design_names)+0.5]);set(gcf, 'Visible', 'off');
     set(gca,'XTick',1:(length(time_windows_design_names)));set(gcf, 'Visible', 'off');
     set(gca,'XTickLabel',char(time_windows_design_names));set(gcf, 'Visible', 'off');
-end;  
+end;
 
 
 % axis limit
@@ -672,19 +711,19 @@ if strcmpi(opt.plottopo, 'off') && length(hdl(:)) > 1
 end;
 
 tlf1=length(levels_f1);
-tlf2=length(levels_f2); 
+tlf2=length(levels_f2);
 if tlf1 > 1 && tlf2 <= 1
-    suptitle([ ' ERP in ' roi_name,': ', name_f1 ])    
- end
- if tlf1 <=1 && tlf2 > 1
-    suptitle([ ' ERP in ' roi_name,': ',  name_f2 ])    
- end
- if tlf1 > 1 && tlf2 > 1 
-    suptitle([ ' ERP in ' roi_name,': ', name_f1 ' and ' name_f2 ])    
- end 
+    suptitle([ ' ERP in ' roi_name,': ', name_f1 ])
+end
+if tlf1 <=1 && tlf2 > 1
+    suptitle([ ' ERP in ' roi_name,': ',  name_f2 ])
+end
+if tlf1 > 1 && tlf2 > 1
+    suptitle([ ' ERP in ' roi_name,': ', name_f1 ' and ' name_f2 ])
+end
 
- 
-% name_embed=fullfile(plot_dir,'erp_curve_tw'); 
+
+% name_embed=fullfile(plot_dir,'erp_curve_tw');
 % name_plot=[name_embed,'_',char(roi_name)];
 % set(fig, 'renderer', 'painter');set(gcf, 'Visible', 'off');
 % modify_plot(fig);set(gcf, 'Visible', 'off');
@@ -692,46 +731,46 @@ if tlf1 > 1 && tlf2 <= 1
 % print([name_plot,'.eps'],'-depsc2','-r300');
 % %plot2svg([name_plot,'.svg'])
 % os = system_dependent('getos');
-% if ~ strncmp(os,'Linux',2) 
+% if ~ strncmp(os,'Linux',2)
 %     print(fig,[name_embed,'.ps'],'-append','-dwinc')
-%     saveppt2(fullfile(plot_dir,'ersp_tf.ppt'),'f',fig);   
+%     saveppt2(fullfile(plot_dir,'ersp_tf.ppt'),'f',fig);
 % else
 %     print(fig,[name_embed,'.ps'],'-append','-painter','-r300')
 % end
-% export_fig(fig,[name_embed,'.pdf'], '-pdf', '-append')       
+% export_fig(fig,[name_embed,'.pdf'], '-pdf', '-append')
 
 input_save_fig.plot_dir               = plot_dir;
 input_save_fig.fig                    = fig;
 input_save_fig.name_embed             = 'erp_curve_tw';
 input_save_fig.suffix_plot            = [char(roi_name)];
 
-save_figures( input_save_fig )
+save_figures( input_save_fig, 'exclude_format',{'svg'}) % exclude svg due to bug of eeglab format
 
- 
- 
+
+
 % set(fig, 'paperpositionmode', 'auto');
 % setfont(fig, 'fontsize', 16);
-% 
+%
 %     name_plot=fullfile(plot_dir,['erp_curve_tw_',char(roi_name)]);
 %         saveas(fig, [name_plot,'.fig']);
 %         saveas(fig,[name_plot,'.eps'],'epsc');
-%         %plot2svg([name_plot,'.svg']) 
-% 
+%         %plot2svg([name_plot,'.svg'])
+%
 % os = system_dependent('getos');
-% if ~ strncmp(os,'Linux',2) 
+% if ~ strncmp(os,'Linux',2)
 %     print(fig,fullfile(plot_dir,'erp_curve_tw.ps'),'-append','-dwinc')
 %     saveppt2(fullfile(plot_dir,'erp_curve_tw.ppt'),'f',fig);
-%    
+%
 % else
 % %     set(gcf,'Renderer','painters')
 %     print(fig,fullfile(plot_dir,'erp_curve_tw.ps'),'-append','-zbuffer','-r200')
 % % print(fig,fullfile(plot_dir,'erp_curve_tw.ps'),'-append')
-%     
-% %     str=['ps2pdf ',fullfile(plot_dir,'erp_curve_tw.ps'), ' ',fullfile(plot_dir,'erp_curve_tw.pdf' )];    
+%
+% %     str=['ps2pdf ',fullfile(plot_dir,'erp_curve_tw.ps'), ' ',fullfile(plot_dir,'erp_curve_tw.pdf' )];
 % %     system(str);
 % end
-%  
-% 
+%
+%
 % ps2pdf('psfile',fullfile(plot_dir,'erp_curve_tw.ps'),'pdffile',fullfile(plot_dir,'erp_curve_tw.pdf'))
 
 
@@ -741,18 +780,18 @@ close(fig)
 % -------------------------------------------
 function hdl = mysubplot(nr,nc,ind,subplottype);
 
-    r = ceil(ind/nc);
-    c = ind -(r-1)*nc;
-    if strcmpi(subplottype, 'transpose'),  hdl = subplot(nc,nr,(c-1)*nr+r);
-    elseif strcmpi(subplottype, 'normal'), hdl = subplot(nr,nc,(r-1)*nc+c);
-    elseif strcmpi(subplottype, 'noplot'), hdl = gca;
-    else error('Unknown subplot type');
-    end;
+r = ceil(ind/nc);
+c = ind -(r-1)*nc;
+if strcmpi(subplottype, 'transpose'),  hdl = subplot(nc,nr,(c-1)*nr+r);
+elseif strcmpi(subplottype, 'normal'), hdl = subplot(nr,nc,(r-1)*nc+c);
+elseif strcmpi(subplottype, 'noplot'), hdl = gca;
+else error('Unknown subplot type');
+end;
 
 % rapid filtering for ERP
 % -----------------------
 function tmpdata2 = myfilt(tmpdata, srate, lowpass, highpass)
 
-    tmpdata2 = reshape(tmpdata, size(tmpdata,1), size(tmpdata,2)*size(tmpdata,3)*size(tmpdata,4));
-    tmpdata2 = eegfiltfft(tmpdata2',srate, lowpass, highpass)';
-    tmpdata2 = reshape(tmpdata2, size(tmpdata,1), size(tmpdata,2), size(tmpdata,3), size(tmpdata,4));
+tmpdata2 = reshape(tmpdata, size(tmpdata,1), size(tmpdata,2)*size(tmpdata,3)*size(tmpdata,4));
+tmpdata2 = eegfiltfft(tmpdata2',srate, lowpass, highpass)';
+tmpdata2 = reshape(tmpdata2, size(tmpdata,1), size(tmpdata,2), size(tmpdata,3), size(tmpdata,4));

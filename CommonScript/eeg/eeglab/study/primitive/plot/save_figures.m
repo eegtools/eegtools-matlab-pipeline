@@ -1,4 +1,4 @@
-function [ ] = save_figures( input )
+function [ ] = save_figures( input, varargin )
 %% function [ fig ] = save_figures( input )
 % save figures representing results of group statistical analysis in different formats
 %
@@ -12,10 +12,11 @@ fig          = input.fig;                                                  % the
 name_embed   = input.name_embed;                                           % the name (without the path) of the overview files (ps, pdf, ppt,)
 suffix_plot  = input.suffix_plot;                                          % the suffix added, for each saved figure, to the name of ebbedded files
 
-fig_dir      = fullfile(plot_dir,'fig'); mkdir(fig_dir);
-eps_dir      = fullfile(plot_dir,'eps'); mkdir(eps_dir);
-svg_dir      = fullfile(plot_dir,'svg'); mkdir(svg_dir);
-tif_dir      = fullfile(plot_dir,'tif'); mkdir(tif_dir);
+
+fig_dir      = fullfile(plot_dir,'fig'); if(not(exist(fig_dir,'dir')));mkdir(fig_dir);end;
+eps_dir      = fullfile(plot_dir,'eps'); if(not(exist(eps_dir,'dir')));mkdir(eps_dir);end;
+svg_dir      = fullfile(plot_dir,'svg'); if(not(exist(svg_dir,'dir')));mkdir(svg_dir);end;
+tif_dir      = fullfile(plot_dir,'tif'); if(not(exist(tif_dir,'dir')));mkdir(tif_dir);end;
 
 name_plot    = [name_embed,'_',suffix_plot];                               % name of the plot without the path
 
@@ -32,6 +33,18 @@ pdf_path  =  fullfile(plot_dir,[name_embed,'.pdf']);
 
 res       = '-r600'; % resolution
 
+exclude_format = [];
+
+ %% check optional arguments
+    for par=1:2:length(varargin)
+       switch varargin{par}
+           case 'exclude_format'                
+                 exclude_format = varargin{par+1};
+               
+           
+       end
+    end    
+
 
 % set figure parameters in a good format for saving/exporting
 set(fig, 'renderer', 'painter')
@@ -43,8 +56,10 @@ saveas(fig, fig_path);
 % save eps file
 print(eps_path,'-depsc2',res);
 
+if(not(sum(ismember(exclude_format,'svg'))))
 % save svg file
 plot2svg(svg_path)
+end
 
 % save tif file
 print(tif_path,'-dtiff',res);

@@ -105,6 +105,7 @@ if tlf1 < 2 || tlf2 < 2
     
     if strcmp(z_transform,'on')
         mat_error_bar=(mat_error_bar-mean(mean(mat_error_bar)))/std(mat_error_bar(:));
+        compact_display_ylim = [-1 1];
     end
     
     vec_mean=mean(mat_error_bar,1);
