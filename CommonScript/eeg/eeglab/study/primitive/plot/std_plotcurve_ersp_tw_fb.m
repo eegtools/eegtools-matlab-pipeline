@@ -471,7 +471,7 @@ for c = 1:ncplot
                         
                         pvec=mean(pgroup_nomask{c},2);
                         lv=length(pvec);
-                        sh=repmat([1.3,1.6,1.9],1,round(lv/3));
+                        sh=repmat([1.3,1.6],1,round(lv/2));
                         sh = sh(1:lv);
                         for nss=1:length(pvec)
                             pstr= sprintf('%0.1e',pvec(nss));
@@ -495,7 +495,7 @@ for c = 1:ncplot
                         hold on
                         pvec=10.^-(mean(pgroupplot{c},2));
                         lv=length(pvec);
-                        sh=repmat([-0.5,-0.7,-0.9],1,round(lv/3));
+                       sh=repmat([-0.3,-0.9],1,round(lv/2));
                         sh = yylim(2)+sh(1:lv);
                         for nss=1:length(pvec)
                             pstr= sprintf('%0.1e',pvec(nss));
@@ -549,7 +549,7 @@ for g = 1:ng
                     pvec=mean(pcond_nomask{g},2);
                     
                     lv=length(pvec);
-                    sh=repmat([1.3,1.6,1.9],1,round(lv/3));
+                    sh=repmat([1.3,1.6],1,round(lv/2));
                     sh = sh(1:lv);
                     for nss=1:length(pvec)
                         pstr= sprintf('%0.1e',pvec(nss));
@@ -580,7 +580,7 @@ for g = 1:ng
                     %                     end
                     
                     lv=length(pvec);
-                    sh=repmat([-0.5,-0.7,-0.9],1,round(lv/3));
+                   sh=repmat([-0.3,-0.9],1,round(lv/2));
                     sh = yylim(2)+sh(1:lv);
                     for nss=1:length(pvec)
                         pstr= sprintf('%0.1e',pvec(nss));
@@ -632,7 +632,7 @@ if ~isempty(opt.groupstats) && ~isempty(opt.condstats) && ng > 1 && nc > 1
             %              end
             
             lv=length(pvec);
-            sh=repmat([1.3,1.6,1.9],1,round(lv/3));
+            sh=repmat([1.3,1.6],1,round(lv/2));
             sh = sh(1:lv);
             for nss=1:length(pvec)
                 pstr= sprintf('%0.1e',pvec(nss));
@@ -660,7 +660,7 @@ if ~isempty(opt.groupstats) && ~isempty(opt.condstats) && ng > 1 && nc > 1
             %
             %             end
             lv=length(pvec);
-            sh=repmat([-0.5,-0.7,-0.9],1,round(lv/3));
+           sh=repmat([-0.3,-0.9],1,round(lv/2));
             sh = yylim(2)+sh(1:lv);
             for nss=1:length(pvec)
                 pstr= sprintf('%0.1e',pvec(nss));
