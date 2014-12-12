@@ -301,7 +301,7 @@ if tlf1 > 1 && tlf2 > 1
                 %                         pstr= ['P=',sprintf('%0.1e',pvec(nss))];
                 %                         text(times(nss),(yl1(1)+delta),pstr);
                 %                     end
-                %                      lv=length(pvec);
+                                     lv=length(pvec);
                 sh=delta*repmat([0.75,1],1,round(lv/2));
                 sh = yl1(1)+sh(1:lv);
                 for nss=1:length(pvec)
