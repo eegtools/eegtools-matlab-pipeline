@@ -1,5 +1,5 @@
 function [] = std_plotcurve_erp_compact(times, erp, plot_dir, roi_name, study_ls, name_f1, name_f2, levels_f1,levels_f2, pgroup,  pcond, compact_display_h0,compact_display_v0,compact_display_sem,compact_display_stats,compact_display_xlim,compact_display_ylim)      
-   
+   set(0,'defaulttextinterpreter','none') 
     % total levels of factor 1 (e.g conditions) and 2 (e.g groups)     
     [tlf1 tlf2]=size(erp);
     
@@ -107,8 +107,8 @@ function [] = std_plotcurve_erp_compact(times, erp, plot_dir, roi_name, study_ls
          box off
          set(gca,'LineWidth',2, 'FontSize', 10)
          xlabel(['Time (ms)'])
-         ylabel(['Amplitude (\muV)'])
-         legend(levels_f,'box','off', 'FontSize', 10,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1])
+         ylabel(['Amplitude (uV)'])
+         set(0,'defaulttextinterpreter','none') ;legend(levels_f,'box','off', 'FontSize', 10,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1])
          title(['ERP in ', roi_name,': ', 'within ',name_f], 'FontSize', 10);
          hold off
          
@@ -254,7 +254,7 @@ save_figures( input_save_fig )
              set(gca,'LineWidth',2, 'FontSize', 10)
              xlabel(['Time (ms)'])
              ylabel(['Amplitude (\muV)'])
-             legend(levels_f2,'box','off', 'FontSize', 10,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1])
+             set(0,'defaulttextinterpreter','none') ;legend(levels_f2,'box','off', 'FontSize', 10,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1])
              title(['ERP in ', roi_name,': ', 'within ',levels_f1{nlf1}], 'FontSize', 10);
              hold off
         
@@ -395,7 +395,7 @@ save_figures( input_save_fig )
              set(gca,'LineWidth',2, 'FontSize', 10)
              xlabel(['Time (ms)'])
              ylabel(['Amplitude (\muV)'])
-             legend(levels_f1,'box','off', 'FontSize', 10,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1])
+             set(0,'defaulttextinterpreter','none') ;legend(levels_f1,'box','off', 'FontSize', 10,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1])
              title(['ERP in ', roi_name,': ','within ',levels_f2{nlf2}], 'FontSize', 10);
              hold off
              
