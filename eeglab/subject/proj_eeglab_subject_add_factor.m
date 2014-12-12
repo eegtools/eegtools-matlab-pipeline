@@ -12,7 +12,7 @@ function EEG = proj_eeglab_subject_add_factor(project, subj_name)
             
             if exist(input_file_name, 'file')                       
 
-                EEG = pop_loadset(input_file_name);
+                EEG = pop_loadset(input_file_name);project.epoching.numcond
                 tot_eve=length(EEG.event);
 
                 for nl=1:length(add_factor_list)
