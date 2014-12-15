@@ -33,11 +33,11 @@ end
 if project.operations.do_auto_pauses_removal
     for subj=1:project.subjects.numsubj
         subj_name=project.subjects.list{subj};        
-        file_name=fullfile(project.paths.input_epochs, [subj_name pre_epoching_input_file_name '.set']);
+        file_name=fullfile(project.paths.input_epochs, [project.import.original_data_prefix subj_name project.import.original_data_suffix project.import.output_suffix pre_epoching_input_file_name '.set']);
         
         eeglab_subject_events_remove_upto_triggercode(file_name, project.task.events.start_experiment_trigger_value); ... return if find a boundary as first event
         eeglab_subject_events_remove_after_triggercode(file_name, project.task.events.end_experiment_trigger_value); ... return if find a boundary as first event
-        pause_resume_errors=eeglab_subject_events_check_2triggers_orders(file_name, project.task.events.pause_trigger_value, project.task.events.resume_trigger_value);
+        pause_resume_errors = eeglab_subject_events_check_2triggers_orders(file_name, project.task.events.pause_trigger_value, project.task.events.resume_trigger_value);
     
         if isempty(pause_resume_errors)
             disp('====>> pause/remove triggers sequence ok....move to pause removal');
@@ -53,8 +53,8 @@ if project.operations.do_ica
     % do preprocessing up to epochs: avgref, epochs, rmbase: create one trails dataset for each condition
     for subj=1:project.subjects.numsubj
         subj_name=project.subjects.list{subj}; 
-        inputfile=fullfile(project.paths.input_epochs, [subj_name pre_epoching_input_file_name '.set']);
-        eeglab_subject_ica(inputfile, project.paths.input_epochs, project.eegdata.eeg_channels_list, 'cudaica');
+        inputfile=fullfile(project.paths.input_epochs, [project.import.original_data_prefix subj_name project.import.original_data_suffix project.import.output_suffix pre_epoching_input_file_name '.set']);
+        eeglab_subject_ica(inputfile, project.paths.input_epochs, project.eegdata.eeg_channels_list, project.import.reference_channels, 'cudaica');
     end
 end
 %==================================================================================
