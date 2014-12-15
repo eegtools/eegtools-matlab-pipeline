@@ -774,7 +774,7 @@ save_figures( input_save_fig, 'exclude_format',{'svg'}) % exclude svg due to bug
 % ps2pdf('psfile',fullfile(plot_dir,'erp_curve_tw.ps'),'pdffile',fullfile(plot_dir,'erp_curve_tw.pdf'))
 
 
-close(fig)
+% close(fig)
 
 % mysubplot (allow to transpose if necessary)
 % -------------------------------------------

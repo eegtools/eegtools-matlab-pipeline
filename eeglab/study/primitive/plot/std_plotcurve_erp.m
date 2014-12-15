@@ -674,7 +674,7 @@ save_figures( input_save_fig )
 % ps2pdf('psfile',fullfile(plot_dir,'erp_curve.ps'),'pdffile',fullfile(plot_dir,'erp_curve.pdf'))
 
 
-close(fig)
+% close(fig)
 
 % mysubplot (allow to transpose if necessary)
 % -------------------------------------------
