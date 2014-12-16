@@ -49,6 +49,15 @@ if project.operations.do_auto_pauses_removal
     end
 end
 %==================================================================================
+if project.operations.do_testart 
+    % allow testing some semi-automatic aritfact removal algorhithms
+    for subj=1:project.subjects.numsubj
+        subj_name=project.subjects.list{subj}; 
+        inputfile=fullfile(project.paths.input_epochs, [subj_name pre_epoching_input_file_name '.set']);
+        eeglab_subject_testart(inputfile, project.paths.input_epochs);
+    end
+end
+%==================================================================================
 if project.operations.do_ica
     % do preprocessing up to epochs: avgref, epochs, rmbase: create one trails dataset for each condition
     for subj=1:project.subjects.numsubj
@@ -57,6 +66,17 @@ if project.operations.do_ica
         eeglab_subject_ica(inputfile, project.paths.input_epochs, project.eegdata.eeg_channels_list, project.import.reference_channels, 'cudaica');
     end
 end
+
+if project.operations.do_uniform_montage
+    % uniform montages between different polygraphs
+    for subj=1:project.subjects.numsubj
+        subj_name=project.subjects.list{subj}; 
+        inputfile=fullfile(project.paths.input_epochs, [subj_name pre_epoching_input_file_name '.set']);
+        eeglab_subject_uniform_montage(inputfile, project.paths.input_epochs, project.preproc.montage_list);
+    end
+end
+
+
 %==================================================================================
 if project.operations.do_epochs
     % do preprocessing up to epochs: avgref, epochs, rmbase: create one trails dataset for each condition
