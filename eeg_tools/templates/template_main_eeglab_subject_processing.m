@@ -40,6 +40,8 @@ project.paths.script.project            = fullfile(project.paths.svn_scripts_roo
 eval(project.conf_file_name);                                               ... project structure
 project                                 = define_project_paths(project);    ... global and project paths definition. If 2nd param is 0, is faster, as it does not call eeglab
 init_operations_flags
+pre_epoching_input_file_name = '_raw_er2';   ... 16/12/14 CLA: it's NOT an override but, apparently, a mandatory parameterfile name suffix used for non-standard operations (second ica, patch triggers, etc...)
+
 %% =====================================================================================================================================================================
 %  OVERRIDE
 %=====================================================================================================================================================================
@@ -50,7 +52,7 @@ stat_threshold = 0.05;
 electrode2inspect='C4';
 save_figure=0;
 
-pre_epoching_input_file_name = '_raw_er2';   ... file name suffix used for non-standard operations (second ica, patch triggers, etc...)
+
 %=====================================================================================================================================================================
 % OPERATIONS LIST 
 %=====================================================================================================================================================================
@@ -72,8 +74,16 @@ project.operations.do_patch_triggers                                            
 project.operations.do_auto_pauses_removal                                           = 0;
 
 %---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+% allow testing some semi-automatic aritfact removal algorhithms
+project.operations.do_testart                                                       = 0;
+
+%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 % perform ICA
 project.operations.do_ica                                                           = 0; 
+
+%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+% uniform montages between different polygraphs
+project.operations.do_uniform_montage                                               = 0;
 
 %---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 % epoching
