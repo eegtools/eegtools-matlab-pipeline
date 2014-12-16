@@ -110,7 +110,7 @@ try
     do_operations
 
     %==================================================================================
-    if do_patch_triggers
+    if project.operations.do_patch_triggers
         for subj=1:project.subjects.numsubj
             subj_name=project.subjects.list{subj}; 
             file_name=fullfile(project.paths.input_epochs, [subj_name pre_epoching_input_file_name '.set']);
@@ -130,7 +130,7 @@ try
 
 
     %==================================================================================
-    if do_custom_epochs
+    if project.operations.do_custom_epochs
         % do preprocessing up to epochs: avgref, epochs, rmbase: create one trails dataset for each condition
          for subj=1:project.subjects.numsubj
             subj_name=project.subjects.list{subj};
@@ -158,7 +158,7 @@ try
     end
     
     %==================================================================================
-    if do_singlesubjects_band_comparison
+    if project.operations.do_singlesubjects_band_comparison
         for subj=1:project.subjects.numsubj
             subj_name=project.subjects.list{subj};        
             cond_files=cell(1,project.epoching.numcond);
