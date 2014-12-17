@@ -47,6 +47,10 @@ function get_erp_stats(result_struct, design_path, fp_full, fp_signif, fp_lat, v
     f2_levels   = result_struct.study_des.variable(2).value;
 
     roi_names   = result_struct.roi_names;
+    if ~isfield(result_struct, 'group_time_windows_names')
+        disp('presumably is a continuous plot, skip it');
+        return
+    end
     tw_names    = result_struct.group_time_windows_names;
 
     stat_type   = [result_struct.correction ':' num2str(p_thresh) ':' num2str(result_struct.num_permutations)];
@@ -80,6 +84,7 @@ function get_erp_stats(result_struct, design_path, fp_full, fp_signif, fp_lat, v
     end
 
     fprintf(fp_full,'%s\r\n', '');
+    fprintf(fp_full,'%s\r\n', design_separator);
     fprintf(fp_full,'%s\r\n', ['parsing ' design_path]);
     fprintf(fp_full,'%s\r\n', '');
     fprintf(fp_full,'%s\r\n', design_separator);
@@ -94,6 +99,8 @@ function get_erp_stats(result_struct, design_path, fp_full, fp_signif, fp_lat, v
 
 
     fprintf(fp_signif,'%s\r\n', '');
+    fprintf(fp_signif,'%s\r\n', design_separator);
+    fprintf(fp_signif,'%s\r\n', ['parsing ' design_path]);
     fprintf(fp_signif,'%s\r\n', '');
     fprintf(fp_signif,'%s\r\n', design_separator);
     fprintf(fp_signif,'%s\r\n', design_separator);
@@ -106,6 +113,8 @@ function get_erp_stats(result_struct, design_path, fp_full, fp_signif, fp_lat, v
     fprintf(fp_signif,'%s\r\n', '');        
 
     fprintf(fp_lat,'%s\r\n', '');
+    fprintf(fp_lat,'%s\r\n', design_separator);
+    fprintf(fp_lat,'%s\r\n', ['parsing ' design_path]);
     fprintf(fp_lat,'%s\r\n', '');
     fprintf(fp_lat,'%s\r\n', design_separator);
     fprintf(fp_lat,'%s\r\n', design_separator);

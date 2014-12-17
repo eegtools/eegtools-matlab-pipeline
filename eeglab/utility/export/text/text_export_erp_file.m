@@ -5,16 +5,16 @@ function [dataexpcols, dataexp] = text_export_erp_file(in_file,out_file)
 
    
     %% inizialize
-    dataexp=[];  
-    subj=[];
-    f1=[];
-    f2=[];   
-    tw=[];
-    roi=[];
-    erpmean=[];
-    erp_extr=[];
-    erp_extr_lat=[];
-    dataexpcols=[];
+    dataexp         = [];  
+    subj            = [];
+    f1              = [];
+    f2              = [];   
+    tw              = [];
+    roi             = [];
+    erpmean         = [];
+    erp_extr        = [];
+    erp_extr_lat    = [];
+    dataexpcols     = [];
 
     if nargin < 2
            help text_export_erp_file;
