@@ -34,11 +34,13 @@ if not(isempty(missing_ch))
         
         if not(isempty(EEG.chanlocs))
                 EEG.chanlocs(nn).labels  = missing_ch{nb};
+                EEG                      = pop_interp(EEG,nn, 'spherical');
+                EEG                      = eeg_checkset( EEG ); 
         end;         
     end
     
     EEG = eeg_checkset( EEG );
-    EEG = pop_saveset( EEG, 'filename',name_noext,'filepath',output_path);
+    EEG = pop_saveset( EEG, 'filename',[name_noext,'_merged'],'filepath',output_path);
 end
 
 
