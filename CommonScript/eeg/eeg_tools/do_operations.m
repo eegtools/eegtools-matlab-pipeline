@@ -245,15 +245,13 @@ if project.operations.do_study_plot_erp_topo_compact_tw_individual_align
 end
  
 
-% %%  export to R
-% if project.operations.do_eeglab_study_export_erp_r
-% %     vec_sel_design=[2,8,9];
-% %     sel_designs=[1:3];
-%     for design_num=1:length(sel_designs)
-%         sel_des=vec_sel_design(sel_designs(design_num));
-%         eeglab_study_export_r(project_settings, fullfile(epochs_path, [protocol_name, '.study']), sel_des, export_r_bands, tf_path);
-%     end
-% end
+%%  export to R
+if project.operations.do_eeglab_study_export_erp_r
+    for design_num=1:length(sel_designs)
+        sel_des=vec_sel_design(sel_designs(design_num));
+        text_export_erp_file_rm(project_settings, fullfile(epochs_path, [protocol_name, '.study']), sel_des, export_r_bands, tf_path);
+    end
+end
 
 
 
@@ -430,15 +428,14 @@ if project.operations.do_study_plot_ersp_topo_tw_fb_individual_align_compact
 end
 
 
-% %%  export to R
-% if project.operations.do_eeglab_study_export_ersp_tf_r
-% %     vec_sel_design=[2,8,9];
-% %     sel_designs=[1:3];
-%     for design_num=1:length(sel_designs)
-%         sel_des=vec_sel_design(sel_designs(design_num));
-%         eeglab_study_export_tf_r(project_settings, fullfile(epochs_path, [protocol_name, '.study']), sel_des, export_r_bands, tf_path);
-%     end
-% end
+%%  export to R
+if project.operations.do_eeglab_study_export_ersp_tf_r
+    for design_num=1:length(sel_designs)
+        sel_des=vec_sel_design(sel_designs(design_num));
+        text_export_ersp_file();
+        get_stats_in_folder
+    end
+end
 
 
 

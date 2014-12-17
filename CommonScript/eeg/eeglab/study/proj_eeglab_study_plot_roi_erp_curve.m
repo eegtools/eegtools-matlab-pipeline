@@ -490,11 +490,13 @@ for design_num=design_num_vec
     %
     
     %% EXPORTING DATA AND RESULTS OF ANALYSIS
-    out_file_name=fullfile(plot_dir,'erp_curve_roi-stat')
+    out_file_name = fullfile(plot_dir,'erp_curve_roi-stat');
     save([out_file_name,'.mat'],'erp_curve_roi_stat');
     
     if ~ ( strcmp(which_method_find_extrema,'group_noalign') || strcmp(which_method_find_extrema,'continuous') );
         [dataexpcols, dataexp] = text_export_erp_struct([out_file_name,'.txt'],erp_curve_roi_stat);
+        text_export_erp_resume_struct(erp_curve_roi_stat, [out_file_name '_resume']);
+        text_export_erp_resume_struct(erp_curve_roi_stat, [out_file_name '_resume_signif'], 'p_thresh', erp_curve_roi_stat.study_ls);
     end
     
     

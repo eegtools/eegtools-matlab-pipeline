@@ -156,6 +156,9 @@ project.operations.do_study_plot_erp_topo_compact_tw_individual_noalign         
 project.operations.do_study_plot_erp_topo_compact_tw_individual_align               = 0;
 
 
+
+project.operations.do_eeglab_study_export_erp_r                                     = 0;
+
 %% ******************************************************************************************************************************************
 %==========================================================================================================================================
 % E R S P  analysis (Time-frequency domain)
