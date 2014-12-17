@@ -30,12 +30,12 @@
 ...project.research_subgroup                        % A2: set in main: e.g.  PAP or MNI
 ...project.name                                     % A3: set in main : must correspond to 'project.paths.local_projects_data' subfolder name
 
-project.study_suffix='';                            % A4: sub name used to create a different STUDY name (fianl file will be called: [project.name project.study_suffix '.study'])
-project.analysis_name='raw_observation';            % A5: epoching output folder name, subfolder containing the condition files of the current analysis type
+project.study_suffix                                = '';                   % A4: sub name used to create a different STUDY name (fianl file will be called: [project.name project.study_suffix '.study'])
+project.analysis_name                               = 'raw_observation';    % A5: epoching output folder name, subfolder containing the condition files of the current analysis type
 
-project.do_source_analysis=0;                       % A6:  
-project.do_emg_analysis=1;                          % A7:
-project.do_cluster_analysis=0;                      % A8:
+project.do_source_analysis                          = 0;                    % A6:  
+project.do_emg_analysis                             = 1;                    % A7:
+project.do_cluster_analysis                         = 0;                    % A8:
 
 %% ======================================================================================================
 % B:    PATHS  
@@ -190,44 +190,44 @@ project.preproc.ff1_emg     = 5;                            % F10:   lower frequ
 project.preproc.ff2_emg     = 100;                          % F11:   higher frequency in Hz of the EMG filtering applied during preprocessing
 
 % CALCULATE RT
-project.preproc.rt.eve1_type            = 'eve1_type';      % F12:
-project.preproc.rt.eve2_type            = 'eve2_type';      % F13:
-project.preproc.rt.allowed_tw_ms.min    = [];               % F14:
-project.preproc.rt.allowed_tw_ms.max    = [];               % F14:
-project.preproc.rt.output_folder        = [];               % F15:
+project.preproc.rt.eve1_type                = 'eve1_type';      % F12:
+project.preproc.rt.eve2_type                = 'eve2_type';      % F13:
+project.preproc.rt.allowed_tw_ms.min        = [];               % F14:
+project.preproc.rt.allowed_tw_ms.max        = [];               % F14:
+project.preproc.rt.output_folder            = [];               % F15:
 
 
 
 %% ADD NEW MARKERS
 
 % DEFINE MARKER LABELS
-project.preproc.marker_type.begin_trial    = 't1';
-project.preproc.marker_type.end_trial      = 't2';
-project.preproc.marker_type.begin_baseline = 'b1';
-project.preproc.marker_type.end_baseline = 'b2';
+project.preproc.marker_type.begin_trial     = 't1';
+project.preproc.marker_type.end_trial       = 't2';
+project.preproc.marker_type.begin_baseline  = 'b1';
+project.preproc.marker_type.end_baseline    = 'b2';
 
 
 
 % INSERT BEGIN TRIAL MARKERS (only if both the target and the begin trial
 % types are NOT empty)
-project.preproc.insert_begin_trial.target_event_types         =   {'b1'};        % string or cell array of strings denoting the type(s) (i.e. labels) of the target events used to set the the begin trial markers 
-project.preproc.insert_begin_trial.begin_trial_marker_type    =   project.preproc.marker_type.begin_trial;  % string denoting the type (i.e. label) of the new begin trial marker
-project.preproc.insert_begin_trial.delay.s                    =   [0];                           % time shift (in ms) to anticipate (negative values ) or posticipate (positive values) the new begin trial markers
+project.preproc.insert_begin_trial.target_event_types           = {'b1'};        % string or cell array of strings denoting the type(s) (i.e. labels) of the target events used to set the the begin trial markers 
+project.preproc.insert_begin_trial.begin_trial_marker_type      = project.preproc.marker_type.begin_trial;  % string denoting the type (i.e. label) of the new begin trial marker
+project.preproc.insert_begin_trial.delay.s                      = [0];                           % time shift (in ms) to anticipate (negative values ) or posticipate (positive values) the new begin trial markers
                                                                                                 %      with respect to the target events, if empty ([]) time shift = 0.
 
 % INSERT END TRIAL MARKERS (only if both the target and the begin trial
 % types are NOT empty)
-project.preproc.insert_end_trial.target_event_types         =     {'b1'};        % string or cell array of strings denoting the type(s) (i.e. labels) of the target events used to set the the end trial markers 
-project.preproc.insert_end_trial.end_trial_marker_type      =     project.preproc.marker_type.end_trial;    % string denoting the type (i.e. label) of the new end trial marker
-project.preproc.insert_end_trial.delay.s                    =     [2.5];                           % time shift (in ms) to anticipate (negative values ) or posticipate (positive values) the new end trial markers
+project.preproc.insert_end_trial.target_event_types             = {'b1'};        % string or cell array of strings denoting the type(s) (i.e. labels) of the target events used to set the the end trial markers 
+project.preproc.insert_end_trial.end_trial_marker_type          = project.preproc.marker_type.end_trial;    % string denoting the type (i.e. label) of the new end trial marker
+project.preproc.insert_end_trial.delay.s                        = [2.5];                           % time shift (in ms) to anticipate (negative values ) or posticipate (positive values) the new end trial markers
    
 
 
     
 
 % INSERT BEGIN BASELINE MARKERS (project.epoching.baseline_replace.baseline_begin_marker)
-project.epoching.baseline_mark.baseline_begin_target_marker            =  {'S 20','S 22','S 24','S 26'};    % a target event for placing the baseline markers: baseline begin marker will be placed at the target marker with a selected delay.
-project.epoching.baseline_mark.baseline_begin_target_marker_delay.s   =   -0.5;                                       % the delay (in seconds) between the target marker and the begin baseline marker to be placed: 
+project.epoching.baseline_mark.baseline_begin_target_marker             = {'S 20','S 22','S 24','S 26'};                % a target event for placing the baseline markers: baseline begin marker will be placed at the target marker with a selected delay.
+project.epoching.baseline_mark.baseline_begin_target_marker_delay.s     = -0.5;                                         % the delay (in seconds) between the target marker and the begin baseline marker to be placed: 
                                                                                                                         % >0 means that baseline begin FOLLOWS the target, 
                                                                                                                         % =0 means that baseline begin IS AT THE SAME TIME the target, 
                                                                                                                         % <0 means that baseline begin ANTICIPATES the target.
@@ -239,8 +239,8 @@ project.epoching.baseline_mark.baseline_begin_target_marker_delay.s   =   -0.5; 
 
                                                                                                                         
 % INSERT END BASELINE MARKERS (project.epoching.baseline_replace.baseline_end_marker)                                                                                                                        
-project.epoching.baseline_mark.baseline_end_target_marker            =  {'S 20','S 22','S 24','S 26'};    % a target event for placing the baseline markers: baseline begin marker will be placed at the target marker with a selected delay.
-project.epoching.baseline_mark.baseline_end_target_marker_delay.s   =   0;                                       % the delay (in seconds) between the target marker and the begin baseline marker to be placed: 
+project.epoching.baseline_mark.baseline_end_target_marker               = {'S 20','S 22','S 24','S 26'};                % a target event for placing the baseline markers: baseline begin marker will be placed at the target marker with a selected delay.
+project.epoching.baseline_mark.baseline_end_target_marker_delay.s       = 0;                                            % the delay (in seconds) between the target marker and the begin baseline marker to be placed: 
                                                                                                                         % >0 means that baseline begin FOLLOWS the target, 
                                                                                                                         % =0 means that baseline begin IS AT THE SAME TIME the target, 
                                                                                                                         % <0 means that baseline begin ANTICIPATES the target.
@@ -253,7 +253,7 @@ project.epoching.baseline_mark.baseline_end_target_marker_delay.s   =   0;      
                                                                                                 
 % INSERT BLOCK MARKERS (only if
 % project.preproc.insert_end_trial.end_trial_marker_type is non empty)
-project.preproc.insert_block.trials_per_block                                = 40;              % number denoting the number of trials per block  
+project.preproc.insert_block.trials_per_block                           = 40;              % number denoting the number of trials per block  
                                                                                                 
                                                                                                 
 %% ======================================================================================================
@@ -309,7 +309,7 @@ project.epoching.baseline_replace.trial_end_marker           = project.preproc.m
 project.epoching.baseline_replace.baseline_begin_marker      = project.preproc.marker_type.begin_baseline;                         % default 
 project.epoching.baseline_replace.baseline_end_marker        = project.preproc.marker_type.end_baseline;
 
-project.epoching.baseline_replace.replace                       = 'part';                    % 'all' 'part' replace all the pre/post marker period with a replicated baseline or replace the baseline at the begin (final position 'before') or at the end (final position 'after') of the recostructed baseline
+project.epoching.baseline_replace.replace                    = 'part';                    % 'all' 'part' replace all the pre/post marker period with a replicated baseline or replace the baseline at the begin (final position 'before') or at the end (final position 'after') of the recostructed baseline
 
 
                                                    
@@ -875,32 +875,43 @@ project.postprocess.design_factors_ordered_levels={...
 project.results_display.erp.time_smoothing                      = 10;           % frequency (Hz) of low-pass filter to be applied (only for visualization) of ERP data
 project.results_display.erp.time_range.s                        = [project.study.erp.tmin_analysis.s project.study.erp.tmax_analysis.s];       % time range for erp representation
 
+% ERP CURVE
 project.results_display.ylim_plot                               = [];           %y limits (uV)for the representation of ERP
+project.results_display.erp.single_subjects                     = 'off';        % display patterns of the single subjcts (keeping the average pattern)
+project.results_display.erp.masked_times_max                    = [];           % number of ms....all the timepoints before this values are not considered for statistics
+project.results_display.erp.do_plots                            = 'off';        %
+project.results_display.erp.show_text                           = 'on';         %
 
 project.results_display.erp.compact_plots                       = 'on';         % display (curve) plots with different conditions/groups on the same plots
-project.results_display.erp.single_subjects                     = 'off';        % display patterns of the single subjcts (keeping the average pattern)
 project.results_display.erp.compact_h0                          = 'on';         % display parameters for compact plots
 project.results_display.erp.compact_v0                          = 'on';         %
 project.results_display.erp.compact_sem                         = 'off';        %
 project.results_display.erp.compact_stats                       = 'on';         %
 project.results_display.erp.compact_display_xlim                = [];           %
 project.results_display.erp.compact_display_ylim                = [];           %
-project.results_display.erp.masked_times_max                    = [];           % number of ms....all the timepoints before this values are not considered for statistics
-project.results_display.erp.set_caxis_topo_tw                   = [];           %
 project.results_display.erp.display_only_significant_curve      = 'on';         % on
+
+% ERP TOPO
+project.results_display.erp.compact_plots_topo                  = 'off';        %
+project.results_display.erp.set_caxis_topo_tw                   = [];           %
 project.results_display.erp.display_only_significant_topo       = 'on';         % on
 project.results_display.erp.display_only_significant_topo_mode  = 'surface';    % 'electrodes';
-project.results_display.erp.compact_plots_topo                  = 'off';        %
 project.results_display.erp.display_compact_topo_mode           = 'boxplot';    % 'boxplot'; ... 'errorbar'
 project.results_display.erp.display_compact_show_head           = 'off';        % 'on'|'off'
-project.results_display.erp.do_plots                            = 'off';        %
-project.results_display.erp.show_text                           = 'on';         %
 
 
 % ERSP
 project.results_display.ersp.time_range.s                       = [project.study.ersp.tmin_analysis.s project.study.ersp.tmax_analysis.s];     % time range for erp representation
 project.results_display.ersp.frequency_range                    = [project.study.ersp.fmin_analysis project.study.ersp.fmax_analysis];         % frequency range for ersp representation
+project.results_display.ersp.do_plots                           = 'off';        %
+project.results_display.ersp.show_text                          = 'on';         %
+project.results_display.ersp.z_transform                        = 'on';         % 'on'|'off' z-transform data data for each roi, band and tw to allow to plot all figures on the same scale
+project.results_display.ersp.which_error_measure                = 'sem';        % 'sd'|'sem'; which error measure is adopted in the errorbar: standard deviation or standard error
+project.results_display.ersp.freq_scale                         = 'linear';     % 'log'|'linear' set frequency scale in time-frequency plots
+project.results_display.ersp.masked_times_max                   = [];
+project.results_display.ersp.display_pmode                      = 'raw_diff';   % 'raw_diff' | 'abs_diff'| 'standard'; plot p values in a time-frequency space. 'raw_diff': for 2 levels factors, show p values multipled with the raw difference between the average of level 1 and the average of level 2; 'abs_diff': for 2 levels factors, show p values multipled with the difference betwenn the abs of the average of level 1 and the abs of the average of level 2 (more focused on the strength of the spectral variatio with respect to the sign of the variation); 'standard': the standard mode of EEGLab, only indicating a significant difference between levels, without providing information about the sign of the difference, it's the only representation avalillable for factors with >2 levels (for which a difference cannot be simply calculated). 
 
+% ERSP CURVE
 project.results_display.ersp.compact_plots                      = 'on';         % display (curve) plots with different conditions/groups on the same plots
 project.results_display.ersp.single_subjects                    = 'off';        % display patterns of the single subjcts (keeping the average pattern)
 project.results_display.ersp.compact_h0                         = 'on';         % 'on'|'off'show x=0 axis
@@ -909,28 +920,23 @@ project.results_display.ersp.compact_sem                        = 'off';        
 project.results_display.ersp.compact_stats                      = 'on';         % 'on'|'off' indicate significant differences in the compact plots, using a black orizontal bar for continuous curve plots and stars for time-windows plots 
 project.results_display.ersp.compact_display_xlim               = [];           % [x_min x_max] set the x limits in ms for compact plots
 project.results_display.ersp.compact_display_ylim               = [];           % [y_min y_max] set the y limits for compact plots 
-project.results_display.ersp.freq_scale                         = 'linear';     % 'log'|'linear' set frequency scale in time-frequency plots
 project.results_display.ersp.stat_time_windows_list             = [];           % time windows in milliseconds [tw1_start,tw1_end; tw2_start,tw2_end] considered for statistics
 project.results_display.ersp.set_caxis_tf                       = [];           % [color_min color_max] set the color limits of the time-frequency plots 
-project.results_display.ersp.set_caxis_topo_tw_fb               = [];           % [color_min color_max] set the color limits of the topographic plots
 project.results_display.ersp.display_only_significant_curve     = 'on';         % on % the threshold is always set, however you can choose to display only the significant p values or all the p values (in the curve plots the threshold is added as a landmark)
-project.results_display.ersp.display_only_significant_topo      = 'on';         % on|off display only significant values or all values
-project.results_display.ersp.display_only_significant_topo_mode = 'surface';    % 'surface'|'electrodes' change the way to show significant differences: show an interpolated surface between electrodes with significant differences or classical representation, i.e. significant electrodes in red
+
+% ERSP TF
 project.results_display.ersp.display_only_significant_tf        = 'on';         % 'on'|'off'display only significant values or all values
 project.results_display.ersp.display_only_significant_tf_mode   ='binary';      % 'thresholded'|'binary'; plot comparison between time frequency distributions; thrsholded: show for each condition only ERSP correspoding to significant differences, binary: show classical EEGLAB representation 
-project.results_display.ersp.masked_times_max                   = [];
 
-project.results_display.ersp.display_pmode                      = 'raw_diff';   % 'raw_diff' | 'abs_diff'| 'standard'; plot p values in a time-frequency space. 'raw_diff': for 2 levels factors, show p values multipled with the raw difference between the average of level 1 and the average of level 2; 'abs_diff': for 2 levels factors, show p values multipled with the difference betwenn the abs of the average of level 1 and the abs of the average of level 2 (more focused on the strength of the spectral variatio with respect to the sign of the variation); 'standard': the standard mode of EEGLab, only indicating a significant difference between levels, without providing information about the sign of the difference, it's the only representation avalillable for factors with >2 levels (for which a difference cannot be simply calculated). 
-
-
+% ERSP TOPO
 project.results_display.ersp.compact_plots_topo                 = 'on';         % 'on'|'off' for each time window, plot compact topographic plot with bot topographic location of the roi and multiple comparisons between conditions OR standard EEGLAB topographic distribution plots (consider the wolwe scalp)
+project.results_display.ersp.set_caxis_topo_tw_fb               = [];           % [color_min color_max] set the color limits of the topographic plots
+project.results_display.ersp.display_only_significant_topo      = 'on';         % on|off display only significant values or all values
+project.results_display.ersp.display_only_significant_topo_mode = 'surface';    % 'surface'|'electrodes' change the way to show significant differences: show an interpolated surface between electrodes with significant differences or classical representation, i.e. significant electrodes in red
 project.results_display.ersp.display_compact_topo_mode          = 'boxplot';    % 'boxplot'|'errorbar' display boxplot with single subjects represented by red points (complete information about distribution) or error bar (syntetic standard representation)
 project.results_display.ersp.display_compact_show_head          = 'off';        %'on'|'off' show the topographical representation of the roi (the head with the channels of the roi in red and te others in black)
-project.results_display.ersp.do_plots                           = 'off';        %
-project.results_display.ersp.show_text                          = 'on';         %
 
-project.results_display.ersp.z_transform                        = 'on';         % 'on'|'off' z-transform data data for each roi, band and tw to allow to plot all figures on the same scale
-project.results_display.ersp.which_error_measure                = 'sem';        % 'sd'|'sem'; which error measure is adopted in the errorbar: standard deviation or standard error
+
 
 
 
