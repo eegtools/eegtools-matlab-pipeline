@@ -38,11 +38,12 @@ if not(isempty(missing_ch))
         EEG.data(nn,:,:)   = ch2add(nch2add, :,:);
         
         if not(isempty(EEG.chanlocs))
-            EEG.chanlocs(nn)         = EEG.chanlocs(1);
-            EEG.chanlocs(nn).labels  = missing_ch{nch2add};
-            EEG                      = eeg_checkset( EEG );
-            EEG                      = pop_interp(EEG,nn, 'spherical');
-            EEG                      = eeg_checkset( EEG );
+            EEG.chanlocs(nn)            = EEG.chanlocs(1);
+            EEG.chanlocs(nn).labels     = missing_ch{nch2add};
+            EEG                         = pop_chanedit( EEG, 'lookup',template_file);    ...  considering using a same file, suitable for whichever electrodes configuration
+            EEG                         = eeg_checkset( EEG );
+            EEG                         = pop_interp(EEG,nn, 'spherical');
+            EEG                         = eeg_checkset( EEG );
         end;
     end
     EEG = pop_chanedit( EEG, 'lookup',template_file);    ...  considering using a same file, suitable for whichever electrodes configuration
