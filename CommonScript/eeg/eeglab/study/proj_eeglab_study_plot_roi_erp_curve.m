@@ -495,8 +495,8 @@ for design_num=design_num_vec
     
     if ~ ( strcmp(which_method_find_extrema,'group_noalign') || strcmp(which_method_find_extrema,'continuous') );
         [dataexpcols, dataexp] = text_export_erp_struct([out_file_name,'.txt'],erp_curve_roi_stat);
-        text_export_erp_resume_struct(erp_curve_roi_stat, [out_file_name '_resume']);
-        text_export_erp_resume_struct(erp_curve_roi_stat, [out_file_name '_resume_signif'], 'p_thresh', erp_curve_roi_stat.study_ls);
+%         text_export_erp_resume_struct(erp_curve_roi_stat, [out_file_name '_resume']);
+%         text_export_erp_resume_struct(erp_curve_roi_stat, [out_file_name '_resume_signif'], 'p_thresh', erp_curve_roi_stat.study_ls);
     end
     
     
