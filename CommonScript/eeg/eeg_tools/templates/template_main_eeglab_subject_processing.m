@@ -40,7 +40,7 @@ project.paths.script.project            = fullfile(project.paths.svn_scripts_roo
 eval(project.conf_file_name);                                               ... project structure
 project                                 = define_project_paths(project);    ... global and project paths definition. If 2nd param is 0, is faster, as it does not call eeglab
 init_operations_flags
-pre_epoching_input_file_name = '_raw_er2';   ... 16/12/14 CLA: it's NOT an override but, apparently, a mandatory parameterfile name suffix used for non-standard operations (second ica, patch triggers, etc...)
+pre_epoching_input_file_name = '_raw_er2';   ... 16/12/14 CLA: it's NOT an override but, apparently, a mandatory parameter file name suffix used for non-standard operations (second ica, patch triggers, etc...)
 
 %% =====================================================================================================================================================================
 %  OVERRIDE
