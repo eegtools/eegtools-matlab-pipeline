@@ -72,7 +72,7 @@ if project.operations.do_uniform_montage
     for subj=1:project.subjects.numsubj
         subj_name=project.subjects.list{subj}; 
         inputfile=fullfile(project.paths.input_epochs, [project.import.original_data_prefix subj_name project.import.original_data_suffix project.import.output_suffix pre_epoching_input_file_name '.set']);
-        eeglab_subject_uniform_montage(inputfile, project.paths.input_epochs, project.preproc.montage_list, project.eegdata.eeglab_channels_file_path);
+        eeglab_subject_uniform_montage(inputfile, project.preproc.montage_list, project.eegdata.eeglab_channels_file_path);
     end 
 end
 %==================================================================================
