@@ -239,7 +239,7 @@ for design_num=design_num_vec
                 if ~isempty(list_select_subjects)
                     vec_select_subjects=ismember(list_design_subjects{nf1,nf2},list_select_subjects);
                     if ~sum(vec_select_subjects)
-                        dis('Error: the selected subjects are not represented in the selected design')
+                        disp('Error: the selected subjects are not represented in the selected design')
                         return;
                     end
                     erp_curve_roi{nf1,nf2}=erp_curve_roi{nf1,nf2}(:,vec_select_subjects);

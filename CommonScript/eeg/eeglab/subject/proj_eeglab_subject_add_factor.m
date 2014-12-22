@@ -12,7 +12,7 @@ function EEG = proj_eeglab_subject_add_factor(project, subj_name)
             
             if exist(input_file_name, 'file')                       
 
-                EEG = pop_loadset(input_file_name);project.epoching.numcond
+                EEG = pop_loadset(input_file_name);project.epoching.numcond;
                 tot_eve=length(EEG.event);
 
                 for nl=1:length(add_factor_list)
@@ -23,7 +23,7 @@ function EEG = proj_eeglab_subject_add_factor(project, subj_name)
                 % inizializzo        
                 for nf=1:length(names_factors)
                     for neve=1:tot_eve
-                        str=['EEG.event(', num2str(neve), ').', names_factors{nf}, ' = ',  '''','nolevels','''' ,';'];
+                        str=char(['EEG.event(', num2str(neve), ').', names_factors{nf}, ' = ',  '''','nolevels','''' ,';']);
                         eval(str);
                     end
                 end
