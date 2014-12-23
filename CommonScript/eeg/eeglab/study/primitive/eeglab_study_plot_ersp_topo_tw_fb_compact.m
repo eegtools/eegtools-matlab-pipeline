@@ -99,7 +99,7 @@ which_realign_measure_cell  = project.stats.ersp.narrowband.which_realign_measur
 pcond=[];
 pgroup=[];
 pinter=[];
-
+output=[];
 
 
 display_compact_plots=project.results_display.ersp.compact_plots;

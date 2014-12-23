@@ -89,7 +89,7 @@ display_single_subjects                                                    = inp
 pcond=[];
 pgroup=[];
 pinter=[];
-
+output=[];
 
 
 [study_path,study_name_noext,study_ext] = fileparts(study_path);
