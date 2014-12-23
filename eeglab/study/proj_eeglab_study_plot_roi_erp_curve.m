@@ -410,7 +410,7 @@ for design_num=design_num_vec
             [pcond_corr, pgroup_corr,  pinter_corr] = eeglab_study_correct_pvals(pcond, pgroup, pinter,correction);
             
             if ~ isempty(masked_times_max)
-                [pcond, pgroup, pinter] = eeglab_study_roi_curve_maskp(pcond, pgroup, pinter,times_plot, masked_times_max);
+                [pcond_corr, pgroup_corr, pinter_corr] = eeglab_study_roi_curve_maskp(pcond_corr, pgroup_corr, pinter_corr,times_plot, masked_times_max);
             end
             if (strcmp(do_plots,'on'))
                                 

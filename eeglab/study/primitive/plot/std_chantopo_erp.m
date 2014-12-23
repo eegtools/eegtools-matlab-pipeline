@@ -428,7 +428,7 @@ save_figures( input_save_fig )
 % 
 % ps2pdf('psfile',fullfile(plot_dir,'erp_topo.ps'),'pdffile',fullfile(plot_dir,'erp_topo.pdf'))
 
-close(fig)
+% close(fig)
 
 
 % colorbar for ERSP and scalp plot

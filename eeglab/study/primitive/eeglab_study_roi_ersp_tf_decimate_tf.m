@@ -113,10 +113,10 @@ for ind = 1:length(pcond),  pcond{ind}  =  abs(pcond{ind}) ; end;
 for ind = 1:length(pgroup),  pgroup{ind}  =  abs(pgroup{ind}) ; end;
 for ind = 1:length(pinter),  pinter{ind}  =  abs(pinter{ind}) ; end;
 
-if ~ isempty(stat_time_windows_list)
-    [pcond, pgroup, pinter] = eeglab_study_roi_tf_maskp(pcond, pgroup, pinter,times, stat_time_windows_list);
-    
-end
+% if ~ isempty(stat_time_windows_list)
+%     [pcond, pgroup, pinter] = eeglab_study_roi_tf_maskp(pcond, pgroup, pinter,times, stat_time_windows_list);
+%     
+% end
 
 if ~ isempty(stat_freq_bands_list)
     [pcond, pgroup, pinter] = eeglab_study_roi_tf_maskp_f(pcond, pgroup, pinter,freqs, stat_freq_bands_list,mask_coef);
