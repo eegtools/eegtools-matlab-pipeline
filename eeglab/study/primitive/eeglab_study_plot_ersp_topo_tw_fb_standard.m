@@ -94,8 +94,12 @@ locs = eeg_mergelocs(ALLEEG.chanlocs);
 
 r1         = [roi_list{:}];
 r2         = {locs.labels};
-roi_list   = [roi_list;{r1};{r2}];
-roi_names  = [roi_names, 'all_rois','all_chan'];
+% roi_list   = [roi_list;{r1};{r2}];
+% roi_names  = [roi_names, 'all_rois','all_chan'];
+
+roi_list = [{r1};{r2}];
+roi_names  = {'all_rois','all_chan'};
+
 
 for design_num=design_num_vec
     
@@ -238,7 +242,7 @@ for design_num=design_num_vec
                     input_graph.which_error_measure                                = [];
                     
                     
-                    eeglab_study_ersp_topo_graph(input_graph)
+                    eeglab_study_ersp_topo_graph(input_graph);
                 end
                 
                 
