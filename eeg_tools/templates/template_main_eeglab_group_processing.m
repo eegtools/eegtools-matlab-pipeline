@@ -50,7 +50,26 @@ if ~ isempty(stat_analysis_suffix)
 end
 
 design_num_vec          = [8:12 2:7];
-list_select_subjects    = {'CC_01_vittoria', 'CC_02_fabio', 'CC_03_anna', 'CC_04_giacomo', 'CC_05_stefano', 'CC_06_giovanni', 'CC_07_davide', 'CC_08_jonathan', 'CC_09_antonella', 'CC_10_chiara', 'CP_01_riccardo', 'CP_02_ester', 'CP_03_sara', 'CP_04_matteo', 'CP_05_gregorio', 'CP_06_fernando', 'CP_07_roberta', 'CP_08_mattia', 'CP_09_alessia', 'CP_10_livia'}; ...project.subjects.sublist;
+
+%% select number of subjects to be processed
+% cell array of strings: select subject names to be processed
+list_select_subjects    = project.subjects.sublist;% {'CC_01_vittoria', 'CC_02_fabio', 'CC_03_anna', 'CC_04_giacomo', 'CC_05_stefano', 'CC_06_giovanni', 'CC_07_davide', 'CC_08_jonathan', 'CC_09_antonella', 'CC_10_chiara', 'CP_01_riccardo', 'CP_02_ester', 'CP_03_sara', 'CP_04_matteo', 'CP_05_gregorio', 'CP_06_fernando', 'CP_07_roberta', 'CP_08_mattia', 'CP_09_alessia', 'CP_10_livia'}; ...project.subjects.sublist;
+if not(exist(list_select_subjects,'var'))
+    list_select_subjects    = project.subjects.sublist;
+else
+    if isempty(list_select_subjects) 
+        list_select_subjects    = project.subjects.sublist;
+    end
+end
+
+%% select a specific bannd to focus statistics in ersp tf (experimental)
+mask_coef=[];
+stat_freq_bands_list=[];
+
+if not(exist( mask_coef,'var')) || not(exist( stat_freq_bands_list,'var'))
+    mask_coef=[];
+    stat_freq_bands_list=[];
+end
 
 %% =====================================================================================================================================================================
 %  OPERATIONS LIST 
