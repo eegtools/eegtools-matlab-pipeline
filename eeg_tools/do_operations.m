@@ -53,17 +53,15 @@ if project.operations.do_testart
     % allow testing some semi-automatic aritfact removal algorhithms
     for subj=1:numsubj
         subj_name=list_select_subjects{subj}; 
-        inputfile=fullfile(project.paths.input_epochs, [project.import.original_data_prefix subj_name project.import.original_data_suffix project.import.output_suffix pre_epoching_input_file_name '.set']);
-        eeglab_subject_testart(inputfile, project.paths.input_epochs);
+        EEG = proj_eeglab_subject_testart(project, subj_name);
     end
 end
 %==================================================================================
 if project.operations.do_ica
     % do preprocessing up to epochs: avgref, epochs, rmbase: create one trails dataset for each condition
     for subj=1:numsubj
-        subj_name=list_select_subjects{subj}; 
-        inputfile=fullfile(project.paths.input_epochs, [project.import.original_data_prefix subj_name project.import.original_data_suffix project.import.output_suffix pre_epoching_input_file_name '.set']);
-        eeglab_subject_ica(inputfile, project.paths.input_epochs, project.eegdata.eeg_channels_list, project.import.reference_channels, 'cudaica');
+        subj_name=list_select_subjects{subj};
+        EEG = proj_eeglab_subject_ica(project, subj_name);
     end
 end
 %==================================================================================
@@ -71,8 +69,7 @@ if project.operations.do_uniform_montage
     % uniform montages between different polygraphs
     for subj=1:numsubj
         subj_name=list_select_subjects{subj}; 
-        inputfile=fullfile(project.paths.input_epochs, [project.import.original_data_prefix subj_name project.import.original_data_suffix project.import.output_suffix pre_epoching_input_file_name '.set']);
-        eeglab_subject_uniform_montage(inputfile, project.preproc.montage_list, project.eegdata.eeglab_channels_file_path);
+        EEG = proj_eeglab_subject_uniform_montage(project, subj_name)
     end 
 end
 %==================================================================================
