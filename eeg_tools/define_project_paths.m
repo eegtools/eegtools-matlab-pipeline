@@ -28,12 +28,14 @@
 ...*  defined in main
 ...** defined in project structure
 %%
-function project = define_project_paths(project, start_toolbox)
+function project = define_project_paths(project, varargin)
 
     set(0, 'DefaulttextInterpreter', 'tex');
      
     if nargin < 2
         start_toolbox = 1;
+    else
+        start_toolbox = varargin{1};        
     end
 
     %% ================================================================================================================
