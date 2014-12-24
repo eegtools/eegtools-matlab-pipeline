@@ -45,8 +45,25 @@ pre_epoching_input_file_name = '_raw_er2';   ... 16/12/14 CLA: it's NOT an overr
 %% =====================================================================================================================================================================
 %  OVERRIDE
 %=====================================================================================================================================================================
-project.subjects.list       = {'CP_05_gregorio'};..., 'CC_02_fabio', 'CC_03_anna', 'CC_04_giacomo', 'CC_05_stefano', 'CC_06_giovanni', 'CC_07_davide', 'CC_08_jonathan', 'CC_09_antonella', 'CC_10_chiara', 'CP_01_riccardo', 'CP_02_ester', 'CP_03_sara', 'CP_04_matteo', 'CP_05_gregorio', 'CP_06_fernando', 'CP_07_roberta', 'CP_08_mattia', 'CP_09_alessia', 'CP_10_livia'}; ...
-project.subjects.numsubj    = length(project.subjects.list);  % DO not remove this line if u override the subjects list
+% project.subjects.list       = {'CP_05_gregorio'};..., 'CC_02_fabio', 'CC_03_anna', 'CC_04_giacomo', 'CC_05_stefano', 'CC_06_giovanni', 'CC_07_davide', 'CC_08_jonathan', 'CC_09_antonella', 'CC_10_chiara', 'CP_01_riccardo', 'CP_02_ester', 'CP_03_sara', 'CP_04_matteo', 'CP_05_gregorio', 'CP_06_fernando', 'CP_07_roberta', 'CP_08_mattia', 'CP_09_alessia', 'CP_10_livia'}; ...
+% project.subjects.numsubj    = length(project.subjects.list);  % DO not remove this line if u override the subjects list
+
+
+% select number of subjects to be processed: can be  1) commented 2) set
+% to [] 3( set to a cell array of strings 4) set to project.subjects.list
+list_select_subjects    = project.subjects.list;% {'CC_01_vittoria', 'CC_02_fabio', 'CC_03_anna', 'CC_04_giacomo', 'CC_05_stefano', 'CC_06_giovanni', 'CC_07_davide', 'CC_08_jonathan', 'CC_09_antonella', 'CC_10_chiara', 'CP_01_riccardo', 'CP_02_ester', 'CP_03_sara', 'CP_04_matteo', 'CP_05_gregorio', 'CP_06_fernando', 'CP_07_roberta', 'CP_08_mattia', 'CP_09_alessia', 'CP_10_livia'}; ...project.subjects.list;
+
+% if a list is not set, or is empty, all subjects in the project are
+% processed 
+if not(exist('list_select_subjects','var'))
+    list_select_subjects    = project.subjects.list;
+else
+    if isempty(list_select_subjects) 
+        list_select_subjects    = project.subjects.list;
+    end
+end
+
+numsubj = length(list_select_subjects);
 
 stat_threshold = 0.05;
 electrode2inspect='C4';

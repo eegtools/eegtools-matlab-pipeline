@@ -13,15 +13,15 @@ if ~strfind(strpath, project.paths.shadowing_functions)
 end
 %==================================================================================
 if project.operations.do_import
-    for subj=1:project.subjects.numsubj
-        subj_name=project.subjects.list{subj}; ... inputfile=fullfile(project.paths.original_data, [project.subjects.list{subj} project.import.original_data_suffix '.' project.import.original_data_extension]);
+    for subj=1:numsubj
+        subj_name=list_select_subjects{subj}; ... inputfile=fullfile(project.paths.original_data, [list_select_subjects{subj} project.import.original_data_suffix '.' project.import.original_data_extension]);
         proj_eeglab_subject_import_data(project, subj_name);
     end
 end
 %==================================================================================
 if project.operations.do_preproc        
-    for subj=1:project.subjects.numsubj 
-        subj_name=project.subjects.list{subj};
+    for subj=1:numsubj 
+        subj_name=list_select_subjects{subj};
         
         proj_eeglab_subject_preprocessing(project, subj_name);
         if project.do_emg_analysis
@@ -31,8 +31,8 @@ if project.operations.do_preproc
 end
 %==================================================================================
 if project.operations.do_auto_pauses_removal
-    for subj=1:project.subjects.numsubj
-        subj_name=project.subjects.list{subj};        
+    for subj=1:numsubj
+        subj_name=list_select_subjects{subj};        
         file_name=fullfile(project.paths.input_epochs, [project.import.original_data_prefix subj_name project.import.original_data_suffix project.import.output_suffix pre_epoching_input_file_name '.set']);
         
         eeglab_subject_events_remove_upto_triggercode(file_name, project.task.events.start_experiment_trigger_value); ... return if find a boundary as first event
@@ -51,8 +51,8 @@ end
 %==================================================================================
 if project.operations.do_testart 
     % allow testing some semi-automatic aritfact removal algorhithms
-    for subj=1:project.subjects.numsubj
-        subj_name=project.subjects.list{subj}; 
+    for subj=1:numsubj
+        subj_name=list_select_subjects{subj}; 
         inputfile=fullfile(project.paths.input_epochs, [project.import.original_data_prefix subj_name project.import.original_data_suffix project.import.output_suffix pre_epoching_input_file_name '.set']);
         eeglab_subject_testart(inputfile, project.paths.input_epochs);
     end
@@ -60,8 +60,8 @@ end
 %==================================================================================
 if project.operations.do_ica
     % do preprocessing up to epochs: avgref, epochs, rmbase: create one trails dataset for each condition
-    for subj=1:project.subjects.numsubj
-        subj_name=project.subjects.list{subj}; 
+    for subj=1:numsubj
+        subj_name=list_select_subjects{subj}; 
         inputfile=fullfile(project.paths.input_epochs, [project.import.original_data_prefix subj_name project.import.original_data_suffix project.import.output_suffix pre_epoching_input_file_name '.set']);
         eeglab_subject_ica(inputfile, project.paths.input_epochs, project.eegdata.eeg_channels_list, project.import.reference_channels, 'cudaica');
     end
@@ -69,8 +69,8 @@ end
 %==================================================================================
 if project.operations.do_uniform_montage
     % uniform montages between different polygraphs
-    for subj=1:project.subjects.numsubj
-        subj_name=project.subjects.list{subj}; 
+    for subj=1:numsubj
+        subj_name=list_select_subjects{subj}; 
         inputfile=fullfile(project.paths.input_epochs, [project.import.original_data_prefix subj_name project.import.original_data_suffix project.import.output_suffix pre_epoching_input_file_name '.set']);
         eeglab_subject_uniform_montage(inputfile, project.preproc.montage_list, project.eegdata.eeglab_channels_file_path);
     end 
@@ -78,15 +78,15 @@ end
 %==================================================================================
 if project.operations.do_epochs
     % do preprocessing up to epochs: avgref, epochs, rmbase: create one trails dataset for each condition
-     for subj=1:project.subjects.numsubj
-        subj_name=project.subjects.list{subj};
+     for subj=1:numsubj
+        subj_name=list_select_subjects{subj};
         proj_eeglab_subject_epoching(project, subj_name);
      end
 end
 %==================================================================================
 if project.operations.do_factors
-    for subj=1:project.subjects.numsubj
-        subj_name=project.subjects.list{subj};        
+    for subj=1:numsubj
+        subj_name=list_select_subjects{subj};        
         proj_eeglab_subject_add_factor(project, subj_name);
     end
 end

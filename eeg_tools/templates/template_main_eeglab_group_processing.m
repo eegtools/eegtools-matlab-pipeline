@@ -51,8 +51,8 @@ end
 
 design_num_vec          = [8:12 2:7];
 
-%% select number of subjects to be processed
-% cell array of strings: select subject names to be processed
+% select number of subjects to be processed: can be  1) commented 2) set
+% to [] 3( set to a cell array of strings 4) set to project.subjects.list
 list_select_subjects    = project.subjects.list;% {'CC_01_vittoria', 'CC_02_fabio', 'CC_03_anna', 'CC_04_giacomo', 'CC_05_stefano', 'CC_06_giovanni', 'CC_07_davide', 'CC_08_jonathan', 'CC_09_antonella', 'CC_10_chiara', 'CP_01_riccardo', 'CP_02_ester', 'CP_03_sara', 'CP_04_matteo', 'CP_05_gregorio', 'CP_06_fernando', 'CP_07_roberta', 'CP_08_mattia', 'CP_09_alessia', 'CP_10_livia'}; ...project.subjects.list;
 
 % if a list is not set, or is empty, all subjects in the project are
@@ -66,7 +66,7 @@ else
 end
 
 
-%% select a specific bannd to focus statistics in ersp tf (experimental)
+% select a specific bannd to focus statistics in ersp tf (experimental)
 mask_coef=[];
 stat_freq_bands_list=[];
 
