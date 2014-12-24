@@ -168,7 +168,7 @@ end;
 % adjust figure size
 % ------------------
 if isempty(opt.subplotpos)
-    fig = figure('color', 'w');set(gcf, 'Visible', 'off');set(fig, 'Visible', 'off')
+      fig=figure( 'color', 'w', 'Visible', 'off');
     set(0, 'DefaultFigureRendererMode', 'manual')
     set(0,'DefaultFigureRenderer','zbuffer')
     

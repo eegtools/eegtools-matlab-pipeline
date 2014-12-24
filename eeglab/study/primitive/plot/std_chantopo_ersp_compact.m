@@ -121,7 +121,7 @@ function std_chantopo_ersp_compact(ersp_topo_tw_fb_sub_avg, ersp_topo_tw_fb_roi_
         x_boxs=1:tot_topo;
         
         % create figure
-       figure();
+        fig=figure( 'color', 'w', 'Visible', 'off');
         
         % create topo plots
         for ntopo = 1:tot_topo
@@ -168,7 +168,7 @@ function std_chantopo_ersp_compact(ersp_topo_tw_fb_sub_avg, ersp_topo_tw_fb_roi_
         hold off        
         suptitle({[frequency_band_name, ' ERSP in ',roi_name,' during ',time_window_name,' time-window ','([',num2str(time_window),']ms):'],   name_f });             
     
-         fig=gcf;
+        
 %          set(fig, 'paperpositionmode', 'auto');
 % setfont(fig, 'fontsize', 16);
 %          
@@ -254,7 +254,7 @@ save_figures( input_save_fig )
             signif_pairs = comparisons(:,signif_vec);                
             x_boxs=1:tot_topo;
             % create figure
-           figure();
+             fig=figure( 'color', 'w', 'Visible', 'off');
             % create topo plots
             for ntopo = 1:tot_topo
                 subplot(tot_row,tot_topo,ntopo);
@@ -300,7 +300,7 @@ save_figures( input_save_fig )
             hold off        
             suptitle({[frequency_band_name, ' ERSP in ' ,roi_name,' during ',time_window_name,' time-window ','([',num2str(time_window),']ms): '],   [name_f, ' within ', name_ff ]});    
         
-             fig=gcf;
+            
 %              set(fig, 'paperpositionmode', 'auto');
 % setfont(fig, 'fontsize', 16);
 %              
@@ -381,7 +381,7 @@ save_figures( input_save_fig )
             signif_pairs = comparisons(:,signif_vec);        
             x_boxs=1:tot_topo;
             % create figure
-           figure();
+             fig=figure( 'color', 'w', 'Visible', 'off');
             % create topo plots
             for ntopo = 1:tot_topo
                 subplot(tot_row,tot_topo,ntopo);
@@ -430,7 +430,7 @@ save_figures( input_save_fig )
             hold off        
             suptitle({[frequency_band_name, ' ERSP in ' ,roi_name,' during ',time_window_name,' time-window ','([',num2str(time_window),']ms): '],   [name_f , ' within ', name_ff ]});      
         
-             fig=gcf;
+            
 %              set(fig, 'paperpositionmode', 'auto');
 % setfont(fig, 'fontsize', 16);
 %              

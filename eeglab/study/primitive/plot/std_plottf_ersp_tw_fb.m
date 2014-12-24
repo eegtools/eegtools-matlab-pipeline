@@ -166,7 +166,7 @@ if strcmpi(opt.plotmode, 'condensed')
             'cmode', 'separate', opt.tftopoopt{:} };       
         
     if strcmpi(opt.freqscale, 'log'), options = { options{:} 'logfreq', 'native' }; end;
-    fig=figure('Visible', 'off');set(gcf, 'Visible', 'off')
+     fig=figure( 'color', 'w', 'Visible', 'off');
    tftopo_tw_fb( meanplot', timevals, freqs, 'title', opt.titles{1}, options{:}); set(gcf, 'Visible', 'off');
     currentHangle = gca;
     if ~isempty( opt.caxis )

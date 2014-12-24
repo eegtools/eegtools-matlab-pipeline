@@ -248,9 +248,9 @@ if strcmpi(opt.datatype, 'erpim'), options = { options{:} 'ylabel' 'Trials' }; e
         
 % adjust figure size
 % ------------------
-fig = figure('Visible', 'off','color', 'w');set(fig, 'Visible', 'off');
-pos = get(fig, 'position');set(fig, 'Visible', 'off');
-set(fig, 'position', [ pos(1)+15 pos(2)+15 pos(3)/2.5*(nc+addr), pos(4)/2*(ng+addc) ]);set(fig, 'Visible', 'off');
+fig = figure('Visible', 'off','color', 'w');
+pos = get(fig, 'position');
+set(fig, 'position', [ pos(1)+15 pos(2)+15 pos(3)/2.5*(nc+addr), pos(4)/2*(ng+addc) ]);
 % vv=get(0,'ScreenSize');
 %  set(fig, 'Position', [1 1 1000 1000]);
 pos = get(fig, 'position');set(fig, 'Visible', 'off');

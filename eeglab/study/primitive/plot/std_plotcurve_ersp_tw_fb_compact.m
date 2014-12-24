@@ -23,7 +23,7 @@ if tlf1 < 2 || tlf2 < 2
     
     % create a list of colors
     list_col=hsv(tlf+1);
-    figure();set(gcf, 'Visible', 'off');
+      fig=figure( 'color', 'w', 'Visible', 'off');
     
     ersp_curve_plot=ersp_curve_fb;
     
@@ -162,7 +162,7 @@ if tlf1 < 2 || tlf2 < 2
     
     
     
-    fig=gcf;
+    
     %          set(fig, 'paperpositionmode', 'auto');
     % setfont(fig, 'fontsize', 16);
     %           name_plot=fullfile(plot_dir,['ersp_curve_fb_',char(roi_name),'_',char(name_f),'_',char(frequency_band_name)]);
@@ -220,7 +220,7 @@ if tlf1 > 1 && tlf2 > 1
     % create a list of colors
     list_col=hsv(tlf1+1);
     for nlf1=1:tlf1
-        figure();set(gcf, 'Visible', 'off');
+          fig=figure( 'color', 'w', 'Visible', 'off');
         
         ersp_curve_plot=ersp_curve_fb(nlf1,:);
         pgroup_plot=pgroup(nlf1);
@@ -403,7 +403,7 @@ if tlf1 > 1 && tlf2 > 1
     list_col=hsv(tlf1+1);
     for nlf2=1:tlf2
         
-        figure();set(gcf, 'Visible', 'off');
+         fig=figure( 'color', 'w', 'Visible', 'off');
         
         ersp_curve_plot=ersp_curve_fb(:,nlf2);
         pcond_plot=pcond(nlf2);
