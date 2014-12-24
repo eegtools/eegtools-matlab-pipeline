@@ -445,6 +445,14 @@ project.subjects.groups             = {{'CC_01_vittoria', 'CC_02_fabio','CC_03_a
 project.study.filename                          = [project.name project.study_suffix '.study'];
 
 % structures that associates conditions' file with (multiple) factor(s)
+
+% IMPORTANT NOTE: as additional factors are added to the EEG.event
+% structure as new fields, you cannot call the new factor names using
+% mathematical operators, which are wrongly intrepretated by matlab. eg,
+% replace the name 'condition-group' with 'condition_group' or
+% 'conditionGroup' OR 'conditionXgroup'
+
+
 if isfield(project, 'study')
     if isfield(project.study, 'factors')
         project.study = rmfield(project.study, 'factors');
