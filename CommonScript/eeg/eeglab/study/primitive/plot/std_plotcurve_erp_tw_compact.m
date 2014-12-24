@@ -25,7 +25,7 @@ if tlf1 < 2 || tlf2 < 2
     
     % create a list of colors
     list_col=hsv(tlf+1);
-    figure();set(gcf, 'Visible', 'off');
+    fig=figure( 'Visible', 'off');
     
     erp_plot=erp;
     
@@ -214,7 +214,7 @@ if tlf1 > 1 && tlf2 > 1
     % create a list of colors
     list_col=hsv(tlf2+1);
     for nlf1=1:tlf1
-        figure();set(gcf, 'Visible', 'off');
+        fig=figure( 'Visible', 'off');
         
         erp_plot=erp(nlf1,:);
         pgroup_plot=pgroup(nlf1);
@@ -390,7 +390,7 @@ if tlf1 > 1 && tlf2 > 1
     list_col=hsv(tlf1+1);
     for nlf2=1:tlf2
         
-        figure();set(gcf, 'Visible', 'off');
+       fig=figure( 'Visible', 'off');
         
         erp_plot=erp(:,nlf2);
         pcond_plot=pcond(nlf2);

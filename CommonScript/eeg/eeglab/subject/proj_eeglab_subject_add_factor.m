@@ -24,6 +24,7 @@ function EEG = proj_eeglab_subject_add_factor(project, subj_name)
                 for nf=1:length(names_factors)
                     for neve=1:tot_eve
                         str=char(['EEG.event(', num2str(neve), ').', names_factors{nf}, ' = ',  '''','nolevels','''' ,';']);
+% display(str)
                         eval(str);
                     end
                 end

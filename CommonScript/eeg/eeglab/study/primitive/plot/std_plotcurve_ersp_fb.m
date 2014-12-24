@@ -271,7 +271,7 @@ end;
 % adjust figure size
 % ------------------
 if strcmpi(opt.figure, 'on')
-    fig= figure('color', 'w');set(gcf, 'Visible', 'off');
+    fig=figure( 'color', 'w', 'Visible', 'off');
     pos = get(gcf, 'position');
     basewinsize = 200/max(nc,ng)*3;
     if strcmpi(opt.plotgroups, 'together') pos(3) = 200*(1+addc);

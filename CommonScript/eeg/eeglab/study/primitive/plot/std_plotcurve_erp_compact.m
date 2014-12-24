@@ -15,7 +15,7 @@ function [] = std_plotcurve_erp_compact(times, erp, plot_dir, roi_name, study_ls
         
         % create a list of colors     
         list_col=hsv(tlf+1);  
-        figure();set(gcf, 'Visible', 'off');
+          fig=figure( 'color', 'w', 'Visible', 'off');
 
         erp_plot=erp;            
 
@@ -178,7 +178,7 @@ save_figures( input_save_fig )
         % create a list of colors     
         list_col=hsv(tlf2+1);
         for nlf1=1:tlf1             
-            figure();set(gcf, 'Visible', 'off');
+              fig=figure( 'color', 'w', 'Visible', 'off');
             
             erp_plot=erp(nlf1,:);            
             pgroup_plot=pgroup(nlf1);
@@ -253,7 +253,7 @@ save_figures( input_save_fig )
              box off
              set(gca,'LineWidth',2, 'FontSize', 10)
              xlabel(['Time (ms)'])
-             ylabel(['Amplitude (\muV)'])
+             ylabel(['Amplitude (uV)'])
              set(0,'defaulttextinterpreter','none') ;legend(levels_f2,'box','off', 'FontSize', 10,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1])
              title(['ERP in ', roi_name,': ', 'within ',levels_f1{nlf1}], 'FontSize', 10);
              hold off
@@ -316,7 +316,7 @@ save_figures( input_save_fig )
         list_col=hsv(tlf1+1);
         for nlf2=1:tlf2 
             
-            figure();set(gcf, 'Visible', 'off');
+              fig=figure( 'color', 'w', 'Visible', 'off');
             
             erp_plot=erp(:,nlf2);            
             pcond_plot=pcond(nlf2);

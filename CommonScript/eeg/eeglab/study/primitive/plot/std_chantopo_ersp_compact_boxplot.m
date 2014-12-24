@@ -125,7 +125,7 @@ if tlf1 < 2 || tlf2 < 2
     signif_pairs = comparisons(:,signif_vec);
     
     % create figure
-    figure('Visible', 'off');set(gcf, 'Visible', 'off');
+     fig=figure( 'color', 'w', 'Visible', 'off');
     % create topo plots
     set(subplot(2,1,1), 'Position',[0.4, 0.75, 0.2, 0.2]);set(gcf, 'Visible', 'off');
     
@@ -181,7 +181,7 @@ if tlf1 < 2 || tlf2 < 2
     if (strcmp(show_text,'on'))
         suptitle({[frequency_band_name, ' ERSP in ',roi_name,' during ',time_window_name,' time-window ','([',num2str(time_window),']ms):'],   name_f });
     end
-    fig=gcf;
+  
     if (strcmp(show_text,'off'))
         fig=modify_plot(fig, 'new_xticklab',[], 'new_yticklab',[],'new_xlab',[],'new_ylab','','new_title',[]);
         
@@ -262,7 +262,7 @@ if tlf1 > 1 && tlf2 > 1
         signif_pairs = comparisons(:,signif_vec);
         
         % create figure
-        figure();set(gcf, 'Visible', 'off');
+          fig=figure( 'color', 'w', 'Visible', 'off');
         if strcmp(show_head,'on')
             % create topo plots
             set(subplot(2,1,1), 'Position',[0.4, 0.75, 0.2, 0.2]);
@@ -319,7 +319,7 @@ if tlf1 > 1 && tlf2 > 1
         if (strcmp(show_text,'on'))
             suptitle({[frequency_band_name, ' ERSP in ' ,roi_name,' during ',time_window_name,' time-window ','([',num2str(time_window),']ms): '],   [name_f, ' within ', name_ff ]});
         end
-        fig=gcf;
+        
         if (strcmp(show_text,'off'))
             fig=modify_plot(fig, 'new_xticklab',[], 'new_yticklab',[],'new_xlab',[],'new_ylab','','new_title',[]);
             
@@ -407,7 +407,7 @@ save_figures( input_save_fig )
         signif_pairs = comparisons(:,signif_vec);
         
         % create figure
-        figure();set(gcf, 'Visible', 'off');
+         fig=figure( 'color', 'w', 'Visible', 'off');
         if strcmp(show_head,'on')
             % create topo plots
             set(subplot(2,1,1), 'Position',[0.4, 0.75, 0.2, 0.2]);
@@ -464,7 +464,7 @@ save_figures( input_save_fig )
         if (strcmp(show_text,'on'))
             suptitle({[frequency_band_name, ' ERSP in ' ,roi_name,' during ',time_window_name,' time-window ','([',num2str(time_window),']ms): '],   [name_f , ' within ', name_ff ]});
         end
-        fig=gcf;
+       
         if (strcmp(show_text,'off'))
             fig=modify_plot(fig, 'new_xticklab',[], 'new_yticklab',[],'new_xlab',[],'new_ylab','','new_title',[]);
             

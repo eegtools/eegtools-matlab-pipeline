@@ -261,7 +261,7 @@ end;
 
 % labels
 % ------
-if strcmpi(opt.unitx, 'ms'), xlab = 'Time (ms)';      ylab = 'Potential (\muV)';
+if strcmpi(opt.unitx, 'ms'), xlab = 'Time (ms)';      ylab = 'Potential (uV)';
 else                         xlab = 'Frequency (Hz)'; ylab = 'Power (10*log_{10}(\muV^{2}))';
 end;
 if ~isnan(opt.threshold), statopt = {  'xlabel' xlab };
@@ -271,7 +271,7 @@ end;
 % adjust figure size
 % ------------------
 if strcmpi(opt.figure, 'on')
-    fig=figure('color', 'w','Visible', 'off');set(gcf, 'Visible', 'off');set(gcf, 'Visible', 'off');
+    fig=figure('color', 'w','Visible', 'off');
     pos = get(gcf, 'position');
     basewinsize = 200/max(nc,ng)*3;
     if strcmpi(opt.plotgroups, 'together') pos(3) = 200*(1+addc);
