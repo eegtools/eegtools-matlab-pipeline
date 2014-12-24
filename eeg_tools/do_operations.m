@@ -51,41 +51,26 @@ end
 %==================================================================================
 if project.operations.do_testart 
     % allow testing some semi-automatic aritfact removal algorhithms
-    for subj=1:numsubj
-        subj_name=list_select_subjects{subj}; 
-        EEG = proj_eeglab_subject_testart(project, subj_name);
-    end
+        EEG = proj_eeglab_subject_testart(project, 'list_select_subjects', list_select_subjects);    
 end
 %==================================================================================
 if project.operations.do_ica
-    % do preprocessing up to epochs: avgref, epochs, rmbase: create one trails dataset for each condition
-    for subj=1:numsubj
-        subj_name=list_select_subjects{subj};
-        EEG = proj_eeglab_subject_ica(project, subj_name);
-    end
+    % do preprocessing up to epochs: avgref, epochs, rmbase: create one trails dataset for each condition    
+        EEG = proj_eeglab_subject_ica(project, 'list_select_subjects', list_select_subjects);   
 end
 %==================================================================================
 if project.operations.do_uniform_montage
-    % uniform montages between different polygraphs
-    for subj=1:numsubj
-        subj_name=list_select_subjects{subj}; 
-        EEG = proj_eeglab_subject_uniform_montage(project, subj_name)
-    end 
+    % uniform montages between different polygraphs    
+        EEG = proj_eeglab_subject_uniform_montage(project, 'list_select_subjects', list_select_subjects);    
 end
 %==================================================================================
 if project.operations.do_epochs
     % do preprocessing up to epochs: avgref, epochs, rmbase: create one trails dataset for each condition
-     for subj=1:numsubj
-        subj_name=list_select_subjects{subj};
-        proj_eeglab_subject_epoching(project, subj_name);
-     end
+        EEG = proj_eeglab_subject_epoching(project, 'list_select_subjects', list_select_subjects);     
 end
 %==================================================================================
 if project.operations.do_factors
-    for subj=1:numsubj
-        subj_name=list_select_subjects{subj};        
-        proj_eeglab_subject_add_factor(project, subj_name);
-    end
+        EEG = proj_eeglab_subject_add_factor(project, 'list_select_subjects', list_select_subjects);    
 end
 %==================================================================================
 
