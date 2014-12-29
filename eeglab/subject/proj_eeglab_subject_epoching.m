@@ -72,6 +72,9 @@ while options_num>0
     opt=opt+1;
     options_num=options_num-2;
 end
+
+numsubj = length(list_select_subjects);
+
 for subj=1:numsubj
     subj_name = list_select_subjects{subj};
     % ----------------------------------------------------------------------------------------------------------------------------

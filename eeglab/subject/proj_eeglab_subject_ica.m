@@ -1,7 +1,7 @@
 function EEG = proj_eeglab_subject_ica(project, varargin)
 
 list_select_subjects  = project.subjects.list;
-numsubj = length(list_select_subjects);
+
 
 options_num=size(varargin,2);
 for opt=1:2:options_num    
@@ -11,6 +11,7 @@ for opt=1:2:options_num
     end
 end
 
+numsubj = length(list_select_subjects);
 
 for subj=1:numsubj
     subj_name = list_select_subjects{subj}; 
