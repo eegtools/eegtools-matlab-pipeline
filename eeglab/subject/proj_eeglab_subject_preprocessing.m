@@ -10,7 +10,7 @@
 function EEG = proj_eeglab_subject_preprocessing(project, subj_name)
 
     % function to preprocess already imported and filtered data
-    input_file_name         = fullfile(project.paths.input_epochs, [project.import.original_data_prefix subj_name project.import.original_data_suffix project.import.output_suffix '.set']);
+    input_file_name         = proj_eeglab_subject_get_filename(project, subj_name,'preprocessing');...fullfile(project.paths.input_epochs, [project.import.original_data_prefix subj_name project.import.original_data_suffix project.import.output_suffix '.set']);
     [path,name_noext,ext]   = fileparts(input_file_name);
     EEG                     = pop_loadset(input_file_name);
     
