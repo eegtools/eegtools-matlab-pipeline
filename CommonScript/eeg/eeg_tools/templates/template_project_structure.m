@@ -102,7 +102,7 @@ project.import.output_folder            = '';                           % D6:   
 project.import.output_suffix            = '';                           % D7:   string appended to input file name after importing original file
 project.import.emg_output_postfix       = [];                  			% D8:   string appended to input file name to EMG file
 
-project.import.reference_channels       = {};                      % D9:   list of electrodes to be used as reference: []: no referencing, {'CAR'}: CAR ref, {'el1', 'el2'}: used those electrodes
+project.import.reference_channels       = {'CAR'};                      % D9:   list of electrodes to be used as reference: []: no referencing, {'CAR'}: CAR ref, {'el1', 'el2'}: used those electrodes
 
 % D10:   list of electrodes to transform
 project.import.ch2transform(1)          = struct('type', 'emg' , 'ch1', 28,'ch2', 32, 'new_label', 'bAPB');         ... emg bipolar                   

@@ -35,9 +35,9 @@ if ll < length(eeg_ch_list)
 end
 
 if length(ch_ref) == 1
-    sel_ch_ref = ismember({EEG.chanlocs.labels},ch_ref);
-    ...ch_ref_ind = find(sel_ch_ref);
-        eeg_ch_list = eeg_ch_list(not(sel_ch_ref)); ...(eeg_ch_list)));
+    sel_ch_ref = ismember({EEG.chanlocs(1:length(eeg_ch_list)).labels},ch_ref);
+    eeg_ch_list = eeg_ch_list(not(sel_ch_ref)); 
+        
 end
 
 
