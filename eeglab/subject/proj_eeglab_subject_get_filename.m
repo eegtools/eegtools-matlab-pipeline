@@ -55,7 +55,8 @@ switch analysis_step
         file_name  = fullfile(eeg_input_path,  [project.import.original_data_prefix subj_name project.import.original_data_suffix project.import.output_suffix input_file_suffix project.epoching.input_suffix '.set']);
     case 'add_factor'
         file_name = fullfile(eeg_input_path, [project.import.original_data_prefix subj_name project.import.original_data_suffix project.import.output_suffix project.epoching.input_suffix '_' cond_name '.set']);
-        
+    case 'extract_narrowband'
+        file_name = fullfile(eeg_input_path, [project.import.original_data_prefix subj_name project.import.original_data_suffix project.import.output_suffix project.epoching.input_suffix '_' cond_name '.set']);   
         
 end
 
