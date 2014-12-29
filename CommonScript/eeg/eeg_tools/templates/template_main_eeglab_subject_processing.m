@@ -82,6 +82,9 @@ project.operations.do_import                                                    
 % preprocessing of the imported file: SUBSAMPLING, CHANNELS TRANSFORMATION, INTERPOLATION, RE-REFERENCE, SPECIFIC FILTERING
 project.operations.do_preproc                                                       = 0;
 
+% do emg extraction analysis
+project.do_emg_analysis                                                             = 0;             
+
 %---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 % do custom modification to event triggers
 project.operations.do_patch_triggers                                                = 0;
