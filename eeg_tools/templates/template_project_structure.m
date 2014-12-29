@@ -34,7 +34,7 @@ project.study_suffix                                = '';                   % A4
 project.analysis_name                               = 'raw_observation';    % A5: epoching output folder name, subfolder containing the condition files of the current analysis type
 
 project.do_source_analysis                          = 0;                    % A6:  
-project.do_emg_analysis                             = 1;                    % A7:
+project.do_emg_analysis                             = 0;                    % A7:
 project.do_cluster_analysis                         = 0;                    % A8:
 
 %% ======================================================================================================
