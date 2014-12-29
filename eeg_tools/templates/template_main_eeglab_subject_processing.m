@@ -40,15 +40,16 @@ project.paths.script.project            = fullfile(project.paths.svn_scripts_roo
 eval(project.conf_file_name);                                               ... project structure
 project                                 = define_project_paths(project);    ... global and project paths definition. If 2nd param is 0, is faster, as it does not call eeglab
 init_operations_flags
-pre_epoching_input_file_name = '_raw_er2';   ... 16/12/14 CLA: it's NOT an override but, apparently, a mandatory parameter file name suffix used for non-standard operations (second ica, patch triggers, etc...)
-% it's first _raw and then do ica. then open by hand _raw, clean segments, save as _raw_er, then do another ica, and save again as raw_er (overwrite). then reopen the ra_er and remove components and save as raw_mc.  
-
 
 %% =====================================================================================================================================================================
 %  OVERRIDE
 %=====================================================================================================================================================================
 % project.subjects.list       = {'CP_05_gregorio'};..., 'CC_02_fabio', 'CC_03_anna', 'CC_04_giacomo', 'CC_05_stefano', 'CC_06_giovanni', 'CC_07_davide', 'CC_08_jonathan', 'CC_09_antonella', 'CC_10_chiara', 'CP_01_riccardo', 'CP_02_ester', 'CP_03_sara', 'CP_04_matteo', 'CP_05_gregorio', 'CP_06_fernando', 'CP_07_roberta', 'CP_08_mattia', 'CP_09_alessia', 'CP_10_livia'}; ...
 % project.subjects.numsubj    = length(project.subjects.list);  % DO not remove this line if u override the subjects list
+
+
+pre_epoching_input_file_name = '_raw_er2';   ... 16/12/14 CLA: it's NOT an override but, apparently, a mandatory parameter file name suffix used for non-standard operations (second ica, patch triggers, etc...)
+% it's first _raw and then do ica. then open by hand _raw, clean segments, save as _raw_er, then do another ica, and save again as raw_er (overwrite). then reopen the ra_er and remove components and save as raw_mc.  
 
 
 % select number of subjects to be processed: can be  1) commented 2) set

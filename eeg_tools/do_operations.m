@@ -24,9 +24,6 @@ end
 if project.do_emg_analysis
     for subj=1:numsubj
         subj_name=list_select_subjects{subj};
-        
-        proj_eeglab_subject_preprocessing(project, subj_name);
-        
         eeglab_subject_emgextraction_epoching(project, subj_name);
     end
 end
@@ -54,7 +51,7 @@ end
 %==================================================================================
 if project.operations.do_testart
     % allow testing some semi-automatic aritfact removal algorhithms
-    EEG = proj_eeglab_subject_testart(project, 'list_select_subjects', list_select_subjects);
+    EEG = proj_eeglab_subject_testart(project, 'list_select_subjects', list_select_subjects,    pre_epoching_input_file_name);
 end
 %==================================================================================
 if project.operations.do_ica

@@ -67,6 +67,8 @@ while options_num>0
             bc_type=varargin{opt};
         case 'list_select_subjects'
             list_select_subjects = varargin{opt+1};
+        case 'pre_epoching_input_file_name'
+            pre_epoching_input_file_name = varargin{opt+1};
     end
     opt=opt+1;
     options_num=options_num-2;
@@ -78,7 +80,7 @@ for subj=1:numsubj
     subj_name = list_select_subjects{subj};
     % ----------------------------------------------------------------------------------------------------------------------------
     % create input filename
-    input_file_name  = proj_eeglab_subject_get_filename(project, subj_name,'epoching'); ...fullfile(eeg_input_path,  [project.import.original_data_prefix subj_name project.import.original_data_suffix project.import.output_suffix input_file_suffix '.set']);
+    input_file_name  = proj_eeglab_subject_get_filename(project, subj_name,'epoching','pre_epoching_input_file_name', pre_epoching_input_file_name); ...fullfile(eeg_input_path,  [project.import.original_data_prefix subj_name project.import.original_data_suffix project.import.output_suffix input_file_suffix '.set']);
     output_file_name = fullfile(eeg_output_path, [project.import.original_data_prefix subj_name project.import.original_data_suffix project.import.output_suffix output_file_suffix '.set']);
     
     [path,in_name_noext,ext]  = fileparts(input_file_name);
