@@ -11,9 +11,10 @@ function EEG = proj_eeglab_subject_import_data(project, varargin)
 % subjects name
 
 list_select_subjects  = project.subjects.list;
-numsubj = length(list_select_subjects);
+
 
 options_num=size(varargin,2);
+
 for opt=1:2:options_num    
     switch varargin{opt}
         case 'list_select_subjects'
@@ -21,6 +22,7 @@ for opt=1:2:options_num
     end
 end
 
+numsubj = length(list_select_subjects);
 
 for subj=1:numsubj
     subj_name = list_select_subjects{subj};

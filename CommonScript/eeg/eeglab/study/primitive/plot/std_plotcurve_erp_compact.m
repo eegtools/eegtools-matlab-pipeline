@@ -394,7 +394,7 @@ save_figures( input_save_fig )
              box off
              set(gca,'LineWidth',2, 'FontSize', 10)
              xlabel(['Time (ms)'])
-             ylabel(['Amplitude (\muV)'])
+             ylabel(['Amplitude (uV)'])
              set(0,'defaulttextinterpreter','none') ;legend(levels_f1,'box','off', 'FontSize', 10,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1])
              title(['ERP in ', roi_name,': ','within ',levels_f2{nlf2}], 'FontSize', 10);
              hold off

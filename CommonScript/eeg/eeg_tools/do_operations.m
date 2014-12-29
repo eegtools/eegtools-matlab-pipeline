@@ -13,10 +13,7 @@ if ~strfind(strpath, project.paths.shadowing_functions)
 end
 %==================================================================================
 if project.operations.do_import
-    for subj=1:numsubj
-        subj_name=list_select_subjects{subj}; ... inputfile=fullfile(project.paths.original_data, [list_select_subjects{subj} project.import.original_data_suffix '.' project.import.original_data_extension]);
-        proj_eeglab_subject_import_data(project, subj_name);
-    end
+    proj_eeglab_subject_import_data(project, 'list_select_subjects', list_select_subjects);   
 end
 %==================================================================================
 if project.operations.do_preproc        
