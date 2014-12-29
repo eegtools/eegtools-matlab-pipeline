@@ -41,6 +41,8 @@ eval(project.conf_file_name);                                               ... 
 project                                 = define_project_paths(project);    ... global and project paths definition. If 2nd param is 0, is faster, as it does not call eeglab
 init_operations_flags
 pre_epoching_input_file_name = '_raw_er2';   ... 16/12/14 CLA: it's NOT an override but, apparently, a mandatory parameter file name suffix used for non-standard operations (second ica, patch triggers, etc...)
+% it's first _raw and then do ica. then open by hand _raw, clean segments, save as _raw_er, then do another ica, and save again as raw_er (overwrite). then reopen the ra_er and remove components and save as raw_mc.  
+
 
 %% =====================================================================================================================================================================
 %  OVERRIDE

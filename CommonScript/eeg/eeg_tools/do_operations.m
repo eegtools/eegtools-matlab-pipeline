@@ -59,7 +59,7 @@ end
 %==================================================================================
 if project.operations.do_ica
     % do preprocessing up to epochs: avgref, epochs, rmbase: create one trails dataset for each condition
-    EEG = proj_eeglab_subject_ica(project, 'list_select_subjects', list_select_subjects);
+    EEG = proj_eeglab_subject_ica(project, 'list_select_subjects', list_select_subjects, pre_epoching_input_file_name);
 end
 %==================================================================================
 if project.operations.do_uniform_montage
