@@ -25,7 +25,6 @@ input_file_suffix       = project.epoching.input_suffix;
 output_file_suffix      = project.epoching.input_suffix;
 bc_type                 = project.epoching.bc_type;
 list_select_subjects    = project.subjects.list;
-numsubj                 = length(list_select_subjects);
 
 
 options_num=size(varargin,2);
