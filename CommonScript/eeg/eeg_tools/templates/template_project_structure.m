@@ -652,7 +652,7 @@ project.postprocess.erp.design(1).which_extrema_curve       = {  ... design x ro
                                 {'max';'min';'min';'min'}; ...
                                 {'max';'min';'min';'min'}; ...
                                 {'max';'min';'min';'min'}; ...
-                                {'max';'min';'min';'min'}  ...
+                                {'max';'min';'min';'min'}  ...112
 };
 
 for ds=2:length(project.design)
@@ -684,10 +684,14 @@ if isfield(project, 'postprocess')
     end
 end
 
-project.postprocess.ersp.frequency_bands(1)         = struct('name','teta','min',3,'max',5);
+project.postprocess.ersp.frequency_bands(1)         = struct('name','teta','min',3,'max',5,'ref_roi',[]);
 project.postprocess.ersp.frequency_bands(2)         = struct('name','mu','min',5,'max',8);
 project.postprocess.ersp.frequency_bands(3)         = struct('name','beta1','min',14, 'max',20);
 project.postprocess.ersp.frequency_bands(4)         = struct('name','beta2','min',20, 'max',32);
+
+
+project.postprocess.ersp.frequency_bands(1).ref_roi = {'Fp1','CCCC'};
+
 
 project.postprocess.ersp.nbands = length(project.postprocess.ersp.frequency_bands);
 
