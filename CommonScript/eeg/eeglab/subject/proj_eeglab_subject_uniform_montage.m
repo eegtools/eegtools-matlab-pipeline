@@ -15,7 +15,7 @@ numsubj = length(list_select_subjects);
 for subj=1:numsubj
     subj_name = list_select_subjects{subj};
     
-    inputfile = fullfile(project.paths.input_epochs, [project.import.original_data_prefix subj_name project.import.original_data_suffix project.import.output_suffix pre_epoching_input_file_name '.set']);
+    inputfile = proj_eeglab_subject_get_filename(project, subj_name,'uniform_montage'); ...fullfile(project.paths.input_epochs, [project.import.original_data_prefix subj_name project.import.original_data_suffix project.import.output_suffix pre_epoching_input_file_name '.set']);
     EEG       = eeglab_subject_uniform_montage(inputfile, project.preproc.montage_list, project.eegdata.eeglab_channels_file_path);
 end
 end

@@ -27,7 +27,7 @@ numsubj = length(list_select_subjects);
 for subj=1:numsubj
     subj_name = list_select_subjects{subj};
     
-    input_file_name         = fullfile(project.paths.original_data, [project.import.original_data_prefix subj_name project.import.original_data_suffix '.' project.import.original_data_extension]);
+    input_file_name         = proj_eeglab_subject_get_filename(project, subj_name,'import_data');...fullfile(project.paths.original_data, [project.import.original_data_prefix subj_name project.import.original_data_suffix '.' project.import.original_data_extension]);
     [path,name_noext,ext]   = fileparts(input_file_name);
     
     eeglab_channels_file    = project.eegdata.eeglab_channels_file_path;
