@@ -134,12 +134,12 @@ if tlf1 < 2 || tlf2 < 2
         % create topo plots
         set(subplot(2,1,1), 'Position',[0.4, 0.75, 0.2, 0.2]);
         
-        topoplot(roi_mask,chanlocs,'style','blank');set(gcf, 'Visible', 'off');
-        set(gca,'color',colbk);set(gcf, 'Visible', 'off');
-        set(gca,'FontSize',10);set(gcf, 'Visible', 'off');
+        topoplot(roi_mask,chanlocs,'style','blank');set(fig, 'Visible', 'off');
+        set(gca,'color',colbk);set(fig, 'Visible', 'off');
+        set(gca,'FontSize',10);set(fig, 'Visible', 'off');
         
-        set(subplot(2,1,2), 'Position', [0.1, 0.1, 0.8, 0.6]);set(gcf, 'Visible', 'off');
-        set(gca, 'LineWidth', 1.2);set(gcf, 'Visible', 'off');
+        set(subplot(2,1,2), 'Position', [0.1, 0.1, 0.8, 0.6]);set(fig, 'Visible', 'off');
+        set(gca, 'LineWidth', 1.2);set(fig, 'Visible', 'off');
         %         nm=1;
         %         for nlf=1:tlf
         %             if nm > length(Markers)
@@ -157,15 +157,15 @@ if tlf1 < 2 || tlf2 < 2
     for nn=1:length(vec_mean)
         plot(nn, vec_mean(nn),Markers(nn),'col',list_col(nn+1,:),'LineWidth',2,'MarkerSize',10);
         hold on
-        errorbar(nn,vec_mean(nn),vec_ster(nn),Markers(nn),'col',list_col(nn+1,:),'LineWidth',2,'MarkerSize',10);set(gcf, 'Visible', 'off');
+        errorbar(nn,vec_mean(nn),vec_ster(nn),Markers(nn),'col',list_col(nn+1,:),'LineWidth',2,'MarkerSize',10);set(fig, 'Visible', 'off');
         hold on
     end
     
     
     
-    set(gca,'XTick',1:(length(levels_f)));set(gcf, 'Visible', 'off');
-    set(gca,'XTickLabel',levels_f);set(gcf, 'Visible', 'off');
-    set(gca,'FontSize',10);set(gcf, 'Visible', 'off');
+    set(gca,'XTick',1:(length(levels_f)));set(fig, 'Visible', 'off');
+    set(gca,'XTickLabel',levels_f);set(fig, 'Visible', 'off');
+    set(gca,'FontSize',10);set(fig, 'Visible', 'off');
     
     xlabel(xlab)
     ylabel(ylab)
@@ -233,16 +233,16 @@ if tlf1 < 2 || tlf2 < 2
     
     
     
-    set(gcf,'color',colbk)
+    set(fig,'color',colbk)
     %         hold off
     %         suptitle({['ERP in ',roi_name,' during ',time_window_name,' time-window ','([',num2str(time_window),']ms):'],   name_f });
-    fig=gcf;set(gcf, 'Visible', 'off');set(fig, 'Visible', 'off');
+   set(fig, 'Visible', 'off');
     
     hold off
     if (strcmp(show_text,'on'))
         suptitle({['ERP in ',roi_name,' during ',time_window_name,' time-window ','([',num2str(time_window),']ms):'],   name_f });
     end
-    fig=gcf;
+   
     if (strcmp(show_text,'off'))
         fig=modify_plot(fig, 'new_xticklab',[], 'new_yticklab',[],'new_xlab',[],'new_ylab','','new_title',[]);
         
@@ -340,14 +340,14 @@ if tlf1 > 1 && tlf2 > 1
         fig=figure( 'Visible', 'off');
         if strcmp(show_head,'on')
             % create topo plots
-            set(subplot(2,1,1), 'Position',[0.4, 0.75, 0.2, 0.2]);set(gcf, 'Visible', 'off');
+            set(subplot(2,1,1), 'Position',[0.4, 0.75, 0.2, 0.2]);set(fig, 'Visible', 'off');
             
-            topoplot(roi_mask,chanlocs,'style','blank');set(gcf, 'Visible', 'off');
-            set(gca,'color',colbk);set(gcf, 'Visible', 'off');
-            set(gca,'FontSize',10);set(gcf, 'Visible', 'off');
+            topoplot(roi_mask,chanlocs,'style','blank');set(fig, 'Visible', 'off');
+            set(gca,'color',colbk);set(fig, 'Visible', 'off');
+            set(gca,'FontSize',10);set(fig, 'Visible', 'off');
             
-            set(subplot(2,1,2), 'Position', [0.1, 0.1, 0.8, 0.6]);set(gcf, 'Visible', 'off');
-            set(gca, 'LineWidth', 1.2);set(gcf, 'Visible', 'off');
+            set(subplot(2,1,2), 'Position', [0.1, 0.1, 0.8, 0.6]);set(fig, 'Visible', 'off');
+            set(gca, 'LineWidth', 1.2);set(fig, 'Visible', 'off');
             %         nm=1;
             %         for nlf=1:tlf
             %             if nm > length(Markers)
@@ -363,16 +363,16 @@ if tlf1 > 1 && tlf2 > 1
         for nn=1:length(vec_mean)
             plot(nn, vec_mean(nn),Markers(nn),'col',list_col(nn+1,:),'LineWidth',2,'MarkerSize',10);
             hold on
-            errorbar(nn,vec_mean(nn),vec_ster(nn),Markers(nn),'col',list_col(nn+1,:),'LineWidth',2,'MarkerSize',10);set(gcf, 'Visible', 'off');
+            errorbar(nn,vec_mean(nn),vec_ster(nn),Markers(nn),'col',list_col(nn+1,:),'LineWidth',2,'MarkerSize',10);set(fig, 'Visible', 'off');
             hold on
         end
         
         
         
         
-        set(gca,'XTick',1:(length(levels_f)));set(gcf, 'Visible', 'off');
-        set(gca,'XTickLabel',levels_f);set(gcf, 'Visible', 'off');
-        set(gca,'FontSize',10);set(gcf, 'Visible', 'off');
+        set(gca,'XTick',1:(length(levels_f)));set(fig, 'Visible', 'off');
+        set(gca,'XTickLabel',levels_f);set(fig, 'Visible', 'off');
+        set(gca,'FontSize',10);set(fig, 'Visible', 'off');
         
         xlabel(xlab)
         ylabel(ylab)
@@ -432,7 +432,7 @@ if tlf1 > 1 && tlf2 > 1
             
         end
         
-        set(gcf,'color',colbk)
+        set(fig,'color',colbk)
         %             hold off
         %             suptitle({['ERP in ' ,roi_name,' during ',time_window_name,' time-window ','([',num2str(time_window),']ms): '],   [name_f, ' within ', name_ff ]});
         %
@@ -442,7 +442,7 @@ if tlf1 > 1 && tlf2 > 1
         if (strcmp(show_text,'on'))
             suptitle({['ERP in ' ,roi_name,' during ',time_window_name,' time-window ','([',num2str(time_window),']ms): '],   [name_f, ' within ', name_ff ]});
         end
-        fig=gcf;
+        
         if (strcmp(show_text,'off'))
             fig=modify_plot(fig, 'new_xticklab',[], 'new_yticklab',[],'new_xlab',[],'new_ylab','','new_title',[]);
             
@@ -543,12 +543,12 @@ if tlf1 > 1 && tlf2 > 1
             % create topo plots
             set(subplot(2,1,1), 'Position',[0.4, 0.75, 0.2, 0.2]);
             
-            topoplot(roi_mask,chanlocs,'style','blank');set(gcf, 'Visible', 'off');
-            set(gca,'color',colbk);set(gcf, 'Visible', 'off');
-            set(gca,'FontSize',10);set(gcf, 'Visible', 'off');
+            topoplot(roi_mask,chanlocs,'style','blank');set(fig, 'Visible', 'off');
+            set(gca,'color',colbk);set(fig, 'Visible', 'off');
+            set(gca,'FontSize',10);set(fig, 'Visible', 'off');
             
-            set(subplot(2,1,2), 'Position', [0.1, 0.1, 0.8, 0.6]);set(gcf, 'Visible', 'off');
-            set(gca, 'LineWidth', 1.2);set(gcf, 'Visible', 'off');
+            set(subplot(2,1,2), 'Position', [0.1, 0.1, 0.8, 0.6]);set(fig, 'Visible', 'off');
+            set(gca, 'LineWidth', 1.2);set(fig, 'Visible', 'off');
             %         nm=1;
             %         for nlf=1:tlf
             %             if nm > length(Markers)
@@ -565,13 +565,13 @@ if tlf1 > 1 && tlf2 > 1
         for nn=1:length(vec_mean)
             plot(nn, vec_mean(nn),Markers(nn),'col',list_col(nn+1,:),'LineWidth',2,'MarkerSize',10);
             hold on
-            errorbar(nn,vec_mean(nn),vec_err(nn),Markers(nn),'col',list_col(nn+1,:),'LineWidth',2,'MarkerSize',10);set(gcf, 'Visible', 'off');
+            errorbar(nn,vec_mean(nn),vec_ster(nn),Markers(nn),'col',list_col(nn+1,:),'LineWidth',2,'MarkerSize',10);set(fig, 'Visible', 'off');
             hold on
         end
         
-        set(gca,'XTick',1:(length(levels_f)));set(gcf, 'Visible', 'off');
-        set(gca,'XTickLabel',levels_f);set(gcf, 'Visible', 'off');
-        set(gca,'FontSize',10);set(gcf, 'Visible', 'off');
+        set(gca,'XTick',1:(length(levels_f)));set(fig, 'Visible', 'off');
+        set(gca,'XTickLabel',levels_f);set(fig, 'Visible', 'off');
+        set(gca,'FontSize',10);set(fig, 'Visible', 'off');
         
         xlabel(xlab)
         ylabel(ylab)
@@ -629,7 +629,7 @@ if tlf1 > 1 && tlf2 > 1
             end
         end
         
-        set(gcf,'color',colbk)
+        set(fig,'color',colbk)
         %             hold off
         %             suptitle({['ERP in ' ,roi_name,' during ',time_window_name,' time-window ','([',num2str(time_window),']ms): '],   [name_f , ' within ', name_ff ]});
         %
@@ -639,7 +639,7 @@ if tlf1 > 1 && tlf2 > 1
         if (strcmp(show_text,'on'))
             suptitle({['ERP in ' ,roi_name,' during ',time_window_name,' time-window ','([',num2str(time_window),']ms): '],   [name_f , ' within ', name_ff ]});
         end
-        fig=gcf;
+        
         if (strcmp(show_text,'off'))
             fig=modify_plot(fig, 'new_xticklab',[], 'new_yticklab',[],'new_xlab',[],'new_ylab','','new_title',[]);
             
