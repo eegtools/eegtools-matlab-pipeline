@@ -1,4 +1,4 @@
-function EEG = proj_eeglab_subject_extract_narrowband(project, varargin)
+function project = proj_eeglab_subject_extract_narrowband(project, varargin)
 
 list_select_subjects  = project.subjects.list;
 
@@ -12,9 +12,10 @@ for opt=1:2:options_num
             pre_epoching_input_file_name = varargin{opt+1};
         case 'cond_name'
             cond_name = varargin{opt+1};
+        case 'ref_roi' ...[ {tmin tmax}] for each band or one for all bands if has dim 1 x 2 (then replicated)
+                ref_roi = varargin{opt+1};            
         case 'ref_twin' ...[ [tmin tmax]; [tmin tmax]...] for each band or one for all bands if has dim 1 x 2 (then replicated)
-               
-            cond_name = varargin{opt+1};
+                ref_twin = varargin{opt+1};
     end
 end
 
@@ -28,10 +29,16 @@ for subj=1:numsubj
     
     % ----------------------------------------------------------------------------------------------------------------------------
     
-    input_file_name = proj_eeglab_subject_get_filename(project, subj_name,'extract_narrowband','pre_epoching_input_file_name',pre_epoching_input_file_name,'cond_name',cond_name);
+    narrowband_cell{subj}
+    
+    input_file_name = proj_eeglab_subject_get_filename(project, subj_name,'extract_narrowband','cond_name',cond_name);
     [input_path,input_name_noext,input_ext] = fileparts(input_file_name);
     
     if exist(input_file_name, 'file')
+        
+       nsub_proj = find(ismember(subj_name,project.subjects.list)
+       project.subjects.data(nsub_proj).frequency_bands_list  = eeglab_subject_extract_narrowband
+        
         
         EEG = pop_loadset(input_file_name);
         
