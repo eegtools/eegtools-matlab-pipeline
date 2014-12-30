@@ -12,7 +12,7 @@
 % design_num_vec                                                             = input.design_num_vec;
 % design_factors_ordered_levels                                              = input.design_factors_ordered_levels;
 % results_path                                                               = input.results_path;
-% analysis_name                                                       = input.analysis_name;
+% analysis_name                                                              = input.analysis_name;
 % roi_list                                                                   = input.roi_list;
 % roi_names                                                                  = input.roi_names;
 % group_time_windows_list                                                    = input.group_time_windows_list;
@@ -41,7 +41,8 @@
 % compact_display_stats                                                      = input.compact_display_stats;
 % compact_display_xlim                                                       = input.compact_display_xlim;
 % display_single_subjects                                                    = input.display_single_subjects;
-%
+% z_transform                                                                = input.z_transform;
+
 
 
 function [output] = eeglab_study_plot_erp_topo_tw_compact(input)
@@ -85,6 +86,8 @@ compact_display_sem                                                        = inp
 compact_display_stats                                                      = input.compact_display_stats;
 compact_display_xlim                                                       = input.compact_display_xlim;
 display_single_subjects                                                    = input.display_single_subjects;
+z_transform                                                                = input.z_transform;
+
 
 pcond=[];
 pgroup=[];
@@ -536,6 +539,7 @@ for design_num=design_num_vec
                 input_graph.show_head                                      = show_head;
                 input_graph.compact_display_ylim                           = compact_display_ylim;
                 input_graph.show_text                                      = show_text;
+                input_graph.z_transform                                    = z_transform;
                 
                 eeglab_study_erp_topo_graph(input_graph);
                 

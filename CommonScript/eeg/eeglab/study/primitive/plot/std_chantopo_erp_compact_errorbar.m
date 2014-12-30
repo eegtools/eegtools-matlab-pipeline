@@ -20,7 +20,7 @@ compgroup                                                                  = inp
 show_head                                                                  = input.show_head;
 compact_display_ylim                                                       = input.compact_display_ylim;
 show_text                                                                  = input.show_text;
-
+z_transform                                                                = input.z_transform;
 
 %  data  -  [cell array] mean data for each subject group and/or data
 %           condition. For example, to compute mean ERPs statistics from a
@@ -37,6 +37,10 @@ Markers=['o','x','+','*','s','d','v','^','<','>','p','h','.'];
 
 
 erp_measure='uV';
+
+if strcmp(z_transform,'on')
+    erp_meaure='Z(ERP)';
+end
 
 colbk='white';
 
@@ -106,6 +110,12 @@ if tlf1 < 2 || tlf2 < 2
         mat_error_bar(:,nlf)=erp_topo_tw_roi_avg{nlf};
     end
     
+    if strcmp(z_transform,'on')
+        mat_error_bar=(mat_error_bar-mean(mean(mat_error_bar)))/std(mat_error_bar(:));
+        compact_display_ylim = [-1 1];
+    end
+    
+    
     vec_mean=mean(mat_error_bar,1);
     vec_ster=std(mat_error_bar,0,1)/sqrt(size(mat_error_bar,1));
     
@@ -140,8 +150,18 @@ if tlf1 < 2 || tlf2 < 2
         %             hold on
         %         end
     end
+    % CLA old version with only one color
+    %     errorbar(vec_mean,vec_ster,'d','MarkerSize',10);set(gcf, 'Visible', 'off');
     
-    errorbar(vec_mean,vec_ster,'d','MarkerSize',10);set(gcf, 'Visible', 'off');
+    % CLA new version with different colors for different bars
+    for nn=1:length(vec_mean)
+        plot(nn, vec_mean(nn),Markers(nn),'col',list_col(nn+1,:),'LineWidth',2,'MarkerSize',10);
+        hold on
+        errorbar(nn,vec_mean(nn),vec_ster(nn),Markers(nn),'col',list_col(nn+1,:),'LineWidth',2,'MarkerSize',10);set(gcf, 'Visible', 'off');
+        hold on
+    end
+    
+    
     
     set(gca,'XTick',1:(length(levels_f)));set(gcf, 'Visible', 'off');
     set(gca,'XTickLabel',levels_f);set(gcf, 'Visible', 'off');
@@ -158,26 +178,60 @@ if tlf1 < 2 || tlf2 < 2
     range_error_bar=[upbar dowbar];
     deltay=abs(diff(range_error_bar))/4;
     
-    if ~ isempty(signif_pairs)
+    
+    % CLA old version with stars and horizontal lines denoting significant differences
+    
+    %     if ~ isempty(signif_pairs)
+    %         yval_min=dowbar-deltay/2;
+    %         yval_max=upbar+1.1*deltay*(size(signif_pairs,2)+0.5)    ;
+    %         ylim([yval_min yval_max]);
+    %
+    %
+    %
+    %         for i  = 1:size(signif_pairs,2)
+    %             offset_segment=upbar+(i)*deltay;
+    %             offset_star=offset_segment+deltay*0.2;
+    %             plot([signif_pairs(1,i) signif_pairs(2,i)], [offset_segment offset_segment],'col','black','LineWidth',1.5)
+    %             plot([signif_pairs(1,i) signif_pairs(1,i)], [offset_segment offset_segment-deltay*0.2],'col','black','LineWidth',1.5)
+    %             plot([signif_pairs(2,i) signif_pairs(2,i)], [offset_segment offset_segment-deltay*0.2],'col','black','LineWidth',1.5)
+    %             text(mean([signif_pairs(2,i),signif_pairs(1,i)]), offset_star,'*','FontSize',15,'LineWidth',2)
+    %         end
+    %     end
+    %
+    %     if ~isempty(compact_display_ylim)
+    %         ylim(compact_display_ylim)
+    %     end
+    
+    % CLA new version with only horizontal lines denoting significant
+    % differences
+    if isempty(compact_display_ylim)
+        deltay=deltay/4;
         yval_min=dowbar-deltay/2;
-        yval_max=upbar+1.1*deltay*(size(signif_pairs,2)+0.5)    ;
+        yval_max=upbar+1*deltay*(size(signif_pairs,2)+0.5)    ;
         ylim([yval_min yval_max]);
-        
-        
         
         for i  = 1:size(signif_pairs,2)
             offset_segment=upbar+(i)*deltay;
-            offset_star=offset_segment+deltay*0.2;
+            %offset_star=offset_segment+deltay*0.2;
             plot([signif_pairs(1,i) signif_pairs(2,i)], [offset_segment offset_segment],'col','black','LineWidth',1.5)
-            plot([signif_pairs(1,i) signif_pairs(1,i)], [offset_segment offset_segment-deltay*0.2],'col','black','LineWidth',1.5)
-            plot([signif_pairs(2,i) signif_pairs(2,i)], [offset_segment offset_segment-deltay*0.2],'col','black','LineWidth',1.5)
-            text(mean([signif_pairs(2,i),signif_pairs(1,i)]), offset_star,'*','FontSize',15,'LineWidth',2)
+            
         end
     end
     
     if ~isempty(compact_display_ylim)
         ylim(compact_display_ylim)
+        if ~ isempty(signif_pairs)
+            space_sig=compact_display_ylim(2)-upbar;
+            delta_y = space_sig/(size(signif_pairs,2)+2);
+            for i = 1 : size(signif_pairs,2)
+                offset_segment=upbar+(i)*delta_y;
+                plot([signif_pairs(1,i) signif_pairs(2,i)], [offset_segment offset_segment],'col','black','LineWidth',1.5)
+            end
+        end
     end
+    
+    
+    
     
     set(gcf,'color',colbk)
     %         hold off
@@ -249,6 +303,8 @@ end
 if tlf1 > 1 && tlf2 > 1
     tlf_within=tlf1; % fix the row (condition) and tlf_within2>1 (compare columns, i.e. groups)
     tlf_between=tlf2;
+    list_col=hsv(tlf_between+1);
+    
     for nlf_within=1:tlf_within
         pcomp=pgroup(nlf_within); % pgroup has for each condition (row), the comparison between groups (columns)
         levels_f=levels_f2;
@@ -261,6 +317,12 @@ if tlf1 > 1 && tlf2 > 1
         for nlf=1:tlf_between
             mat_error_bar(:,nlf)=erp_topo_tw_roi_avg{nlf};
         end
+        
+        if strcmp(z_transform,'on')
+            mat_error_bar=(mat_error_bar-mean(mean(mat_error_bar)))/std(mat_error_bar(:));
+            compact_display_ylim = [-1 1];
+        end
+        
         
         vec_mean=mean(mat_error_bar,1);
         vec_ster=std(mat_error_bar,0,1)/sqrt(size(mat_error_bar,1));
@@ -275,7 +337,7 @@ if tlf1 > 1 && tlf2 > 1
         
         % create figure
         % create figure
-       fig=figure( 'Visible', 'off');
+        fig=figure( 'Visible', 'off');
         if strcmp(show_head,'on')
             % create topo plots
             set(subplot(2,1,1), 'Position',[0.4, 0.75, 0.2, 0.2]);set(gcf, 'Visible', 'off');
@@ -296,7 +358,17 @@ if tlf1 > 1 && tlf2 > 1
             %             hold on
             %         end
         end
-        errorbar(vec_mean,vec_ster,'d','MarkerSize',10);set(gcf, 'Visible', 'off');
+        %         errorbar(vec_mean,vec_ster,'d','MarkerSize',10);set(gcf, 'Visible', 'off');
+        
+        for nn=1:length(vec_mean)
+            plot(nn, vec_mean(nn),Markers(nn),'col',list_col(nn+1,:),'LineWidth',2,'MarkerSize',10);
+            hold on
+            errorbar(nn,vec_mean(nn),vec_ster(nn),Markers(nn),'col',list_col(nn+1,:),'LineWidth',2,'MarkerSize',10);set(gcf, 'Visible', 'off');
+            hold on
+        end
+        
+        
+        
         
         set(gca,'XTick',1:(length(levels_f)));set(gcf, 'Visible', 'off');
         set(gca,'XTickLabel',levels_f);set(gcf, 'Visible', 'off');
@@ -313,23 +385,51 @@ if tlf1 > 1 && tlf2 > 1
         range_error_bar=[upbar dowbar];
         deltay=abs(diff(range_error_bar))/4;
         
-        if ~ isempty(signif_pairs)
+        %         if ~ isempty(signif_pairs)
+        %             yval_min=dowbar-deltay/2;
+        %             yval_max=upbar+1.1*deltay*(size(signif_pairs,2)+0.5)    ;
+        %             ylim([yval_min yval_max]);
+        %
+        %
+        %             for i  = 1:size(signif_pairs,2)
+        %                 offset_segment=upbar+(i)*deltay;
+        %                 offset_star=offset_segment+deltay*0.2;
+        %                 plot([signif_pairs(1,i) signif_pairs(2,i)], [offset_segment offset_segment],'col','black','LineWidth',1.5)
+        %                 plot([signif_pairs(1,i) signif_pairs(1,i)], [offset_segment offset_segment-deltay*0.2],'col','black','LineWidth',1.5)
+        %                 plot([signif_pairs(2,i) signif_pairs(2,i)], [offset_segment offset_segment-deltay*0.2],'col','black','LineWidth',1.5)
+        %                 text(mean([signif_pairs(2,i),signif_pairs(1,i)]), offset_star,'*','FontSize',15,'LineWidth',2)
+        %             end
+        %         end
+        %         if ~isempty(compact_display_ylim)
+        %             ylim(compact_display_ylim)
+        %         end
+        
+        
+        if isempty(compact_display_ylim)
+            deltay=deltay/4;
             yval_min=dowbar-deltay/2;
-            yval_max=upbar+1.1*deltay*(size(signif_pairs,2)+0.5)    ;
+            yval_max=upbar+1*deltay*(size(signif_pairs,2)+0.5)    ;
             ylim([yval_min yval_max]);
-            
             
             for i  = 1:size(signif_pairs,2)
                 offset_segment=upbar+(i)*deltay;
-                offset_star=offset_segment+deltay*0.2;
+                %offset_star=offset_segment+deltay*0.2;
                 plot([signif_pairs(1,i) signif_pairs(2,i)], [offset_segment offset_segment],'col','black','LineWidth',1.5)
-                plot([signif_pairs(1,i) signif_pairs(1,i)], [offset_segment offset_segment-deltay*0.2],'col','black','LineWidth',1.5)
-                plot([signif_pairs(2,i) signif_pairs(2,i)], [offset_segment offset_segment-deltay*0.2],'col','black','LineWidth',1.5)
-                text(mean([signif_pairs(2,i),signif_pairs(1,i)]), offset_star,'*','FontSize',15,'LineWidth',2)
+                
             end
         end
+        
         if ~isempty(compact_display_ylim)
             ylim(compact_display_ylim)
+            if ~ isempty(signif_pairs)
+                space_sig=compact_display_ylim(2)-upbar;
+                delta_y = space_sig/(size(signif_pairs,2)+2);
+                for i = 1 : size(signif_pairs,2)
+                    offset_segment=upbar+(i)*delta_y;
+                    plot([signif_pairs(1,i) signif_pairs(2,i)], [offset_segment offset_segment],'col','black','LineWidth',1.5)
+                end
+            end
+            
         end
         
         set(gcf,'color',colbk)
@@ -403,6 +503,8 @@ if tlf1 > 1 && tlf2 > 1
     
     tlf_within=tlf2; % fix the column (group) and tlf_within2>1 (compare rows, i.e. conditions)
     tlf_between=tlf1;
+    list_col=hsv(tlf_between+1);
+    
     for nlf_within=1:tlf_within
         pcomp=pcond(nlf_within); % pgroup has for each condition (row), the comparison between groups (columns)
         levels_f=levels_f1;
@@ -415,6 +517,11 @@ if tlf1 > 1 && tlf2 > 1
         mat_error_bar=[];
         for nlf=1: tlf_between
             mat_error_bar(:,nlf)=erp_topo_tw_roi_avg{nlf};
+        end
+        
+        if strcmp(z_transform,'on')
+            mat_error_bar=(mat_error_bar-mean(mean(mat_error_bar)))/std(mat_error_bar(:));
+            compact_display_ylim = [-1 1];
         end
         
         vec_mean=mean(mat_error_bar,1);
@@ -452,7 +559,15 @@ if tlf1 > 1 && tlf2 > 1
             %             hold on
             %         end
         end
-        errorbar(vec_mean,vec_ster,'d','MarkerSize',10);set(gcf, 'Visible', 'off');
+        %         errorbar(vec_mean,vec_ster,'d','MarkerSize',10);set(gcf, 'Visible', 'off');
+        
+        
+        for nn=1:length(vec_mean)
+            plot(nn, vec_mean(nn),Markers(nn),'col',list_col(nn+1,:),'LineWidth',2,'MarkerSize',10);
+            hold on
+            errorbar(nn,vec_mean(nn),vec_err(nn),Markers(nn),'col',list_col(nn+1,:),'LineWidth',2,'MarkerSize',10);set(gcf, 'Visible', 'off');
+            hold on
+        end
         
         set(gca,'XTick',1:(length(levels_f)));set(gcf, 'Visible', 'off');
         set(gca,'XTickLabel',levels_f);set(gcf, 'Visible', 'off');
@@ -468,23 +583,50 @@ if tlf1 > 1 && tlf2 > 1
         range_error_bar=[upbar dowbar];
         deltay=abs(diff(range_error_bar))/4;
         
-        if ~ isempty(signif_pairs)
+        %         if ~ isempty(signif_pairs)
+        %             yval_min=dowbar-deltay/2;
+        %             yval_max=upbar+1.1*deltay*(size(signif_pairs,2)+0.5)    ;
+        %             ylim([yval_min yval_max]);
+        %
+        %
+        %             for i  = 1:size(signif_pairs,2)
+        %                 offset_segment=upbar+(i)*deltay;
+        %                 offset_star=offset_segment+deltay*0.2;
+        %                 plot([signif_pairs(1,i) signif_pairs(2,i)], [offset_segment offset_segment],'col','black','LineWidth',1.5)
+        %                 plot([signif_pairs(1,i) signif_pairs(1,i)], [offset_segment offset_segment-deltay*0.2],'col','black','LineWidth',1.5)
+        %                 plot([signif_pairs(2,i) signif_pairs(2,i)], [offset_segment offset_segment-deltay*0.2],'col','black','LineWidth',1.5)
+        %                 text(mean([signif_pairs(2,i),signif_pairs(1,i)]), offset_star,'*','FontSize',15,'LineWidth',2)
+        %             end
+        %         end
+        %         if ~isempty(compact_display_ylim)
+        %             ylim(compact_display_ylim)
+        %         end
+        
+        
+        if isempty(compact_display_ylim)
+            deltay=deltay/4;
             yval_min=dowbar-deltay/2;
-            yval_max=upbar+1.1*deltay*(size(signif_pairs,2)+0.5)    ;
+            yval_max=upbar+1*deltay*(size(signif_pairs,2)+0.5)    ;
             ylim([yval_min yval_max]);
-            
             
             for i  = 1:size(signif_pairs,2)
                 offset_segment=upbar+(i)*deltay;
-                offset_star=offset_segment+deltay*0.2;
+                %offset_star=offset_segment+deltay*0.2;
                 plot([signif_pairs(1,i) signif_pairs(2,i)], [offset_segment offset_segment],'col','black','LineWidth',1.5)
-                plot([signif_pairs(1,i) signif_pairs(1,i)], [offset_segment offset_segment-deltay*0.2],'col','black','LineWidth',1.5)
-                plot([signif_pairs(2,i) signif_pairs(2,i)], [offset_segment offset_segment-deltay*0.2],'col','black','LineWidth',1.5)
-                text(mean([signif_pairs(2,i),signif_pairs(1,i)]), offset_star,'*','FontSize',15,'LineWidth',2)
+                
             end
         end
+        
         if ~isempty(compact_display_ylim)
             ylim(compact_display_ylim)
+            if ~ isempty(signif_pairs)
+                space_sig=compact_display_ylim(2)-upbar;
+                delta_y = space_sig/(size(signif_pairs,2)+2);
+                for i = 1 : size(signif_pairs,2)
+                    offset_segment=upbar+(i)*delta_y;
+                    plot([signif_pairs(1,i) signif_pairs(2,i)], [offset_segment offset_segment],'col','black','LineWidth',1.5)
+                end
+            end
         end
         
         set(gcf,'color',colbk)
