@@ -27,6 +27,17 @@
 % LEGENDA
 ...*  defined in main
 ...** defined in project structure
+
+
+%% PATHS DEFINED
+...     project.paths.original_data         :           (project.paths.project,'original_data', project.import.original_data_folder)
+...     project.paths.output_import         :           (project.paths.project,'epochs', project.import.output_folder)
+...     project.paths.output_preprocessing  :           (project.paths.project,'epochs', project.import.output_folder)
+...     project.paths.input_epochs          :           (project.paths.project,'epochs', project.import.output_folder)
+...     project.paths.output_epochs         :           (project.paths.project,'epochs', project.analysis_name)
+...     project.paths.results               :           (project.paths.project,'results', project.analysis_name)
+...     project.paths.emg_epochs            :           (project.paths.project,'epochs_emg', project.analysis_name)
+
 %%
 function project = define_project_paths(project, varargin)
 
@@ -107,25 +118,37 @@ function project = define_project_paths(project, varargin)
     project.paths.project                       = fullfile(project.paths.projects_data_root, project.research_group, project.research_subgroup, project.name, '');
 
     % original data path
-    project.paths.original_data                 = fullfile(project.paths.project,'original_data', project.import.original_data_folder, '');
+    project.paths.original_data                 = fullfile(project.paths.project, 'original_data', project.import.original_data_folder, '');
     if ~exist(project.paths.original_data, 'dir')
         mkdir(project.paths.original_data);
     end    
 
+    % output import
+    project.paths.output_import                 = fullfile(project.paths.project, 'epochs', project.import.output_folder, '');
+    if ~exist(project.paths.output_import, 'dir')
+        mkdir(project.paths.output_import);
+    end     
+    
+    % output pre-processing
+    project.paths.output_preprocessing             = fullfile(project.paths.project, 'epochs', project.preproc.output_folder, '');
+     if ~exist(project.paths.output_preprocessing, 'dir')
+        mkdir(project.paths.output_preprocessing);
+    end      
+     
     % imported eeglab continuous files 
-    project.paths.input_epochs                  = fullfile(project.paths.project,'epochs', project.import.output_folder, '');
+    project.paths.input_epochs                  = fullfile(project.paths.project, 'epochs', project.epoching.input_folder, '');
     if ~exist(project.paths.input_epochs, 'dir')
         mkdir(project.paths.input_epochs);
     end
 
     % exported eeglab epochs files 
-    project.paths.output_epochs                 = fullfile(project.paths.project,'epochs', project.analysis_name, '');
+    project.paths.output_epochs                 = fullfile(project.paths.project, 'epochs', project.analysis_name, '');
     if ~exist(project.paths.output_epochs, 'dir')
         mkdir(project.paths.output_epochs);
     end
 
     % results files path
-    project.paths.results                       = fullfile(project.paths.project,'results',project.analysis_name, '');
+    project.paths.results                       = fullfile(project.paths.project, 'results', project.analysis_name, '');
     if ~exist(project.paths.results, 'dir')
         mkdir(project.paths.results);
     end
@@ -134,13 +157,13 @@ function project = define_project_paths(project, varargin)
     if project.do_emg_analysis
 
         % exported eeglab EMG epochs files 
-        project.paths.emg_epochs                = fullfile(project.paths.project,'epochs_emg',project.analysis_name, '');
+        project.paths.emg_epochs                = fullfile(project.paths.project, 'epochs_emg', project.analysis_name, '');
         if ~exist(project.paths.emg_epochs, 'dir')
             mkdir(project.paths.emg_epochs);
         end
 
         % EMG MAT files 
-        project.paths.emg_epochs_mat            = fullfile(project.paths.emg_epochs,'mat', '');
+        project.paths.emg_epochs_mat            = fullfile(project.paths.emg_epochs, 'mat', '');
         if ~exist(project.paths.emg_epochs_mat, 'dir')
             mkdir(project.paths.emg_epochs_mat);
         end    

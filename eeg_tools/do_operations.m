@@ -17,27 +17,21 @@ if project.operations.do_import
 end
 %==================================================================================
 if project.operations.do_preproc
-        proj_eeglab_subject_preprocessing(project, 'list_select_subjects', list_select_subjects);
+    proj_eeglab_subject_preprocessing(project, 'list_select_subjects', list_select_subjects);
 end
-
 %==================================================================================
 if project.do_emg_analysis
-    for subj=1:numsubj
-        subj_name=list_select_subjects{subj};
-        eeglab_subject_emgextraction_epoching(project, subj_name);
-    end
+    eeglab_subject_emgextraction_epoching(project, 'list_select_subjects', list_select_subjects);
 end
-
-
 %==================================================================================
 if project.operations.do_auto_pauses_removal
     for subj=1:numsubj
-        subj_name=list_select_subjects{subj};
-        file_name=fullfile(project.paths.input_epochs, [project.import.original_data_prefix subj_name project.import.original_data_suffix project.import.output_suffix pre_epoching_input_file_name '.set']);
+        subj_name   = list_select_subjects{subj};
+        file_name   = proj_eeglab_subject_get_filename(project, subj_name, 'temp_preepochs', 'pre_epoching_input_file_name', pre_epoching_input_file_name);
         
         eeglab_subject_events_remove_upto_triggercode(file_name, project.task.events.start_experiment_trigger_value); ... return if find a boundary as first event
-            eeglab_subject_events_remove_after_triggercode(file_name, project.task.events.end_experiment_trigger_value); ... return if find a boundary as first event
-            pause_resume_errors = eeglab_subject_events_check_2triggers_orders(file_name, project.task.events.pause_trigger_value, project.task.events.resume_trigger_value);
+        eeglab_subject_events_remove_after_triggercode(file_name, project.task.events.end_experiment_trigger_value); ... return if find a boundary as first event
+        pause_resume_errors = eeglab_subject_events_check_2triggers_orders(file_name, project.task.events.pause_trigger_value, project.task.events.resume_trigger_value);
         
         if isempty(pause_resume_errors)
             disp('====>> pause/remove triggers sequence ok....move to pause removal');
@@ -51,12 +45,12 @@ end
 %==================================================================================
 if project.operations.do_testart
     % allow testing some semi-automatic aritfact removal algorhithms
-    EEG = proj_eeglab_subject_testart(project, 'list_select_subjects', list_select_subjects,    pre_epoching_input_file_name);
+    EEG = proj_eeglab_subject_testart(project, 'list_select_subjects', list_select_subjects, 'pre_epoching_input_file_name', pre_epoching_input_file_name);
 end
 %==================================================================================
 if project.operations.do_ica
     % do preprocessing up to epochs: avgref, epochs, rmbase: create one trails dataset for each condition
-    EEG = proj_eeglab_subject_ica(project, 'list_select_subjects', list_select_subjects, pre_epoching_input_file_name);
+    EEG = proj_eeglab_subject_ica(project, 'list_select_subjects', list_select_subjects, 'pre_epoching_input_file_name', pre_epoching_input_file_name);
 end
 %==================================================================================
 if project.operations.do_uniform_montage

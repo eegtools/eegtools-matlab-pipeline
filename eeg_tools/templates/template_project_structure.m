@@ -1,4 +1,4 @@
-%% project
+ %% project
 %           A: start
 %           B: paths
 
@@ -98,7 +98,7 @@ project.import.original_data_prefix     = '';                           % D5:   
 
 
 % output
-project.import.output_folder            = '';                           % D6:   string appended to fullfile(project.paths.project,'epochs', ...=) , determining where to write imported file
+project.import.output_folder            = project.import.original_data_folder;  % D6:   string appended to fullfile(project.paths.project,'epochs', ...) , determining where to write imported file, by default coincides with original_data_folder
 project.import.output_suffix            = '';                           % D7:   string appended to input file name after importing original file
 project.import.emg_output_postfix       = [];                  			% D8:   string appended to input file name to EMG file
 
@@ -134,10 +134,10 @@ for ch_id=1:length(project.import.ch2transform)
     ch = project.import.ch2transform(ch_id);
     if ~isempty(ch.new_label)
         if strcmp(ch.type, 'emg')
-            project.eegdata.emg_channels_list           = [project.eegdata.emg_channels_list (project.eegdata.nch_eeg+ch_id)];
+            project.eegdata.emg_channels_list           = [project.eegdata.emg_channels_list(project.eegdata.nch_eeg+ch_id)];
             project.eegdata.emg_channels_list_labels    = [project.eegdata.emg_channels_list_labels ch.new_label];
         elseif strcmp(ch.type, 'eog')
-            project.eegdata.eog_channels_list           = [project.eegdata.eog_channels_list (project.eegdata.nch_eeg+ch_id)];
+            project.eegdata.eog_channels_list           = [project.eegdata.eog_channels_list(project.eegdata.nch_eeg+ch_id)];
             project.eegdata.eog_channels_list_labels    = [project.eegdata.eog_channels_list_labels ch.new_label];
         end
     end
@@ -152,10 +152,11 @@ project.eegdata.no_eeg_channels_list = [project.eegdata.emg_channels_list projec
 % output file name = [original_data_prefix subj_name original_data_suffix project.import.output_suffix . set]
 
 % during import
+project.preproc.output_folder   = project.import.output_folder;     % F1:   string appended to fullfile(project.paths.project,'epochs', ...) , determining where to write imported file
 
 % FILTER ALGORITHM (FOR ALL FILTERS IN THE PROJECT)
 % the _12 suffix indicate filetrs of EEGLab 12; the _13 suffix indicate filetrs of EEGLab 13
-project.preproc.filter_algorithm = 'pop_eegfiltnew_12'; 
+project.preproc.filter_algorithm = 'pop_eegfiltnew_12';     % F2:   
     % * 'pop_eegfiltnew_12'                     = pop_eegfiltnew without the causal/non-causal option. is the default filter of EEGLab, 
     %                                             allows to set the band also for notch, so it's more flexible than pop_basicfilter of erplab 
     % * 'pop_basicfilter'                       = erplab filters (version erplab_1.0.0.33: more recent presented many bugs)  
@@ -167,34 +168,33 @@ project.preproc.filter_algorithm = 'pop_eegfiltnew_12';
     % * 'noncausal_pop_eegfiltnew_13'           = noncausal pop_eegfiltnew
 
 % GLOBAL FILTER
-project.preproc.ff1_global    = 0.16;                         % F1:   lower frequency in Hz of the preliminar filtering applied during data import
-project.preproc.ff2_global    = 100;                          % F2:   higher frequency in Hz of the preliminar filtering applied during data import
+project.preproc.ff1_global    = 0.16;                       % F3:   lower frequency in Hz of the preliminar filtering applied during data import
+project.preproc.ff2_global    = 100;                        % F4:   higher frequency in Hz of the preliminar filtering applied during data import
 
 % NOTCH
-project.preproc.do_notch      = 1;                            % F3:   define if apply the notch filter at 50 Hz
-project.preproc.notch_fcenter = 50;                           % F4:   center frequency of the notch filter 50 Hz or 60 Hz
-project.preproc.notch_fspan   = 5;                            % F5:   halved frequency range of the notch filters  
-project.preproc.notch_remove_armonics = 'first';               %       'all' | 'first' reemove all or only the first harmonic(s) of the line current
-
+project.preproc.do_notch      = 1;                          % F5:   define if apply the notch filter at 50 Hz
+project.preproc.notch_fcenter = 50;                         % F6:   center frequency of the notch filter 50 Hz or 60 Hz
+project.preproc.notch_fspan   = 5;                          % F7:   halved frequency range of the notch filters  
+project.preproc.notch_remove_armonics = 'first';            % F8:   'all' | 'first' reemove all or only the first harmonic(s) of the line current
 % during pre-processing
 %FURTHER EEG FILTER
-project.preproc.ff1_eeg     = 0.16;                         % F6:   lower frequency in Hz of the EEG filtering applied during preprocessing
-project.preproc.ff2_eeg     = 45;                           % F7:   higher frequency in Hz of the EEG filtering applied during preprocessing
+project.preproc.ff1_eeg     = 0.16;                         % F9:   lower frequency in Hz of the EEG filtering applied during preprocessing
+project.preproc.ff2_eeg     = 45;                           % F10:  higher frequency in Hz of the EEG filtering applied during preprocessing
 
 %FURTHER EOG FILTER
-project.preproc.ff1_eog     = 0.16;                         % F8:   lower frequency in Hz of the EOG filtering applied during preprocessing
-project.preproc.ff2_eog     = 8;                            % F9:   higher frequency in Hz of the EEG filtering applied during preprocessing
+project.preproc.ff1_eog     = 0.16;                         % F11:  lower frequency in Hz of the EOG filtering applied during preprocessing
+project.preproc.ff2_eog     = 8;                            % F12:  higher frequency in Hz of the EEG filtering applied during preprocessing
 
 %FURTHER EMG FILTER
-project.preproc.ff1_emg     = 5;                            % F10:   lower frequency in Hz of the EMG filtering applied during preprocessing
-project.preproc.ff2_emg     = 100;                          % F11:   higher frequency in Hz of the EMG filtering applied during preprocessing
+project.preproc.ff1_emg     = 5;                            % F13:   lower frequency in Hz of the EMG filtering applied during preprocessing
+project.preproc.ff2_emg     = 100;                          % F14:   higher frequency in Hz of the EMG filtering applied during preprocessing
 
 % CALCULATE RT
-project.preproc.rt.eve1_type                = 'eve1_type';      % F12:
-project.preproc.rt.eve2_type                = 'eve2_type';      % F13:
-project.preproc.rt.allowed_tw_ms.min        = [];               % F14:
-project.preproc.rt.allowed_tw_ms.max        = [];               % F14:
-project.preproc.rt.output_folder            = [];               % F15:
+project.preproc.rt.eve1_type                = 'eve1_type';  % F15:
+project.preproc.rt.eve2_type                = 'eve2_type';  % F16:
+project.preproc.rt.allowed_tw_ms.min        = [];           % F17:
+project.preproc.rt.allowed_tw_ms.max        = [];           % F18:
+project.preproc.rt.output_folder            = [];           % F19:
 
 
 
@@ -205,8 +205,6 @@ project.preproc.marker_type.begin_trial     = 't1';
 project.preproc.marker_type.end_trial       = 't2';
 project.preproc.marker_type.begin_baseline  = 'b1';
 project.preproc.marker_type.end_baseline    = 'b2';
-
-
 
 % INSERT BEGIN TRIAL MARKERS (only if both the target and the begin trial
 % types are NOT empty)
@@ -222,9 +220,6 @@ project.preproc.insert_end_trial.end_trial_marker_type          = project.prepro
 project.preproc.insert_end_trial.delay.s                        = [2.5];                           % time shift (in ms) to anticipate (negative values ) or posticipate (positive values) the new end trial markers
    
 
-
-    
-
 % INSERT BEGIN BASELINE MARKERS (project.epoching.baseline_replace.baseline_begin_marker)
 project.epoching.baseline_mark.baseline_begin_target_marker             = {'S 20','S 22','S 24','S 26'};                % a target event for placing the baseline markers: baseline begin marker will be placed at the target marker with a selected delay.
 project.epoching.baseline_mark.baseline_begin_target_marker_delay.s     = -0.5;                                         % the delay (in seconds) between the target marker and the begin baseline marker to be placed: 
@@ -237,7 +232,6 @@ project.epoching.baseline_mark.baseline_begin_target_marker_delay.s     = -0.5; 
                                                                                                                         % the latency information is stored internally in data samples (points or EEGLAB 'pnts') 
                                                                                                                         % relative to the beginning of the continuous data matrix (EEG.data). 
 
-                                                                                                                        
 % INSERT END BASELINE MARKERS (project.epoching.baseline_replace.baseline_end_marker)                                                                                                                        
 project.epoching.baseline_mark.baseline_end_target_marker               = {'S 20','S 22','S 24','S 26'};                % a target event for placing the baseline markers: baseline begin marker will be placed at the target marker with a selected delay.
 project.epoching.baseline_mark.baseline_end_target_marker_delay.s       = 0;                                            % the delay (in seconds) between the target marker and the begin baseline marker to be placed: 
@@ -249,14 +243,11 @@ project.epoching.baseline_mark.baseline_end_target_marker_delay.s       = 0;    
                                                                                                                         % As we will see in the event scripting section, 
                                                                                                                         % the latency information is stored internally in data samples (points or EEGLAB 'pnts') 
                                                                                                                         % relative to the beginning of the continuous data matrix (EEG.data). 
-                                                                                                                        
                                                                                                 
 % INSERT BLOCK MARKERS (only if
 % project.preproc.insert_end_trial.end_trial_marker_type is non empty)
 project.preproc.insert_block.trials_per_block                           = 40;              % number denoting the number of trials per block  
                       
-
-
 % UNIFORM MONTAGES
 project.preproc.montage_list = {...
                                 {'Fp1','Fp2','F7','F3','Fz','F4','F8','FC5','FC1','FC2','FC6','T7','C3','Cz',...
@@ -282,32 +273,19 @@ project.preproc.montage_list = {...
 
 %% replace baseline. 
 % replace partially or totally the period before/after the experimental triggers   
-% problem: when epoching, generally there is the need to do a baseline
-% correction.
-% however sometimes no part of the extracted epoch can be assumed as a good
-% baseline.
-% The standard STUDY pipeline does NOT allow to consider smoothly external
-% baselines.
-% Here is the possibility, for each trial, to replace part of the extracted epoch
-% around each experimental event in the trial, by a segment (in the same
-% trial or outside), that it's known to be a 'good' baseline.
+% problem: when epoching, generally there is the need to do a baseline correction. however sometimes no part of the extracted epoch can be assumed as a good baseline.
+% The standard STUDY pipeline does NOT allow to consider smoothly external baselines.
+% Here is the possibility, for each trial, to replace part of the extracted epoch around each experimental event in the trial, by a segment (in the same trial or outside), 
+% that it's known to be a 'good' baseline.
 % The procedure has some requirements:
 % 
-% 1. have already marked in the recording events denoting begin/end of
-% trial
+% 1. have already marked in the recording events denoting begin/end of trial
 %
-% 2. have already marked in the recording events denoting begin/end of
-% baseline
+% 2. have already marked in the recording events denoting begin/end of baseline
 %
 % NOTE that 1 and 2 can be switched in the analysis if you that the the 'good' baseline is at beginning of each trial (e.g. a pre-stimulus).
-% in this case, you should mark the baselines (using as target events the
-% stimuli) and then mark the trial, using as target for the beginnig of the
-% trial the new baseline begin marker. Or, you can to both mark baseline
-% and trial use the same stimuli marker as target events, giving the right
-% delays.
-%
-
-
+% in this case, you should mark the baselines (using as target events the stimuli) and then mark the trial, using as target for the beginnig of the
+% trial the new baseline begin marker. Or, you can to both mark baseline and trial use the same stimuli marker as target events, giving the right delays.
 
 project.epoching.baseline_replace.mode                       = 'trial';                      % replace a baseline before/after events to  be epoched and processed: 
                                                                                                 %  * 'trial'    use a baseline within each trial
@@ -327,16 +305,11 @@ project.epoching.baseline_replace.baseline_end_marker        = project.preproc.m
 
 project.epoching.baseline_replace.replace                    = 'part';                    % 'all' 'part' replace all the pre/post marker period with a replicated baseline or replace the baseline at the begin (final position 'before') or at the end (final position 'after') of the recostructed baseline
 
-
-                                                   
-                                                                                                                        
                                                                                                              
-                                                                                                                        
-                                                                                                                        
 
 % EEG
 project.epoching.input_suffix           = '_mc';                        % G1:   final file name before epoching : default is '_raw_mc'
-project.epoching.input_epochs_folder    = project.analysis_name;        % G2:   input epoch folder
+project.epoching.input_folder           = project.preproc.output_folder;% G2:   input epoch folder, by default the preprocessing output folder
 project.epoching.bc_type                = 'global';                     % G3:   type of baseline correction: global: considering all the trials, 'condition': by condition, 'trial': trial-by-trial
 
 project.epoching.epo_st.s               = -0.99;                        % G4:   EEG epochs start latency
