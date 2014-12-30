@@ -208,15 +208,15 @@ set(fig, 'PaperType', 'A4', 'PaperPositionMode', 'auto');
 
 % set latex off
 set(fig,'defaulttextinterpreter','none')
-% after creating the figure,
-%find all the axes in the current figure
-h=findobj(fig,'type','axes');
-%get the handles of the axis label strings in all these axes
-hl=[get(h,'title') get(h,'xlabel') get(h,'ylabel') get(h,'zlabel')];
-%Find all the text objects in this figure
-ht=findobj(fig,'type','text');
-%Change the interpreter for all the label strings AND all text strings
-set([hl{:} ht(:)],'interpreter','none');
+% % after creating the figure,
+% %find all the axes in the current figure
+% h=findobj(fig,'type','axes');
+% %get the handles of the axis label strings in all these axes
+% hl=[get(h,'title') get(h,'xlabel') get(h,'ylabel') get(h,'zlabel')];
+% %Find all the text objects in this figure
+% ht=findobj(fig,'type','text');
+% %Change the interpreter for all the label strings AND all text strings
+% set([hl{:} ht(:)],'interpreter','none');
 
 
 end
