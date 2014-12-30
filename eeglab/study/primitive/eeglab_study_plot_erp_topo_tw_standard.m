@@ -58,7 +58,7 @@ do_plots                                                                   = inp
 num_tails                                                                  = input.num_tails;
 roi_list                                                                   = input.roi_list;
 roi_names                                                                  = input.roi_names;
-
+z_transform                                                                = input.z_transform                                                   
 
 erp_topo_tw_roi_avg=[];
 compcond=[];
@@ -200,7 +200,7 @@ for design_num=design_num_vec
                     input_graph.show_head                                          = [];
                     input_graph.compact_display_ylim                               = [];
                     input_graph.show_text                                          = [];
-                    
+                    input_graph.z_transform                                        = z_transform;
                     
                     eeglab_study_erp_topo_graph(input_graph);
                 end

@@ -926,6 +926,7 @@ project.results_display.erp.display_only_significant_topo       = 'on';         
 project.results_display.erp.display_only_significant_topo_mode  = 'surface';    % 'electrodes';
 project.results_display.erp.display_compact_topo_mode           = 'boxplot';    % 'boxplot'; ... 'errorbar'
 project.results_display.erp.display_compact_show_head           = 'off';        % 'on'|'off'
+project.results_display.erp.z_transform                        = 'on';         % 'on'|'off' z-transform data data for each roi, and tw to allow to plot all figures on the same scale
 
 
 % ERSP

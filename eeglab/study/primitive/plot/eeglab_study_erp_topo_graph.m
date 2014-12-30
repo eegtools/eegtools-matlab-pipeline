@@ -28,6 +28,7 @@ roi_mask                                                                   = inp
 show_head                                                                  = input.show_head;
 compact_display_ylim                                                       = input.compact_display_ylim;
 show_text                                                                  = input.show_text;
+z_transform                                                                = input.z_transform;
 
 pmaskcond=[];
 pmaskgru=[];
@@ -96,6 +97,7 @@ switch display_compact
             input_plot.show_head                                           = show_head;
             input_plot.compact_display_ylim                                = compact_display_ylim;
             input_plot.show_text                                           = show_text;
+            input_plot.z_transform                                         = z_transform;
             
             std_chantopo_erp_compact_errorbar(input_plot);
             

@@ -103,7 +103,7 @@ do_plots                            = project.results_display.erp.do_plots;
 compact_display_ylim                = project.results_display.erp.compact_display_ylim;
 num_tails                           = project.stats.erp.num_tails;
 show_text                           = project.results_display.erp.show_text;
-
+z_transform                         = project.results_display.erp.z_transform;
 
 compact_display_h0=project.results_display.erp.compact_h0;
 compact_display_v0=project.results_display.erp.compact_v0;
@@ -186,7 +186,7 @@ if strcmp(display_compact_topo,'on')
     input_topo.compact_display_stats                                           = compact_display_stats;
     input_topo.compact_display_xlim                                            = compact_display_xlim;
     input_topo.display_single_subjects                                         = display_single_subjects;
-    
+    input_topo.z_transform                                                     = z_transform;
     
     [output_topo] = eeglab_study_plot_erp_topo_tw_compact(input_topo);
     STUDY         = output_topo.STUDY;
@@ -218,6 +218,7 @@ if strcmp(display_compact_topo,'off')
     input_topo.num_tails                                                       = num_tails;
     input_topo.roi_list                                                        = roi_list;
     input_topo.roi_names                                                       = roi_names;
+    input_topo.z_transform                                                     = z_transform;
     
     [output_topo] = eeglab_study_plot_erp_topo_tw_standard(input_topo);
     STUDY         = output_topo.STUDY;
