@@ -5,12 +5,22 @@ function EEG = proj_eeglab_subject_add_factor(project, varargin)
 
     list_select_subjects    = project.subjects.list;
 
-    for opt=1:2:size(varargin,2)
-        switch varargin{opt}
-            case 'list_select_subjects'
-                list_select_subjects            = varargin{opt+1};
-        end
-    end
+
+    for par=1:2:length(varargin)
+        switch varargin{par}
+            case {  ...
+                    'list_select_subjects', ...
+                    'custom_suffix' ...
+                 }
+
+                if isempty(varargin{par+1})
+                    continue;
+                else
+                    assign(varargin{par}, varargin{par+1});
+                end
+        end 
+    end     
+    
 
     if not(iscell(list_select_subjects)), list_select_subjects = {list_select_subjects}; end
     numsubj = length(list_select_subjects);
@@ -24,7 +34,7 @@ function EEG = proj_eeglab_subject_add_factor(project, varargin)
         if not(isempty(add_factor_list))
             for nc=1:project.epoching.numcond
                 cond_name                               = project.epoching.condition_names{nc};
-                input_file_name                         = proj_eeglab_subject_get_filename(project, subj_name, 'add_factor', 'cond_name', cond_name);
+                input_file_name                         = proj_eeglab_subject_get_filename(project, subj_name, 'add_factor', 'cond_name', cond_name, 'custom_suffix', custom_suffix);
                 [input_path,input_name_noext,input_ext] = fileparts(input_file_name);
 
                 if exist(input_file_name, 'file')

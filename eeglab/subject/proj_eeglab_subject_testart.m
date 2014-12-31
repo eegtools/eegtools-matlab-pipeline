@@ -5,14 +5,19 @@ function EEG = proj_eeglab_subject_testart(project, varargin)
 
     list_select_subjects    = project.subjects.list;
 
-    options_num             = size(varargin,2);
-    for opt=1:2:options_num    
-        switch varargin{opt}
-            case 'list_select_subjects'
-                list_select_subjects    = varargin{opt+1};
-            case 'custom_suffix'
-                 custom_suffix          = varargin{opt+1};                
-        end
+    for par=1:2:length(varargin)
+        switch varargin{par}
+            case {  ...
+                    'list_select_subjects', ...
+                    'custom_suffix' ...
+                 }
+
+                if isempty(varargin{par+1})
+                    continue;
+                else
+                    assign(varargin{par}, varargin{par+1});
+                end
+        end 
     end
     
     if not(iscell(list_select_subjects)), list_select_subjects = {list_select_subjects}; end
@@ -21,7 +26,7 @@ function EEG = proj_eeglab_subject_testart(project, varargin)
     for subj=1:numsubj
         
         subj_name   = list_select_subjects{subj};        
-        inputfile   = proj_eeglab_subject_get_filename(project, subj_name, 'custom_pre_epochs', 'custom_suffix', custom_suffix);...fullfile(project.paths.input_epochs, [project.import.original_data_prefix subj_name project.import.original_data_suffix project.import.output_suffix pre_epoching_input_file_name '.set']);
+        inputfile   = proj_eeglab_subject_get_filename(project, subj_name, 'custom_pre_epochs', 'custom_suffix', custom_suffix);
         EEG         = eeglab_subject_testart(inputfile, project.paths.output_preprocessing);
     
     end 

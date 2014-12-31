@@ -173,7 +173,7 @@ try
                 if ~exist(swapped_file_name, 'file')
                     eeglab_subject_swap_electrodes(input_file_name, swapped_file_name);
                 end
-                proj_eeglab_subject_epoching(project, subj_name, 'input_file_suffix', [project.epoching.input_suffix '_sw']);
+                proj_eeglab_subject_epoching(project, subj_name, 'custom_suffix', '_sw');
             else
                 proj_eeglab_subject_epoching(project, subj_name);
             end

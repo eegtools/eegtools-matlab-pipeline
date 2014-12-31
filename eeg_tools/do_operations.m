@@ -55,7 +55,7 @@ end
 %==================================================================================
 if project.operations.do_uniform_montage
     % uniform montages between different polygraphs
-    EEG = proj_eeglab_subject_uniform_montage(project, 'list_select_subjects', list_select_subjects);
+    EEG = proj_eeglab_subject_uniform_montage(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
 end
 %==================================================================================
 if project.operations.do_epochs
@@ -64,7 +64,7 @@ if project.operations.do_epochs
 end
 %==================================================================================
 if project.operations.do_factors
-    EEG = proj_eeglab_subject_add_factor(project, 'list_select_subjects', list_select_subjects);
+    EEG = proj_eeglab_subject_add_factor(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
 end
 %==================================================================================
 
