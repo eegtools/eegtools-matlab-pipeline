@@ -1,7 +1,10 @@
 %% function EEG = eeglab_subject_import_data(project, subj_name)
+%
 % function to import data into eeglab from different file format
-% discard undesired electrodes
-% apply specific filtering for eeg,eog and emg channels
+% - remove blanks from brainvision triggers code
+% - transform all triggers type to string
+% - import channel locations
+% - apply specific filtering for eeg,eog and emg channels
 %
 % INPUTS:
 % project structure containing all the project info
@@ -79,6 +82,10 @@ end
 % CHANGE LOG
 % ====================================================================================================
 % ====================================================================================================
+% 29/12/2014
+% the function now accept also a cell array of subject names, instead of a single subject name
+% utilization of proj_eeglab_subject_get_filename function to define IO file name
+
 % 11/12/2014
 % added 'otherwise' case in switch statement, variable cleaning
 

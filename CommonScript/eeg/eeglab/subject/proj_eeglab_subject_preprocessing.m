@@ -6,6 +6,7 @@
 % CHANNELS TRANSFORMATION
 % INTERPOLATION
 % RE-REFERENCE
+% EVENT FILTERING
 % SPECIFIC FILTERING
 %
 %%
@@ -17,25 +18,22 @@ function EEG = proj_eeglab_subject_preprocessing(project, varargin)
     for opt=1:2:options_num
         switch varargin{opt}
             case 'list_select_subjects'
-                list_select_subjects=varargin{opt+1};
+                list_select_subjects = varargin{opt+1};
         end
     end
 
+    if not(iscell(list_select_subjects)), list_select_subjects = {list_select_subjects}; end
     numsubj = length(list_select_subjects);
 
     for subj=1:numsubj
         
         subj_name               = list_select_subjects{subj};
-        input_file_name         = proj_eeglab_subject_get_filename(project, subj_name, 'output_import_data');...fullfile(project.paths.input_epochs, [project.import.original_data_prefix subj_name project.import.original_data_suffix project.import.output_suffix '.set']);
+        input_file_name         = proj_eeglab_subject_get_filename(project, subj_name, 'output_import_data');
         [path,name_noext,ext]   = fileparts(input_file_name);
         EEG                     = pop_loadset(input_file_name);
 
-        eeg_channels_list       = project.eegdata.eeg_channels_list;
         eog_channels_list       = project.eegdata.eog_channels_list;
         emg_channels_list       = project.eegdata.emg_channels_list;
-
-        output_suffix           = project.import.output_suffix;
-        output_path             = project.paths.input_epochs;
 
         %===============================================================================================
         % check if SUBSAMPLING
@@ -121,7 +119,7 @@ function EEG = proj_eeglab_subject_preprocessing(project, varargin)
             end
         end
 
-        if ~isempty(ch2interpolate)
+        if not(isempty(ch2interpolate))
             tchanint        = length(ch2interpolate);
             channels_list   = {EEG.chanlocs.labels};
             for nchint=1:tchanint;
@@ -138,9 +136,9 @@ function EEG = proj_eeglab_subject_preprocessing(project, varargin)
         % RE-REFERENCE
         %===============================================================================================
             ... if left blank => do nothing, if project.import.reference_channels{1} = 'CAR' => apply CAR, else ...
-        if ~isempty(project.import.reference_channels)
+        if not(isempty(project.import.reference_channels))
             reference=[];
-            if ~strcmp(project.import.reference_channels{1}, 'CAR')
+            if not(strcmp(project.import.reference_channels{1}, 'CAR'))
 
                 tchanref        = length(project.import.reference_channels);
                 channels_list   = {EEG.chanlocs.labels};
@@ -162,6 +160,15 @@ function EEG = proj_eeglab_subject_preprocessing(project, varargin)
         end
 
         %===============================================================================================
+        % EVENTS FILTERING
+        %===============================================================================================
+        if not(isempty(project.import.valid_marker))
+            allowed_events  = ismember({EEG.event.type}, project.import.valid_marker);
+            EEG.event       = EEG.event(allowed_events);
+            EEG             = eeg_checkset( EEG );
+        end
+        
+        %===============================================================================================
         % SPECIFIC FILTERING
         %===============================================================================================
 
@@ -170,13 +177,13 @@ function EEG = proj_eeglab_subject_preprocessing(project, varargin)
         EEG = eeg_checkset( EEG );
 
         % filter for EOG channels
-        if ~isempty(eog_channels_list)
+        if not(isempty(eog_channels_list))
             EEG = proj_eeglab_subject_filter(EEG, project,'eog','bandpass');
             EEG = eeg_checkset( EEG );
         end
         
         % filter for EMG channels
-        if ~isempty(emg_channels_list)
+        if not(isempty(emg_channels_list))
             EEG = proj_eeglab_subject_filter(EEG, project,'emg','bandpass');
             EEG = eeg_checkset( EEG );
         end
@@ -194,13 +201,22 @@ end
 % CHANGE LOG
 % ====================================================================================================
 % ====================================================================================================
+% 30/12/2014
+% restored event filtering routine, if project.import.valid_marker is not empty
+
+% 29/12/2014
+% the function now accept also a cell array of subject names, instead of a single subject name
+% utilization of proj_eeglab_subject_get_filename function to define IO file name
+
 % 23/9/2014
 % completely redesigned the channel transformation section. a proper structure has been introduced, allowing user to select discarded channels
 % and how to treat bipolar and monopolar channels
-% 16/9/2014
+
+% 16/9/2014 (invalid change, modified by following modification)
 % referencing exclude channels according to items in project.eegdata.no_eeg_channels_list
 % added channels manipulation info
 % poly data are not appended, but substitute data in the proper channel
 % remove channels at the end of the ch tail. for those setup using recording several polygraphic but using only part of them (e.g as with biosemi)
+
 % 30/1/2014
 % first version of the new project structure
