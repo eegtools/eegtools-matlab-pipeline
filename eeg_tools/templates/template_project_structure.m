@@ -134,10 +134,10 @@ for ch_id=1:length(project.import.ch2transform)
     ch = project.import.ch2transform(ch_id);
     if ~isempty(ch.new_label)
         if strcmp(ch.type, 'emg')
-            project.eegdata.emg_channels_list           = [project.eegdata.emg_channels_list(project.eegdata.nch_eeg+ch_id)];
+            project.eegdata.emg_channels_list           = [project.eegdata.emg_channels_list (project.eegdata.nch_eeg+ch_id)];
             project.eegdata.emg_channels_list_labels    = [project.eegdata.emg_channels_list_labels ch.new_label];
         elseif strcmp(ch.type, 'eog')
-            project.eegdata.eog_channels_list           = [project.eegdata.eog_channels_list(project.eegdata.nch_eeg+ch_id)];
+            project.eegdata.eog_channels_list           = [project.eegdata.eog_channels_list (project.eegdata.nch_eeg+ch_id)];
             project.eegdata.eog_channels_list_labels    = [project.eegdata.eog_channels_list_labels ch.new_label];
         end
     end
@@ -663,7 +663,7 @@ project.postprocess.ersp.frequency_bands(3)         = struct('name','beta1','min
 project.postprocess.ersp.frequency_bands(4)         = struct('name','beta2','min',20, 'max',32,'ref_roi',[]);
 
 
-project.postprocess.ersp.frequency_bands(1).ref_roi = {'Fp1','CCCC'};
+...project.postprocess.ersp.frequency_bands(1).ref_roi = {'Fp1'};
 
 
 project.postprocess.ersp.nbands = length(project.postprocess.ersp.frequency_bands);
@@ -765,10 +765,10 @@ project.postprocess.ersp.design(1).which_extrema_curve_continuous = {     .... d
 
 % ****CHECK****
 if size(project.postprocess.ersp.design(1).which_extrema_curve_continuous, 1) ~= project.postprocess.ersp.nroi
-   error(['number of roi in which_extrema_curve_continuous parameters (' str2num(size(project.postprocess.ersp.design(1).which_extrema_curve_continuous,1)) ') does not correspond to number of defined ROI (' num2str(project.postprocess.ersp.nroi) ')']); 
+   error(['number of roi in which_extrema_curve_continuous parameters (' num2str(size(project.postprocess.ersp.design(1).which_extrema_curve_continuous,1)) ') does not correspond to number of defined ROI (' num2str(project.postprocess.ersp.nroi) ')']); 
 else
     if size(project.postprocess.ersp.design(1).which_extrema_curve_continuous{1}, 1) ~= project.postprocess.ersp.nbands
-        error(['number of bands in the first roi of which_extrema_curve_continuous parameters (' str2num(size(project.postprocess.ersp.design(1).which_extrema_curve_continuous{1},1)) ') does not correspond to number of defined frequency bands (' num2str(project.postprocess.ersp.nbands) ')']); 
+        error(['number of bands in the first roi of which_extrema_curve_continuous parameters (' num2str(size(project.postprocess.ersp.design(1).which_extrema_curve_continuous{1},1)) ') does not correspond to number of defined frequency bands (' num2str(project.postprocess.ersp.nbands) ')']); 
     end
 end
 %*************

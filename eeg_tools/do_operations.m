@@ -27,7 +27,7 @@ end
 if project.operations.do_auto_pauses_removal
     for subj=1:numsubj
         subj_name   = list_select_subjects{subj};
-        file_name   = proj_eeglab_subject_get_filename(project, subj_name, 'temp_preepochs', 'pre_epoching_input_file_name', pre_epoching_input_file_name);
+        file_name   = proj_eeglab_subject_get_filename(project, subj_name, 'custom_pre_epochs', 'custom_suffix', custom_suffix);
         
         eeglab_subject_events_remove_upto_triggercode(file_name, project.task.events.start_experiment_trigger_value); ... return if find a boundary as first event
         eeglab_subject_events_remove_after_triggercode(file_name, project.task.events.end_experiment_trigger_value); ... return if find a boundary as first event
@@ -45,12 +45,12 @@ end
 %==================================================================================
 if project.operations.do_testart
     % allow testing some semi-automatic aritfact removal algorhithms
-    EEG = proj_eeglab_subject_testart(project, 'list_select_subjects', list_select_subjects, 'pre_epoching_input_file_name', pre_epoching_input_file_name);
+    EEG = proj_eeglab_subject_testart(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
 end
 %==================================================================================
 if project.operations.do_ica
     % do preprocessing up to epochs: avgref, epochs, rmbase: create one trails dataset for each condition
-    EEG = proj_eeglab_subject_ica(project, 'list_select_subjects', list_select_subjects, 'pre_epoching_input_file_name', pre_epoching_input_file_name);
+    EEG = proj_eeglab_subject_ica(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
 end
 %==================================================================================
 if project.operations.do_uniform_montage
@@ -60,7 +60,7 @@ end
 %==================================================================================
 if project.operations.do_epochs
     % do preprocessing up to epochs: avgref, epochs, rmbase: create one trails dataset for each condition
-    EEG = proj_eeglab_subject_epoching(project, 'list_select_subjects', list_select_subjects);
+    EEG = proj_eeglab_subject_epoching(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
 end
 %==================================================================================
 if project.operations.do_factors

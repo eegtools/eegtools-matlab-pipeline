@@ -48,7 +48,7 @@ init_operations_flags
 % project.subjects.numsubj    = length(project.subjects.list);  % DO not remove this line if u override the subjects list
 
 
-pre_epoching_input_file_name = '_raw_er2';   ... 16/12/14 CLA: it's NOT an override but, apparently, a mandatory parameter file name suffix used for non-standard operations (second ica, patch triggers, etc...)
+custom_suffix = '_raw_er2';   ... 16/12/14 CLA: it's NOT an override but, apparently, a mandatory parameter file name suffix used for non-standard operations (second ica, patch triggers, etc...)
 % it's first _raw and then do ica. then open by hand _raw, clean segments, save as _raw_er, then do another ica, and save again as raw_er (overwrite). then reopen the ra_er and remove components and save as raw_mc.  
 
 
@@ -85,6 +85,7 @@ project.operations.do_import                                                    
 % preprocessing of the imported file: SUBSAMPLING, CHANNELS TRANSFORMATION, INTERPOLATION, RE-REFERENCE, SPECIFIC FILTERING
 project.operations.do_preproc                                                       = 0;
 
+%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 % do emg extraction analysis
 project.do_emg_analysis                                                             = 0;             
 
@@ -135,8 +136,8 @@ try
     %==================================================================================
     if project.operations.do_patch_triggers
         for subj=1:project.subjects.numsubj
-            subj_name=project.subjects.list{subj}; 
-            file_name=fullfile(project.paths.input_epochs, [subj_name pre_epoching_input_file_name '.set']);
+            subj_name   = project.subjects.list{subj}; 
+            file_name   = proj_eeglab_subject_get_filename(project, subj_name, 'custom_pre_epochs', 'custom_suffix', custom_suffix);            
 
             %   1) if not present, add start trigger 1 sec before the first trigger
 
