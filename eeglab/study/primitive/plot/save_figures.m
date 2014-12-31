@@ -34,12 +34,15 @@ pdf_path  =  fullfile(plot_dir,[name_embed,'.pdf']);
 res       = '-r600'; % resolution
 
 exclude_format = [];
+renderer       = 'painter';
 
  %% check optional arguments
     for par=1:2:length(varargin)
        switch varargin{par}
            case 'exclude_format'                
                  exclude_format = varargin{par+1};
+           case  'renderer'                
+                 renderer = varargin{par+1};
                
            
        end
@@ -47,7 +50,7 @@ exclude_format = [];
 
 
 % set figure parameters in a good format for saving/exporting
-set(fig, 'renderer', 'painter')
+set(fig, 'renderer', renderer)
 modify_plot(fig);
 
 % save matlab fig file
@@ -75,11 +78,11 @@ if ~ strncmp(os,'Linux',2)
     
     % if linux, only append to the postscript
 else
-    print(fig, ps_path,'-append','-painter',res)
+    print(fig, ps_path,'-append',['-',renderer],res)
 end
 % in any operating system, append the current figure to a global pdf file
 % for overview
-export_fig(fig, pdf_path, '-pdf', '-append')
+export_fig(fig, pdf_path, '-pdf', '-append','-zbuffer')
 
 close(fig)
 
