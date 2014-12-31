@@ -5,12 +5,19 @@ function EEG = proj_eeglab_subject_uniform_montage(project, varargin)
 
     list_select_subjects  = project.subjects.list;
 
-    options_num=size(varargin,2);
-    for opt=1:2:options_num
-        switch varargin{opt}
-            case 'list_select_subjects'
-                list_select_subjects=varargin{opt+1};
-        end
+    for par=1:2:length(varargin)
+        switch varargin{par}
+            case {  ...
+                    'list_select_subjects', ...
+                    'custom_suffix' ...
+                 }
+
+                if isempty(varargin{par+1})
+                    continue;
+                else
+                    assign(varargin{par}, varargin{par+1});
+                end
+        end 
     end
     
     if not(iscell(list_select_subjects)), list_select_subjects = {list_select_subjects}; end
@@ -19,7 +26,7 @@ function EEG = proj_eeglab_subject_uniform_montage(project, varargin)
     for subj=1:numsubj
 
         subj_name = list_select_subjects{subj};
-        inputfile = proj_eeglab_subject_get_filename(project, subj_name, 'uniform_montage'); 
+        inputfile = proj_eeglab_subject_get_filename(project, subj_name, 'uniform_montage', 'custom_suffix', custom_suffix); 
         EEG       = eeglab_subject_uniform_montage(inputfile, project.preproc.montage_list, project.eegdata.eeglab_channels_file_path);
     
     end
