@@ -32,8 +32,25 @@ z_transform                                                                = inp
 %           >> pcond = std_stat(data, 'condstats', 'on');
 
 
-Markers=['o','x','+','*','s','d','v','^','<','>','p','h','.'];
 
+
+colbk='white';
+
+
+% total levels of factor 1 (e.g conditions) and 2 (e.g groups)
+[tlf1 tlf2]=size(erp_topo_tw_roi_avg);
+
+% Markers=['o','x','+','*','s','d','v','^','<','>','p','h','.'];
+
+
+% create a list of marker types
+Markers=repmat(['o','x','+','*','s','d','v','^','<','>','p','h','.'],1,10);
+
+tlf=max(tlf1,tlf2);
+% create a list of colors
+% list_col=hsv(tlf+1);
+% list_col=repmat(hsv(5),10,1);
+list_col=repmat(['b','m','g','r','c'],1,10);
 
 
 erp_measure='uV';
@@ -41,12 +58,6 @@ erp_measure='uV';
 if strcmp(z_transform,'on')
     erp_meaure='Z(ERP)';
 end
-
-colbk='white';
-
-
-% total levels of factor 1 (e.g conditions) and 2 (e.g groups)
-[tlf1 tlf2]=size(erp_topo_tw_roi_avg);
 
 if tlf1 >1
     levels_f=levels_f1;
@@ -89,7 +100,7 @@ if tlf1 < 2 || tlf2 < 2
     tlf=max(tlf1,tlf2);
     
     % create a list of colors
-    list_col=hsv(tlf+1);
+%     list_col=hsv(tlf+1);
     
     if tlf2>1 % only one row (condition), compare columns (groups)
         pcomp=pgroup; % pgroup has for each condition (row), the comparison between groups (columns)
@@ -145,7 +156,7 @@ if tlf1 < 2 || tlf2 < 2
         %             if nm > length(Markers)
         %                 nm=1;
         %             end
-        %             errorbar(nlf,vec_mean(nlf),vec_ster(nlf),Markers(nm),'col',list_col(nlf+1,:),'LineWidth',2,'MarkerSize',10)
+        %             errorbar(nlf,vec_mean(nlf),vec_ster(nlf),Markers(nm),'col',list_col(nlf),'LineWidth',2,'MarkerSize',10)
         %             nm=nm+1;
         %             hold on
         %         end
@@ -155,9 +166,9 @@ if tlf1 < 2 || tlf2 < 2
     
     % CLA new version with different colors for different bars
     for nn=1:length(vec_mean)
-        plot(nn, vec_mean(nn),Markers(nn),'col',list_col(nn+1,:),'LineWidth',2,'MarkerSize',10);
+        plot(nn, vec_mean(nn),Markers(nn),'col',list_col(nn),'LineWidth',2,'MarkerSize',10);
         hold on
-        errorbar(nn,vec_mean(nn),vec_ster(nn),Markers(nn),'col',list_col(nn+1,:),'LineWidth',2,'MarkerSize',10);set(fig, 'Visible', 'off');
+        errorbar(nn,vec_mean(nn),vec_ster(nn),Markers(nn),'col',list_col(nn),'LineWidth',2,'MarkerSize',10);set(fig, 'Visible', 'off');
         hold on
     end
     
@@ -303,7 +314,7 @@ end
 if tlf1 > 1 && tlf2 > 1
     tlf_within=tlf1; % fix the row (condition) and tlf_within2>1 (compare columns, i.e. groups)
     tlf_between=tlf2;
-    list_col=hsv(tlf_between+1);
+%     list_col=hsv(tlf_between+1);
     
     for nlf_within=1:tlf_within
         pcomp=pgroup(nlf_within); % pgroup has for each condition (row), the comparison between groups (columns)
@@ -353,7 +364,7 @@ if tlf1 > 1 && tlf2 > 1
             %             if nm > length(Markers)
             %                 nm=1;
             %             end
-            %             errorbar(nlf,vec_mean(nlf,:),vec_ster(nlf,:),Markers(nm),'col',list_col(nlf+1,:),'LineWidth',2,'MarkerSize',10)
+            %             errorbar(nlf,vec_mean(nlf,:),vec_ster(nlf,:),Markers(nm),'col',list_col(nlf),'LineWidth',2,'MarkerSize',10)
             %             nm=nm+1;
             %             hold on
             %         end
@@ -361,9 +372,9 @@ if tlf1 > 1 && tlf2 > 1
         %         errorbar(vec_mean,vec_ster,'d','MarkerSize',10);set(gcf, 'Visible', 'off');
         
         for nn=1:length(vec_mean)
-            plot(nn, vec_mean(nn),Markers(nn),'col',list_col(nn+1,:),'LineWidth',2,'MarkerSize',10);
+            plot(nn, vec_mean(nn),Markers(nn),'col',list_col(nn),'LineWidth',2,'MarkerSize',10);
             hold on
-            errorbar(nn,vec_mean(nn),vec_ster(nn),Markers(nn),'col',list_col(nn+1,:),'LineWidth',2,'MarkerSize',10);set(fig, 'Visible', 'off');
+            errorbar(nn,vec_mean(nn),vec_ster(nn),Markers(nn),'col',list_col(nn),'LineWidth',2,'MarkerSize',10);set(fig, 'Visible', 'off');
             hold on
         end
         
@@ -503,7 +514,7 @@ if tlf1 > 1 && tlf2 > 1
     
     tlf_within=tlf2; % fix the column (group) and tlf_within2>1 (compare rows, i.e. conditions)
     tlf_between=tlf1;
-    list_col=hsv(tlf_between+1);
+%     list_col=hsv(tlf_between+1);
     
     for nlf_within=1:tlf_within
         pcomp=pcond(nlf_within); % pgroup has for each condition (row), the comparison between groups (columns)
@@ -554,7 +565,7 @@ if tlf1 > 1 && tlf2 > 1
             %             if nm > length(Markers)
             %                 nm=1;
             %             end
-            %             errorbar(nlf,vec_mean(nlf,:),vec_ster(nlf,:),Markers(nm),'col',list_col(nlf+1,:),'LineWidth',2,'MarkerSize',10)
+            %             errorbar(nlf,vec_mean(nlf,:),vec_ster(nlf,:),Markers(nm),'col',list_col(nlf),'LineWidth',2,'MarkerSize',10)
             %             nm=nm+1;
             %             hold on
             %         end
@@ -563,9 +574,9 @@ if tlf1 > 1 && tlf2 > 1
         
         
         for nn=1:length(vec_mean)
-            plot(nn, vec_mean(nn),Markers(nn),'col',list_col(nn+1,:),'LineWidth',2,'MarkerSize',10);
+            plot(nn, vec_mean(nn),Markers(nn),'col',list_col(nn),'LineWidth',2,'MarkerSize',10);
             hold on
-            errorbar(nn,vec_mean(nn),vec_ster(nn),Markers(nn),'col',list_col(nn+1,:),'LineWidth',2,'MarkerSize',10);set(fig, 'Visible', 'off');
+            errorbar(nn,vec_mean(nn),vec_ster(nn),Markers(nn),'col',list_col(nn),'LineWidth',2,'MarkerSize',10);set(fig, 'Visible', 'off');
             hold on
         end
         

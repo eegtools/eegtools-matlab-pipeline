@@ -18,7 +18,9 @@ Markers=repmat(['o','x','+','*','s','d','v','^','<','>','p','h','.'],1,10);
 
 tlf=max(tlf1,tlf2);
 % create a list of colors
- list_col=hsv(tlf+1);
+%  list_col=hsv(tlf+1);
+list_col=repmat(['b','m','g','r','c'],1,10);
+
 
 if tlf1 < 2 || tlf2 < 2
     
@@ -294,7 +296,7 @@ if tlf1 > 1 && tlf2 > 1
             ns=1;
             for nlf2=1:tlf2
                 mm=ersp_curve_fb_plot_mat(nlf2,:);
-                plot(times, mm,'col',list_col(nlf2+1,:),'LineWidth',2,'LineStyle',list_stiles{ns})
+                plot(times, mm,'col',list_col(nlf2),'LineWidth',2,'LineStyle',list_stiles{ns})
                 hold on
                 if ns < length(list_stiles)
                     ns=ns+1;
@@ -310,7 +312,7 @@ if tlf1 > 1 && tlf2 > 1
             dx=0;
             nm=1;
             for nlf2=1:tlf2
-                plot(times+dx, ersp_curve_fb_plot_mat(nlf2,:),Markers(nlf2),'col',list_col(nlf2+1,:),'LineWidth',2,'MarkerSize',10);
+                plot(times+dx, ersp_curve_fb_plot_mat(nlf2,:),Markers(nlf2),'col',list_col(nlf2),'LineWidth',2,'MarkerSize',10);
                 nm=nm+1;
                 if nlf2 > length(Markers)
                     nm=1;
@@ -324,7 +326,7 @@ if tlf1 > 1 && tlf2 > 1
             dx=0;
             nm=1;
             for nlf2=1:tlf2
-                errorbar(times+dx, ersp_curve_fb_plot_mat(nlf2,:),ster_plot_mat(nlf2,:),Markers(nlf2),'col',list_col(nlf2+1,:),'LineWidth',2,'MarkerSize',10)
+                errorbar(times+dx, ersp_curve_fb_plot_mat(nlf2,:),ster_plot_mat(nlf2,:),Markers(nlf2),'col',list_col(nlf2),'LineWidth',2,'MarkerSize',10)
                 nm=nm+1;
                 if nlf2 > length(Markers)
                     nm=1;
@@ -477,7 +479,7 @@ if tlf1 > 1 && tlf2 > 1
             ns=1;
             for nlf1=1:tlf1
                 mm=ersp_curve_fb_plot_mat(nlf1,:);
-                plot(times, mm,'col',list_col(nlf1+1,:),'LineWidth',2,'LineStyle',list_stiles{ns})
+                plot(times, mm,'col',list_col(nlf1),'LineWidth',2,'LineStyle',list_stiles{ns})
                 hold on
                 if ns < length(list_stiles)
                     ns=ns+1;
@@ -493,7 +495,7 @@ if tlf1 > 1 && tlf2 > 1
             dx=0;
             nm=1;
             for nlf1=1:tlf1
-                plot(times+dx, ersp_curve_fb_plot_mat(nlf1,:),Markers(nlf1),'col',list_col(nlf1+1,:),'LineWidth',2,'MarkerSize',10);
+                plot(times+dx, ersp_curve_fb_plot_mat(nlf1,:),Markers(nlf1),'col',list_col(nlf1),'LineWidth',2,'MarkerSize',10);
                 nm=nm+1;
                 if nlf1 > length(Markers)
                     nm=1;
@@ -508,7 +510,7 @@ if tlf1 > 1 && tlf2 > 1
             dx=0;
             nm=1;
             for nlf1=1:tlf1
-                errorbar(times+dx, ersp_curve_fb_plot_mat(nlf1,:),ster_plot_mat(nlf1,:),Markers(nlf1),'col',list_col(nlf1+1,:),'LineWidth',2,'MarkerSize',10)
+                errorbar(times+dx, ersp_curve_fb_plot_mat(nlf1,:),ster_plot_mat(nlf1,:),Markers(nlf1),'col',list_col(nlf1),'LineWidth',2,'MarkerSize',10)
                 nm=nm+1;
                 if nlf1 > length(Markers)
                     nm=1;
