@@ -184,7 +184,7 @@ if tlf1 < 2 || tlf2 < 2
     input_save_fig.name_embed             = 'ersp_curve_fb';
     input_save_fig.suffix_plot            = [ char(roi_name),'_',char(name_f),'_',char(frequency_band_name)];
     
-    save_figures( input_save_fig )
+    save_figures( input_save_fig ,'renderer','opengl')
     
     
 end

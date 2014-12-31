@@ -171,7 +171,7 @@ input_save_fig.fig                    = fig;
 input_save_fig.name_embed             = 'erp_curve';
 input_save_fig.suffix_plot            = [char(roi_name),'_',char(name_f)];
 
-save_figures( input_save_fig )
+save_figures( input_save_fig ,'renderer','opengl');
          
          
     end
@@ -312,8 +312,7 @@ input_save_fig.fig                    = fig;
 input_save_fig.name_embed             = 'erp_curve';
 input_save_fig.suffix_plot            = [char(roi_name),'_',char(levels_f1{nlf1})];
 
-save_figures( input_save_fig )
-
+save_figures( input_save_fig ,'renderer','opengl');
         end
         
         % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
@@ -454,8 +453,7 @@ input_save_fig.fig                    = fig;
 input_save_fig.name_embed             = 'erp_curve';
 input_save_fig.suffix_plot            = [char(roi_name),'_',char(levels_f2{nlf2})];
 
-save_figures( input_save_fig )
-
+save_figures( input_save_fig ,'renderer','opengl');
         end
      end
 end
