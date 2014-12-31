@@ -10,15 +10,29 @@ function [] = std_plotcurve_ersp_fb_compact(times, ersp_curve_fb, plot_dir, roi_
 % to distinguish curves
 
 % create a list of line stiles
-list_stiles={'-','--',':','-.'};
+%list_stiles={'-','--',':','-.'};
 %       list_stiles={'-','-','-','-'};
+
+
+% to distinguish curves
+
+% create a list of line stiles
+list_stiles=repmat({'-','--',':','-.'},1,10);
+
+% create a list of marker types
+Markers=repmat(['o','x','+','*','s','d','v','^','<','>','p','h','.'],1,10);
+
+tlf=max(tlf1,tlf2);
+% create a list of colors
+ %list_col=hsv(tlf+1);
+
 
 if tlf1 < 2 || tlf2 < 2
     
     tlf=max(tlf1,tlf2);
     
     % create a list of colors
-    list_col=hsv(tlf+1);
+    %list_col=hsv(tlf+1);
     fig=figure( 'color', 'w', 'Visible', 'off');
     
     ersp_curve_plot=ersp_curve_fb;
@@ -181,7 +195,7 @@ end
 
 if tlf1 > 1 && tlf2 > 1
     % create a list of colors
-    list_col=hsv(tlf2+1);
+    %list_col=hsv(tlf2+1);
     for nlf1=1:tlf1
         fig=figure( 'color', 'w', 'Visible', 'off');
         
@@ -331,7 +345,7 @@ if tlf1 > 1 && tlf2 > 1
     % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
     
     % create a list of colors
-    list_col=hsv(tlf1+1);
+    %list_col=hsv(tlf1+1);
     for nlf2=1:tlf2
         
         fig=figure( 'color', 'w', 'Visible', 'off');

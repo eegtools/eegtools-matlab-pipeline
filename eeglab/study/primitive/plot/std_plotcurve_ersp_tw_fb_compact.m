@@ -11,19 +11,21 @@ function [] = std_plotcurve_ersp_tw_fb_compact(times, ersp_curve_fb, plot_dir, r
 % to distinguish curves
 
 % create a list of line stiles
-list_stiles={'-','--',':','-.'};
+list_stiles=repmat({'-','--',':','-.'},1,10);
 
 % create a list of marker types
-Markers=['o','x','+','*','s','d','v','^','<','>','p','h','.'];
+Markers=repmat(['o','x','+','*','s','d','v','^','<','>','p','h','.'],1,10);
 
+tlf=max(tlf1,tlf2);
+% create a list of colors
+ list_col=hsv(tlf+1);
 
 if tlf1 < 2 || tlf2 < 2
     
-    tlf=max(tlf1,tlf2);
     
-    % create a list of colors
-    list_col=hsv(tlf+1);
-      fig=figure( 'color', 'w', 'Visible', 'off');
+    
+    
+    fig=figure( 'color', 'w', 'Visible', 'off');
     
     ersp_curve_plot=ersp_curve_fb;
     
@@ -50,47 +52,98 @@ if tlf1 < 2 || tlf2 < 2
         
     end
     
+    
+    %% plot the data 
+    
+    % lines without error bars
     if strcmp(compact_display_sem,'off')
-        ns=1;
+       
+        ns = 1;
+        nc = 2; ... number of color, possibly resetted to avoid exceeding the list
+        
+        
         for nlf=1:tlf
-            mm=ersp_curve_fb_plot_mat(nlf,:);
-            plot(times, mm,'col',list_col(nlf+1,:),'LineWidth',2,'LineStyle',list_stiles{ns})
-            hold on
-            if ns < length(list_stiles)
-                ns=ns+1;
-            else
-                ns=1;
+            
+            mm = ersp_curve_fb_plot_mat(nlf,:);
+            
+            if nlf > length(list_stiles)
+                ns = 1;
             end
+            
+            if nlf > length(list_col)
+                nc = 3;
+            end
+            
+            
+            plot(times, mm,'col',list_col(nc,:),'LineWidth',2,'LineStyle',list_stiles{ns})
+            
+            hold on
+            
         end
-        l=legend(levels_f,'box','off', 'FontSize', 15,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1]);
+        
+        l = legend(levels_f,'box','off', 'FontSize', 15,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1]);
     end
     
+    
+    % errorbar without lines
     if strcmp(compact_display_sem,'on')
-        dx=0;
-        nm=1;
-        for nlf=1:tlf
-            plot(times+dx, ersp_curve_fb_plot_mat(nlf,:),Markers(nlf),'col',list_col(nlf+1,:),'LineWidth',2,'MarkerSize',10);
-            nm=nm+1;
+        
+        dx = 0;        
+        nm = 1; ... number of marker possibly resetted to avoid exceeding the list
+        nc = 2; ... number of color, possibly resetted to avoid exceeding the list
+            
+        for nlf = 1:tlf
+            
             if nlf > length(Markers)
-                nm=1;
+                nm = 1;
             end
-            dx=dx+0.1;
+            
+            if nlf > length(list_col)
+                nc = 3;
+            end
+                       
+            
+            plot(times+dx, ersp_curve_fb_plot_mat(nlf,:),Markers(nm),'col',list_col(nc,:),'LineWidth',2,'MarkerSize',10);
+            
+            nm = nm+1;
+            nc = nc+1;            
+            dx = dx+0.1;
+            
             hold on
         end
         
         l=legend(levels_f,'box','off', 'FontSize', 15,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1]);
+        
         dx=0;
-        nm=1;
+        nm = 1; ... number of marker possibly resetted to avoid exceeding the list
+        nc = 2; ... number of color, possibly resetted to avoid exceeding the list
+        
         for nlf=1:tlf
-            errorbar(times+dx, ersp_curve_fb_plot_mat(nlf,:),ster_plot_mat(nlf,:),Markers(nlf),'col',list_col(nlf+1,:),'LineWidth',2,'MarkerSize',10)
-            nm=nm+1;
+            
             if nlf > length(Markers)
                 nm=1;
             end
-            dx=dx+0.1;
+            
+            if nlf > length(list_col)
+                nm=3;
+            end
+            
+            errorbar(times+dx, ersp_curve_fb_plot_mat(nlf,:),ster_plot_mat(nlf,:),Markers(nm),'col',list_col(nc,:),'LineWidth',2,'MarkerSize',10)
+            
+            nm = nm+1;
+            nc = nc+1;            
+            dx = dx+0.1;
+            
             hold on
         end
     end
+    
+    
+    
+    
+    
+    
+    %% plot significant differences
     
     if ~isempty(compact_display_xlim)
         xlim(compact_display_xlim)
@@ -218,9 +271,9 @@ end
 
 if tlf1 > 1 && tlf2 > 1
     % create a list of colors
-    list_col=hsv(tlf1+1);
+%     list_col=hsv(tlf1+1);
     for nlf1=1:tlf1
-          fig=figure( 'color', 'w', 'Visible', 'off');
+        fig=figure( 'color', 'w', 'Visible', 'off');
         
         ersp_curve_plot=ersp_curve_fb(nlf1,:);
         pgroup_plot=pgroup(nlf1);
@@ -400,10 +453,10 @@ if tlf1 > 1 && tlf2 > 1
     % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
     
     % create a list of colors
-    list_col=hsv(tlf1+1);
+%     list_col=hsv(tlf1+1);
     for nlf2=1:tlf2
         
-         fig=figure( 'color', 'w', 'Visible', 'off');
+        fig=figure( 'color', 'w', 'Visible', 'off');
         
         ersp_curve_plot=ersp_curve_fb(:,nlf2);
         pcond_plot=pcond(nlf2);

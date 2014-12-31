@@ -58,7 +58,7 @@ do_plots                                                                   = inp
 num_tails                                                                  = input.num_tails;
 roi_list                                                                   = input.roi_list;
 roi_names                                                                  = input.roi_names;
-z_transform                                                                = input.z_transform                                                   
+z_transform                                                                = input.z_transform;                                                   
 
 erp_topo_tw_roi_avg=[];
 compcond=[];
