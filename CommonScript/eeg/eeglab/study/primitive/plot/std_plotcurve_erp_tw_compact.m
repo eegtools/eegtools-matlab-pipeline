@@ -10,12 +10,14 @@ function [] = std_plotcurve_erp_tw_compact(times, erp, plot_dir, roi_name, study
 % to distinguish curves
 
 % create a list of line stiles
-list_stiles={'-','--',':','-.'};
+list_stiles=repmat({'-','--',':','-.'},1,10);
 
 % create a list of marker types
-Markers=['o','x','+','*','s','d','v','^','<','>','p','h','.'];
+Markers=repmat(['o','x','+','*','s','d','v','^','<','>','p','h','.'],1,10);
 
-
+tlf=max(tlf1,tlf2);
+% create a list of colors
+ list_col=hsv(tlf+1);
 
 
 
@@ -24,7 +26,7 @@ if tlf1 < 2 || tlf2 < 2
     tlf=max(tlf1,tlf2);
     
     % create a list of colors
-    list_col=hsv(tlf+1);
+    %list_col=hsv(tlf+1);
     fig=figure( 'Visible', 'off');
     
     erp_plot=erp;
@@ -212,7 +214,7 @@ end
 
 if tlf1 > 1 && tlf2 > 1
     % create a list of colors
-    list_col=hsv(tlf2+1);
+    %list_col=hsv(tlf2+1);
     for nlf1=1:tlf1
         fig=figure( 'Visible', 'off');
         
@@ -387,7 +389,7 @@ if tlf1 > 1 && tlf2 > 1
     % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
     
     % create a list of colors
-    list_col=hsv(tlf1+1);
+    %list_col=hsv(tlf1+1);
     for nlf2=1:tlf2
         
        fig=figure( 'Visible', 'off');
