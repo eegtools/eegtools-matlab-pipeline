@@ -31,26 +31,30 @@ ps_path   =  fullfile(plot_dir,[name_embed,'.ps']);
 ppt_path  =  fullfile(plot_dir,[name_embed,'.ppt']);
 pdf_path  =  fullfile(plot_dir,[name_embed,'.pdf']);
 
-res       = '-r600'; % resolution
+res             = '-r600'; % resolution
+exclude_format  = [];
+renderer        = 'painter';
+pdf_mode        = 'export_fig';
 
-exclude_format = [];
-renderer       = 'painter';
+%% check optional arguments
 
- %% check optional arguments
-    for par=1:2:length(varargin)
-       switch varargin{par}
-           case 'exclude_format'                
-                 exclude_format = varargin{par+1};
-           case  'renderer'                
-                 renderer = varargin{par+1};
-               
-           
-       end
-    end    
+for par=1:2:length(varargin)
+    switch varargin{par}
+        case {'renderer', ...
+                'pdf_mode'  ...
+                }
+            
+            if isempty(varargin{par+1})
+                continue;
+            else
+                assign(varargin{par}, varargin{par+1});
+            end
+    end
+end
 
 
 % set figure parameters in a good format for saving/exporting
-set(fig, 'renderer', renderer)
+set(fig, 'renderer', renderer);
 modify_plot(fig);
 
 % save matlab fig file
@@ -60,8 +64,8 @@ saveas(fig, fig_path);
 print(eps_path,'-depsc2',res);
 
 if(not(sum(ismember(exclude_format,'svg'))))
-% save svg file
-plot2svg(svg_path)
+    % save svg file
+    plot2svg(svg_path)
 end
 
 % save tif file
@@ -80,10 +84,15 @@ if ~ strncmp(os,'Linux',2)
 else
     print(fig, ps_path,'-append',['-',renderer],res)
 end
+
 % in any operating system, append the current figure to a global pdf file
 % for overview
-export_fig(fig, pdf_path, '-pdf', '-append','-zbuffer')
-
+switch pdf_mode
+    case 'export_fig'
+        export_fig(fig, pdf_path, '-pdf', '-append');
+    case 'ps2pdf'
+        ps2pdf('psfile',  ps_path, 'pdffile', pdf_path, 'gspapersize', 'a4')
+end
 close(fig)
 
 end

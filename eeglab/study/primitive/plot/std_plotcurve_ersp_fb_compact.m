@@ -17,14 +17,16 @@ function [] = std_plotcurve_ersp_fb_compact(times, ersp_curve_fb, plot_dir, roi_
 % to distinguish curves
 
 % create a list of line stiles
-list_stiles=repmat({'-','--',':','-.'},1,10);
+list_stiles=repmat({'-','--','-.'},1,10);
 
 % create a list of marker types
 Markers=repmat(['o','x','+','*','s','d','v','^','<','>','p','h','.'],1,10);
 
 tlf=max(tlf1,tlf2);
 % create a list of colors
- %list_col=hsv(tlf+1);
+% list_col=hsv(tlf+1);
+% list_col=repmat(hsv(5),10,1);
+list_col=repmat(['b','m','g','r','c'],1,10);
 
 
 if tlf1 < 2 || tlf2 < 2
@@ -63,7 +65,7 @@ if tlf1 < 2 || tlf2 < 2
     ns=1;
     for nlf=1:tlf
         mm=ersp_curve_fb_plot_mat(nlf,:);
-        plot(times, mm,'col',list_col(nlf+1,:),'LineWidth',2,'LineStyle',list_stiles{ns})
+        plot(times, mm,'col',list_col(nlf),'LineWidth',10,'LineStyle',list_stiles{ns})
         hold on
         if ns < length(list_stiles)
             ns=ns+1;
@@ -76,7 +78,7 @@ if tlf1 < 2 || tlf2 < 2
         for nlf=1:tlf
             BX=[times,fliplr(times)];
             BY=[down_plot_mat(nlf,:),fliplr(up_plot_mat(nlf,:))];
-            fill(BX, BY,list_col(nlf+1,:),'FaceAlpha', 0.2)
+            fill(BX, BY,list_col(nlf),'FaceAlpha', 0.2)
             hold on
         end
     end
@@ -116,7 +118,7 @@ if tlf1 < 2 || tlf2 < 2
     xlim(xxlim)
     set(gcf,'color','w');
     box off
-    set(gca,'LineWidth',2, 'FontSize', 15)
+    set(gca,'LineWidth',10, 'FontSize', 15)
     xlabel(['Time (ms)'])
     if strcmp(ersp_mode, 'Pfu')
         ylabel(['Delta %'])
@@ -184,7 +186,11 @@ if tlf1 < 2 || tlf2 < 2
     input_save_fig.name_embed             = 'ersp_curve_fb';
     input_save_fig.suffix_plot            = [ char(roi_name),'_',char(name_f),'_',char(frequency_band_name)];
     
-    save_figures( input_save_fig ,'renderer','opengl')
+    if strcmp(compact_display_sem,'on')
+        save_figures( input_save_fig ,'renderer','opengl','pdf_mode','ps2pdf');
+    else
+        save_figures( input_save_fig )
+    end
     
     
 end
@@ -217,7 +223,7 @@ if tlf1 > 1 && tlf2 > 1
         ns=1;
         for nlf2=1:tlf2
             mm=ersp_curve_fb_plot_mat(nlf2,:);
-            plot(times, mm,'col',list_col(nlf2+1,:),'LineWidth',2,'LineStyle',list_stiles{ns})
+            plot(times, mm,'col',list_col(nlf2),'LineWidth',10,'LineStyle',list_stiles{ns})
             hold on
             if ns < length(list_stiles)
                 ns=ns+1;
@@ -230,7 +236,7 @@ if tlf1 > 1 && tlf2 > 1
             for nlf2=1:tlf2
                 BX=[times,fliplr(times)];
                 BY=[down_plot_mat(nlf2,:),fliplr(up_plot_mat(nlf2,:))];
-                fill(BX, BY,list_col(nlf2+1,:),'FaceAlpha', 0.2)
+                fill(BX, BY,list_col(nlf2),'FaceAlpha', 0.2)
                 hold on
             end
         end
@@ -270,7 +276,7 @@ if tlf1 > 1 && tlf2 > 1
         xlim(xxlim)
         set(gcf,'color','w');
         box off
-        set(gca,'LineWidth',2, 'FontSize', 15)
+        set(gca,'LineWidth',10, 'FontSize', 15)
         xlabel(['Time (ms)'])
         if strcmp(ersp_mode, 'Pfu')
             ylabel(['Delta %'])
@@ -337,7 +343,11 @@ if tlf1 > 1 && tlf2 > 1
         input_save_fig.name_embed             = 'ersp_curve_fb';
         input_save_fig.suffix_plot            = [ char(roi_name),'_',char(levels_f1{nlf1}),'_',char(frequency_band_name)];
         
-        save_figures( input_save_fig )
+        if strcmp(compact_display_sem,'on')
+            save_figures( input_save_fig ,'renderer','opengl','pdf_mode','ps2pdf');
+        else
+            save_figures( input_save_fig )
+        end
         
         
     end
@@ -368,7 +378,7 @@ if tlf1 > 1 && tlf2 > 1
         ns=1;
         for nlf1=1:tlf1
             mm=ersp_curve_fb_plot_mat(nlf1,:);
-            plot(times, mm,'col',list_col(nlf1+1,:),'LineWidth',2,'LineStyle',list_stiles{ns})
+            plot(times, mm,'col',list_col(nlf1),'LineWidth',10,'LineStyle',list_stiles{ns})
             hold on
             if ns < length(list_stiles)
                 ns=ns+1;
@@ -380,7 +390,7 @@ if tlf1 > 1 && tlf2 > 1
             for nlf1=1:tlf1
                 BX=[times,fliplr(times)];
                 BY=[down_plot_mat(nlf1,:),fliplr(up_plot_mat(nlf1,:))];
-                fill(BX, BY,list_col(nlf1+1,:),'FaceAlpha', 0.2)
+                fill(BX, BY,list_col(nlf1),'FaceAlpha', 0.2)
                 hold on
             end
         end
@@ -421,7 +431,7 @@ if tlf1 > 1 && tlf2 > 1
         xlim(xxlim);
         set(gcf,'color','w');
         box off
-        set(gca,'LineWidth',2, 'FontSize', 15)
+        set(gca,'LineWidth',10, 'FontSize', 15)
         xlabel(['Time (ms)'])
         if strcmp(ersp_mode, 'Pfu')
             ylabel(['Delta %'])
@@ -481,7 +491,11 @@ if tlf1 > 1 && tlf2 > 1
         input_save_fig.name_embed             = 'ersp_curve_fb';
         input_save_fig.suffix_plot            = [ char(roi_name),'_',char(levels_f2{nlf2}),'_',char(frequency_band_name)];
         
-        save_figures( input_save_fig )
+        if strcmp(compact_display_sem,'on')
+            save_figures( input_save_fig ,'renderer','opengl','pdf_mode','ps2pdf');
+        else
+            save_figures( input_save_fig )
+        end
         
     end
 end

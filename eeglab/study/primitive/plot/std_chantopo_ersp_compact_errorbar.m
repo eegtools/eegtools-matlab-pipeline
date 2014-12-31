@@ -22,7 +22,24 @@ function std_chantopo_ersp_compact_errorbar(ersp_topo_tw_fb_roi_avg, ...
 
 
 
-Markers=['o','x','+','*','s','d','v','^','<','>','p','h','.'];
+% Markers=['o','x','+','*','s','d','v','^','<','>','p','h','.'];
+
+
+
+
+% total levels of factor 1 (e.g conditions) and 2 (e.g groups)
+[tlf1 tlf2]=size(ersp_topo_tw_fb_roi_avg);
+
+
+% create a list of marker types
+Markers=repmat(['o','x','+','*','s','d','v','^','<','>','p','h','.'],1,10);
+
+tlf=max(tlf1,tlf2);
+% create a list of colors
+% list_col=hsv(tlf+1);
+% list_col=repmat(hsv(5),10,1);
+list_col=repmat(['b','m','g','r','c'],1,10);
+
 
 switch ersp_mode
     case 'dB'
@@ -38,8 +55,6 @@ end
 colbk='white';
 
 
-% total levels of factor 1 (e.g conditions) and 2 (e.g groups)
-[tlf1 tlf2]=size(ersp_topo_tw_fb_roi_avg);
 
 if tlf1 >1
     levels_f=levels_f1;
@@ -82,7 +97,7 @@ if tlf1 < 2 || tlf2 < 2
     tlf=max(tlf1,tlf2);
     
     % create a list of colors
-    list_col=hsv(tlf+1);
+%     list_col=hsv(tlf+1);
     
     if tlf2>1 % only one row (condition), compare columns (groups)
         pcomp=pgroup; % pgroup has for each condition (row), the comparison between groups (columns)
@@ -139,9 +154,9 @@ if tlf1 < 2 || tlf2 < 2
     end
     
     for nn=1:length(vec_mean)
-        plot(nn, vec_mean(nn),Markers(nn),'col',list_col(nn+1,:),'LineWidth',2,'MarkerSize',10);
+        plot(nn, vec_mean(nn),Markers(nn),'col',list_col(nn),'LineWidth',2,'MarkerSize',10);
         hold on
-        errorbar(nn,vec_mean(nn),vec_err(nn),Markers(nn),'col',list_col(nn+1,:),'LineWidth',2,'MarkerSize',10);set(gcf, 'Visible', 'off');
+        errorbar(nn,vec_mean(nn),vec_err(nn),Markers(nn),'col',list_col(nn),'LineWidth',2,'MarkerSize',10);set(gcf, 'Visible', 'off');
         hold on
     end
     
@@ -252,7 +267,7 @@ end
 if tlf1 > 1 && tlf2 > 1
     tlf_within=tlf1; % fix the row (condition) and tlf_within2>1 (compare columns, i.e. groups)
     tlf_between=tlf2;
-    list_col=hsv(tlf_between+1);
+%     list_col=hsv(tlf_between+1);
     for nlf_within=1:tlf_within % for each row
         pcomp=pgroup(nlf_within); % pgroup has for each condition (row), the comparison between groups (columns)
         levels_f=levels_f2;
@@ -302,9 +317,9 @@ if tlf1 > 1 && tlf2 > 1
         end
         %         errorbar(vec_mean,vec_err,'d','MarkerSize',10);set(gcf, 'Visible', 'off');
         for nn=1:length(vec_mean)
-            plot(nn, vec_mean(nn),Markers(nn),'col',list_col(nn+1,:),'LineWidth',2,'MarkerSize',10);
+            plot(nn, vec_mean(nn),Markers(nn),'col',list_col(nn),'LineWidth',2,'MarkerSize',10);
             hold on
-            errorbar(nn,vec_mean(nn),vec_err(nn),Markers(nn),'col',list_col(nn+1,:),'LineWidth',2,'MarkerSize',10);set(gcf, 'Visible', 'off');
+            errorbar(nn,vec_mean(nn),vec_err(nn),Markers(nn),'col',list_col(nn),'LineWidth',2,'MarkerSize',10);set(gcf, 'Visible', 'off');
             hold on
         end
         
@@ -393,7 +408,7 @@ save_figures( input_save_fig )
     
     tlf_within=tlf2; % fix the column (group) and tlf_within2>1 (compare rows, i.e. conditions)
     tlf_between=tlf1;
-    list_col=hsv(tlf_between+1);
+%     list_col=hsv(tlf_between+1);
     for nlf_within=1:tlf_within
         pcomp=pcond(nlf_within); % pgroup has for each condition (row), the comparison between groups (columns)
         levels_f=levels_f1;
@@ -445,9 +460,9 @@ save_figures( input_save_fig )
         end
         %          errorbar(vec_mean,vec_err,'d','MarkerSize',10);set(gcf, 'Visible', 'off');
         for nn=1:length(vec_mean)
-            plot(nn, vec_mean(nn),Markers(nn),'col',list_col(nn+1,:),'LineWidth',2,'MarkerSize',10);
+            plot(nn, vec_mean(nn),Markers(nn),'col',list_col(nn),'LineWidth',2,'MarkerSize',10);
             hold on
-            errorbar(nn,vec_mean(nn),vec_err(nn),Markers(nn),'col',list_col(nn+1,:),'LineWidth',2,'MarkerSize',10);set(gcf, 'Visible', 'off');
+            errorbar(nn,vec_mean(nn),vec_err(nn),Markers(nn),'col',list_col(nn),'LineWidth',2,'MarkerSize',10);set(gcf, 'Visible', 'off');
             hold on
         end
         
