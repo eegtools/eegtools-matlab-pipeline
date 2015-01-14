@@ -143,13 +143,13 @@ if tlf1 < 2 || tlf2 < 2
     if strcmp(show_head,'on')
         
         % create topo plots
-        set(subplot(2,1,1), 'Position',[0.4, 0.75, 0.2, 0.2]);
+        set(subplot(2,1,1), 'Position',[0.4, 0.75, 0.2, 0.2], 'Visible', 'off');
         
         topoplot(roi_mask,chanlocs,'style','blank');set(fig, 'Visible', 'off');
         set(gca,'color',colbk);set(fig, 'Visible', 'off');
         set(gca,'FontSize',10);set(fig, 'Visible', 'off');
         
-        set(subplot(2,1,2), 'Position', [0.1, 0.1, 0.8, 0.6]);set(fig, 'Visible', 'off');
+        set(subplot(2,1,2), 'Position', [0.1, 0.1, 0.8, 0.6], 'Visible', 'off');set(fig, 'Visible', 'off');
         set(gca, 'LineWidth', 1.2);set(fig, 'Visible', 'off');
         %         nm=1;
         %         for nlf=1:tlf
@@ -351,13 +351,13 @@ if tlf1 > 1 && tlf2 > 1
         fig=figure( 'Visible', 'off');
         if strcmp(show_head,'on')
             % create topo plots
-            set(subplot(2,1,1), 'Position',[0.4, 0.75, 0.2, 0.2]);set(fig, 'Visible', 'off');
+            set(subplot(2,1,1), 'Position',[0.4, 0.75, 0.2, 0.2], 'Visible', 'off');set(fig, 'Visible', 'off');
             
             topoplot(roi_mask,chanlocs,'style','blank');set(fig, 'Visible', 'off');
             set(gca,'color',colbk);set(fig, 'Visible', 'off');
             set(gca,'FontSize',10);set(fig, 'Visible', 'off');
             
-            set(subplot(2,1,2), 'Position', [0.1, 0.1, 0.8, 0.6]);set(fig, 'Visible', 'off');
+            set(subplot(2,1,2), 'Position', [0.1, 0.1, 0.8, 0.6], 'Visible', 'off');set(fig, 'Visible', 'off');
             set(gca, 'LineWidth', 1.2);set(fig, 'Visible', 'off');
             %         nm=1;
             %         for nlf=1:tlf
@@ -552,13 +552,13 @@ if tlf1 > 1 && tlf2 > 1
         if strcmp(show_head,'on')
             
             % create topo plots
-            set(subplot(2,1,1), 'Position',[0.4, 0.75, 0.2, 0.2]);
+            set(subplot(2,1,1), 'Position',[0.4, 0.75, 0.2, 0.2], 'Visible', 'off');
             
             topoplot(roi_mask,chanlocs,'style','blank');set(fig, 'Visible', 'off');
             set(gca,'color',colbk);set(fig, 'Visible', 'off');
             set(gca,'FontSize',10);set(fig, 'Visible', 'off');
             
-            set(subplot(2,1,2), 'Position', [0.1, 0.1, 0.8, 0.6]);set(fig, 'Visible', 'off');
+            set(subplot(2,1,2), 'Position', [0.1, 0.1, 0.8, 0.6], 'Visible', 'off');set(fig, 'Visible', 'off');
             set(gca, 'LineWidth', 1.2);set(fig, 'Visible', 'off');
             %         nm=1;
             %         for nlf=1:tlf

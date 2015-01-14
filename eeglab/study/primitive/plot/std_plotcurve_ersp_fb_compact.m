@@ -65,7 +65,7 @@ if tlf1 < 2 || tlf2 < 2
     ns=1;
     for nlf=1:tlf
         mm=ersp_curve_fb_plot_mat(nlf,:);
-        plot(times, mm,'col',list_col(nlf),'LineWidth',10,'LineStyle',list_stiles{ns})
+        plot(times, mm,'col',list_col(nlf),'LineWidth',3,'LineStyle',list_stiles{1})
         hold on
         if ns < length(list_stiles)
             ns=ns+1;
@@ -76,9 +76,12 @@ if tlf1 < 2 || tlf2 < 2
     
     if strcmp(compact_display_sem,'on')
         for nlf=1:tlf
-            BX=[times,fliplr(times)];
-            BY=[down_plot_mat(nlf,:),fliplr(up_plot_mat(nlf,:))];
-            fill(BX, BY,list_col(nlf),'FaceAlpha', 0.2)
+%             BX=[times,fliplr(times)];
+%             BY=[down_plot_mat(nlf,:),fliplr(up_plot_mat(nlf,:))];
+%             fill(BX, BY,list_col(nlf),'FaceAlpha', 0.2)
+plot(times, down_plot_mat(nlf,:),'col',list_col(nlf),'LineWidth',0.5,'LineStyle',list_stiles{2});
+hold on
+plot(times, up_plot_mat(nlf,:),'col',list_col(nlf),'LineWidth',0.5,'LineStyle',list_stiles{2});
             hold on
         end
     end
@@ -118,7 +121,7 @@ if tlf1 < 2 || tlf2 < 2
     xlim(xxlim)
     set(gcf,'color','w');
     box off
-    set(gca,'LineWidth',10, 'FontSize', 15)
+    set(gca,'LineWidth',3, 'FontSize', 15)
     xlabel(['Time (ms)'])
     if strcmp(ersp_mode, 'Pfu')
         ylabel(['Delta %'])
@@ -126,7 +129,7 @@ if tlf1 < 2 || tlf2 < 2
         ylabel(['Power (dB)'])
     end
     
-    legend(levels_f,'box','off', 'FontSize', 13,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1])
+    legend(levels_f,'box','off', 'FontSize', 13,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1],'Location','NorthEastOutside')
     title([frequency_band_name, ' ersp in ', roi_name,': ', 'within ',name_f], 'FontSize', 20);
     hold off
     
@@ -187,7 +190,7 @@ if tlf1 < 2 || tlf2 < 2
     input_save_fig.suffix_plot            = [ char(roi_name),'_',char(name_f),'_',char(frequency_band_name)];
     
     if strcmp(compact_display_sem,'on')
-        save_figures( input_save_fig ,'renderer','opengl','pdf_mode','ps2pdf');
+        save_figures( input_save_fig );%save_figures( input_save_fig ,'renderer','opengl','pdf_mode','ps2pdf');
     else
         save_figures( input_save_fig )
     end
@@ -223,7 +226,7 @@ if tlf1 > 1 && tlf2 > 1
         ns=1;
         for nlf2=1:tlf2
             mm=ersp_curve_fb_plot_mat(nlf2,:);
-            plot(times, mm,'col',list_col(nlf2),'LineWidth',10,'LineStyle',list_stiles{ns})
+            plot(times, mm,'col',list_col(nlf2),'LineWidth',3,'LineStyle',list_stiles{1})
             hold on
             if ns < length(list_stiles)
                 ns=ns+1;
@@ -234,10 +237,14 @@ if tlf1 > 1 && tlf2 > 1
         
         if strcmp(compact_display_sem,'on')
             for nlf2=1:tlf2
-                BX=[times,fliplr(times)];
-                BY=[down_plot_mat(nlf2,:),fliplr(up_plot_mat(nlf2,:))];
-                fill(BX, BY,list_col(nlf2),'FaceAlpha', 0.2)
-                hold on
+%                 BX=[times,fliplr(times)];
+%                 BY=[down_plot_mat(nlf2,:),fliplr(up_plot_mat(nlf2,:))];
+%                 fill(BX, BY,list_col(nlf2),'FaceAlpha', 0.2)
+%                 hold on
+plot(times, down_plot_mat(nlf2,:),'col',list_col(nlf2),'LineWidth',0.5,'LineStyle',list_stiles{2});
+hold on
+plot(times, up_plot_mat(nlf2,:),'col',list_col(nlf2),'LineWidth',0.5,'LineStyle',list_stiles{2});
+hold on
             end
         end
         
@@ -276,7 +283,7 @@ if tlf1 > 1 && tlf2 > 1
         xlim(xxlim)
         set(gcf,'color','w');
         box off
-        set(gca,'LineWidth',10, 'FontSize', 15)
+        set(gca,'LineWidth',3, 'FontSize', 15)
         xlabel(['Time (ms)'])
         if strcmp(ersp_mode, 'Pfu')
             ylabel(['Delta %'])
@@ -284,7 +291,7 @@ if tlf1 > 1 && tlf2 > 1
             ylabel(['Power (dB)'])
         end
         
-        legend(levels_f2,'box','off', 'FontSize', 13,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1])
+        legend(levels_f2,'box','off', 'FontSize', 13,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1],'Location','NorthEastOutside')
         title([frequency_band_name, ' ersp in ', roi_name,': ', 'within ',levels_f1{nlf1}], 'FontSize', 20);
         hold off
         
@@ -344,7 +351,7 @@ if tlf1 > 1 && tlf2 > 1
         input_save_fig.suffix_plot            = [ char(roi_name),'_',char(levels_f1{nlf1}),'_',char(frequency_band_name)];
         
         if strcmp(compact_display_sem,'on')
-            save_figures( input_save_fig ,'renderer','opengl','pdf_mode','ps2pdf');
+            save_figures( input_save_fig );%save_figures( input_save_fig ,'renderer','opengl','pdf_mode','ps2pdf');
         else
             save_figures( input_save_fig )
         end
@@ -378,7 +385,7 @@ if tlf1 > 1 && tlf2 > 1
         ns=1;
         for nlf1=1:tlf1
             mm=ersp_curve_fb_plot_mat(nlf1,:);
-            plot(times, mm,'col',list_col(nlf1),'LineWidth',10,'LineStyle',list_stiles{ns})
+            plot(times, mm,'col',list_col(nlf1),'LineWidth',3,'LineStyle',list_stiles{ns})
             hold on
             if ns < length(list_stiles)
                 ns=ns+1;
@@ -388,10 +395,13 @@ if tlf1 > 1 && tlf2 > 1
         end
         if strcmp(compact_display_sem,'on')
             for nlf1=1:tlf1
-                BX=[times,fliplr(times)];
-                BY=[down_plot_mat(nlf1,:),fliplr(up_plot_mat(nlf1,:))];
-                fill(BX, BY,list_col(nlf1),'FaceAlpha', 0.2)
-                hold on
+%                 BX=[times,fliplr(times)];
+%                 BY=[down_plot_mat(nlf1,:),fliplr(up_plot_mat(nlf1,:))];
+%                 fill(BX, BY,list_col(nlf1),'FaceAlpha', 0.2)
+%                 hold on
+plot(times, down_plot_mat(nlf1,:),'col',list_col(nlf1),'LineWidth',0.5,'LineStyle',list_stiles{2});
+hold on
+plot(times, up_plot_mat(nlf1,:),'col',list_col(nlf1),'LineWidth',0.5,'LineStyle',list_stiles{2});
             end
         end
         
@@ -431,7 +441,7 @@ if tlf1 > 1 && tlf2 > 1
         xlim(xxlim);
         set(gcf,'color','w');
         box off
-        set(gca,'LineWidth',10, 'FontSize', 15)
+        set(gca,'LineWidth',3, 'FontSize', 15)
         xlabel(['Time (ms)'])
         if strcmp(ersp_mode, 'Pfu')
             ylabel(['Delta %'])
@@ -439,7 +449,7 @@ if tlf1 > 1 && tlf2 > 1
             ylabel(['Power (dB)'])
         end
         
-        legend(levels_f1,'box','off', 'FontSize', 13,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1])
+        legend(levels_f1,'box','off', 'FontSize', 13,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1],'Location','NorthEastOutside')
         
         title([frequency_band_name, ' ersp in ', roi_name,': ','within ',levels_f2{nlf2}], 'FontSize', 20);
         hold off
@@ -492,7 +502,7 @@ if tlf1 > 1 && tlf2 > 1
         input_save_fig.suffix_plot            = [ char(roi_name),'_',char(levels_f2{nlf2}),'_',char(frequency_band_name)];
         
         if strcmp(compact_display_sem,'on')
-            save_figures( input_save_fig ,'renderer','opengl','pdf_mode','ps2pdf');
+            save_figures( input_save_fig );%save_figures( input_save_fig ,'renderer','opengl','pdf_mode','ps2pdf');
         else
             save_figures( input_save_fig )
         end

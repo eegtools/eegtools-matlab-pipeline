@@ -109,9 +109,9 @@ for design_num=design_num_vec
             roi_name=roi_names{roi_num};
             roi_mask=ismember({locs.labels},roi_ch);
             
+            str                                = datestr(now, 'dd-mmm-yyyy-HH-MM-SS');
             
-            
-            plot_dir=fullfile(results_path,stat_analysis_suffix,[STUDY.design(design_num).name,'-',roi_names{roi_num},'-ersp_topo_tw_fb_standard','-', display_compact_topo_mode,'-',display_only_significant_topo_mode, '-', datestr(now,30)]);
+            plot_dir=fullfile(results_path,stat_analysis_suffix,[STUDY.design(design_num).name,'-',roi_names{roi_num},'-ersp_topo_tw_fb_standard','-', display_compact_topo_mode,'-',display_only_significant_topo_mode, '-', str]);
             mkdir(plot_dir);
             
             % select the study design for the analyses

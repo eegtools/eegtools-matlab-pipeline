@@ -397,7 +397,7 @@ input_save_fig.fig                    = fig;
 input_save_fig.name_embed             = 'esrp_topo';
 input_save_fig.suffix_plot            = [time_window_name,'_',char(frequency_band_name)];
 
-save_figures( input_save_fig )
+save_figures( input_save_fig ,'exclude_format',{'svg'})
  
 % set(fig, 'paperpositionmode', 'auto');
 % setfont(fig, 'fontsize', 16);

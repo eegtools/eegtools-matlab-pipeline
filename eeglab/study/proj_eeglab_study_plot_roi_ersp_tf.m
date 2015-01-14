@@ -168,7 +168,8 @@ STUDY = []; CURRENTSTUDY = 0; ALLEEG = []; EEG=[]; CURRENTSET=[];
 
 for design_num=design_num_vec
     
-    plot_dir=fullfile(results_path,analysis_name,[STUDY.design(design_num).name,'-ersp_tf_roi','-',ersp_tf_resolution_mode,'-',datestr(now,30)]);
+    str                                = datestr(now, 'dd-mmm-yyyy-HH-MM-SS');
+    plot_dir=fullfile(results_path,analysis_name,[STUDY.design(design_num).name,'-ersp_tf_roi','-',ersp_tf_resolution_mode,'-',str]);
     mkdir(plot_dir);
     
     %% subjects list divided by factor levels

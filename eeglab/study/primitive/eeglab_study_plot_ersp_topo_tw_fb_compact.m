@@ -174,8 +174,8 @@ tw_stat_estimator           = mode.tw_stat_estimator;       ... mean, extremum
 for design_num=design_num_vec
     
     
-    
-    plot_dir=fullfile(results_path,stat_analysis_suffix,[STUDY.design(design_num).name,'-ersp_topo_tw_fb_compact','-', display_compact_topo_mode, '-', which_method_find_extrema, '_',datestr(now,30)]);
+    str                                = datestr(now, 'dd-mmm-yyyy-HH-MM-SS');
+    plot_dir=fullfile(results_path,stat_analysis_suffix,[STUDY.design(design_num).name,'-ersp_topo_tw_fb_compact','-', display_compact_topo_mode, '-', which_method_find_extrema, '_',str]);
     mkdir(plot_dir);
     
     

@@ -96,8 +96,8 @@ for design_num=design_num_vec
         if length(roi_ch) >1
             roi_name=roi_names{roi_num};
             roi_mask=ismember({chanlocs.labels},roi_ch);
-            
-            plot_dir=fullfile(results_path,analysis_name,[STUDY.design(design_num).name,'-',roi_names{roi_num},'-erp_topo_tw','-',datestr(now,30)]);
+            str                                = datestr(now, 'dd-mmm-yyyy-HH-MM-SS');
+            plot_dir=fullfile(results_path,analysis_name,[STUDY.design(design_num).name,'-',roi_names{roi_num},'-erp_topo_tw','-',str]);
             mkdir(plot_dir);
             
             % select the study design for the analyses
