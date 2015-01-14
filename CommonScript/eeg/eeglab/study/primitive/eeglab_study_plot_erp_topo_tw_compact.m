@@ -140,8 +140,8 @@ erp_topo_stat.roi_names     = roi_names;
 
 for design_num=design_num_vec
     
-    
-    plot_dir=fullfile(results_path,analysis_name,[STUDY.design(design_num).name,'-erp_topo_tw','-',which_method_find_extrema,'_',datestr(now,30)]);
+    str                                = datestr(now, 'dd-mmm-yyyy-HH-MM-SS');
+    plot_dir=fullfile(results_path,analysis_name,[STUDY.design(design_num).name,'-erp_topo_tw','-',which_method_find_extrema,'_',str]);
     mkdir(plot_dir);
     
     

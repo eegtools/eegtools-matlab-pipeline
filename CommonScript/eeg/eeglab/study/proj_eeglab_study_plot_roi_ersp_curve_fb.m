@@ -188,8 +188,8 @@ name_f2                                = STUDY.design(design_num).variable(2).la
 
 levels_f1                              = STUDY.design(design_num).variable(1).value;
 levels_f2                              = STUDY.design(design_num).variable(2).value;
-
-plot_dir                               = fullfile(results_path, analysis_name,[STUDY.design(design_num).name,'-ersp_curve_roi_',which_method_find_extrema,'-',datestr(now,30)]);
+str                                = datestr(now, 'dd-mmm-yyyy-HH-MM-SS');
+plot_dir                               = fullfile(results_path, analysis_name,[STUDY.design(design_num).name,'-ersp_curve_roi_',which_method_find_extrema,'-',str]);
 mkdir(plot_dir);
 
 %% set representation to time-frequency representation

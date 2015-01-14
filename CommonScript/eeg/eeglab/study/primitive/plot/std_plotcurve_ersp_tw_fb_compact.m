@@ -83,7 +83,7 @@ if tlf1 < 2 || tlf2 < 2
             
         end
         
-        l = legend(levels_f,'box','off', 'FontSize', 15,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1]);
+        l = legend(levels_f,'box','off', 'FontSize', 15,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1],'Location','NorthEastOutside');
     end
     
     
@@ -114,7 +114,7 @@ if tlf1 < 2 || tlf2 < 2
             hold on
         end
         
-        l=legend(levels_f,'box','off', 'FontSize', 15,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1]);
+        l=legend(levels_f,'box','off', 'FontSize', 15,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1],'Location','NorthEastOutside');
         
         dx=0;
         nm = 1; ... number of marker possibly resetted to avoid exceeding the list
@@ -304,7 +304,7 @@ if tlf1 > 1 && tlf2 > 1
                     ns=1;
                 end
             end
-            l=legend(levels_f2,'box','off', 'FontSize', 15,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1]);
+            l=legend(levels_f2,'box','off', 'FontSize', 15,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1],'Location','NorthEastOutside');
             
         end
         
@@ -321,7 +321,7 @@ if tlf1 > 1 && tlf2 > 1
                 hold on
             end
             
-            l=legend(levels_f2,'box','off', 'FontSize', 15,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1]);
+            l=legend(levels_f2,'box','off', 'FontSize', 15,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1],'Location','NorthEastOutside');
             
             dx=0;
             nm=1;
@@ -487,7 +487,7 @@ if tlf1 > 1 && tlf2 > 1
                     ns=1;
                 end
             end
-            l=legend(levels_f1,'box','off', 'FontSize', 15,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1]);
+            l=legend(levels_f1,'box','off', 'FontSize', 15,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1],'Location','NorthEastOutside');
             
         end
         
@@ -504,7 +504,7 @@ if tlf1 > 1 && tlf2 > 1
                 hold on
             end
             
-            l=legend(levels_f1,'box','off', 'FontSize', 15,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1]);
+            l=legend(levels_f1,'box','off', 'FontSize', 15,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1],'Location','NorthEastOutside');
             
             
             dx=0;

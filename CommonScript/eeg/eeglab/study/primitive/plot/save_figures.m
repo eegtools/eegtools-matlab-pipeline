@@ -15,7 +15,7 @@ suffix_plot  = input.suffix_plot;                                          % the
 
 fig_dir      = fullfile(plot_dir,'fig'); if(not(exist(fig_dir,'dir')));mkdir(fig_dir);end;
 eps_dir      = fullfile(plot_dir,'eps'); if(not(exist(eps_dir,'dir')));mkdir(eps_dir);end;
-svg_dir      = fullfile(plot_dir,'svg'); if(not(exist(svg_dir,'dir')));mkdir(svg_dir);end;
+svg_dir      = fullfile(plot_dir,'svg'); 
 tif_dir      = fullfile(plot_dir,'tif'); if(not(exist(tif_dir,'dir')));mkdir(tif_dir);end;
 
 name_plot    = [name_embed,'_',suffix_plot];                               % name of the plot without the path
@@ -31,7 +31,7 @@ ps_path   =  fullfile(plot_dir,[name_embed,'.ps']);
 ppt_path  =  fullfile(plot_dir,[name_embed,'.ppt']);
 pdf_path  =  fullfile(plot_dir,[name_embed,'.pdf']);
 
-res             = '-r600'; % resolution
+res             = '-r300'; % resolution
 exclude_format  = [];
 renderer        = 'painter';
 pdf_mode        = 'export_fig';
@@ -40,9 +40,10 @@ pdf_mode        = 'export_fig';
 
 for par=1:2:length(varargin)
     switch varargin{par}
-        case {'renderer', ...
-                'pdf_mode'  ...
-                }
+        case {'renderer'          , ...
+              'pdf_mode'          , ...
+              'exclude_format'    , ...
+             }
             
             if isempty(varargin{par+1})
                 continue;
@@ -52,7 +53,7 @@ for par=1:2:length(varargin)
     end
 end
 
-
+% renderer        = 'painter';
 % set figure parameters in a good format for saving/exporting
 set(fig, 'renderer', renderer);
 modify_plot(fig);
@@ -63,7 +64,8 @@ saveas(fig, fig_path);
 % save eps file
 print(eps_path,'-depsc2',res);
 
-if(not(sum(ismember(exclude_format,'svg'))))
+if(not(sum(ismember(exclude_format,'svg')))) % note: there is a specific bug of matlab/eeglab: when saving topoplots svg come corrupted
+    if(not(exist(svg_dir,'dir')));mkdir(svg_dir);end;
     % save svg file
     plot2svg(svg_path)
 end
@@ -89,7 +91,7 @@ end
 % for overview
 switch pdf_mode
     case 'export_fig'
-        export_fig(fig, pdf_path, '-pdf', '-append');
+        export_fig(fig, pdf_path, '-pdf', '-append',res);
     case 'ps2pdf'
         ps2pdf('psfile',  ps_path, 'pdffile', pdf_path, 'gspapersize', 'a4')
 end

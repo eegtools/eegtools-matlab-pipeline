@@ -111,8 +111,8 @@ else posr = 0;
      posc = 0;
 end;
 
-set(0, 'DefaultFigureRendererMode', 'manual')
-set(0,'DefaultFigureRenderer','zbuffer')
+% set(0, 'DefaultFigureRendererMode', 'manual')
+% set(0,'DefaultFigureRenderer','zbuffer')
 
 % % compute significance mask
 % % -------------------------
@@ -182,22 +182,22 @@ end;
 % ------------------
 if isempty(opt.subplotpos)
      fig=figure( 'color', 'w', 'Visible', 'off');
-    set(0, 'DefaultFigureRendererMode', 'manual')
-    set(0,'DefaultFigureRenderer','zbuffer')
+%     set(0, 'DefaultFigureRendererMode', 'manual')
+%     set(0,'DefaultFigureRenderer','zbuffer')
     
     pos = get(fig, 'position');
-    set(fig, 'position', [ pos(1)+15 pos(2)+15 pos(3)/2.5*(nc+addr), pos(4)/2*(ng+addc) ]);set(gcf, 'Visible', 'off')
+    set(fig, 'position', [ pos(1)+15 pos(2)+15 pos(3)/2.5*(nc+addr), pos(4)/2*(ng+addc) ], 'Visible', 'off');...set(gcf, 'Visible', 'off')
     
     
     
     pos = get(fig, 'position');
-    if strcmpi(opt.transpose, 'off'), set(gcf, 'position', [ pos(1) pos(2) pos(4) pos(3)]);
-    else                              set(gcf, 'position', pos);
+    if strcmpi(opt.transpose, 'off'), set(gcf, 'position', [ pos(1) pos(2) pos(4) pos(3)], 'Visible', 'off');
+    else                              set(gcf, 'position', pos, 'Visible', 'off');
     end;
 end
 
-set(0, 'DefaultFigureRendererMode', 'manual')
-set(0,'DefaultFigureRenderer','zbuffer')
+% set(0, 'DefaultFigureRendererMode', 'manual')
+% set(0,'DefaultFigureRenderer','zbuffer')
 
 mask_surface =~(isempty(pmaskgru) & isempty(pmaskcond));
 
@@ -398,7 +398,7 @@ input_save_fig.fig                    = fig;
 input_save_fig.name_embed             = 'erp_topo';
 input_save_fig.suffix_plot            = [time_window_name];
 
-save_figures( input_save_fig )
+save_figures( input_save_fig,'exclude_format',{'svg'} )
 
 
     
