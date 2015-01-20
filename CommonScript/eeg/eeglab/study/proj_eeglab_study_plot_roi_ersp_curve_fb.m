@@ -347,7 +347,7 @@ for nroi = 1:length(roi_list)
             group_time_windows_names_design = group_time_windows_names{design_num};
             
             ersp_curve_roi_fb_stat.group_time_windows_list_design  = group_time_windows_list_design;
-            ersp_curve_roi_fb_stat.group_time_windows_names_design = group_time_windows_list_design;
+            ersp_curve_roi_fb_stat.group_time_windows_names_design = group_time_windows_names_design;
             
             which_extrema_design_tw            = project.postprocess.ersp.design(design_num).which_extrema_curve_tw; ...which_extrema_ersp_curve_fb{design_num};
                 which_extrema_design_roi_tw    = which_extrema_design_tw{nroi};
