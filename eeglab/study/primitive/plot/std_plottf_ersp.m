@@ -84,6 +84,10 @@ function [pgroup, pcond, pinter] = std_plottf_ersp(timevals, freqs, data, plot_d
 pgroup = [];
 pcond  = [];
 pinter = [];
+
+% cla
+close all
+
 if nargin < 2
     help std_plottf;
     return;
