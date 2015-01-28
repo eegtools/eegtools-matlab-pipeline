@@ -95,7 +95,7 @@ switch pdf_mode
     case 'ps2pdf'
         ps2pdf('psfile',  ps_path, 'pdffile', pdf_path, 'gspapersize', 'a4')
 end
-close(fig)
+close all
 
 end
 
