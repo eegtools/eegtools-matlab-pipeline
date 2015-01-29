@@ -235,7 +235,10 @@ STUDY = pop_erspparams(STUDY, 'topotime',[] ,'plotgroups','apart' ,'plotconditio
 %% for each roi in the list
 for nroi = 1:length(roi_list)
     ersp=[];
-    
+    % lista dei soggetti suddivisi per fattori
+    list_design_subjects   = eeglab_generate_subjects_list_by_factor_levels(STUDY, design_num);
+    individual_fb_bands    = eeglab_generate_subjects_bands_by_factor_levels(STUDY, design_num, subjects_data, frequency_bands_list);  ... {factor1,factor2}{subj}{band}
+   
     roi_channels=roi_list{nroi};
     roi_name=roi_names{nroi};
     STUDY = pop_statparams(STUDY, 'groupstats','off','condstats','off','method', stat_method);

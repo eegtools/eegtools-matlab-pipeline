@@ -190,6 +190,8 @@ for design_num=design_num_vec
     for nroi = 1:length(roi_list)
         roi_channels=roi_list{nroi};
         roi_name=roi_names{nroi};
+            list_design_subjects                       = eeglab_generate_subjects_list_by_factor_levels(STUDY, design_num);
+
         STUDY = pop_statparams(STUDY, 'groupstats','off','condstats','off');
         
         [STUDY, erp_curve_roi, times]=std_erpplot(STUDY,ALLEEG,'channels',roi_list{nroi},'noplot','on');
