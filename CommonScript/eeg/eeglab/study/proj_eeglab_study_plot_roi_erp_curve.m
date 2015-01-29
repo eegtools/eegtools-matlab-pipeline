@@ -202,9 +202,7 @@ STUDY = []; CURRENTSTUDY = 0; ALLEEG = []; EEG=[]; CURRENTSET=[];
 
 for design_num=design_num_vec
     
-    % lista dei soggetti suddivisi per fattori
-    list_design_subjects               = eeglab_generate_subjects_list_by_factor_levels(STUDY, design_num);
-    
+     
     
     % select the study design for the analyses
     STUDY                              = std_selectdesign(STUDY, ALLEEG, design_num);
@@ -229,6 +227,9 @@ for design_num=design_num_vec
     
     % for each roi in the list
     for nroi = 1:length(roi_list)
+        % lista dei soggetti suddivisi per fattori
+    list_design_subjects               = eeglab_generate_subjects_list_by_factor_levels(STUDY, design_num);
+   
         roi_channels=roi_list{nroi};
         roi_name=roi_names{nroi};
         STUDY = pop_statparams(STUDY, 'groupstats','off','condstats','off');

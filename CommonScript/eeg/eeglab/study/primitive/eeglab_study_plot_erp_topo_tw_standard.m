@@ -103,8 +103,6 @@ for design_num=design_num_vec
             % select the study design for the analyses
             STUDY                           = std_selectdesign(STUDY, ALLEEG, design_num);
             
-            % lista dei soggetti che partecipano di quel design
-            list_design_subjects            = eeglab_generate_subjects_list_by_factor_levels(STUDY, design_num);
             
             erp_topo_tw_stat.study_des      = STUDY.design(design_num);
             erp_topo_tw_stat.study_des.num  = design_num;
@@ -132,6 +130,9 @@ for design_num=design_num_vec
             
             for nwin=1:length(group_time_windows_list_design)
                 
+                 % lista dei soggetti che partecipano di quel design
+            list_design_subjects            = eeglab_generate_subjects_list_by_factor_levels(STUDY, design_num);
+           
                 % set parameters for a topographic represntation
                 STUDY = pop_erpparams(STUDY, 'topotime',group_time_windows_list_design{nwin});
                 

@@ -118,7 +118,6 @@ for design_num=design_num_vec
             STUDY = std_selectdesign(STUDY, ALLEEG, design_num);
             
             % lista dei soggetti suddivisi per fattori
-            list_design_subjects   = eeglab_generate_subjects_list_by_factor_levels(STUDY, design_num);
             individual_fb_bands    = eeglab_generate_subjects_bands_by_factor_levels(STUDY, design_num, subjects_data, frequency_bands_list);  ... {factor1,factor2}{subj}{band}
                 
         
@@ -167,6 +166,9 @@ for design_num=design_num_vec
                 % calculate ersp in the channels corresponding to the selected roi
                 [STUDY ersp_topo_tw_fb times freqs]=std_erspplot(STUDY,ALLEEG,'channels',roi_ch,'noplot','on');
                 
+                list_design_subjects   = eeglab_generate_subjects_list_by_factor_levels(STUDY, design_num);
+
+               
                 
                 % select subjects
                 for nf1=1:length(levels_f1)

@@ -170,7 +170,7 @@ ersp_curve_roi_fb_stat.mode                     = mode;
 
 for design_num=design_num_vec
     %% subjects list divided by factor levels
-    list_design_subjects                   = eeglab_generate_subjects_list_by_factor_levels(STUDY, design_num);
+    
     individual_fb_bands                    = eeglab_generate_subjects_bands_by_factor_levels(STUDY, design_num, project.subjects.data, frequency_bands_list);  ... {factor1,factor2}{subj}{band}
         
 %% select the study design for the analyses
@@ -198,7 +198,8 @@ STUDY = pop_erspparams(STUDY, 'topotime',[] ,'plotgroups','apart' ,'plotconditio
 %% for each roi in the list
 for nroi = 1:length(roi_list)
     ersp=[];
-    
+        list_design_subjects                   = eeglab_generate_subjects_list_by_factor_levels(STUDY, design_num);
+
     roi_channels=roi_list{nroi};
     roi_name=roi_names{nroi};
     STUDY = pop_statparams(STUDY, 'groupstats','off','condstats','off','method', stat_method);
