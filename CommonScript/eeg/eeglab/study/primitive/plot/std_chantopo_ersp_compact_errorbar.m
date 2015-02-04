@@ -278,7 +278,7 @@ if tlf1 > 1 && tlf2 > 1
         pcomparisons=pcomp{1};
         mat_error_bar=[];
         for nlf=1: tlf_between
-            mat_error_bar(:,nlf)=ersp_topo_tw_fb_roi_avg{nlf,nlf_within};
+            mat_error_bar(:,nlf)=ersp_topo_tw_fb_roi_avg{nlf_within,nlf};
         end
         
         if strcmp(z_transform,'on')

@@ -315,7 +315,15 @@ if tlf1 > 1 && tlf2 > 1
     tlf_within=tlf1; % fix the row (condition) and tlf_within2>1 (compare columns, i.e. groups)
     tlf_between=tlf2;
 %     list_col=hsv(tlf_between+1);
-    
+
+% cla in case of different number of subjects
+ll    = length(erp_topo_tw_roi_avg);
+vsize = zeros(1,ll);
+for nn =1:ll    
+    vsize = size(erp_topo_tw_roi_avg{nn},2);
+end
+mm = max(vsize);
+
     for nlf_within=1:tlf_within
         pcomp=pgroup(nlf_within); % pgroup has for each condition (row), the comparison between groups (columns)
         levels_f=levels_f2;
@@ -324,18 +332,20 @@ if tlf1 > 1 && tlf2 > 1
         comp=compgroup(nlf_within);
         comparisons=comp{1};
         pcomparisons=pcomp{1};
-        mat_error_bar=[];
+        mat_error_bar=nan(mm,tlf_between);
         for nlf=1:tlf_between
-            mat_error_bar(:,nlf)=erp_topo_tw_roi_avg{nlf_within,nlf};
+            vv = erp_topo_tw_roi_avg{nlf_within,nlf};
+            lv = length(vv);
+            mat_error_bar(1:lv,nlf)=vv;
         end
-        
-        if strcmp(z_transform,'on')
-            mat_error_bar=(mat_error_bar-mean(mean(mat_error_bar)))/std(mat_error_bar(:));
+        nonan_mat = not(isnan(mat_error_bar));
+        if strcmp(z_transform,'on')            
+            mat_error_bar(nonan_mat)=(mat_error_bar(nonan_mat)-mean(mean(mat_error_bar(nonan_mat))))/std(mat_error_bar(nonan_mat));
             compact_display_ylim = [-1 1];
         end
         
         
-        vec_mean=mean(mat_error_bar,1);
+        vec_mean=mean(mat_error_bar(nonan_mat),1);
         vec_ster=std(mat_error_bar,0,1)/sqrt(size(mat_error_bar,1));
         
         xlab=name_f;
@@ -515,7 +525,7 @@ if tlf1 > 1 && tlf2 > 1
     tlf_within=tlf2; % fix the column (group) and tlf_within2>1 (compare rows, i.e. conditions)
     tlf_between=tlf1;
 %     list_col=hsv(tlf_between+1);
-    
+%     
     for nlf_within=1:tlf_within
         pcomp=pcond(nlf_within); % pgroup has for each condition (row), the comparison between groups (columns)
         levels_f=levels_f1;
