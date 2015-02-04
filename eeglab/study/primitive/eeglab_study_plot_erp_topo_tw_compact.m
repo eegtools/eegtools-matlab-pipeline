@@ -423,7 +423,7 @@ for design_num=design_num_vec
             %             [STUDY,erp_topo_tw times freqs]=std_erpplot_corr(STUDY,ALLEEG,'channels',roi_channels,'noplot','on');
             
             
-            erp_topo_tw=erp_curve_roi;
+            erp_topo_tw=erp_curve_roi_stat.dataroi(nroi).erp_curve_roi;%erp_curve_roi;
             
             
             
