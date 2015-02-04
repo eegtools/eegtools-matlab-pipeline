@@ -149,7 +149,7 @@ if tlf1 < 2 || tlf2 < 2
     box off
     set(gca,'LineWidth',2, 'FontSize', 15)
     xlabel(['Time window'])
-    ylabel(['Amplitude (\muV)'])
+    ylabel(['Amplitude (uV)'])
     
     
     set(gca,'XLim',[0.5 length(time_windows_design_names)+1]);
@@ -329,7 +329,7 @@ if tlf1 > 1 && tlf2 > 1
         box off
         set(gca,'LineWidth',2, 'FontSize', 15)
         xlabel(['Time (ms)'])
-        ylabel(['Amplitude (\muV)'])
+        ylabel(['Amplitude (uV)'])
         
         set(gca,'XLim',[0.5 length(time_windows_design_names)+1]);
         set(gca,'XTick',1:(length(time_windows_design_names)))
@@ -508,7 +508,7 @@ if tlf1 > 1 && tlf2 > 1
         box off
         set(gca,'LineWidth',2, 'FontSize', 15)
         xlabel(['Time (ms)'])
-        ylabel(['Amplitude (\muV)'])
+        ylabel(['Amplitude (uV)'])
         
         set(gca,'XLim',[0.5 length(time_windows_design_names)+1]);
         set(gca,'XTick',1:(length(time_windows_design_names)))

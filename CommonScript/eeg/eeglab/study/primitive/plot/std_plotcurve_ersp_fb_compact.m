@@ -385,7 +385,7 @@ hold on
         ns=1;
         for nlf1=1:tlf1
             mm=ersp_curve_fb_plot_mat(nlf1,:);
-            plot(times, mm,'col',list_col(nlf1),'LineWidth',3,'LineStyle',list_stiles{ns})
+            plot(times, mm,'col',list_col(nlf1),'LineWidth',3,'LineStyle',list_stiles{1})
             hold on
             if ns < length(list_stiles)
                 ns=ns+1;
