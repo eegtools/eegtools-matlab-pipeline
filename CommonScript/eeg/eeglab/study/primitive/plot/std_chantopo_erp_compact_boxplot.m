@@ -385,11 +385,40 @@ save_figures( input_save_fig )
         comparisons=comp{1};
         pcomparisons=pcomp{1};
         
-        mat_box=[];
-        for nlf_between=1:tlf_between
-            mat_box(:,nlf_between)=erp_topo_tw_roi_avg{nlf_between,nlf_within};
+%         mat_box=[];
+%         for nlf_between=1:tlf_between
+%             mat_box(:,nlf_between)=erp_topo_tw_roi_avg{nlf_between,nlf_within};
+%         end
+%         
+
+
+    cell_error_bar = cell(tlf,1);
+    lv = nan(tlf,1);
+    
+    for nlf=1:tlf
+        cell_error_bar(nlf)=erp_topo_tw_roi_avg(nlf);
+        lv(nlf) = length(erp_topo_tw_roi_avg{nlf});
+    end
+    
+    mlv  = max(lv);
+    mat_box =  nan(mlv,nlf_between);
+    
+    mm = mean([cell_error_bar{:}]);
+    ss = std([cell_error_bar{:}]);
+    
+    if strcmp(z_transform,'on')
+        for nlf=1:tlf
+            cell_error_bar{nlf}=(cell_error_bar{nlf}-mm)/ss;
         end
         
+        compact_display_ylim = [-1 1];
+    end
+    
+    
+    vec_mean=cellfun(@mean,cell_error_bar);
+    vec_ster=cellfun(@std,cell_error_bar)./sqrt(cellfun(@length,cell_error_bar));
+
+
         xlab=name_f;
         ylab=erp_measure;
         %comparisons = combn_all(1:tot_topo,2);

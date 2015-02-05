@@ -113,22 +113,50 @@ if tlf1 < 2 || tlf2 < 2
     end
     comparisons=comp{1};
     pcomparisons=pcomp{1};
-    mat_error_bar=[];
+   
+    
+
+    
+    
+%     mat_error_bar=[];
+%     for nlf=1:tlf
+%         mat_error_bar(:,nlf)=ersp_topo_tw_fb_roi_avg{nlf};
+%     end
+%     
+%     if strcmp(z_transform,'on')
+%         mat_error_bar=(mat_error_bar-mean(mean(mat_error_bar)))/std(mat_error_bar(:));
+%         compact_display_ylim = [-1 1];
+%     end
+%     
+%     vec_mean=mean(mat_error_bar,1);
+%     
+%     vec_ster=std(mat_error_bar,0,1);
+%     if strcmp(which_error_measure,'sem')
+%         vec_ster=vec_ster/sqrt(size(mat_error_bar,1));
+%     end
+
+
+
+ cell_error_bar = cell(tlf,1);
+    
     for nlf=1:tlf
-        mat_error_bar(:,nlf)=ersp_topo_tw_fb_roi_avg{nlf};
+        cell_error_bar(nlf)=ersp_topo_tw_fb_roi_avg(nlf);
     end
+    mm = mean([cell_error_bar{:}]);
+    ss = std([cell_error_bar{:}]);
     
     if strcmp(z_transform,'on')
-        mat_error_bar=(mat_error_bar-mean(mean(mat_error_bar)))/std(mat_error_bar(:));
+        for nlf=1:tlf
+            cell_error_bar{nlf}=(cell_error_bar{nlf}-mm)/ss;
+        end
+        
         compact_display_ylim = [-1 1];
     end
     
-    vec_mean=mean(mat_error_bar,1);
     
-    vec_err=std(mat_error_bar,0,1);
-    if strcmp(which_error_measure,'sem')
-        vec_err=vec_err/sqrt(size(mat_error_bar,1));
-    end
+    vec_mean=cellfun(@mean,cell_error_bar);
+    vec_ster=cellfun(@std,cell_error_bar)./sqrt(cellfun(@length,cell_error_bar));
+
     
     xlab=name_f;
     ylab=ersp_meaure;
@@ -156,7 +184,7 @@ if tlf1 < 2 || tlf2 < 2
     for nn=1:length(vec_mean)
         plot(nn, vec_mean(nn),Markers(nn),'col',list_col(nn),'LineWidth',2,'MarkerSize',10);
         hold on
-        errorbar(nn,vec_mean(nn),vec_err(nn),Markers(nn),'col',list_col(nn),'LineWidth',2,'MarkerSize',10);set(gcf, 'Visible', 'off');
+        errorbar(nn,vec_mean(nn),vec_ster(nn),Markers(nn),'col',list_col(nn),'LineWidth',2,'MarkerSize',10);set(gcf, 'Visible', 'off');
         hold on
     end
     
@@ -170,8 +198,8 @@ if tlf1 < 2 || tlf2 < 2
     
     hold on
     
-    upbar=max(vec_mean+vec_err);
-    dowbar=min(vec_mean-vec_err);
+    upbar=max(vec_mean+vec_ster);
+    dowbar=min(vec_mean-vec_ster);
     
     range_error_bar=[upbar dowbar];
     deltay=abs(diff(range_error_bar))/4;
@@ -276,22 +304,46 @@ if tlf1 > 1 && tlf2 > 1
         comp=compgroup(nlf_within);
         comparisons=comp{1};
         pcomparisons=pcomp{1};
-        mat_error_bar=[];
-        for nlf=1: tlf_between
-            mat_error_bar(:,nlf)=ersp_topo_tw_fb_roi_avg{nlf_within,nlf};
+      
+        
+%         mat_error_bar=[];
+%         for nlf=1: tlf_between
+%             mat_error_bar(:,nlf)=ersp_topo_tw_fb_roi_avg{nlf_within,nlf};
+%         end
+%         
+%         if strcmp(z_transform,'on')
+%             mat_error_bar=(mat_error_bar-mean(mean(mat_error_bar)))/std(mat_error_bar(:));
+%         end
+%         
+%         vec_mean=mean(mat_error_bar,1);
+%         
+%         vec_ster=std(mat_error_bar,0,1);
+%         if strcmp(which_error_measure,'sem')
+%             vec_ster=vec_ster/sqrt(size(mat_error_bar,1));
+%         end
+        
+
+cell_error_bar = cell(tlf_between,1);
+    
+    for nlf=1:tlf
+        cell_error_bar(nlf)=ersp_topo_tw_fb_roi_avg(nlf_within,nlf);
+    end
+    mm = mean([cell_error_bar{:}]);
+    ss = std([cell_error_bar{:}]);
+    
+    if strcmp(z_transform,'on')
+        for nlf=1:tlf
+            cell_error_bar{nlf}=(cell_error_bar{nlf}-mm)/ss;
         end
         
-        if strcmp(z_transform,'on')
-            mat_error_bar=(mat_error_bar-mean(mean(mat_error_bar)))/std(mat_error_bar(:));
-        end
-        
-        vec_mean=mean(mat_error_bar,1);
-        
-        vec_err=std(mat_error_bar,0,1);
-        if strcmp(which_error_measure,'sem')
-            vec_err=vec_err/sqrt(size(mat_error_bar,1));
-        end
-        
+        compact_display_ylim = [-1 1];
+    end
+    
+    
+    vec_mean=cellfun(@mean,cell_error_bar);
+    vec_ster=cellfun(@std,cell_error_bar)./sqrt(cellfun(@length,cell_error_bar));
+
+
         xlab=name_f;
         ylab=ersp_meaure;
         
@@ -315,11 +367,11 @@ if tlf1 > 1 && tlf2 > 1
             set(gca, 'LineWidth', 1.2);set(gcf, 'Visible', 'off');
             
         end
-        %         errorbar(vec_mean,vec_err,'d','MarkerSize',10);set(gcf, 'Visible', 'off');
+        %         errorbar(vec_mean,vec_ster,'d','MarkerSize',10);set(gcf, 'Visible', 'off');
         for nn=1:length(vec_mean)
             plot(nn, vec_mean(nn),Markers(nn),'col',list_col(nn),'LineWidth',2,'MarkerSize',10);
             hold on
-            errorbar(nn,vec_mean(nn),vec_err(nn),Markers(nn),'col',list_col(nn),'LineWidth',2,'MarkerSize',10);set(gcf, 'Visible', 'off');
+            errorbar(nn,vec_mean(nn),vec_ster(nn),Markers(nn),'col',list_col(nn),'LineWidth',2,'MarkerSize',10);set(gcf, 'Visible', 'off');
             hold on
         end
         
@@ -332,8 +384,8 @@ if tlf1 > 1 && tlf2 > 1
         
         hold on
         
-        upbar=max(vec_mean+vec_err);
-        dowbar=min(vec_mean-vec_err);
+        upbar=max(vec_mean+vec_ster);
+        dowbar=min(vec_mean-vec_ster);
         
         range_error_bar=[upbar dowbar];
         deltay=abs(diff(range_error_bar))/4;
@@ -418,23 +470,46 @@ save_figures( input_save_fig )
         comparisons=comp{1};
         pcomparisons=pcomp{1};
         
-        mat_error_bar=[];
-        for nlf=1:tlf_between
-            mat_error_bar(:,nlf)=ersp_topo_tw_fb_roi_avg{nlf,nlf_within};
+%         mat_error_bar=[];
+%         for nlf=1:tlf_between
+%             mat_error_bar(:,nlf)=ersp_topo_tw_fb_roi_avg{nlf,nlf_within};
+%         end
+%         
+%         
+%         if strcmp(z_transform,'on')
+%             mat_error_bar=(mat_error_bar-mean(mean(mat_error_bar)))/std(mat_error_bar(:));
+%         end
+%         
+%         vec_mean=mean(mat_error_bar,1);
+%         
+%         vec_ster=std(mat_error_bar,0,1);
+%         if strcmp(which_error_measure,'sem')
+%             vec_ster=vec_ster/sqrt(size(mat_error_bar,1));
+%         end
+%         
+
+
+cell_error_bar = cell(tlf_between,1);
+    
+    for nlf=1:tlf
+        cell_error_bar(nlf)=ersp_topo_tw_fb_roi_avg(nlf,nlf_within);
+    end
+    mm = mean([cell_error_bar{:}]);
+    ss = std([cell_error_bar{:}]);
+    
+    if strcmp(z_transform,'on')
+        for nlf=1:tlf
+            cell_error_bar{nlf}=(cell_error_bar{nlf}-mm)/ss;
         end
         
-        
-        if strcmp(z_transform,'on')
-            mat_error_bar=(mat_error_bar-mean(mean(mat_error_bar)))/std(mat_error_bar(:));
-        end
-        
-        vec_mean=mean(mat_error_bar,1);
-        
-        vec_err=std(mat_error_bar,0,1);
-        if strcmp(which_error_measure,'sem')
-            vec_err=vec_err/sqrt(size(mat_error_bar,1));
-        end
-        
+        compact_display_ylim = [-1 1];
+    end
+    
+    
+    vec_mean=cellfun(@mean,cell_error_bar);
+    vec_ster=cellfun(@std,cell_error_bar)./sqrt(cellfun(@length,cell_error_bar));
+
+
         xlab=name_f;
         ylab=ersp_meaure;
         
@@ -458,11 +533,11 @@ save_figures( input_save_fig )
             set(gca, 'LineWidth', 1.2)
             
         end
-        %          errorbar(vec_mean,vec_err,'d','MarkerSize',10);set(gcf, 'Visible', 'off');
+        %          errorbar(vec_mean,vec_ster,'d','MarkerSize',10);set(gcf, 'Visible', 'off');
         for nn=1:length(vec_mean)
             plot(nn, vec_mean(nn),Markers(nn),'col',list_col(nn),'LineWidth',2,'MarkerSize',10);
             hold on
-            errorbar(nn,vec_mean(nn),vec_err(nn),Markers(nn),'col',list_col(nn),'LineWidth',2,'MarkerSize',10);set(gcf, 'Visible', 'off');
+            errorbar(nn,vec_mean(nn),vec_ster(nn),Markers(nn),'col',list_col(nn),'LineWidth',2,'MarkerSize',10);set(gcf, 'Visible', 'off');
             hold on
         end
         
@@ -474,8 +549,8 @@ save_figures( input_save_fig )
         ylabel(ylab)
         
         hold on
-        upbar=max(vec_mean+vec_err);
-        dowbar=min(vec_mean-vec_err);
+        upbar=max(vec_mean+vec_ster);
+        dowbar=min(vec_mean-vec_ster);
         
         range_error_bar=[upbar dowbar];
         deltay=abs(diff(range_error_bar))/4;

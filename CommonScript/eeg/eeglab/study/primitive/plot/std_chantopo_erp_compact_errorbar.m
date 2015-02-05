@@ -100,7 +100,7 @@ if tlf1 < 2 || tlf2 < 2
     tlf=max(tlf1,tlf2);
     
     % create a list of colors
-%     list_col=hsv(tlf+1);
+    %     list_col=hsv(tlf+1);
     
     if tlf2>1 % only one row (condition), compare columns (groups)
         pcomp=pgroup; % pgroup has for each condition (row), the comparison between groups (columns)
@@ -116,19 +116,45 @@ if tlf1 < 2 || tlf2 < 2
     end
     comparisons=comp{1};
     pcomparisons=pcomp{1};
-    mat_error_bar=[];
+    %     mat_error_bar=[];
+    %     for nlf=1:tlf
+    %         mat_error_bar(:,nlf)=erp_topo_tw_roi_avg{nlf};
+    %     end
+    %
+    %     if strcmp(z_transform,'on')
+    %         mat_error_bar=(mat_error_bar-mean(mean(mat_error_bar)))/std(mat_error_bar(:));
+    %         compact_display_ylim = [-1 1];
+    %     end
+    %
+    %
+    %     vec_mean=mean(mat_error_bar,1);
+    %     vec_ster=std(mat_error_bar,0,1)/sqrt(size(mat_error_bar,1));
+    %
+    
+    
+    cell_error_bar = cell(tlf,1);
+    
     for nlf=1:tlf
-        mat_error_bar(:,nlf)=erp_topo_tw_roi_avg{nlf};
+        cell_error_bar(nlf)=erp_topo_tw_roi_avg(nlf);
     end
+    mm = mean([cell_error_bar{:}]);
+    ss = std([cell_error_bar{:}]);
     
     if strcmp(z_transform,'on')
-        mat_error_bar=(mat_error_bar-mean(mean(mat_error_bar)))/std(mat_error_bar(:));
+        for nlf=1:tlf
+            cell_error_bar{nlf}=(cell_error_bar{nlf}-mm)/ss;
+        end
+        
         compact_display_ylim = [-1 1];
     end
     
     
-    vec_mean=mean(mat_error_bar,1);
-    vec_ster=std(mat_error_bar,0,1)/sqrt(size(mat_error_bar,1));
+    vec_mean=cellfun(@mean,cell_error_bar);
+    vec_ster=cellfun(@std,cell_error_bar)./sqrt(cellfun(@length,cell_error_bar));
+    %
+    
+    
+    
     
     xlab=name_f;
     ylab=erp_measure;
@@ -247,13 +273,13 @@ if tlf1 < 2 || tlf2 < 2
     set(fig,'color',colbk)
     %         hold off
     %         suptitle({['ERP in ',roi_name,' during ',time_window_name,' time-window ','([',num2str(time_window),']ms):'],   name_f });
-   set(fig, 'Visible', 'off');
+    set(fig, 'Visible', 'off');
     
     hold off
     if (strcmp(show_text,'on'))
         suptitle({['ERP in ',roi_name,' during ',time_window_name,' time-window ','([',num2str(time_window),']ms):'],   name_f });
     end
-   
+    
     if (strcmp(show_text,'off'))
         fig=modify_plot(fig, 'new_xticklab',[], 'new_yticklab',[],'new_xlab',[],'new_ylab','','new_title',[]);
         
@@ -314,16 +340,8 @@ end
 if tlf1 > 1 && tlf2 > 1
     tlf_within=tlf1; % fix the row (condition) and tlf_within2>1 (compare columns, i.e. groups)
     tlf_between=tlf2;
-%     list_col=hsv(tlf_between+1);
-
-% cla in case of different number of subjects
-ll    = length(erp_topo_tw_roi_avg);
-vsize = zeros(1,ll);
-for nn =1:ll    
-    vsize = size(erp_topo_tw_roi_avg{nn},2);
-end
-mm = max(vsize);
-
+    %     list_col=hsv(tlf_between+1);
+    
     for nlf_within=1:tlf_within
         pcomp=pgroup(nlf_within); % pgroup has for each condition (row), the comparison between groups (columns)
         levels_f=levels_f2;
@@ -332,21 +350,44 @@ mm = max(vsize);
         comp=compgroup(nlf_within);
         comparisons=comp{1};
         pcomparisons=pcomp{1};
-        mat_error_bar=nan(mm,tlf_between);
+        
+        
+        
+        %         mat_error_bar=[];
+        %         for nlf=1:tlf_between
+        %             mat_error_bar(:,nlf)=erp_topo_tw_roi_avg{nlf_within,nlf};
+        %         end
+        %
+        %         if strcmp(z_transform,'on')
+        %             mat_error_bar=(mat_error_bar-mean(mean(mat_error_bar)))/std(mat_error_bar(:));
+        %             compact_display_ylim = [-1 1];
+        %         end
+        %
+        %
+        %         vec_mean=mean(mat_error_bar,1);
+        %         vec_ster=std(mat_error_bar,0,1)/sqrt(size(mat_error_bar,1));
+        
+        
+        cell_error_bar = cell(tlf_between,1);
+        
         for nlf=1:tlf_between
-            vv = erp_topo_tw_roi_avg{nlf_within,nlf};
-            lv = length(vv);
-            mat_error_bar(1:lv,nlf)=vv;
+            cell_error_bar(nlf)=erp_topo_tw_roi_avg(nlf_within,nlf);
         end
-        nonan_mat = not(isnan(mat_error_bar));
-        if strcmp(z_transform,'on')            
-            mat_error_bar(nonan_mat)=(mat_error_bar(nonan_mat)-mean(mean(mat_error_bar(nonan_mat))))/std(mat_error_bar(nonan_mat));
+        mm = mean([cell_error_bar{:}]);
+        ss = std([cell_error_bar{:}]);
+        
+        if strcmp(z_transform,'on')
+            for nlf=1:tlf
+                cell_error_bar{nlf}=(cell_error_bar{nlf}-mm)/ss;
+            end
+            
             compact_display_ylim = [-1 1];
         end
         
         
-        vec_mean=mean(mat_error_bar(nonan_mat),1);
-        vec_ster=std(mat_error_bar,0,1)/sqrt(size(mat_error_bar,1));
+        vec_mean=cellfun(@mean,cell_error_bar);
+        vec_ster=cellfun(@std,cell_error_bar)./sqrt(cellfun(@length,cell_error_bar));
+        
         
         xlab=name_f;
         ylab=erp_measure;
@@ -524,8 +565,8 @@ mm = max(vsize);
     
     tlf_within=tlf2; % fix the column (group) and tlf_within2>1 (compare rows, i.e. conditions)
     tlf_between=tlf1;
-%     list_col=hsv(tlf_between+1);
-%     
+    %     list_col=hsv(tlf_between+1);
+    
     for nlf_within=1:tlf_within
         pcomp=pcond(nlf_within); % pgroup has for each condition (row), the comparison between groups (columns)
         levels_f=levels_f1;
@@ -535,18 +576,40 @@ mm = max(vsize);
         comparisons=comp{1};
         pcomparisons=pcomp{1};
         
-        mat_error_bar=[];
-        for nlf=1: tlf_between
-            mat_error_bar(:,nlf)=erp_topo_tw_roi_avg{nlf,nlf_within};
+        %         mat_error_bar=[];
+        %         for nlf=1: tlf_between
+        %             mat_error_bar(:,nlf)=erp_topo_tw_roi_avg{nlf,nlf_within};
+        %         end
+        %
+        %         if strcmp(z_transform,'on')
+        %             mat_error_bar=(mat_error_bar-mean(mean(mat_error_bar)))/std(mat_error_bar(:));
+        %             compact_display_ylim = [-1 1];
+        %         end
+        %
+        %         vec_mean=mean(mat_error_bar,1);
+        %         vec_ster=std(mat_error_bar,0,1)/sqrt(size(mat_error_bar,1));
+        %
+        
+        cell_error_bar = cell(tlf_between,1);
+        
+        for nlf=1:tlf_between
+            cell_error_bar(nlf)=erp_topo_tw_roi_avg(nlf,nlf_within);
         end
+        mm = mean([cell_error_bar{:}]);
+        ss = std([cell_error_bar{:}]);
         
         if strcmp(z_transform,'on')
-            mat_error_bar=(mat_error_bar-mean(mean(mat_error_bar)))/std(mat_error_bar(:));
+            for nlf=1:tlf
+                cell_error_bar{nlf}=(cell_error_bar{nlf}-mm)/ss;
+            end
+            
             compact_display_ylim = [-1 1];
         end
         
-        vec_mean=mean(mat_error_bar,1);
-        vec_ster=std(mat_error_bar,0,1)/sqrt(size(mat_error_bar,1));
+        
+        vec_mean=cellfun(@mean,cell_error_bar);
+        vec_ster=cellfun(@std,cell_error_bar)./sqrt(cellfun(@length,cell_error_bar));
+        
         
         xlab=name_f;
         ylab=erp_measure;
