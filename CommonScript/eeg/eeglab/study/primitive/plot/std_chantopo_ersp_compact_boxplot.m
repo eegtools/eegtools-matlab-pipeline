@@ -111,12 +111,44 @@ if tlf1 < 2 || tlf2 < 2
     pcomparisons=pcomp{1};
     
     
-    mat_box=[];
+%     mat_box=[];
+%     
+%     for nlf=1:tlf
+%         mat_box(:,nlf)=ersp_topo_tw_fb_roi_avg{nlf};
+%     end
+%     
+
+
+ cell_error_bar = cell(tlf,1);
+    lv = nan(tlf,1);
     
     for nlf=1:tlf
-        mat_box(:,nlf)=ersp_topo_tw_fb_roi_avg{nlf};
+        cell_error_bar(nlf)=ersp_topo_tw_fb_roi_avg(nlf);
+        lv(nlf) = length(cell_error_bar{nlf});
     end
     
+    mv =max(lv);
+    
+    mm = mean([cell_error_bar{:}]);
+    ss = std([cell_error_bar{:}]);
+    
+%     if strcmp(z_transform,'on')
+%         for nlf=1:tlf
+%             cell_error_bar{nlf}=(cell_error_bar{nlf}-mm)/ss;
+%         end
+%         
+%         compact_display_ylim = [-1 1];
+%     end
+    
+
+    mat_box=nan(mv,tlf);
+    
+    for nlf=1:tlf
+        mat_box(1:lv(nlf),nlf)=cell_error_bar{nlf};
+    end
+
+
+
     xlab=name_f;
     ylab=ersp_meaure;
     
@@ -249,10 +281,42 @@ if tlf1 > 1 && tlf2 > 1
         comparisons=comp{1};
         pcomparisons=pcomp{1};
         
-        mat_box=[];
-        for nlf_between=1:tlf_between
-            mat_box(:,nlf_between)=ersp_topo_tw_fb_roi_avg{nlf_within,nlf_between};
-        end
+%         mat_box=[];
+%         for nlf_between=1:tlf_between
+%             mat_box(:,nlf_between)=ersp_topo_tw_fb_roi_avg{nlf_within,nlf_between};
+%         end
+
+
+
+cell_error_bar = cell(tlf_between,1);
+    lv = nan(tlf_between,1);
+    
+    for nlf_between=1:tlf_between
+        cell_error_bar(nlf_between)=ersp_topo_tw_fb_roi_avg(nlf_within,nlf_between);
+        lv(nlf_between) = length(cell_error_bar{nlf_between});
+    end
+    
+    mv =max(lv);
+    
+    mm = mean([cell_error_bar{:}]);
+    ss = std([cell_error_bar{:}]);
+    
+%     if strcmp(z_transform,'on')
+%         for nlf_between=1:tlf_between
+%             cell_error_bar{nlf_between}=(cell_error_bar{nlf_between}-mm)/ss;
+%         end
+%         
+%         compact_display_ylim = [-1 1];
+%     end
+    
+
+    mat_box=nan(mv,tlf_between);
+    
+    for nlf_between=1:tlf_between
+        mat_box(1:lv(nlf_between),nlf_between)=cell_error_bar{nlf_between};
+    end
+
+
         
         xlab=name_f;
         ylab=ersp_meaure;
@@ -394,10 +458,43 @@ save_figures( input_save_fig )
         comparisons=comp{1};
         pcomparisons=pcomp{1};
         
-        mat_box=[];
-        for nlf_between=1:tlf_between
-            mat_box(:,nlf_between)=ersp_topo_tw_fb_roi_avg{nlf_between,nlf_within};
-        end
+%         mat_box=[];
+%         for nlf_between=1:tlf_between
+%             mat_box(:,nlf_between)=ersp_topo_tw_fb_roi_avg{nlf_between,nlf_within};
+%         end
+
+
+
+
+ cell_error_bar = cell(tlf_between,1);
+    lv = nan(tlf_between,1);
+    
+    for nlf_between=1:tlf_between
+        cell_error_bar(nlf_between)=ersp_topo_tw_fb_roi_avg(nlf_between,nlf_within);
+        lv(nlf_between) = length(cell_error_bar{nlf_between});
+    end
+    
+    mv =max(lv);
+    
+    mm = mean([cell_error_bar{:}]);
+    ss = std([cell_error_bar{:}]);
+    
+%     if strcmp(z_transform,'on')
+%         for nlf_between=1:tlf_between
+%             cell_error_bar{nlf_between}=(cell_error_bar{nlf_between}-mm)/ss;
+%         end
+%         
+%         compact_display_ylim = [-1 1];
+%     end
+    
+
+    mat_box=nan(mv,tlf_between);
+    
+    for nlf_between=1:tlf_between
+        mat_box(1:lv(nlf_between),nlf_between)=cell_error_bar{nlf_between};
+    end
+
+
         
         xlab=name_f;
         ylab=ersp_meaure;
