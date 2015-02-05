@@ -142,7 +142,7 @@ for subj=1:numsubj
         case 'none'
             EEG = pop_epoch(EEG, [mark_cond_code{1:length(mark_cond_code)}], [epoch_start         epoch_end], 'newname', 'all_conditions', 'epochinfo', 'yes');
             EEG = eeg_checkset(EEG);
-            EEG = eeg_checkset(EEG);
+            
             
             % C1 repeated cicle: first run does not save
             for cond=1
