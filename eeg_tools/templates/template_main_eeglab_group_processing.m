@@ -45,9 +45,7 @@ init_operations_flags
 %=====================================================================================================================================================================
 
 stat_analysis_suffix='aocs_ao_C4_subject_similar_presound-TF_tw_fb';
-if ~ isempty(stat_analysis_suffix)
-    stat_analysis_suffix=[stat_analysis_suffix,'-',datestr(now,30)];
-end
+stat_analysis_suffix=[stat_analysis_suffix,'-',datestr(now, 'dd-mmm-yyyy-HH-MM-SS')];
 
 design_num_vec          = [8:12 2:7];
 
