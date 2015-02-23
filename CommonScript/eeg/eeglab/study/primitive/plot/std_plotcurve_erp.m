@@ -415,7 +415,7 @@ for c = 1:ncplot
                         list_col=hsv(tsub+1);  
                         list_sub={};
                         for nsub=1:tsub
-                            list_sub{nsub}=['s',num2str(nsub)];
+                            list_sub{nsub}=num2str(nsub);%list_sub{nsub}=['s',num2str(nsub)];
                         end
                         hold on
                         for nsub=1:tsub    
@@ -427,7 +427,8 @@ for c = 1:ncplot
                         maxy=max(max(tmpdata_subs));
                         deltay=abs(maxy-miny)*0.1;
                         ylim([(miny-deltay),(maxy+deltay)]);
-                        legend(['mean',list_sub],'box','off', 'FontSize', 13,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1],'Location','EastOutside')
+%                         legend(['mean',list_sub],'box','off', 'FontSize', 13,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1],'Location','EastOutside')
+% legend(['mean',list_sub],'box','off', 'FontSize', 3,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1])
                         % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
                         set(gcf, 'Visible', 'off')
                     end                    

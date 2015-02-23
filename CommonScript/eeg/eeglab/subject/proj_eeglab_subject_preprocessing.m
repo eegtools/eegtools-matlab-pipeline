@@ -188,9 +188,9 @@ function EEG = proj_eeglab_subject_preprocessing(project, varargin)
             EEG = eeg_checkset( EEG );
         end
         
-        %===============================================================================================
-        % SAVE
-        %===============================================================================================
+%         ===============================================================================================
+%         % SAVE
+%         %===============================================================================================
         output_file_name        = proj_eeglab_subject_get_filename(project, subj_name, 'output_preprocessing');
         [path,name_noext,ext]   = fileparts(output_file_name);        
         EEG                     = pop_saveset( EEG, 'filename', name_noext, 'filepath', path);

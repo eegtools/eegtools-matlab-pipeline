@@ -16,6 +16,11 @@ if project.operations.do_import
     proj_eeglab_subject_import_data(project, 'list_select_subjects', list_select_subjects);
 end
 %==================================================================================
+if project.operations.do_testart
+    % allow testing some semi-automatic aritfact removal algorhithms
+    EEG = proj_eeglab_subject_testart(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
+end
+%==================================================================================
 if project.operations.do_preproc
     proj_eeglab_subject_preprocessing(project, 'list_select_subjects', list_select_subjects);
 end
@@ -41,11 +46,6 @@ if project.operations.do_auto_pauses_removal
             pause_resume_errors
         end
     end
-end
-%==================================================================================
-if project.operations.do_testart
-    % allow testing some semi-automatic aritfact removal algorhithms
-    EEG = proj_eeglab_subject_testart(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
 end
 %==================================================================================
 if project.operations.do_ica

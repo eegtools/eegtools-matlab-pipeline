@@ -8,6 +8,7 @@
 function EEG = proj_eeglab_subject_ica(project, varargin)
 
     list_select_subjects    = project.subjects.list;
+    custom_suffix           = '';
 
     for par=1:2:length(varargin)
         switch varargin{par}
