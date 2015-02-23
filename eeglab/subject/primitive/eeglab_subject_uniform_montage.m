@@ -101,7 +101,10 @@ function OUTEEG = eeglab_subject_uniform_montage(input_file_name, montage_list, 
         end
         OUTEEG  = pop_chanedit( OUTEEG, 'lookup',template_file);    ...  considering using a same file, suitable for whichever electrodes configuration
         OUTEEG  = eeg_checkset( OUTEEG );
+    
         OUTEEG  = pop_saveset( OUTEEG, 'filename', name_noext, 'filepath', path);
+          
+        
     end
 
     EEG = pop_saveset( EEG, 'filename', [name_noext,'_unmerged'], 'filepath', backup_path);

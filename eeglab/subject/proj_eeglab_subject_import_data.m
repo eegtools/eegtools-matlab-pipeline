@@ -52,6 +52,10 @@ function EEG = proj_eeglab_subject_import_data(project, varargin)
                 for ev=1:size(EEG.event,2)
                     EEG.event(ev).type = num2str(EEG.event(ev).type);
                 end
+            case 'GEODESIC'
+                EEG = pop_readegi(input_file_name, [],[],'auto');
+                EEG = eeg_checkset( EEG );
+                
 
             otherwise
                 error(['unrecognized device (' project.import.acquisition_system ')']);
