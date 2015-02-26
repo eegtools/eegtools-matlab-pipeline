@@ -404,7 +404,7 @@ for c = 1:ncplot
                         % size(alllines)
                         % alltext=findall(a,'Type','text');
                         % set(allaxes,'FontName','Arial','FontWeight','Bold','LineWidth',2,'FontSize',14);
-                        set(alllines(1),'Linewidth',6);
+                        set(alllines(1),'Linewidth',3);
                         % set(alltext,'FontName','Arial','FontWeight','Bold','FontSize',14);
 
                         % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
@@ -426,9 +426,21 @@ for c = 1:ncplot
                         miny=min(min(tmpdata_subs));
                         maxy=max(max(tmpdata_subs));
                         deltay=abs(maxy-miny)*0.1;
+                        deltax= abs(max(allx)-min(allx))*0.1;
                         ylim([(miny-deltay),(maxy+deltay)]);
+                        yyylim =get(gca,'ylim');
+                        mmmax = max(yyylim);
+                        mmmin = min(yyylim);                        
+                        dddeltay=abs(mmmax-mmmin)*0.1;
 %                         legend(['mean',list_sub],'box','off', 'FontSize', 13,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1],'Location','EastOutside')
 % legend(['mean',list_sub],'box','off', 'FontSize', 3,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1])
+                        for nsub=1:tsub    
+                            text(max(allx)+deltax,mmmax-dddeltay*(nsub-1)*1.1,num2str(nsub),'col',list_col(nsub+1,:))
+                            hold on
+                        end                     
+
+
+                        
                         % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
                         set(gcf, 'Visible', 'off')
                     end                    
