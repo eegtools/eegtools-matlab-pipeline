@@ -113,13 +113,15 @@ function new_project(varargin)
         
         % if user wants to close kill all the tabs except the first one.
         if not_close_it == 0
-            for i=2:num_open_tabs
-                GlobalData.tabbed_panel.remove(i-1)
+            for i=(num_open_tabs-1):-1:1
+                GlobalData.tabbed_panel.remove(i)
             end
         end
         return
     end
 
+    % LOAD ALL THE PANELS.
+    display_panel_paths(GlobalData.tabbed_panel)
     get_panel_paths(GlobalData.tabbed_panel);
     % The following index is the number of the panel we would like to open
     % afer the new peoject button has been pressed.

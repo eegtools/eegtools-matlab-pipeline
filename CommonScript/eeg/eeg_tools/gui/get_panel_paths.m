@@ -9,7 +9,7 @@ function [] = get_panel_paths(tabbed_panel)
     %icon_folder_path = strcat(GlobalData.path_icons, 'iconFolderOpen.jpg');
 
     panel = JPanel();
-    tabbed_panel.addTab('paths', panel);
+    tabbed_panel.addTab('input paths', panel);
 
     % Panel boxlayout.
     % The panel will have a vertical box layout.
@@ -143,7 +143,7 @@ function [dir] = searchPath(varargin)
     dir = uigetdir('c:\', 'Please select the path');
     global GlobalData
     
-    if nargin == 3
+    if nargin == 3 % the 3rd argument is the path_type.
         path_type = varargin{3};
         
         switch path_type
