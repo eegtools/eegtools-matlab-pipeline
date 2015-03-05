@@ -68,6 +68,7 @@ function main_panel = createMainPanel()
     %%% ####################  java_setcb
     % Tested. The following also closes Matlab.
     %main_panel.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
+    %main_panel.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 end
 
 %%
@@ -123,6 +124,7 @@ function new_project(varargin)
     % LOAD ALL THE PANELS.
     display_panel_paths(GlobalData.tabbed_panel)
     get_panel_paths(GlobalData.tabbed_panel);
+    get_convertion_example_panel(GlobalData.tabbed_panel);
     % The following index is the number of the panel we would like to open
     % afer the new peoject button has been pressed.
     index = 1;
