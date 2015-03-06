@@ -548,7 +548,10 @@ project.stats.ersp.narrowband.group_tmin        = [];                     % lowe
 project.stats.ersp.narrowband.group_tmax        = [];                     % highest time of the time windows considered to select the narrow band. if empty, consider the end of the epoch
 project.stats.ersp.narrowband.dfmin             =  2  ;                         % low variation in Hz from the barycenter frequency
 project.stats.ersp.narrowband.dfmax             =  2  ;                         % high variation in Hz from the barycenter frequency
-project.stats.ersp.narrowband.which_realign_measure ={'max','min','min','auc'}; % min |max |auc for each band, select the frequency with the maximum or the minumum ersp or the largest area under the curve to reallign the narrowband
+
+
+
+project.stats.ersp.narrowband.which_realign_measure = {'max','min','min','min'}; % min |max |auc for each band, select the frequency with the maximum or the minumum ersp or the largest area under the curve to reallign the narrowband
 
 project.stats.eeglab.ersp.method                = 'bootstrap';          % method applied in ERP statistical analysis
 project.stats.eeglab.ersp.correction            = 'none';               % multiple comparison correction applied in ERP statistical analysis
@@ -678,11 +681,19 @@ project.postprocess.ersp.frequency_bands(2)         = struct('name','mu','min',8
 project.postprocess.ersp.frequency_bands(3)         = struct('name','beta1','min',14, 'max',20,'ref_roi',[]);
 project.postprocess.ersp.frequency_bands(4)         = struct('name','beta2','min',20, 'max',32,'ref_roi',[]);
 
-
 ...project.postprocess.ersp.frequency_bands(1).ref_roi = {'Fp1'};
 
 
 project.postprocess.ersp.nbands = length(project.postprocess.ersp.frequency_bands);
+
+% % semi-automatic (simplified) input mode: set values for the first roi/design and
+% % other values will be automatically generated
+% which_realign_measure = {'auc'};
+% for nband = 1:project.postprocess.ersp.nbands
+%     project.stats.ersp.narrowband.which_realign_measure = repmat(which_realign_measure,1,2); % min |max |auc for each band, select the frequency with the maximum or the minumum ersp or the largest area under the curve to reallign the narrowband
+% end
+
+
 
 project.postprocess.ersp.frequency_bands_list       = {}; ... writes something like {[4,8];[8,12];[14,20];[20,32]};
 for fb=1:project.postprocess.ersp.nbands
