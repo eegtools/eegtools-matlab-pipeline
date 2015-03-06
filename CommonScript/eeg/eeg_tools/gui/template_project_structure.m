@@ -616,6 +616,20 @@ project.postprocess.erp.design(1).subject_time_windows(2)   = struct('min',-100,
 project.postprocess.erp.design(1).subject_time_windows(3)   = struct('min',-100, 'max',100);
 project.postprocess.erp.design(1).subject_time_windows(4)   = struct('min',-100, 'max',100);
 
+
+% compact version: only set one roi and the others will be automatically
+% generated
+% which_extrema_curve_roi = {'max';'min';'max';'max'};
+% which_extrema_curve_design = cell(project.postprocess.erp.numroi,1);
+% for nr =1:project.postprocess.erp.numroi
+%     which_extrema_curve_design{nr} = which_extrema_curve_roi;
+% end
+% 
+% project.postprocess.erp.design(1).which_extrema_curve = which_extrema_curve_design;
+
+
+
+
 project.postprocess.erp.design(1).which_extrema_curve       = {  ... design x roi x time_windows
                             ...   tw1   tw2  ...
                                 {'max';'min';'min';'min'}; ... roi 1
@@ -725,6 +739,14 @@ project.postprocess.ersp.design(1).subject_time_windows(3)      = struct('min',-
 project.postprocess.ersp.design(1).subject_time_windows(4)      = struct('min',-100, 'max',100);
 
 
+% compact version: only set one roi and the others will be automatically
+% generated
+% which_extrema_curve_roi = {{'max'};{'min'};{'min'};{'min'}};
+%     which_extrema_curve_design = cell(project.postprocess.ersp.numroi,1);
+%     for nr =1:project.postprocess.ersp.nroi
+%         which_extrema_curve_design{nr} = which_extrema_curve_roi;
+%     end
+%     project.postprocess.ersp.design(1).which_extrema_curve_continuous = which_extrema_curve_design;
 
 % extreme to be searched in the continuous curve ( NON time-window mode)
 project.postprocess.ersp.design(1).which_extrema_curve_continuous = {     .... design x roi x freq band
