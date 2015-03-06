@@ -11,7 +11,6 @@ results_path                    = project.paths.results;
 list_select_subjects                = {};
 design_num_vec                      = [1:length(project.design)];
 
-design_factors_ordered_levels       = [];
 
 roi_list                            = project.postprocess.erp.roi_list;
 roi_names                           = project.postprocess.erp.roi_names;
@@ -135,13 +134,14 @@ for design_num=design_num_vec
                         label = [levels_f1{nf1}, '_',levels_f2{nf2}];
                         plot_dir_sub=fullfile(plot_dir,label);
                         mkdir(plot_dir_sub);
-                        for ns=1:length(levels_f2)
+                        ls = list_design_subjects{nf1,nf2};
+                        for ns=1:length(ls)
                             
                             fig_path_sub = fullfile(plot_dir_sub,list_design_subjects{nf1,nf2}{ns});
                             fig=figure( 'color', 'w', 'Visible', 'off');
                             hold on
                             erp_butterfly_sub = erp_curve{nf1,nf2}(:,:,ns);
-                            timtopo(erp_butterfly_sub',chanlocs(ismember(r2,r1)),'limits',[min(times) max(times)],'title',label);
+                            timtopo(erp_butterfly_sub',chanlocs(ismember(r2,r1)),'limits',[min(times) max(times)],'title',[label,'_',ls{ns}]);
                             % save matlab fig file
                             saveas(fig, fig_path_sub);
                             close(fig)
