@@ -2,8 +2,24 @@ function [] = get_convertion_example_panel(tabbed_panel)
 % Conversion from Celsius to Fahrenheit example. Used to apply the 
 % Netbeans IDE GUI to matlab handmade GUI.
 
-    %javaaddpath('C:\Program Files\NetBeans 8.0.2\platform\modules\ext\swing-layout-1.0.4.jar');
+    %javaaddpath('C:\Users\goccia\Documents\NetBeansProjects\JavaApplication8\dist\JavaApplication8.jar')
+    %javaaddpath('C:\Users\goccia\Documents\NetBeansProjects\GUIFormExamples\dist\GUIFormExamples.jar')
+    %%% Use this to use GImport
+    frame = GXJFrame(figure, 'myFrame', gui.NewJPanel());
+    % or
+    frame = GXJFrame(figure);
+    g = GImport(frame, newpackage.MySpaecialNewJPanel(), false);
+    a = g.getComponents();
+    jbutton = a{10};
     
+    %textfield = jbutton.name;
+    
+    %g.setCallback(jbutton, 'ActionPerformedCallback', @callback_print)
+    
+    mybutton = g.find('jButton1');
+    g.setCallback(mybutton, 'ActionPerformedCallback', @callback_print)
+    %%%%%
+
     global GlobalData
 
     import javax.swing.JFrame;
