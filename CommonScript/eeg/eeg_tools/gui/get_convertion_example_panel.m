@@ -5,19 +5,19 @@ function [] = get_convertion_example_panel(tabbed_panel)
     %javaaddpath('C:\Users\goccia\Documents\NetBeansProjects\JavaApplication8\dist\JavaApplication8.jar')
     %javaaddpath('C:\Users\goccia\Documents\NetBeansProjects\GUIFormExamples\dist\GUIFormExamples.jar')
     %%% Use this to use GImport
-    frame = GXJFrame(figure, 'myFrame', gui.NewJPanel());
+    %frame = GXJFrame(figure, 'myFrame', gui.NewJPanel());
     % or
     frame = GXJFrame(figure);
     g = GImport(frame, newpackage.MySpaecialNewJPanel(), false);
-    a = g.getComponents();
-    jbutton = a{10};
+    %a = g.getComponents();
+    %jbutton = a{10};  % More complicated
+    %g.setCallback(jbutton, 'ActionPerformedCallback', @callback_print)
     
     %textfield = jbutton.name;
     
-    %g.setCallback(jbutton, 'ActionPerformedCallback', @callback_print)
     
-    mybutton = g.find('jButton1');
-    g.setCallback(mybutton, 'ActionPerformedCallback', @callback_print)
+    mybutton = g.find('jButton1');   % Much easier to access the button.
+    g.setCallback(mybutton, 'ActionPerformedCallback', @print_string, 'marcello')
     %%%%%
 
     global GlobalData
