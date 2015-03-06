@@ -613,6 +613,18 @@ project.postprocess.erp.design(1).subject_time_windows(2)   = struct('min',-100,
 project.postprocess.erp.design(1).subject_time_windows(3)   = struct('min',-100, 'max',100);
 project.postprocess.erp.design(1).subject_time_windows(4)   = struct('min',-100, 'max',100);
 
+% semi-automatic (simplified) input mode: set values for the first roi/design and
+% other values will be automatically generated
+% which_extrema_curve_roi = {'max';'min';'max';'max'};
+% which_extrema_curve_design = cell(project.postprocess.erp.numroi,1);
+% for nr =1:project.postprocess.erp.numroi
+%     which_extrema_curve_design{nr} = which_extrema_curve_roi;
+% end
+% 
+% project.postprocess.erp.design(1).which_extrema_curve = which_extrema_curve_design;
+
+
+
 project.postprocess.erp.design(1).which_extrema_curve       = {  ... design x roi x time_windows
                             ...   tw1   tw2  ...
                                 {'max';'min';'min';'min'}; ... roi 1
@@ -661,8 +673,8 @@ if isfield(project, 'postprocess')
     end
 end
 
-project.postprocess.ersp.frequency_bands(1)         = struct('name','teta','min',3,'max',5,'ref_roi',[]);
-project.postprocess.ersp.frequency_bands(2)         = struct('name','mu','min',5,'max',8,'ref_roi',[]);
+project.postprocess.ersp.frequency_bands(1)         = struct('name','teta','min',4,'max',8,'ref_roi',[]);
+project.postprocess.ersp.frequency_bands(2)         = struct('name','mu','min',8,'max',12,'ref_roi',[]);
 project.postprocess.ersp.frequency_bands(3)         = struct('name','beta1','min',14, 'max',20,'ref_roi',[]);
 project.postprocess.ersp.frequency_bands(4)         = struct('name','beta2','min',20, 'max',32,'ref_roi',[]);
 
@@ -714,11 +726,8 @@ project.postprocess.ersp.design(1).group_time_windows(2)        = struct('name',
 project.postprocess.ersp.design(1).group_time_windows(3)        = struct('name','1700-2500','min',1700, 'max',2500);
 project.postprocess.ersp.design(1).group_time_windows(4)        = struct('name','350-2500','min',350, 'max',2500);
     
-
-project.postprocess.erp.design(1).group_time_windows(1).ref_roi = [project.postprocess.erp.roi_list(1), project.postprocess.erp.roi_list(6)];
-project.postprocess.erp.design(1).group_time_windows(2).ref_roi = [project.postprocess.erp.roi_list(2), project.postprocess.erp.roi_list(7)];
-project.postprocess.erp.design(1).group_time_windows(3).ref_roi = [project.postprocess.erp.roi_list(1), project.postprocess.erp.roi_list(6)];
-project.postprocess.erp.design(1).group_time_windows(4).ref_roi = [project.postprocess.erp.roi_list(2), project.postprocess.erp.roi_list(7)];
+% ref_roi is used by the function [extr_lat] = proj_get_erp_peak_info(project, out_file)
+project.postprocess.erp.design(1).group_time_windows(1).ref_roi = [project.postprocess.erp.roi_list(1), project.postprocess.erp.roi_list(2)];
 
 project.postprocess.ersp.design(1).subject_time_windows(1)      = struct('min',-100, 'max',100);
 project.postprocess.ersp.design(1).subject_time_windows(2)      = struct('min',-100, 'max',100);
@@ -726,6 +735,14 @@ project.postprocess.ersp.design(1).subject_time_windows(3)      = struct('min',-
 project.postprocess.ersp.design(1).subject_time_windows(4)      = struct('min',-100, 'max',100);
 
 
+% semi-automatic (simplified) input mode: set values for the first roi/design and
+% other values will be automatically generated
+%  which_extrema_curve_roi = {{'max'};{'min'};{'min'};{'min'}};
+%     which_extrema_curve_design = cell(project.postprocess.ersp.numroi,1);
+%     for nr =1:project.postprocess.ersp.nroi
+%         which_extrema_curve_design{nr} = which_extrema_curve_roi;
+%     end
+%     project.postprocess.ersp.design(1).which_extrema_curve_continuous = which_extrema_curve_design;
 
 % extreme to be searched in the continuous curve ( NON time-window mode)
 project.postprocess.ersp.design(1).which_extrema_curve_continuous = {     .... design x roi x freq band
@@ -767,15 +784,25 @@ project.postprocess.ersp.design(1).which_extrema_curve_continuous = {     .... d
                                     };
 };
 
-% ****CHECK****
-if size(project.postprocess.ersp.design(1).which_extrema_curve_continuous, 1) ~= project.postprocess.ersp.nroi
-   error(['number of roi in which_extrema_curve_continuous parameters (' num2str(size(project.postprocess.ersp.design(1).which_extrema_curve_continuous,1)) ') does not correspond to number of defined ROI (' num2str(project.postprocess.ersp.nroi) ')']); 
-else
-    if size(project.postprocess.ersp.design(1).which_extrema_curve_continuous{1}, 1) ~= project.postprocess.ersp.nbands
-        error(['number of bands in the first roi of which_extrema_curve_continuous parameters (' num2str(size(project.postprocess.ersp.design(1).which_extrema_curve_continuous{1},1)) ') does not correspond to number of defined frequency bands (' num2str(project.postprocess.ersp.nbands) ')']); 
-    end
-end
+% % ****CHECK****
+% if size(project.postprocess.ersp.design(1).which_extrema_curve_continuous, 1) ~= project.postprocess.ersp.nroi
+%    error(['number of roi in which_extrema_curve_continuous parameters (' num2str(size(project.postprocess.ersp.design(1).which_extrema_curve_continuous,1)) ') does not correspond to number of defined ROI (' num2str(project.postprocess.ersp.nroi) ')']); 
+% else
+%     if size(project.postprocess.ersp.design(1).which_extrema_curve_continuous{1}, 1) ~= project.postprocess.ersp.nbands
+%         error(['number of bands in the first roi of which_extrema_curve_continuous parameters (' num2str(size(project.postprocess.ersp.design(1).which_extrema_curve_continuous{1},1)) ') does not correspond to number of defined frequency bands (' num2str(project.postprocess.ersp.nbands) ')']); 
+%     end
+% end
 %*************
+
+% semi-automatic (simplified) input mode: set values for the first roi/design and
+% other values will be automatically generated
+% group_time_windows_continuous_roi = {{};{};{};{}};
+%     group_time_windows_continuous_design = cell(project.postprocess.ersp.numroi,1);
+%     for nr =1:project.postprocess.ersp.numroi
+%         group_time_windows_continuous_design{nr} = group_time_windows_continuous_roi;
+%     end
+%     project.postprocess.ersp.design(1).which_extrema_curve_continuous = group_time_windows_continuous_design;
+
 
 % time interval for searching extreme in the continuous curve ( NON time-window mode)
 project.postprocess.ersp.design(1).group_time_windows_continuous = {     .... design x roi x freq band
@@ -814,6 +841,26 @@ project.postprocess.ersp.design(1).group_time_windows_continuous = {     .... de
 
 
 
+
+
+% semi-automatic (simplified) input mode: set values for the first roi/design and
+% other values will be automatically generated
+% group_which_extrema_curve_tw_roi =  {... roi 1
+%         %                                     ...  tw1    tw2   tw3   tw4   tw5
+%         {'max';'max';'max';'max';'max'}; ... frequency band 1
+%         {'min';'min';'min';'min';'min'}; ... frequency band 2
+%         {'min';'min';'min';'min';'min'}; ... frequency band 3
+%         {'min';'min';'min';'min';'min'}  ... frequency band 4
+%         };
+%     group_which_extrema_curve_tw_design = cell(project.postprocess.ersp.numroi,1);
+%     for nr =1:project.postprocess.ersp.numroi
+%         group_which_extrema_curve_tw_design{nr} = group_which_extrema_curve_tw_roi;
+%     end
+%     project.postprocess.ersp.design(1).which_extrema_curve_tw = group_which_extrema_curve_tw_design;
+%     
+
+
+
 % extreme to be searched in each time window (time-window mode)
 project.postprocess.ersp.design(1).which_extrema_curve_tw = {     .... design x roi x freq band x time window
                                     {... roi 1
@@ -845,8 +892,14 @@ end
 
 
 
-
-
+% semi-automatic (simplified) input mode: set values for the first roi/design and
+% other values will be automatically generated
+%  design_factors_ordered_level = {{} {}};
+%     project.postprocess.design_factors_ordered_levels = cell(length(project.design),1);
+%     for ds=1:length(project.design)
+%         project.postprocess.design_factors_ordered_levels{ds} = design_factors_ordered_level;
+%     end
+%     
 
 %cla aggiungo questo per riordinare eventualmente in post-processing i
 %livelli di qualche fattore
@@ -885,7 +938,7 @@ project.results_display.erp.time_range.s                        = [project.study
 project.results_display.ylim_plot                               = [];           %y limits (uV)for the representation of ERP
 project.results_display.erp.single_subjects                     = 'off';        % display patterns of the single subjcts (keeping the average pattern)
 project.results_display.erp.masked_times_max                    = [];           % number of ms....all the timepoints before this values are not considered for statistics
-project.results_display.erp.do_plots                            = 'off';        %
+project.results_display.erp.do_plots                            = 'on';        %
 project.results_display.erp.show_text                           = 'on';         %
 
 project.results_display.erp.compact_plots                       = 'on';         % display (curve) plots with different conditions/groups on the same plots
@@ -898,11 +951,11 @@ project.results_display.erp.compact_display_ylim                = [];           
 project.results_display.erp.display_only_significant_curve      = 'on';         % on
 
 % ERP TOPO
-project.results_display.erp.compact_plots_topo                  = 'off';        %
+project.results_display.erp.compact_plots_topo                  = 'on';        %
 project.results_display.erp.set_caxis_topo_tw                   = [];           %
 project.results_display.erp.display_only_significant_topo       = 'on';         % on
 project.results_display.erp.display_only_significant_topo_mode  = 'surface';    % 'electrodes';
-project.results_display.erp.display_compact_topo_mode           = 'boxplot';    % 'boxplot'; ... 'errorbar'
+project.results_display.erp.display_compact_topo_mode           = 'errorbar';    % 'boxplot'; ... 'errorbar'
 project.results_display.erp.display_compact_show_head           = 'off';        % 'on'|'off'
 project.results_display.erp.z_transform                        = 'on';         % 'on'|'off' z-transform data data for each roi, and tw to allow to plot all figures on the same scale
 
@@ -910,7 +963,7 @@ project.results_display.erp.z_transform                        = 'on';         %
 % ERSP
 project.results_display.ersp.time_range.s                       = [project.study.ersp.tmin_analysis.s project.study.ersp.tmax_analysis.s];     % time range for erp representation
 project.results_display.ersp.frequency_range                    = [project.study.ersp.fmin_analysis project.study.ersp.fmax_analysis];         % frequency range for ersp representation
-project.results_display.ersp.do_plots                           = 'off';        %
+project.results_display.ersp.do_plots                           = 'on';        %
 project.results_display.ersp.show_text                          = 'on';         %
 project.results_display.ersp.z_transform                        = 'on';         % 'on'|'off' z-transform data data for each roi, band and tw to allow to plot all figures on the same scale
 project.results_display.ersp.which_error_measure                = 'sem';        % 'sd'|'sem'; which error measure is adopted in the errorbar: standard deviation or standard error
@@ -940,7 +993,7 @@ project.results_display.ersp.compact_plots_topo                 = 'on';         
 project.results_display.ersp.set_caxis_topo_tw_fb               = [];           % [color_min color_max] set the color limits of the topographic plots
 project.results_display.ersp.display_only_significant_topo      = 'on';         % on|off display only significant values or all values
 project.results_display.ersp.display_only_significant_topo_mode = 'surface';    % 'surface'|'electrodes' change the way to show significant differences: show an interpolated surface between electrodes with significant differences or classical representation, i.e. significant electrodes in red
-project.results_display.ersp.display_compact_topo_mode          = 'boxplot';    % 'boxplot'|'errorbar' display boxplot with single subjects represented by red points (complete information about distribution) or error bar (syntetic standard representation)
+project.results_display.ersp.display_compact_topo_mode          = 'errorbar';    % 'boxplot'|'errorbar' display boxplot with single subjects represented by red points (complete information about distribution) or error bar (syntetic standard representation)
 project.results_display.ersp.display_compact_show_head          = 'off';        %'on'|'off' show the topographical representation of the roi (the head with the channels of the roi in red and te others in black)
 
 

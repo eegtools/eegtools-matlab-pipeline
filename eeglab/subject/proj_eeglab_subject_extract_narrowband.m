@@ -2,8 +2,7 @@ function results= proj_eeglab_subject_extract_narrowband(project, varargin)
 
 
 %% VARARGIN DEFAULTS
-list_select_subjects        = {};
-design_num_vec              = [1:length(project.design)];
+
 
 roi_list                    = project.postprocess.ersp.roi_list;
 roi_names                   = project.postprocess.ersp.roi_names;
@@ -95,3 +94,68 @@ for subj=1:numsubj
     
 end
 end
+
+
+
+
+% Ciao Claudio
+% 
+%  
+% 
+% Volevo definire un po meglio la questione della narrow band
+% 
+%  
+% 
+% Credo servirebbe cio:
+% 
+%  
+% 
+% una funzione
+% 
+%  
+% 
+% = eeglab_subject_get_narrowband (project, input_file, wide_bands, clusters, tws, criteria)
+% 
+%  
+% 
+% input_file:          File .set da cui estrarre la nb
+% 
+% wide_bands      cell array of arrays, bande in cui cercare la nb,  come la struttura   project.postprocess.ersp.frequency_bands_list = {[3 5]; [8 12]; [14 20]; [20 32]}  se wide_bands viene passato vuoto, usa infatti quella struttura
+% 
+% roi:         cell array of cell array…e.g   {{‘C3’, ‘C4’}; {‘FC3’, ‘FC4’}}… stessa forma di project.postprocess.ersp.roi_list...se clusters viene passato vuoto, usa infatti quella struttura.
+% 
+% Tws:                      cell array of arrays...eg {[-500 -12]; [100 1000]}
+% 
+% Criteria:               come avevi gia fatto, non ricordo com’era: pos_peak, neg_peak, max_area
+% 
+%  
+% 
+% Questa funzione ritorna un cell array multidimensionale.. ... io lo ordinerei cosi: bande, roi, tw
+% 
+% res = {
+% 
+% {... band1
+% 
+%                 {tw1; tw2;tw3};  ... roi 1
+% 
+%                 {tw1; tw2;tw3};  ... roi 2
+% 
+%                 {tw1; tw2;tw3};  ... roi 3
+% 
+% };
+% 
+% {... band2
+% 
+%                 {tw1; tw2;tw3};  ... roi 1
+% 
+%                 {tw1; tw2;tw3};  ... roi 2
+% 
+%                 {tw1; tw2;tw3};  ... roi 3
+% 
+% };
+% 
+% }
+% 
+ 
+
+ 
