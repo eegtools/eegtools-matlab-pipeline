@@ -80,10 +80,6 @@ for subj=1:numsubj
         end
         
         input_narrowband.which_realign_measure        = which_realign_measure;
-        input_narrowband.group_tmin                   = group_tmin;
-        input_narrowband.group_tmax                   = group_tmax;
-        input_narrowband.group_fmin                   = group_fmin;
-        input_narrowband.group_fmax                   = group_fmax;
         input_narrowband.group_dfmin                  = group_dfmin;
         input_narrowband.group_dfmax                  = group_dfmax;
         
