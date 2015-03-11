@@ -44,6 +44,7 @@ for par=1:2:length(varargin)
                 'group_time_windows_list', ...
                 'powbase_cell',...
                 'ersp_measure',...
+                'custom_suffix',...
                 }
             
             if isempty(varargin{par+1})
@@ -64,7 +65,7 @@ for nsuff = 1:length(narrowband_suffix_cell);
     
     for subj=1:numsubj
         subj_name = list_select_subjects{subj};
-        input_file_name = proj_eeglab_subject_get_filename(project, subj_name,'extract_narrowband','cond_name',['_',suffix]);
+        input_file_name = proj_eeglab_subject_get_filename(project, subj_name,'extract_narrowband','cond_name',suffix,  'custom_suffix', custom_suffix);...['_',suffix]
         
         if exist(input_file_name, 'file')
             %% input of the low level extract narrow band
