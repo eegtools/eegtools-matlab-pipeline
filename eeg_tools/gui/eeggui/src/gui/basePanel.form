@@ -18,73 +18,67 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+              <Component id="btNewProject" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Component id="jButton2" min="-2" max="-2" attributes="0"/>
+              <Component id="btOpenProject" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Component id="jButton3" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="943" max="32767" attributes="0"/>
+              <Component id="btSaveProject" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
-          <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
-              <Group type="102" attributes="0">
-                  <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
-                  <Component id="jTabbedPane2" max="32767" attributes="0"/>
-                  <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-              </Group>
-          </Group>
+          <Component id="jTabbedPane2" alignment="1" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jButton1" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jButton2" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jButton3" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btNewProject" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btOpenProject" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btSaveProject" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="0" pref="754" max="32767" attributes="0"/>
-          </Group>
-          <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="1" attributes="0">
-                  <EmptySpace pref="27" max="32767" attributes="0"/>
-                  <Component id="jTabbedPane2" min="-2" pref="739" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-              </Group>
+              <EmptySpace max="32767" attributes="0"/>
+              <Component id="jTabbedPane2" min="-2" pref="739" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JButton" name="jButton1">
+    <Component class="javax.swing.JButton" name="btNewProject">
       <Properties>
         <Property name="text" type="java.lang.String" value="New"/>
+        <Property name="name" type="java.lang.String" value="btNewProject" noResource="true"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btNewProjectActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton2">
+    <Component class="javax.swing.JButton" name="btOpenProject">
       <Properties>
         <Property name="text" type="java.lang.String" value="Open"/>
-        <Property name="name" type="java.lang.String" value="open_project" noResource="true"/>
+        <Property name="name" type="java.lang.String" value="btOpenProject" noResource="true"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton2ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btOpenProjectActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton3">
+    <Component class="javax.swing.JButton" name="btSaveProject">
       <Properties>
         <Property name="text" type="java.lang.String" value="Save"/>
+        <Property name="name" type="java.lang.String" value="btSaveProject" noResource="true"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btSaveProjectActionPerformed"/>
+      </Events>
     </Component>
     <Container class="javax.swing.JTabbedPane" name="jTabbedPane2">
       <Properties>
-        <Property name="name" type="java.lang.String" value="" noResource="true"/>
+        <Property name="name" type="java.lang.String" value="postprocess" noResource="true"/>
       </Properties>
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
       <SubComponents>
-        <Container class="javax.swing.JPanel" name="jPanel2">
+        <Container class="javax.swing.JPanel" name="jPimport_data">
           <Properties>
             <Property name="name" type="java.lang.String" value="import_data" noResource="true"/>
           </Properties>
@@ -169,7 +163,7 @@
                                   </Group>
                                   <Group type="102" alignment="1" attributes="0">
                                       <Component id="jLabel23" min="-2" pref="82" max="-2" attributes="0"/>
-                                      <EmptySpace pref="161" max="32767" attributes="0"/>
+                                      <EmptySpace pref="185" max="32767" attributes="0"/>
                                       <Component id="jLabel26" min="-2" pref="67" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="jTextField5" min="-2" pref="770" max="-2" attributes="0"/>
@@ -203,7 +197,7 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" pref="159" max="-2" attributes="0"/>
                           <Component id="jScrollPane3" min="-2" pref="777" max="-2" attributes="0"/>
-                          <EmptySpace pref="178" max="32767" attributes="0"/>
+                          <EmptySpace pref="202" max="32767" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -304,7 +298,7 @@
                     <StringItem index="3" value="Item 4"/>
                   </StringArray>
                 </Property>
-                <Property name="name" type="java.lang.String" value="marcellino" noResource="true"/>
+                <Property name="name" type="java.lang.String" value="acquisition_system" noResource="true"/>
               </Properties>
               <AccessibilityProperties>
                 <Property name="AccessibleContext.accessibleName" type="java.lang.String" value=""/>
@@ -321,6 +315,7 @@
             <Component class="javax.swing.JTextField" name="jTextField1">
               <Properties>
                 <Property name="text" type="java.lang.String" value="jTextField1"/>
+                <Property name="name" type="java.lang.String" value="original_data_extension" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel20">
@@ -336,6 +331,7 @@
             <Component class="javax.swing.JTextField" name="jTextField2">
               <Properties>
                 <Property name="text" type="java.lang.String" value="jTextField1"/>
+                <Property name="name" type="java.lang.String" value="original_data_folder" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel21">
@@ -346,6 +342,7 @@
             <Component class="javax.swing.JTextField" name="jTextField3">
               <Properties>
                 <Property name="text" type="java.lang.String" value="jTextField1"/>
+                <Property name="name" type="java.lang.String" value="original_data_prefix" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel22">
@@ -356,6 +353,7 @@
             <Component class="javax.swing.JTextField" name="jTextField4">
               <Properties>
                 <Property name="text" type="java.lang.String" value="jTextField1"/>
+                <Property name="name" type="java.lang.String" value="original_data_suffix" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel23">
@@ -366,6 +364,7 @@
             <Component class="javax.swing.JTextField" name="jTextField5">
               <Properties>
                 <Property name="text" type="java.lang.String" value="jTextField1"/>
+                <Property name="name" type="java.lang.String" value="input_example_name" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel4">
@@ -381,6 +380,7 @@
             <Component class="javax.swing.JTextField" name="jTextField6">
               <Properties>
                 <Property name="text" type="java.lang.String" value="jTextField1"/>
+                <Property name="name" type="java.lang.String" value="output_folder" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel25">
@@ -391,6 +391,7 @@
             <Component class="javax.swing.JTextField" name="jTextField7">
               <Properties>
                 <Property name="text" type="java.lang.String" value="jTextField1"/>
+                <Property name="name" type="java.lang.String" value="output_suffix" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel26">
@@ -401,11 +402,13 @@
             <Component class="javax.swing.JLabel" name="jLabel27">
               <Properties>
                 <Property name="text" type="java.lang.String" value="OUTPUT"/>
+                <Property name="name" type="java.lang.String" value="" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="jTextField8">
               <Properties>
                 <Property name="text" type="java.lang.String" value="jTextField1"/>
+                <Property name="name" type="java.lang.String" value="input_example_name" noResource="true"/>
               </Properties>
             </Component>
             <Container class="javax.swing.JScrollPane" name="jScrollPane1">
@@ -421,6 +424,7 @@
                       <Table columnCount="0" rowCount="2"/>
                     </Property>
                     <Property name="columnSelectionAllowed" type="boolean" value="true"/>
+                    <Property name="name" type="java.lang.String" value="final_channels_list" noResource="true"/>
                     <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
                       <TableHeader reorderingAllowed="false" resizingAllowed="true"/>
                     </Property>
@@ -431,6 +435,7 @@
             <Component class="javax.swing.JButton" name="jButton4">
               <Properties>
                 <Property name="text" type="java.lang.String" value="new"/>
+                <Property name="name" type="java.lang.String" value="ch2transform_btNew" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton4ActionPerformed"/>
@@ -439,11 +444,13 @@
             <Component class="javax.swing.JButton" name="jButton5">
               <Properties>
                 <Property name="text" type="java.lang.String" value="remove"/>
+                <Property name="name" type="java.lang.String" value="ch2transform_btRemove" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JButton" name="jButton6">
               <Properties>
                 <Property name="text" type="java.lang.String" value="apply"/>
+                <Property name="name" type="java.lang.String" value="ch2transform_btApply" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton6ActionPerformed"/>
@@ -457,6 +464,7 @@
             <Component class="javax.swing.JTextField" name="jTextField9">
               <Properties>
                 <Property name="text" type="java.lang.String" value="jTextField1"/>
+                <Property name="name" type="java.lang.String" value="valid_marker" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel29">
@@ -472,6 +480,7 @@
             <Component class="javax.swing.JTextField" name="jTextField10">
               <Properties>
                 <Property name="text" type="java.lang.String" value="jTextField1"/>
+                <Property name="name" type="java.lang.String" value="nch" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextField10ActionPerformed"/>
@@ -485,6 +494,7 @@
             <Component class="javax.swing.JTextField" name="jTextField11">
               <Properties>
                 <Property name="text" type="java.lang.String" value="jTextField1"/>
+                <Property name="name" type="java.lang.String" value="nch_eeg" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel32">
@@ -495,6 +505,7 @@
             <Component class="javax.swing.JTextField" name="jTextField12">
               <Properties>
                 <Property name="text" type="java.lang.String" value="jTextField1"/>
+                <Property name="name" type="java.lang.String" value="fs" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel33">
@@ -505,6 +516,7 @@
             <Component class="javax.swing.JTextField" name="jTextField13">
               <Properties>
                 <Property name="text" type="java.lang.String" value="jTextField1"/>
+                <Property name="name" type="java.lang.String" value="eeglab_channels_file_name" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel3">
@@ -538,6 +550,7 @@
                         <Column editable="true" title="new_label" type="java.lang.String"/>
                       </Table>
                     </Property>
+                    <Property name="name" type="java.lang.String" value="ch2transform" noResource="true"/>
                     <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
                       <TableHeader reorderingAllowed="false" resizingAllowed="true"/>
                     </Property>
@@ -547,7 +560,10 @@
             </Container>
           </SubComponents>
         </Container>
-        <Container class="javax.swing.JPanel" name="jPanel4">
+        <Container class="javax.swing.JPanel" name="jPpreproc">
+          <Properties>
+            <Property name="name" type="java.lang.String" value="preproc" noResource="true"/>
+          </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Preprocessing">
@@ -750,7 +766,7 @@
                                                       <Component id="jTextField42" min="-2" max="-2" attributes="0"/>
                                                       <EmptySpace type="separate" max="-2" attributes="0"/>
                                                       <Component id="jLabel67" min="-2" pref="70" max="-2" attributes="0"/>
-                                                      <EmptySpace pref="62" max="32767" attributes="0"/>
+                                                      <EmptySpace max="32767" attributes="0"/>
                                                       <Component id="jTextField43" min="-2" pref="459" max="-2" attributes="0"/>
                                                   </Group>
                                               </Group>
@@ -772,7 +788,7 @@
                                   <Component id="jLabel14" alignment="0" min="-2" pref="98" max="-2" attributes="0"/>
                                   <Component id="jLabel15" alignment="0" min="-2" pref="98" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="945" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -930,6 +946,7 @@
                     <StringItem index="3" value="Item 4"/>
                   </StringArray>
                 </Property>
+                <Property name="name" type="java.lang.String" value="filter_algorithm" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jComboBox2ActionPerformed"/>
@@ -943,6 +960,7 @@
             <Component class="javax.swing.JTextField" name="jTextField14">
               <Properties>
                 <Property name="text" type="java.lang.String" value="jTextField1"/>
+                <Property name="name" type="java.lang.String" value="ff1_global" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel37">
@@ -953,6 +971,7 @@
             <Component class="javax.swing.JTextField" name="jTextField15">
               <Properties>
                 <Property name="text" type="java.lang.String" value="jTextField1"/>
+                <Property name="name" type="java.lang.String" value="ff2_global" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel38">
@@ -963,6 +982,7 @@
             <Component class="javax.swing.JTextField" name="jTextField16">
               <Properties>
                 <Property name="text" type="java.lang.String" value="jTextField1"/>
+                <Property name="name" type="java.lang.String" value="output_folder" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel39">
@@ -973,6 +993,7 @@
             <Component class="javax.swing.JTextField" name="jTextField17">
               <Properties>
                 <Property name="text" type="java.lang.String" value="jTextField1"/>
+                <Property name="name" type="java.lang.String" value="notch_fcenter" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel6">
@@ -981,6 +1002,9 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JCheckBox" name="jCheckBox1">
+              <Properties>
+                <Property name="name" type="java.lang.String" value="do_notch" noResource="true"/>
+              </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel40">
               <Properties>
@@ -990,6 +1014,7 @@
             <Component class="javax.swing.JTextField" name="jTextField18">
               <Properties>
                 <Property name="text" type="java.lang.String" value="jTextField1"/>
+                <Property name="name" type="java.lang.String" value="notch_fspan" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel41">
@@ -1007,6 +1032,7 @@
                     <StringItem index="3" value="Item 4"/>
                   </StringArray>
                 </Property>
+                <Property name="name" type="java.lang.String" value="notch_remove_armonics" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jComboBox3ActionPerformed"/>
@@ -1025,6 +1051,7 @@
             <Component class="javax.swing.JTextField" name="jTextField19">
               <Properties>
                 <Property name="text" type="java.lang.String" value="jTextField1"/>
+                <Property name="name" type="java.lang.String" value="ff1_eeg" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel43">
@@ -1035,11 +1062,12 @@
             <Component class="javax.swing.JTextField" name="jTextField20">
               <Properties>
                 <Property name="text" type="java.lang.String" value="jTextField1"/>
+                <Property name="name" type="java.lang.String" value="ff2_eeg" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel8">
               <Properties>
-                <Property name="text" type="java.lang.String" value="EMG FILTER"/>
+                <Property name="text" type="java.lang.String" value="EOG FILTER"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel44">
@@ -1050,6 +1078,7 @@
             <Component class="javax.swing.JTextField" name="jTextField21">
               <Properties>
                 <Property name="text" type="java.lang.String" value="jTextField1"/>
+                <Property name="name" type="java.lang.String" value="ff1_eog" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel45">
@@ -1060,11 +1089,12 @@
             <Component class="javax.swing.JTextField" name="jTextField22">
               <Properties>
                 <Property name="text" type="java.lang.String" value="jTextField1"/>
+                <Property name="name" type="java.lang.String" value="ff2_eog" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel9">
               <Properties>
-                <Property name="text" type="java.lang.String" value="EOG FILTER"/>
+                <Property name="text" type="java.lang.String" value="EMG FILTER"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel46">
@@ -1075,6 +1105,7 @@
             <Component class="javax.swing.JTextField" name="jTextField23">
               <Properties>
                 <Property name="text" type="java.lang.String" value="jTextField1"/>
+                <Property name="name" type="java.lang.String" value="ff1_emg" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel47">
@@ -1085,6 +1116,7 @@
             <Component class="javax.swing.JTextField" name="jTextField24">
               <Properties>
                 <Property name="text" type="java.lang.String" value="jTextField1"/>
+                <Property name="name" type="java.lang.String" value="ff2_emg" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel10">
@@ -1103,6 +1135,7 @@
             <Component class="javax.swing.JTextField" name="jTextField25">
               <Properties>
                 <Property name="text" type="java.lang.String" value="jTextField1"/>
+                <Property name="name" type="java.lang.String" value="eve1_type" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel49">
@@ -1113,6 +1146,7 @@
             <Component class="javax.swing.JTextField" name="jTextField26">
               <Properties>
                 <Property name="text" type="java.lang.String" value="jTextField1"/>
+                <Property name="name" type="java.lang.String" value="eve2_type" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel50">
@@ -1123,16 +1157,18 @@
             <Component class="javax.swing.JTextField" name="jTextField27">
               <Properties>
                 <Property name="text" type="java.lang.String" value="jTextField1"/>
+                <Property name="name" type="java.lang.String" value="allowed_tw_ms_min" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel51">
               <Properties>
-                <Property name="text" type="java.lang.String" value="allowed tw MIN [ms]"/>
+                <Property name="text" type="java.lang.String" value="allowed tw MAX [ms]"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="jTextField28">
               <Properties>
                 <Property name="text" type="java.lang.String" value="jTextField1"/>
+                <Property name="name" type="java.lang.String" value="allowed_tw_ms_max" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel52">
@@ -1143,6 +1179,7 @@
             <Component class="javax.swing.JTextField" name="jTextField29">
               <Properties>
                 <Property name="text" type="java.lang.String" value="jTextField1"/>
+                <Property name="name" type="java.lang.String" value="output_folder" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel11">
@@ -1161,6 +1198,7 @@
             <Component class="javax.swing.JTextField" name="jTextField30">
               <Properties>
                 <Property name="text" type="java.lang.String" value="jTextField1"/>
+                <Property name="name" type="java.lang.String" value="begin_trial" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel54">
@@ -1171,6 +1209,7 @@
             <Component class="javax.swing.JTextField" name="jTextField31">
               <Properties>
                 <Property name="text" type="java.lang.String" value="jTextField1"/>
+                <Property name="name" type="java.lang.String" value="end_trial" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel55">
@@ -1206,6 +1245,7 @@
             <Component class="javax.swing.JTextField" name="jTextField35">
               <Properties>
                 <Property name="text" type="java.lang.String" value="jTextField1"/>
+                <Property name="name" type="java.lang.String" value="begin_baseline" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel59">
@@ -1216,6 +1256,7 @@
             <Component class="javax.swing.JTextField" name="jTextField36">
               <Properties>
                 <Property name="text" type="java.lang.String" value="jTextField1"/>
+                <Property name="name" type="java.lang.String" value="end_baseline" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel60">
@@ -1356,7 +1397,10 @@
             </Container>
           </SubComponents>
         </Container>
-        <Container class="javax.swing.JPanel" name="jPanel5">
+        <Container class="javax.swing.JPanel" name="jPepoching">
+          <Properties>
+            <Property name="name" type="java.lang.String" value="epoching" noResource="true"/>
+          </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Epoching">
@@ -1389,7 +1433,7 @@
                               <Component id="jLabel16" min="-2" pref="183" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace pref="325" max="32767" attributes="0"/>
+                      <EmptySpace pref="349" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -1433,6 +1477,9 @@
                     <StringItem index="2" value="Item 3"/>
                     <StringItem index="3" value="Item 4"/>
                   </StringArray>
+                </Property>
+                <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+                  <Color id="Default Cursor"/>
                 </Property>
                 <Property name="name" type="java.lang.String" value="" noResource="true"/>
               </Properties>
@@ -1493,246 +1540,10 @@
             </Component>
           </SubComponents>
         </Container>
-        <Container class="javax.swing.JPanel" name="jPanel6">
-          <Constraints>
-            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="Subjects">
-                <Property name="tabTitle" type="java.lang.String" value="Subjects"/>
-              </JTabbedPaneConstraints>
-            </Constraint>
-          </Constraints>
-
-          <Layout>
-            <DimensionLayout dim="0">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="1" attributes="0">
-                                  <Group type="102" alignment="1" attributes="0">
-                                      <Component id="jButton9" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="jButton8" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                      <Component id="jButton7" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Component id="jScrollPane6" alignment="1" min="-2" pref="1033" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="jLabel73" min="-2" pref="54" max="-2" attributes="0"/>
-                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                      <Component id="jScrollPane7" min="-2" pref="73" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                          <Component id="jButton11" alignment="0" max="32767" attributes="0"/>
-                                          <Component id="jButton12" alignment="0" max="32767" attributes="0"/>
-                                          <Component id="jButton10" alignment="0" max="32767" attributes="0"/>
-                                      </Group>
-                                  </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="jLabel17" min="-2" pref="116" max="-2" attributes="0"/>
-                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                      <Component id="jLabel70" min="-2" pref="89" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="jTextField45" min="-2" pref="80" max="-2" attributes="0"/>
-                                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="jLabel71" min="-2" pref="63" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="jTextField46" min="-2" pref="80" max="-2" attributes="0"/>
-                                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="jLabel72" min="-2" pref="120" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="jTextField47" min="-2" pref="80" max="-2" attributes="0"/>
-                                  </Group>
-                              </Group>
-                          </Group>
-                      </Group>
-                      <EmptySpace pref="71" max="32767" attributes="0"/>
-                  </Group>
-              </Group>
-            </DimensionLayout>
-            <DimensionLayout dim="1">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jButton8" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jButton7" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jButton9" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane6" min="-2" pref="339" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jLabel17" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel70" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jTextField45" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel71" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jTextField46" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel72" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jTextField47" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jLabel73" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
-                              <Group type="102" alignment="1" attributes="0">
-                                  <Component id="jButton10" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jButton11" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="32767" attributes="0"/>
-                                  <Component id="jButton12" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <Component id="jScrollPane7" alignment="1" min="-2" pref="85" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
-                      <EmptySpace pref="203" max="32767" attributes="0"/>
-                  </Group>
-              </Group>
-            </DimensionLayout>
-          </Layout>
-          <SubComponents>
-            <Container class="javax.swing.JScrollPane" name="jScrollPane6">
-              <AuxValues>
-                <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
-              </AuxValues>
-
-              <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
-              <SubComponents>
-                <Component class="javax.swing.JTable" name="jTable4">
-                  <Properties>
-                    <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                      <Table columnCount="9" rowCount="0">
-                        <Column editable="true" title="Name" type="java.lang.String"/>
-                        <Column editable="true" title="Group" type="java.lang.String"/>
-                        <Column editable="true" title="age" type="java.lang.String"/>
-                        <Column editable="true" title="gender" type="java.lang.String"/>
-                        <Column editable="true" title="handedness" type="java.lang.String"/>
-                        <Column editable="true" title="bad ch" type="java.lang.Object"/>
-                        <Column editable="true" title="baseline file" type="java.lang.String"/>
-                        <Column editable="true" title="baseline file interval" type="java.lang.String"/>
-                        <Column editable="true" title="frequency bands" type="java.lang.Object"/>
-                      </Table>
-                    </Property>
-                    <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
-                      <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
-                    </Property>
-                  </Properties>
-                </Component>
-              </SubComponents>
-            </Container>
-            <Component class="javax.swing.JButton" name="jButton7">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="apply"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton7ActionPerformed"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JButton" name="jButton8">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="remove"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton8ActionPerformed"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JButton" name="jButton9">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="new"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="jLabel17">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="DEFAULT ATTRIBUTES"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="jLabel70">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="narrow-band file"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JTextField" name="jTextField45">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="jTextField1"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="jLabel71">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="baseline file"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JTextField" name="jTextField46">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="jTextField1"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="jLabel72">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="baseline file interval [s]"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JTextField" name="jTextField47">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="jTextField1"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="jLabel73">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="GROUPS"/>
-              </Properties>
-            </Component>
-            <Container class="javax.swing.JScrollPane" name="jScrollPane7">
-              <AuxValues>
-                <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
-              </AuxValues>
-
-              <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
-              <SubComponents>
-                <Component class="javax.swing.JList" name="jList1">
-                  <Properties>
-                    <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.editors2.ListModelEditor">
-                      <StringArray count="5">
-                        <StringItem index="0" value="Item 1"/>
-                        <StringItem index="1" value="Item 2"/>
-                        <StringItem index="2" value="Item 3"/>
-                        <StringItem index="3" value="Item 4"/>
-                        <StringItem index="4" value="Item 5"/>
-                      </StringArray>
-                    </Property>
-                  </Properties>
-                </Component>
-              </SubComponents>
-            </Container>
-            <Component class="javax.swing.JButton" name="jButton10">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="new"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JButton" name="jButton11">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="remove"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton11ActionPerformed"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JButton" name="jButton12">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="apply"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton12ActionPerformed"/>
-              </Events>
-            </Component>
-          </SubComponents>
-        </Container>
-        <Container class="javax.swing.JPanel" name="jPanel7">
+        <Container class="javax.swing.JPanel" name="jPstudy_design">
+          <Properties>
+            <Property name="name" type="java.lang.String" value="study_design" noResource="true"/>
+          </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Study Design">
@@ -1752,7 +1563,7 @@
                                   <Group type="102" alignment="0" attributes="0">
                                       <Component id="jLabel78" min="-2" pref="87" max="-2" attributes="0"/>
                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                      <Component id="jScrollPane10" pref="898" max="32767" attributes="0"/>
+                                      <Component id="jScrollPane10" pref="922" max="32767" attributes="0"/>
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
                                       <Component id="jLabel80" min="-2" pref="87" max="-2" attributes="0"/>
@@ -1815,7 +1626,7 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
                           <Component id="jLabel84" min="-2" pref="87" max="-2" attributes="0"/>
-                          <EmptySpace pref="1007" max="32767" attributes="0"/>
+                          <EmptySpace pref="1031" max="32767" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -2136,7 +1947,10 @@
             </Component>
           </SubComponents>
         </Container>
-        <Container class="javax.swing.JPanel" name="jPanel9">
+        <Container class="javax.swing.JPanel" name="jPstats">
+          <Properties>
+            <Property name="name" type="java.lang.String" value="stats" noResource="true"/>
+          </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Stats">
@@ -2148,7 +1962,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="1114" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="1138" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -2158,7 +1972,7 @@
             </DimensionLayout>
           </Layout>
         </Container>
-        <Container class="javax.swing.JPanel" name="jPanel10">
+        <Container class="javax.swing.JPanel" name="jPpostprocess">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Postprocess">
@@ -2170,7 +1984,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="1114" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="1138" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -2180,7 +1994,10 @@
             </DimensionLayout>
           </Layout>
         </Container>
-        <Container class="javax.swing.JPanel" name="jPanel11">
+        <Container class="javax.swing.JPanel" name="jPresults_display">
+          <Properties>
+            <Property name="name" type="java.lang.String" value="results_display" noResource="true"/>
+          </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Results_display">
@@ -2192,7 +2009,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="1114" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="1138" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -2202,7 +2019,10 @@
             </DimensionLayout>
           </Layout>
         </Container>
-        <Container class="javax.swing.JPanel" name="jPanel12">
+        <Container class="javax.swing.JPanel" name="jPbrainstorm">
+          <Properties>
+            <Property name="name" type="java.lang.String" value="brainstorm" noResource="true"/>
+          </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Brainstorm">
@@ -2214,7 +2034,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="1114" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="1138" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -2224,7 +2044,10 @@
             </DimensionLayout>
           </Layout>
         </Container>
-        <Container class="javax.swing.JPanel" name="jPanel13">
+        <Container class="javax.swing.JPanel" name="jPpaths">
+          <Properties>
+            <Property name="name" type="java.lang.String" value="paths" noResource="true"/>
+          </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Paths">
@@ -2236,7 +2059,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="1114" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="1138" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -2246,7 +2069,10 @@
             </DimensionLayout>
           </Layout>
         </Container>
-        <Container class="javax.swing.JPanel" name="jPanel14">
+        <Container class="javax.swing.JPanel" name="jPtask">
+          <Properties>
+            <Property name="name" type="java.lang.String" value="task" noResource="true"/>
+          </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Task">
@@ -2258,7 +2084,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="1114" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="1138" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
