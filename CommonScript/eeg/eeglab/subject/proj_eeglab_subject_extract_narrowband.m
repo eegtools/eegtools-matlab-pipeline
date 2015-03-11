@@ -93,8 +93,8 @@ for nsuff = 1:length(narrowband_suffix_cell);
             input_narrowband.group_dfmax                  = group_dfmax;
             
             %% output of the low level extract narrow band
-            output.results(subj).nb                       = eeglab_subject_extract_narrowband(input_narrowband);
-            output.results(subj).subjname                 = subj_name;
+            output.results.nb                               = eeglab_subject_extract_narrowband(input_narrowband);
+            output.results.subjname                         = subj_name;
             output.project                                = project;
             output.dimnames                               = {'band','roi','tw'};
             
