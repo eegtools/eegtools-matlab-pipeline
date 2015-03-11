@@ -46,9 +46,18 @@ project.operations.do_custom_epochs                                             
 % add experimental factors information to the data
 project.operations.do_factors                                                       = 0;
 
+
 %---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 % perform basic single-subject plotting and analysis, basically 1 condition spectral graphs, single epochs desynch, or 2 conditions comparisons
 project.operations.do_singlesubjects_band_comparison                                = 0;
+
+
+
+%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+% perform basic single-subject plotting and analysis, basically 1 condition spectral graphs, single epochs desynch, or 2 conditions comparisons
+project.operations.do_singlesubjects_band_comparison                                = 0;
+
+
 
 
 %==============================================================================================================================================

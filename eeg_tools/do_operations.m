@@ -67,6 +67,10 @@ if project.operations.do_factors
     EEG = proj_eeglab_subject_add_factor(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
 end
 %==================================================================================
+if project.operations.do_singlesubjects_band_comparison
+    EEG = proj_eeglab_subject_add_factor(project, 'list_select_subjects', list_select_subjects);
+end
+%==================================================================================
 
 
 
