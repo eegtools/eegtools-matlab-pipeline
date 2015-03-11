@@ -481,7 +481,6 @@ project.study.precompute.spec                   = {'interp','off','allcomps','on
 project.study.precompute.ersp                   = {'interp','off' ,'allcomps','on','ersp' ,'on','erspparams' ,{'cycles' project.study.ersp.cycles,  'freqs', project.study.ersp.freqout_analysis_interval, 'timesout', project.study.ersp.timeout_analysis_interval.s*1000, ...
                                                    'freqscale','linear','padratio',project.study.ersp.padratio, 'baseline',[project.epoching.bc_st.s*1000 project.epoching.bc_end.s*1000] },'itc','on','recompute','off'};
 
-
 %% ======================================================================================================
 % L:    DESIGN
 % ======================================================================================================
@@ -679,10 +678,11 @@ if isfield(project, 'postprocess')
     end
 end
 
-project.postprocess.ersp.frequency_bands(1)         = struct('name','teta','min',4,'max',8,'ref_roi',[]);
+project.postprocess.ersp.frequency_bands(1)         = struct('name','teta','min',4,'max',8,'ref_roi',[], 'ref_cond', 'ao', 'ref_tw', [0 100]);
 project.postprocess.ersp.frequency_bands(2)         = struct('name','mu','min',8,'max',12,'ref_roi',[]);
 project.postprocess.ersp.frequency_bands(3)         = struct('name','beta1','min',14, 'max',20,'ref_roi',[]);
 project.postprocess.ersp.frequency_bands(4)         = struct('name','beta2','min',20, 'max',32,'ref_roi',[]);
+
 
 ...project.postprocess.ersp.frequency_bands(1).ref_roi = {'Fp1'};
 

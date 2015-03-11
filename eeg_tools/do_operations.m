@@ -71,6 +71,10 @@ if project.operations.do_singlesubjects_band_comparison
     EEG = proj_eeglab_subject_add_factor(project, 'list_select_subjects', list_select_subjects);
 end
 %==================================================================================
+if project.operations.do_extract_narrowband
+    EEG = proj_eeglab_subject_extract_narrowband(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
+end
+%==================================================================================
 
 
 

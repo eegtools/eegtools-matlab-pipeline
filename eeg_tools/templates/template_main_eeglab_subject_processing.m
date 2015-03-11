@@ -122,14 +122,12 @@ project.operations.do_custom_epochs                                             
 project.operations.do_factors                                                       = 0;
 
 %---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-% extract narrowband for each subject and selected condition and save
-% separately each condition in a mat file
-project.operations.do_extract_narrowband                                            = 0;
-
-
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 % perform basic single-subject plotting and analysis, basically 1 condition spectral graphs, single epochs desynch, or 2 conditions comparisons
 project.operations.do_singlesubjects_band_comparison                                = 0;
+
+%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+% extract narrowband for each subject and selected condition and save separately each condition in a mat file
+project.operations.do_extract_narrowband                                            = 0;
 
 %=====================================================================================================================================================================
 % S T A R T    P R O C E S S I N G  
