@@ -679,7 +679,7 @@ if isfield(project, 'postprocess')
 end
 
 
-project.postprocess.ersp.frequency_bands(1)         = struct('name','teta','min',4,'max',8,'ref_roi_list',{'Cpz'}, 'ref_roi_name','Cpz','ref_cond', 'ao', 'ref_tw_list', [0 100], 'ref_tw_name', 'gigi');  
+project.postprocess.ersp.frequency_bands(1)         = struct('name','teta','min',4,'max',8,'ref_roi_list',{'Cpz'}, 'ref_roi_name','Cpz','ref_cond', 'ao', 'ref_tw_list', [0 100], 'ref_tw_name', 'gigi', 'realign_method','auc');  
 project.postprocess.ersp.frequency_bands(2)         = struct('name','mu','min',8,'max',12,'ref_roi',[]);
 project.postprocess.ersp.frequency_bands(3)         = struct('name','beta1','min',14, 'max',20,'ref_roi',[]);
 project.postprocess.ersp.frequency_bands(4)         = struct('name','beta2','min',20, 'max',32,'ref_roi',[]);
