@@ -133,8 +133,8 @@ elseif strcmp(mode.peak_type, 'off')
 end
 
 tw_stat_estimator           = mode.tw_stat_estimator;       ... mean, extremum
-time_resolution_mode        = mode.time_resolution_mode;    ... continous, tw
-sel_extrema                 = project.postprocess.ersp.sel_extrema;
+    time_resolution_mode        = mode.time_resolution_mode;    ... continous, tw
+    sel_extrema                 = project.postprocess.ersp.sel_extrema;
 
 for par=1:2:length(varargin)
     switch varargin{par}
@@ -167,6 +167,18 @@ ersp_curve_roi_fb_stat.frequency_bands_names    = frequency_bands_names;
 ersp_curve_roi_fb_stat.frequency_bands_list     = frequency_bands_list;
 ersp_curve_roi_fb_stat.mode                     = mode;
 
+%% calculate narrowband
+% it does not depending even by the design: the ref condition is fixed the
+% same for all designs. from the narrowband structure will select the band
+% for each subject and this band will be applied to all conditions of the
+% same subject
+
+if strcmp(do_narrowband,'on')
+    nb = proj_eeglab_subject_extract_narrowband(project);
+end
+
+
+
 
 for design_num=design_num_vec
     %% subjects list divided by factor levels
@@ -192,14 +204,17 @@ str                                = datestr(now, 'dd-mmm-yyyy-HH-MM-SS');
 plot_dir                               = fullfile(results_path, analysis_name,[STUDY.design(design_num).name,'-ersp_curve_roi_',which_method_find_extrema,'-',str]);
 mkdir(plot_dir);
 
+
+
+
 %% set representation to time-frequency representation
 STUDY = pop_erspparams(STUDY, 'topotime',[] ,'plotgroups','apart' ,'plotconditions','apart','averagechan','on','method', stat_method);
 
 %% for each roi in the list
 for nroi = 1:length(roi_list)
     ersp=[];
-        list_design_subjects                   = eeglab_generate_subjects_list_by_factor_levels(STUDY, design_num);
-
+    list_design_subjects                   = eeglab_generate_subjects_list_by_factor_levels(STUDY, design_num);
+    
     roi_channels=roi_list{nroi};
     roi_name=roi_names{nroi};
     STUDY = pop_statparams(STUDY, 'groupstats','off','condstats','off','method', stat_method);
@@ -293,7 +308,19 @@ for nroi = 1:length(roi_list)
                 
                 narrowband_output = [];
                 
+                %% narrowband
+                % the possibility of restrict and recenter the band considered based on the activity of the single subject
+                % (thus obtaining theoretically more reliable results, eliminating physiological inter subject variability.
+                % assume that for each band there is a reference condition
+                % and a reference roi. for this condition and roi,
+                % calculate for each subject the frequency with the strongest activity
+                % (fnb). Then, using calculated fnb and [dfmin dmfmax], use the same narrow band for all conditions of the single considered subject.
+                % so, in a first step (depending only by band) calculate
+                % fnb for each subject. in a second steps apply fnb to all
+                % conditions of the corresponding subject.
+                
                 if strcmp(do_narrowband,'on')
+                    
                     group_fmin = fmin;
                     group_fmax = fmax;
                     
@@ -313,8 +340,8 @@ for nroi = 1:length(roi_list)
                     
                     
                     %                     if ~isempty([sub_adjusted_fmin, sub_adjusted_fmax])
-                    fmin                                    = narrowband_output.results.sub.fmin;
-                    fmax                                    = narrowband_output.results.sub.fmax;
+                    %                     fmin                                    = narrowband_output.results.sub.fmin;
+                    %                     fmax                                    = narrowband_output.results.sub.fmax;
                     %                     end
                     
                     narrowband_output.adjusted_frequency_band{nf1,nf2}(nsub,:)      = [narrowband_output.results.sub.fmin, narrowband_output.results.sub.fmax];
@@ -329,6 +356,9 @@ for nroi = 1:length(roi_list)
                 end
             
             narrowband{nf1,nf2,nsub}            = narrowband_output;
+            
+            fmin                                    = nb.results.nb.band(1).sub(nsub).fnb  - project.postprocess.ersp.frequency_bands(nband).dfmin;
+            fmax                                    = nb.results.nb.band(1).sub(nsub).fnb  + project.postprocess.ersp.frequency_bands(nband).dfmax;
             sel_freqs                           = freqs >= fmin & freqs <= fmax;
             ersp_curve_roi_fb{nf1,nf2}(:,nsub)  = mean(ersp_roi{nf1,nf2}(sel_freqs,:,nsub),1);
             
@@ -580,7 +610,7 @@ for nroi = 1:length(roi_list)
         ersp_curve_roi_fb_stat.dataroi(nroi).databand(nband).dfinter               = dfinter;
         
         
-        ersp_curve_roi_fb_stat.dataroi(nroi).databand(nband).narrowband            = narrowband;
+        %         ersp_curve_roi_fb_stat.dataroi(nroi).databand(nband).narrowband            = narrowband;
         
         
     end

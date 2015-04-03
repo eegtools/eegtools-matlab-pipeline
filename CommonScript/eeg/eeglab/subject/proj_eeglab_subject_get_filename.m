@@ -25,9 +25,9 @@ function file_name = proj_eeglab_subject_get_filename(project, subj_name, analys
                 custom_suffix   = varargin{opt+1};
             case 'cond_name' 
                 cond_name       = varargin{opt+1};
-                if not(strcmp(analysis_step, 'output_epoching')) && not(strcmp(analysis_step, 'add_factor'))
-                    error(['error in proj_eeglab_subject_get_filename with cond_name parameter specified, the analysis_step is not ''output_epoching'' or ''add_factor'', please correct the function call']);
-                end
+%                 if not(strcmp(analysis_step, 'output_epoching')) && not(strcmp(analysis_step, 'add_factor'))
+%                     error(['error in proj_eeglab_subject_get_filename with cond_name parameter specified, the analysis_step is not ''output_epoching'' or ''add_factor'', please correct the function call']);
+%                 end
         end
     end
 
