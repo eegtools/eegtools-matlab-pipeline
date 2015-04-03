@@ -377,8 +377,8 @@ project.subjects.narrowband_file            = [];
 project.subjects.baseline_file              = [];
 project.subjects.baseline_file_interval_s   = [];
 
-
-project.subjects.narrowband_suffix_cell ={'baseline','ao','aois'}; 
+%% allow the possibility to define a different reference condition for each band
+% project.subjects.narrowband_suffix_cell ={'baseline','ao','aois'}; 
 
 project.subjects.data(1)  = struct('name', 'CC_01_vittoria', 'group', 'CC', 'age', 13, 'gender', 'f', 'handedness', 'r', 'bad_ch', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
 project.subjects.data(2)  = struct('name', 'CC_02_fabio',    'group', 'CC', 'age', 12, 'gender', 'm', 'handedness', 'r', 'bad_ch', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
@@ -679,7 +679,7 @@ if isfield(project, 'postprocess')
 end
 
 
-project.postprocess.ersp.frequency_bands(1)         = struct('name','teta','min',4,'max',8,'ref_roi_list',{'Cpz'}, 'ref_roi_name','Cpz','ref_cond', 'ao', 'ref_tw_list', [0 100], 'ref_tw_name', 'gigi', 'realign_method','auc');  
+project.postprocess.ersp.frequency_bands(1)         = struct('name','teta','min',4,'max',8,'dfmin',1,'dfmax',1,'ref_roi_list',{'Cpz'}, 'ref_roi_name','Cpz','ref_cond', 'ao', 'ref_tw_list', [0 100], 'ref_tw_name', 'gigi', 'which_realign_measure','auc');  
 project.postprocess.ersp.frequency_bands(2)         = struct('name','mu','min',8,'max',12,'ref_roi',[]);
 project.postprocess.ersp.frequency_bands(3)         = struct('name','beta1','min',14, 'max',20,'ref_roi',[]);
 project.postprocess.ersp.frequency_bands(4)         = struct('name','beta2','min',20, 'max',32,'ref_roi',[]);
