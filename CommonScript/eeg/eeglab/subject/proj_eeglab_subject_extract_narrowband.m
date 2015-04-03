@@ -1,4 +1,4 @@
-function output = proj_eeglab_subject_extract_narrowband(project, varargin)
+function output = proj_eeglab_subject_extract_narrowband(project, analysis_name, varargin)
 
 % funzione che cicla sui soggetti: dalla struttura project si prendono le
 % informazioni sulla banda del tipo
@@ -21,7 +21,7 @@ custom_suffix               = [];
 results_path                       = project.paths.results;
 
 str                                = datestr(now, 'dd-mmm-yyyy-HH-MM-SS');
-narrow_band_dir                    = fullfile(results_path, ['narrow_band-',str]);
+narrow_band_dir                    = fullfile(results_path, analysis_name,['narrow_band-',str]);
 mkdir(narrow_band_dir);
 
 for par=1:2:length(varargin)

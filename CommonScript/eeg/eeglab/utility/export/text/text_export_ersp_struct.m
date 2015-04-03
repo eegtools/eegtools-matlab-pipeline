@@ -53,18 +53,18 @@ function [dataexpcols, dataexp] = text_export_ersp_struct(out_file,ersp_struct)
     
     if isempty(char(ersp_struct.study_des.variable(1).label))
         dataexpcols={'subject', char(ersp_struct.study_des.variable(2).label), 'band_name' ,'time_window',  'roi', 'ersp_mean', 'ersp_extr', 'ersp_extr_lat'};    
-        formatSpecCols = [repmat('%s ',1,length(dataexpcols)),'\r\n'];
-        formatSpecData = '%s %s %s %s %s %f %f %f\r\n';
+        formatSpecCols = [repmat('%s\t',1,length(dataexpcols)-1),'%s\r\n'];
+        formatSpecData = '%s\t%s\t%s\t%s\t%s\t%f\t%f\t%f\r\n';
         dataexp=[subj, f2, band, tw,  roi, erspmean, ersp_extr, ersp_extr_lat];
     elseif isempty(char(ersp_struct.study_des.variable(2).label))
         dataexpcols={'subject', char(ersp_struct.study_des.variable(1).label), 'band_name' ,'time_window',  'roi', 'ersp_mean', 'ersp_extr', 'ersp_extr_lat'};    
-        formatSpecCols = [repmat('%s ',1,length(dataexpcols)),'\r\n'];
-        formatSpecData = '%s %s %s %s %s %f %f %f\r\n';  
+        formatSpecCols = [repmat('%s ',1,length(dataexpcols)-1),'%s\r\n'];
+        formatSpecData = '%s\t%s\t%s\t%s\t%s\t%f\t%f\t%f\r\n';  
         dataexp=[subj, f1, band, tw,  roi, erspmean, ersp_extr, ersp_extr_lat];
     else
         dataexpcols={'subject', char(ersp_struct.study_des.variable(1).label), char(ersp_struct.study_des.variable(2).label), 'band_name' ,'time_window',  'roi', 'ersp_mean', 'ersp_extr', 'ersp_extr_lat'};    
-        formatSpecCols = [repmat('%s ',1,length(dataexpcols)),'\r\n'];
-        formatSpecData = '%s %s %s %s %s %s %f %f %f\r\n';
+        formatSpecCols = [repmat('%s ',1,length(dataexpcols)-1),'%s\r\n'];
+        formatSpecData = '%s\t%s\t%s\t%s\t%s\t%s\t%f\t%f\t%f\r\n';
         dataexp=[subj, f1, f2, band, tw,  roi, erspmean, ersp_extr, ersp_extr_lat];
     end
     

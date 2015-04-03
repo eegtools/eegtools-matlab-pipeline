@@ -85,8 +85,8 @@ function [dataexpcols, dataexp] = text_export_ersp_fb_realign(out_file,ersp_stru
             'adjusted_fmin', 'adjusted_fmax', 'adjusted_realign_freq','adjusted_realign_freq_value',...
             'adjusted_realign_freq_value_lat',' mean_centroid_group_fb',' mean_centroid_sub_realign_fb',' median_centroid_group_fb','median_centroid_sub_realign_fb'};    
         
-        formatSpecCols = [repmat('%s ',1,length(dataexpcols)),'\r\n'];
-        formatSpecData = '%s %s %s %s %s %f %f %f %f %f %f %f %f %f\r\n';
+        formatSpecCols = [repmat('%s\t',1,length(dataexpcols)-1),'%s\r\n'];
+        formatSpecData = '%s\t%s\t%s\t%s\t%s\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\r\n';
         dataexp=[subj, f2, band, tw,  roi,...
             adjusted_fmin, adjusted_fmax, adjusted_realign_freq, adjusted_realign_freq_value,...
            adjusted_realign_freq_value_lat, mean_centroid_group_fb, mean_centroid_sub_realign_fb, median_centroid_group_fb, median_centroid_sub_realign_fb];
@@ -96,8 +96,8 @@ function [dataexpcols, dataexp] = text_export_ersp_fb_realign(out_file,ersp_stru
            'adjusted_fmin', 'adjusted_fmax', 'adjusted_realign_freq','adjusted_realign_freq_value',...
             'adjusted_realign_freq_value_lat',' mean_centroid_group_fb',' mean_centroid_sub_realign_fb',' median_centroid_group_fb','median_centroid_sub_realign_fb'};  
         
-        formatSpecCols = [repmat('%s ',1,length(dataexpcols)),'\r\n'];
-        formatSpecData = '%s %s %s %s %s %f %f %f %f %f %f %f %f %f\r\n';  
+        formatSpecCols = [repmat('%s\t',1,length(dataexpcols)-1),'%s\r\n'];
+        formatSpecData = '%s\t%s\t%s\t%s\t%s\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\r\n';  
         dataexp=[subj, f1, band, tw,  roi,...
             adjusted_fmin, adjusted_fmax, adjusted_realign_freq, adjusted_realign_freq_value,...
            adjusted_realign_freq_value_lat, mean_centroid_group_fb, mean_centroid_sub_realign_fb, median_centroid_group_fb, median_centroid_sub_realign_fb];
@@ -107,8 +107,8 @@ function [dataexpcols, dataexp] = text_export_ersp_fb_realign(out_file,ersp_stru
             'adjusted_fmin', 'adjusted_fmax', 'adjusted_realign_freq','adjusted_realign_freq_value',...
             'adjusted_realign_freq_value_lat',' mean_centroid_group_fb',' mean_centroid_sub_realign_fb',' median_centroid_group_fb','median_centroid_sub_realign_fb'};  
         
-        formatSpecCols = [repmat('%s ',1,length(dataexpcols)),'\r\n'];
-        formatSpecData = '%s %s %s %s %s %s %f %f %f %f %f %f %f %f %f\r\n';
+        formatSpecCols = [repmat('%s\t',1,length(dataexpcols)-1),'%s\r\n'];
+        formatSpecData = '%s\t%s\t%s\t%s\t%s\t%s\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\r\n';
         dataexp=[subj, f1, f2, band, tw,  roi,...
             adjusted_fmin, adjusted_fmax, adjusted_realign_freq, adjusted_realign_freq_value,...
            adjusted_realign_freq_value_lat, mean_centroid_group_fb, mean_centroid_sub_realign_fb, median_centroid_group_fb, median_centroid_sub_realign_fb];

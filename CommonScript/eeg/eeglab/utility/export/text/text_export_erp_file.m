@@ -60,18 +60,18 @@ function [dataexpcols, dataexp] = text_export_erp_file(in_file,out_file)
     
     if isempty(char(erp_struct.study_des.variable(1).label))
         dataexpcols={'subject', char(erp_struct.study_des.variable(2).label) ,'time_window',  'roi', 'erp_mean', 'erp_extr', 'erp_extr_lat'};    
-        formatSpecCols = [repmat('%s ',1,length(dataexpcols)),'\r\n'];
-        formatSpecData = '%s  %s %s %s %f %f %f\r\n';
+        formatSpecCols = [repmat('%s\t',1,length(dataexpcols)-1),'%s\r\n'];
+        formatSpecData = '%s\t%s\t%s\t%s\t%f\t%f\t%f\r\n';
         dataexp=[subj, f2, tw,  roi, erpmean, erp_extr, erp_extr_lat];
     elseif isempty(char(erp_struct.study_des.variable(2).label))
         dataexpcols={'subject', char(erp_struct.study_des.variable(1).label), 'time_window',  'roi', 'erp_mean', 'erp_extr', 'erp_extr_lat'};    
-        formatSpecCols = [repmat('%s ',1,length(dataexpcols)),'\r\n'];
-        formatSpecData = '%s %s  %s %s %f %f %f\r\n';  
+        formatSpecCols = [repmat('%s\t',1,length(dataexpcols)-1),'%s\r\n'];
+        formatSpecData = '%s\t%s\t%s\t%s\t%f\t%f\t%f\r\n';  
         dataexp=[subj, f1, tw,  roi, erpmean, erp_extr, erp_extr_lat];
     else
         dataexpcols={'subject', char(erp_struct.study_des.variable(1).label), char(erp_struct.study_des.variable(2).label), 'time_window',  'roi', 'erp_mean', 'erp_extr', 'erp_extr_lat'};    
-        formatSpecCols = [repmat('%s ',1,length(dataexpcols)),'\r\n'];
-        formatSpecData = '%s %s %s %s %s %f %f %f\r\n';
+        formatSpecCols = [repmat('%s\t',1,length(dataexpcols)-1),'%s\r\n'];
+        formatSpecData = '%s\t%s\t%s\t%s\t%s\t%f\t%f\t%f\r\n';
         dataexp=[subj, f1, f2, tw,  roi, erpmean, erp_extr, erp_extr_lat];
     end
     
