@@ -172,7 +172,7 @@ tw_stat_estimator           = mode.tw_stat_estimator;       ... mean, extremum
 % same subject
 
 if strcmp(do_narrowband,'on')
-    nb = proj_eeglab_subject_extract_narrowband(project);
+    nb = proj_eeglab_subject_extract_narrowband(project,stat_analysis_suffix);
 end
 
 

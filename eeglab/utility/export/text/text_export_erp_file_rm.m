@@ -61,8 +61,8 @@ function [dataexpcols, dataexp] = text_export_erp_file_rm(in_file,out_file)
     erp_extr_lat    = num2cell(erp_extr_lat);
    
     num_columns     = length(cond_label);
-    formatSpecCols  = [repmat('%s ',1,num_columns),'\r\n'];
-    formatSpecData  = ['%s ' repmat('%f ',1,num_columns-1),'\r\n'];
+    formatSpecCols  = [repmat('%s\t',1,num_columns-1),'%s\r\n'];
+    formatSpecData  = ['%s\t' repmat('%f\t',1,num_columns-1),'\r\n'];
 
     data_mean       = [subj, erpmean];
     data_extr       = [subj, erp_extr];

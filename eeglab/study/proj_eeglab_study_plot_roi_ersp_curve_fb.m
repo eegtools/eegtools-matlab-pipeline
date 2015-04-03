@@ -174,7 +174,7 @@ ersp_curve_roi_fb_stat.mode                     = mode;
 % same subject
 
 if strcmp(do_narrowband,'on')
-    nb = proj_eeglab_subject_extract_narrowband(project);
+    nb = proj_eeglab_subject_extract_narrowband(project,analysis_name);
 end
 
 
