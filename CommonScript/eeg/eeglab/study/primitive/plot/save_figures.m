@@ -1,12 +1,26 @@
 function [ ] = save_figures( input, varargin )
-%% function [ fig ] = save_figures( input )
-% save figures representing results of group statistical analysis in different formats
+%% function [ ] = save_figures( input )
+% save figures representing results of group statistical analysis in
+% different formats (fig, eps, svg, tif + ps and pdf with embedded figures)
 %
 % plot_dir     = input.plot_dir;                                             % root directory for saving figures
 % fig          = input.fig;                                                  % the figure handle to be saved
 % name_embed   = input.name_embed;                                           % the name (without the path) of the overview files (ps, pdf, ppt,)
 % suffix_plot  = input.suffix_plot;                                          % the suffix added, for each saved figure, to the name of ebbedded files
 %
+% varargin
+% res             = '-r300'; % resolution
+% exclude_format  = [];
+% renderer        = 'painter';
+% printer         ='-depsc2';
+% pdf_mode        = 'export_fig';
+%                    switch pdf_mode
+%                     case 'export_fig'
+%                         export_fig(fig, pdf_path, '-pdf', '-append',res);
+%                     case 'ps2pdf'
+%                         ps2pdf('psfile',  ps_path, 'pdffile', pdf_path, 'gspapersize', 'a4')
+% end
+
 plot_dir     = input.plot_dir;                                             % root directory for saving figures
 fig          = input.fig;                                                  % the figure handle to be saved
 name_embed   = input.name_embed;                                           % the name (without the path) of the overview files (ps, pdf, ppt,)
@@ -35,6 +49,7 @@ res             = '-r300'; % resolution
 exclude_format  = [];
 renderer        = 'painter';
 pdf_mode        = 'export_fig';
+printer         ='-depsc2';
 
 %% check optional arguments
 
@@ -43,6 +58,8 @@ for par=1:2:length(varargin)
         case {'renderer'          , ...
               'pdf_mode'          , ...
               'exclude_format'    , ...
+              'res'               , ...
+              'printer'           , ...
              }
             
             if isempty(varargin{par+1})
@@ -62,7 +79,7 @@ modify_plot(fig);
 saveas(fig, fig_path);
 
 % save eps file
-print(eps_path,'-depsc2',res);
+print(eps_path,printer,res);
 
 if(not(sum(ismember(exclude_format,'svg')))) % note: there is a specific bug of matlab/eeglab: when saving topoplots svg come corrupted
     if(not(exist(svg_dir,'dir')));mkdir(svg_dir);end;
