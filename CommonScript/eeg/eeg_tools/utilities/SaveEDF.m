@@ -87,41 +87,41 @@ function SaveEDF(filename, data, header)
     Annt=cell(1, header.records); 
     for p1=1:header.records
         a=[43 unicode2native(num2str(p1-1)) 20 20 00];
-         if Pa.*p1<=length(header.annotation.event)
-    for p2=Pa.*p1-Pa+1:Pa.*p1
-        a=[a 43 unicode2native(num2str(header.annotation.starttime(p2)))];
-            if header.annotation.duration(p2)>0
-           a=[a 21 unicode2native(num2str(header.annotation.duration(p2)))];
+        if Pa.*p1<=length(header.annotation.event)
+            for p2=Pa.*p1-Pa+1:Pa.*p1
+                a=[a 43 unicode2native(num2str(header.annotation.starttime(p2)))];
+                if header.annotation.duration(p2)>0
+                    a=[a 21 unicode2native(num2str(header.annotation.duration(p2)))];
+                end
+                a=[a 20 unicode2native(header.annotation.event{p2}) 20 00];
             end
-           a=[a 20 unicode2native(header.annotation.event{p2}) 20 00];
-    end
         end
-    Annt{p1}=a;
+        Annt{p1}=a;
 
-        end
-    fs=cell2mat(cellfun(@length, Annt, 'UniformOutput', false)); 
-    AnnotationSR=ceil(max(fs)./2).*2; if AnnotationSR<header.samplerate(1), AnnotationSR=header.samplerate(1).*2; end
-    AnnotationDATA=zeros(AnnotationSR, header.records);
+    end
+    fs              = cell2mat(cellfun(@length, Annt, 'UniformOutput', false)); 
+    AnnotationSR    = ceil(max(fs)./2).*2; if AnnotationSR<header.samplerate(1), AnnotationSR=header.samplerate(1).*2; end
+    AnnotationDATA  = zeros(AnnotationSR, header.records);
     for p1=1:header.records
         AnnotationDATA(1:fs(p1), p1)=Annt{p1};
     end
 
     % channel with annotation data
-    AnnotationDATA=typecast(uint8(AnnotationDATA(:)'), 'int16');
-    AnnotationSR=length(AnnotationDATA)./header.records; % samplerate annotation channel
+    AnnotationDATA      = typecast(uint8(AnnotationDATA(:)'), 'int16');
+    AnnotationSR        = length(AnnotationDATA)./header.records; % samplerate annotation channel
 
-    data=[data double(AnnotationDATA)];
-    header.samplerate=[header.samplerate; AnnotationSR];
+    data                = [data double(AnnotationDATA)];
+    header.samplerate   = [header.samplerate; AnnotationSR];
 
-    header.channels = length(data);
-    signal_length=length(data{1});
+    header.channels     = length(data);
+    signal_length       = length(data{1});
 
 
     %%%%% PART 2: Header forming
 
     %1 local patient identification
     if ~isfield(header,'patientID')
-           header.patientID='';
+        header.patientID='';
         if isfield(header,'patient')
          %1 patient code
             if ~isfield(header.patient,'ID')
@@ -157,14 +157,14 @@ function SaveEDF(filename, data, header)
 
     %2 local recording identification
     if ~isfield(header,'recordID')
-       header.recordID='Startdate'; 
+        header.recordID='Startdate'; 
 
-    if ~isfield(header, 'startdate')
-    header.recordID=[header.recordID ' X'];
-    else
-       F_month={'JAN' 'FEB' 'MAR' 'APR' 'MAY' 'JUN' 'JUL' 'AUG' 'SEP' 'OCT' 'NOV' 'DEC'};
-       header.recordID=[header.recordID ' ' header.startdate(1:2) '-' F_month{str2num(header.startdate(4:5))} '-' header.startdate(7:8)];
-    end
+        if ~isfield(header, 'startdate')
+            header.recordID=[header.recordID ' X'];
+        else
+           F_month={'JAN' 'FEB' 'MAR' 'APR' 'MAY' 'JUN' 'JUL' 'AUG' 'SEP' 'OCT' 'NOV' 'DEC'};
+           header.recordID=[header.recordID ' ' header.startdate(1:2) '-' F_month{str2num(header.startdate(4:5))} '-' header.startdate(7:8)];
+        end
 
         if isfield(header,'record')
         %1 hospital administration code of the investigation
@@ -189,17 +189,17 @@ function SaveEDF(filename, data, header)
             header.recordID=[header.recordID ' X X X'];
         end
     end
-     header.recordID= header.recordID(:);
+    header.recordID= header.recordID(:);
 
     %3 startdate of recording (dd.mm.yy)
     if ~isfield(header, 'startdate')
-    header.startdate='01.01.00';
+        header.startdate='01.01.00';
     end
     header.startdate=header.startdate(:);
 
     %4 starttime of recording (hh.mm.ss)
     if ~isfield(header, 'starttime')
-    header.starttime='00.00.00';
+        header.starttime='00.00.00';
     end
     header.starttime=header.starttime(:);
 
@@ -208,21 +208,24 @@ function SaveEDF(filename, data, header)
     if ~isfield(header, 'labels')
         header.labels=cellstr(num2str([1:header.channels-1]'));
     end
-    header.labels{end+1}='EDF Annotations';% annotation channel
-    labels = char(32*ones(header.channels, 16));
+    header.labels{end+1}    = 'EDF Annotations';% annotation channel
+    labels                  = char(32*ones(header.channels, 16));
 
     for n=1:header.channels
-        if length(header.labels{n})>16,header.labels{n}=header.labels{n}(1:16);end
-    labels(n,1:length(header.labels{n})) = header.labels{n}; 
+        if length(header.labels{n})>16
+            header.labels{n}=header.labels{n}(1:16);
+        end
+        labels(n,1:length(header.labels{n})) = header.labels{n}; 
     end
-    header.labels=labels';
-    header.labels=header.labels(:);
+    header.labels = labels';
+    header.labels = header.labels(:);
 
     %6 transducer type
     if ~isfield(header, 'transducer')
-    header.transducer={' '};
+        header.transducer={' '};
     end
     if ~iscell(header.transducer), header.transducer={header.transducer}; end
+    
     if length(header.transducer)==1
        header.transducer(1:header.channels)=header.transducer;
     end
@@ -232,9 +235,9 @@ function SaveEDF(filename, data, header)
         if n>length(header.transducer)
             header.transducer{n}=' ';
         end
-    if length(header.transducer{n})>80,header.transducer{n}=header.transducer{n}(1:80);end
-    if isempty(header.transducer{n}), header.transducer{n}=' '; end
-    transducer(n,1:length(header.transducer{n})) = header.transducer{n}; 
+        if length(header.transducer{n})>80,header.transducer{n}=header.transducer{n}(1:80);end
+        if isempty(header.transducer{n}), header.transducer{n}=' '; end
+        transducer(n,1:length(header.transducer{n})) = header.transducer{n}; 
     end
     header.transducer=transducer';
     header.transducer=header.transducer(:);
@@ -242,7 +245,7 @@ function SaveEDF(filename, data, header)
     %7 units
 
     if ~isfield(header, 'units')
-    header.units={' '};
+        header.units={' '};
     end
     if ~iscell(header.units), header.units={header.units}; end
     if length(header.units)==1
@@ -254,9 +257,9 @@ function SaveEDF(filename, data, header)
         if n>length(header.units)
             header.units{n}=' ';
         end
-    if length(header.units{n})>8,header.units{n}=header.units{n}(1:8);end
-    if isempty(header.units{n}), header.units{n}=' '; end
-    units(n,1:length(header.units{n})) = header.units{n}; 
+        if length(header.units{n})>8,header.units{n}=header.units{n}(1:8);end
+        if isempty(header.units{n}), header.units{n}=' '; end
+        units(n,1:length(header.units{n})) = header.units{n}; 
     end
     units(double(units)<32)=' ';
     units(double(units)>126)=' ';
@@ -268,7 +271,7 @@ function SaveEDF(filename, data, header)
     %8 prefiltering
 
     if ~isfield(header, 'prefilt')
-    header.prefilt={' '};
+        header.prefilt={' '};
     end
     if ~iscell(header.prefilt), header.prefilt={header.prefilt}; end
     if length(header.prefilt)==1
@@ -280,8 +283,8 @@ function SaveEDF(filename, data, header)
         if n>length(header.prefilt)
             header.prefilt{n}=' ';
         end
-    if length(header.prefilt{n})>80,header.prefilt{n}=header.prefilt{n}(1:80);end
-    prefilt(n,1:length(header.prefilt{n})) = header.prefilt{n}; 
+        if length(header.prefilt{n})>80,header.prefilt{n}=header.prefilt{n}(1:80);end
+        prefilt(n,1:length(header.prefilt{n})) = header.prefilt{n}; 
     end
     header.prefilt=prefilt';
 
