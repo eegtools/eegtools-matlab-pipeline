@@ -172,6 +172,7 @@ ersp_curve_roi_fb_stat.mode                     = mode;
 % same for all designs. from the narrowband structure will select the band
 % for each subject and this band will be applied to all conditions of the
 % same subject
+nb = [];
 
 if strcmp(do_narrowband,'on')
     nb = proj_eeglab_subject_extract_narrowband(project,analysis_name);
@@ -353,15 +354,16 @@ for nroi = 1:length(roi_list)
                         narrowband_output.mean_centroid_sub_realign_fb{nf1,nf2}(nsub)   = narrowband_output.results.sub.fb.centroid_mean;   ...mean_centroid_sub_realign_fb;
                         narrowband_output.median_centroid_group_fb{nf1,nf2}(nsub)       = narrowband_output.results.group.fb.centroid_median;  ...results.group.fb.centroid_median ...median_centroid_group_fb;
                         ...narrowband_output.median_centroid_sub_realign_fb{nf1,nf2}(nsub) = 0; ...narrowband_output.results.sub.fb.centroid_median;  ...median_centroid_sub_realign_fb;
+                        
+                    
+                    narrowband{nf1,nf2,nsub}            = narrowband_output;
+                    
+                    fmin                                    = nb.results.nb.band(1).sub(nsub).fnb  - project.postprocess.ersp.frequency_bands(nband).dfmin;
+                    fmax                                    = nb.results.nb.band(1).sub(nsub).fnb  + project.postprocess.ersp.frequency_bands(nband).dfmax;
                 end
-            
-            narrowband{nf1,nf2,nsub}            = narrowband_output;
-            
-            fmin                                    = nb.results.nb.band(1).sub(nsub).fnb  - project.postprocess.ersp.frequency_bands(nband).dfmin;
-            fmax                                    = nb.results.nb.band(1).sub(nsub).fnb  + project.postprocess.ersp.frequency_bands(nband).dfmax;
-            sel_freqs                           = freqs >= fmin & freqs <= fmax;
-            ersp_curve_roi_fb{nf1,nf2}(:,nsub)  = mean(ersp_roi{nf1,nf2}(sel_freqs,:,nsub),1);
-            
+                sel_freqs                           = freqs >= fmin & freqs <= fmax;
+                ersp_curve_roi_fb{nf1,nf2}(:,nsub)  = mean(ersp_roi{nf1,nf2}(sel_freqs,:,nsub),1);
+                
                 end
                 
             end
@@ -642,8 +644,20 @@ ersp_curve_roi_fb_stat.list_design_subjects = list_design_subjects;
 out_file_name=fullfile(plot_dir,'ersp_curve_roi_fb-stat')
 save([out_file_name,'.mat'],'ersp_curve_roi_fb_stat');
 
-if ~ ( strcmp(which_method_find_extrema,'group_noalign') || strcmp(which_method_find_extrema,'continuous') );
+% if ~ ( strcmp(which_method_find_extrema,'group_noalign') || strcmp(which_method_find_extrema,'continuous') );
+%     [dataexpcols, dataexp]=text_export_ersp_struct([out_file_name,'.txt'],ersp_curve_roi_fb_stat);
+% end
+
+
+if not( strcmp(which_method_find_extrema,'group_noalign') || strcmp(which_method_find_extrema,'continuous') );
     [dataexpcols, dataexp]=text_export_ersp_struct([out_file_name,'.txt'],ersp_curve_roi_fb_stat);
 end
+
+if  strcmp(which_method_find_extrema,'continuous') ;
+    [dataexpcols, dataexp]=text_export_ersp_continuous_struct([out_file_name,'.txt'],ersp_curve_roi_fb_stat);
+end
+
+
+
 end
 end
