@@ -101,7 +101,7 @@ pgroup=[];
 pinter=[];
 output=[];
 
-
+nb=[];
 display_compact_plots=project.results_display.ersp.compact_plots;
 compact_display_h0 = project.results_display.ersp.compact_h0;
 compact_display_v0 = project.results_display.ersp.compact_v0;
@@ -403,15 +403,15 @@ for nband=1:length(frequency_bands_list)
                     narrowband_output.mean_centroid_sub_realign_fb{nf1,nf2}(nsub)   = narrowband_output.results.sub.fb.centroid_mean;   ...mean_centroid_sub_realign_fb;
                     narrowband_output.median_centroid_group_fb{nf1,nf2}(nsub)       = narrowband_output.results.group.fb.centroid_median;  ...results.group.fb.centroid_median ...median_centroid_group_fb;
                     ...narrowband_output.median_centroid_sub_realign_fb{nf1,nf2}(nsub) = 0; ...narrowband_output.results.sub.fb.centroid_median;  ...median_centroid_sub_realign_fb;
+                    
+                
+                narrowband{nf1,nf2,nsub}            = narrowband_output;
+                fmin                                    = nb.results.nb.band(1).sub(nsub).fnb  - project.postprocess.ersp.frequency_bands(nband).dfmin;
+                fmax                                    = nb.results.nb.band(1).sub(nsub).fnb  + project.postprocess.ersp.frequency_bands(nband).dfmax;
+                
             end
-        
-        narrowband{nf1,nf2,nsub}            = narrowband_output;
-        fmin                                    = nb.results.nb.band(1).sub(nsub).fnb  - project.postprocess.ersp.frequency_bands(nband).dfmin;
-        fmax                                    = nb.results.nb.band(1).sub(nsub).fnb  + project.postprocess.ersp.frequency_bands(nband).dfmax;
-        
-        
-        sel_freqs = freqs >= fmin & freqs <= fmax;
-        ersp_curve_roi_fb{nf1,nf2}(:,nsub)=mean(ersp_roi{nf1,nf2}(sel_freqs,:,nsub),1);
+            sel_freqs = freqs >= fmin & freqs <= fmax;
+            ersp_curve_roi_fb{nf1,nf2}(:,nsub)=mean(ersp_roi{nf1,nf2}(sel_freqs,:,nsub),1);
             end
             
         end
