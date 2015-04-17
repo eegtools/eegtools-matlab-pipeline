@@ -196,58 +196,6 @@ project.preproc.rt.allowed_tw_ms.min        = [];           % F17:
 project.preproc.rt.allowed_tw_ms.max        = [];           % F18:
 project.preproc.rt.output_folder            = [];           % F19:
 
-
-
-%% ADD NEW MARKERS
-
-% DEFINE MARKER LABELS
-project.preproc.marker_type.begin_trial     = 't1';
-project.preproc.marker_type.end_trial       = 't2';
-project.preproc.marker_type.begin_baseline  = 'b1';
-project.preproc.marker_type.end_baseline    = 'b2';
-
-% INSERT BEGIN TRIAL MARKERS (only if both the target and the begin trial
-% types are NOT empty)
-project.preproc.insert_begin_trial.target_event_types           = {'b1'};        % string or cell array of strings denoting the type(s) (i.e. labels) of the target events used to set the the begin trial markers 
-project.preproc.insert_begin_trial.begin_trial_marker_type      = project.preproc.marker_type.begin_trial;  % string denoting the type (i.e. label) of the new begin trial marker
-project.preproc.insert_begin_trial.delay.s                      = [0];                           % time shift (in ms) to anticipate (negative values ) or posticipate (positive values) the new begin trial markers
-                                                                                                %      with respect to the target events, if empty ([]) time shift = 0.
-
-% INSERT END TRIAL MARKERS (only if both the target and the begin trial
-% types are NOT empty)
-project.preproc.insert_end_trial.target_event_types             = {'b1'};        % string or cell array of strings denoting the type(s) (i.e. labels) of the target events used to set the the end trial markers 
-project.preproc.insert_end_trial.end_trial_marker_type          = project.preproc.marker_type.end_trial;    % string denoting the type (i.e. label) of the new end trial marker
-project.preproc.insert_end_trial.delay.s                        = [2.5];                           % time shift (in ms) to anticipate (negative values ) or posticipate (positive values) the new end trial markers
-   
-
-% INSERT BEGIN BASELINE MARKERS (project.epoching.baseline_replace.baseline_begin_marker)
-project.epoching.baseline_mark.baseline_begin_target_marker             = {'S 20','S 22','S 24','S 26'};                % a target event for placing the baseline markers: baseline begin marker will be placed at the target marker with a selected delay.
-project.epoching.baseline_mark.baseline_begin_target_marker_delay.s     = -0.5;                                         % the delay (in seconds) between the target marker and the begin baseline marker to be placed: 
-                                                                                                                        % >0 means that baseline begin FOLLOWS the target, 
-                                                                                                                        % =0 means that baseline begin IS AT THE SAME TIME the target, 
-                                                                                                                        % <0 means that baseline begin ANTICIPATES the target.
-                                                                                                                        % IMPOTANT NOTE: The latency information is displayed in seconds for continuous data, 
-                                                                                                                        % or in milliseconds relative to the epoch's time-locking event for epoched data. 
-                                                                                                                        % As we will see in the event scripting section, 
-                                                                                                                        % the latency information is stored internally in data samples (points or EEGLAB 'pnts') 
-                                                                                                                        % relative to the beginning of the continuous data matrix (EEG.data). 
-
-% INSERT END BASELINE MARKERS (project.epoching.baseline_replace.baseline_end_marker)                                                                                                                        
-project.epoching.baseline_mark.baseline_end_target_marker               = {'S 20','S 22','S 24','S 26'};                % a target event for placing the baseline markers: baseline begin marker will be placed at the target marker with a selected delay.
-project.epoching.baseline_mark.baseline_end_target_marker_delay.s       = 0;                                            % the delay (in seconds) between the target marker and the begin baseline marker to be placed: 
-                                                                                                                        % >0 means that baseline begin FOLLOWS the target, 
-                                                                                                                        % =0 means that baseline begin IS AT THE SAME TIME the target, 
-                                                                                                                        % <0 means that baseline begin ANTICIPATES the target.
-                                                                                                                        % IMPOTANT NOTE: The latency information is displayed in seconds for continuous data, 
-                                                                                                                        % or in milliseconds relative to the epoch's time-locking event for epoched data. 
-                                                                                                                        % As we will see in the event scripting section, 
-                                                                                                                        % the latency information is stored internally in data samples (points or EEGLAB 'pnts') 
-                                                                                                                        % relative to the beginning of the continuous data matrix (EEG.data). 
-                                                                                                
-% INSERT BLOCK MARKERS (only if
-% project.preproc.insert_end_trial.end_trial_marker_type is non empty)
-project.preproc.insert_block.trials_per_block                           = 40;              % number denoting the number of trials per block  
-                      
 % UNIFORM MONTAGES
 project.preproc.montage_list = {...
                                 {'Fp1','Fp2','F7','F3','Fz','F4','F8','FC5','FC1','FC2','FC6','T7','C3','Cz',...
@@ -262,12 +210,67 @@ project.preproc.montage_list = {...
                                  'FC4','FC2','FCz','Cz','C2','C4','C6','T8','TP8','CP6','CP4','CP2','P2','P4','P6',...
                                  'P8','P10','PO8','PO4','O2'}
 };
-                                                                                                
+
+
+                                                                                               
+% INSERT BLOCK MARKERS (only if
+% project.preproc.insert_end_trial.end_trial_marker_type is non empty)
+project.preproc.insert_block.trials_per_block                           = 40;              % number denoting the number of trials per block  
+                      
+     
+
+%% ADD NEW MARKERS
+
+% DEFINE MARKER LABELS
+project.preproc.marker_type.begin_trial     = 't1';
+project.preproc.marker_type.end_trial       = 't2';
+project.preproc.marker_type.begin_baseline  = 'b1';
+project.preproc.marker_type.end_baseline    = 'b2';
+
+% INSERT BEGIN TRIAL MARKERS (only if both the target and the begin trial
+% types are NOT empty)
+project.preproc.insert_begin_trial.target_event_types       = {'b1'};        % string or cell array of strings denoting the type(s) (i.e. labels) of the target events used to set the the begin trial markers 
+project.preproc.insert_begin_trial.delay.s                  = 0;                           % time shift (in ms) to anticipate (negative values ) or posticipate (positive values) the new begin trial markers
+                                                                                                %      with respect to the target events, if empty ([]) time shift = 0.
+
+% INSERT END TRIAL MARKERS (only if both the target and the begin trial
+% types are NOT empty)
+project.preproc.insert_end_trial.target_event_types         = {'b1'};        % string or cell array of strings denoting the type(s) (i.e. labels) of the target events used to set the the end trial markers 
+project.preproc.insert_end_trial.delay.s                    = [2.5];                           % time shift (in ms) to anticipate (negative values ) or posticipate (positive values) the new end trial markers
+
+
+% INSERT BEGIN BASELINE MARKERS (project.epoching.baseline_replace.baseline_begin_marker)
+project.preproc.insert_begin_baseline.target_event_types    = {'S 20','S 22','S 24','S 26'};                % a target event for placing the baseline markers: baseline begin marker will be placed at the target marker with a selected delay.
+project.preproc.insert_begin_baseline.delay.s               = -0.5;                                         % the delay (in seconds) between the target marker and the begin baseline marker to be placed: 
+                                                                                                                        % >0 means that baseline begin FOLLOWS the target, 
+                                                                                                                        % =0 means that baseline begin IS AT THE SAME TIME the target, 
+                                                                                                                        % <0 means that baseline begin ANTICIPATES the target.
+                                                                                                                        % IMPOTANT NOTE: The latency information is displayed in seconds for continuous data, 
+                                                                                                                        % or in milliseconds relative to the epoch's time-locking event for epoched data. 
+                                                                                                                        % As we will see in the event scripting section, 
+                                                                                                                        % the latency information is stored internally in data samples (points or EEGLAB 'pnts') 
+                                                                                                                        % relative to the beginning of the continuous data matrix (EEG.data). 
+
+% INSERT END BASELINE MARKERS (project.epoching.baseline_replace.baseline_end_marker)                                                                                                                        
+project.preproc.insert_end_baseline.target_event_types          = {'S 20','S 22','S 24','S 26'};                % a target event for placing the baseline markers: baseline begin marker will be placed at the target marker with a selected delay.
+project.preproc.insert_end_baseline.delay.s                     = 0;                                            % the delay (in seconds) between the target marker and the begin baseline marker to be placed: 
+                                                                                                                        % >0 means that baseline begin FOLLOWS the target, 
+                                                                                                                        % =0 means that baseline begin IS AT THE SAME TIME the target, 
+                                                                                                                        % <0 means that baseline begin ANTICIPATES the target.
+                                                                                                                        % IMPOTANT NOTE: The latency information is displayed in seconds for continuous data, 
+                                                                                                                        % or in milliseconds relative to the epoch's time-locking event for epoched data. 
+                                                                                                                        % As we will see in the event scripting section, 
+                                                                                                                        % the latency information is stored internally in data samples (points or EEGLAB 'pnts') 
+                                                                                                                        % relative to the beginning of the continuous data matrix (EEG.data). 
+
+                                                                                           
 %% ======================================================================================================
 % G:    EPOCHING
 % =======================================================================================================
 % input file name  = [original_data_prefix subj_name original_data_suffix project.import.output_suffix epoching.input_suffix . set]
 % output file name = [original_data_prefix subj_name original_data_suffix project.import.output_suffix epoching.input_suffix '_' CONDXX. set]
+
+
 
 
 
@@ -296,13 +299,6 @@ project.epoching.baseline_replace.mode                       = 'trial';         
 
 project.epoching.baseline_replace.baseline_originalposition  = 'before';                     % when replace the new baseline: the baseline segments to be inserted are originally 'before' or 'after' the events to  be epoched and processed                                                                                                                                                                             
 project.epoching.baseline_replace.baseline_finalposition     = 'before';                     % when replace the new baseline: the baseline segments are inserted 'before' or 'after' the events to  be epoched and processed                                                                                 
-
-project.epoching.baseline_replace.trial_begin_marker         = project.preproc.marker_type.begin_trial;
-project.epoching.baseline_replace.trial_end_marker           = project.preproc.marker_type.end_trial;
-
-project.epoching.baseline_replace.baseline_begin_marker      = project.preproc.marker_type.begin_baseline;                         % default 
-project.epoching.baseline_replace.baseline_end_marker        = project.preproc.marker_type.end_baseline;
-
 project.epoching.baseline_replace.replace                    = 'part';                    % 'all' 'part' replace all the pre/post marker period with a replicated baseline or replace the baseline at the begin (final position 'before') or at the end (final position 'after') of the recostructed baseline
 
                                                                                                              
