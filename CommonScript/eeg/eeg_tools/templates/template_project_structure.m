@@ -541,7 +541,7 @@ project.stats.ersp.decimation_factor_freqs_tf   = 10;
 project.stats.ersp.tf_resolution_mode           = 'continuous';         %'continuous'; 'decimate_times';'decimate_freqs';'decimate_times_freqs';'tw_fb';
 project.stats.ersp.measure                      = 'dB';                 % 'Pfu';  dB decibel, Pfu, (A-R)/R * 100 = (A/R-1) * 100 = (10^.(ERSP/10)-1)*100 variazione percentuale definita da pfursheller
 
-project.stats.ersp.do_narrowband                = 'on';                         % on|off enable/disable the adjustment of spectral band for each subject
+project.stats.ersp.do_narrowband                = 'off';                         % off|ref|auto  the adjustment of spectral band for each subject: off=no adhiustment, ref adjust based on a ref condition, auto ajust each condition separately
 project.stats.ersp.narrowband.group_tmin        = [];                     % lowest time of the time windows considered to select the narrow band. if empty, consider the start of the epoch
 project.stats.ersp.narrowband.group_tmax        = [];                     % highest time of the time windows considered to select the narrow band. if empty, consider the end of the epoch
 project.stats.ersp.narrowband.dfmin             =  2  ;                         % low variation in Hz from the barycenter frequency

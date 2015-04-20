@@ -1,19 +1,31 @@
-function datatw = eeglab_study_plot_find_extrema_avg(curve,levels_f1,levels_f2,group_time_windows_list_design,times,which_extrema_design_roi,sel_extrema)
+function output = eeglab_study_plot_find_extrema_avg(input)
+
+% curve,levels_f1,levels_f2,group_time_windows_list_design,times,which_extrema_design_roi,sel_extrema
+
+
+curve                                                                      = input.curve;               
+levels_f1                                                                  = input.levels_f1;
+levels_f2                                                                  = input.levels_f2;
+group_time_windows_list_design                                             = input.group_time_windows_list_design;
+times                                                                      = input.times;
+which_extrema_design_roi                                                   = input.which_extrema_design_roi;
+sel_extrema                                                                = input.sel_extrema;
+
         
 
-% datatw.curve{nf1,nf2}                     % (nsubj) MEAN per ogni soggetto nella finestra
-% datatw.curve_tw{nf1,nf2}                  % (nsubj x ntp) serie temporale per ogni soggetto nella finestra
+% output.curve{nf1,nf2}                     % (nsubj) MEAN per ogni soggetto nella finestra
+% output.curve_tw{nf1,nf2}                  % (nsubj x ntp) serie temporale per ogni soggetto nella finestra
 
-% datatw.extr{nf1,nf2}                  % (1) EXTR calcolato sulla serie temporale media di gruppo
-% datatw.extr_lat{nf1,nf2}              % (1) LATENCY of EXTR calcolato sulla serie temporale media di gruppo
+% output.extr{nf1,nf2}                  % (1) EXTR calcolato sulla serie temporale media di gruppo
+% output.extr_lat{nf1,nf2}              % (1) LATENCY of EXTR calcolato sulla serie temporale media di gruppo
                      
-% datatw.extr_lat_vec{nf1,nf2}          % (n) latencies in cui raggiungi l'EXTR
+% output.extr_lat_vec{nf1,nf2}          % (n) latencies in cui raggiungi l'EXTR
 
                
                
 % in questo metodo per trovare gli estremi viene usata la finestra globale di gruppo applicata direttamente al pattern medio di
 % gruppo: si trovano gli estremi nella finestra selezionata basandosi sulpattern mediato tra tutti i soggetti. 
-       datatw=[];
+       output=[];
        M=[];
        % il cell array su cui fare la statistica
        % curve;
@@ -104,30 +116,30 @@ function datatw = eeglab_study_plot_find_extrema_avg(curve,levels_f1,levels_f2,g
         
                % finestre temporali). questa matrice verra' passata alle funzioni        
                % per la statistica e la rappresentazione        
-               datatw.curve{nf1,nf2} = M2;       
-               ...datatw.curve_avg{nf1,nf2} = mean(M2);
+               output.curve{nf1,nf2} = M2;       
+               ...output.curve_avg{nf1,nf2} = mean(M2);
         
                % i pattern di tutti i soggetti nelle
                % finestre selezionate (per poter verificare / rifare i conti        
                % altrove). in questo caso le finestre sono le stesse per ogni
                % soggetto e sono quelle globali di gruppo.
-               datatw.curve_tw{nf1,nf2}=curve_tw_f12; 
+               output.curve_tw{nf1,nf2}=curve_tw_f12; 
 
                % il valore degli estremi su        
                % tutte le finestre temporali        
-               datatw.extr{nf1,nf2} = extr_f12;
+               output.extr{nf1,nf2} = extr_f12;
                
                % le corrispondenti latenze (per ogni finestra, possibilmente un vettore con tutte le occorrenze)                      
-               datatw.extr_lat_vec{nf1,nf2} = extr_lat_vec_f12;
+               output.extr_lat_vec{nf1,nf2} = extr_lat_vec_f12;
                
                % per tutte le finestre, la latenza selezionata (e.g la prima occorrenza o la media delle occorrenze...)
-               datatw.extr_lat{nf1,nf2} = extr_lat_f12;
+               output.extr_lat{nf1,nf2} = extr_lat_f12;
        
            end
            %fine ciclo su f2
        end
        %fine ciclo su f1       
-       datatw.which_extrema_design_roi=which_extrema_design_roi;
-%        display(datatw)
+       output.which_extrema_design_roi=which_extrema_design_roi;
+%        display(output)
        
 end

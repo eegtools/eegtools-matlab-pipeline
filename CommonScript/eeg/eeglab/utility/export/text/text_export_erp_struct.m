@@ -33,9 +33,9 @@ function [dataexpcols, dataexp] = text_export_erp_struct(out_file,erp_struct)
                     tw=[tw; repmat(erp_struct.group_time_windows_names_design(ntw),length(erp_struct.list_design_subjects{nl1,nl2}),1)];
 
                     subj=[subj; erp_struct.list_design_subjects{nl1,nl2}'];                        
-                    erpmean=[erpmean; erp_struct.dataroi(nroi).datatw.curve{nl1,nl2}(ntw,:)'];                        
-                    erp_extr=[erp_extr; erp_struct.dataroi(nroi).datatw.extr{nl1,nl2}(ntw,:)'];
-                    erp_extr_lat=[erp_extr_lat; erp_struct.dataroi(nroi).datatw.extr_lat{nl1,nl2}(ntw,:)'];                       
+                    erpmean=[erpmean; erp_struct.dataroi(nroi).datatw.find_extrema.curve{nl1,nl2}(ntw,:)'];                        
+                    erp_extr=[erp_extr; erp_struct.dataroi(nroi).datatw.find_extrema.extr{nl1,nl2}(ntw,:)'];
+                    erp_extr_lat=[erp_extr_lat; erp_struct.dataroi(nroi).datatw.find_extrema.extr_lat{nl1,nl2}(ntw,:)'];                       
                 end             
             end 
         end         

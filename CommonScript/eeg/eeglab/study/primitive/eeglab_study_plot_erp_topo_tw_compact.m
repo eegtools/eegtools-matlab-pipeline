@@ -190,8 +190,8 @@ for design_num=design_num_vec
     for nroi = 1:length(roi_list)
         roi_channels=roi_list{nroi};
         roi_name=roi_names{nroi};
-            list_design_subjects                       = eeglab_generate_subjects_list_by_factor_levels(STUDY, design_num);
-
+        list_design_subjects                       = eeglab_generate_subjects_list_by_factor_levels(STUDY, design_num);
+        
         STUDY = pop_statparams(STUDY, 'groupstats','off','condstats','off');
         
         [STUDY, erp_curve_roi, times]=std_erpplot(STUDY,ALLEEG,'channels',roi_list{nroi},'noplot','on');
@@ -222,36 +222,53 @@ for design_num=design_num_vec
         which_extrema_design            = project.postprocess.erp.design(design_num).which_extrema_curve;
         which_extrema_design_roi        = which_extrema_design{nroi};
         
-        if ~eeglab_check_tw_compliancy(group_time_windows_list_design, times);
-            return;
-        end
+%         if ~eeglab_check_tw_compliancy(group_time_windows_list_design, times);
+%             return;
+%         end
+%         
+%         if isempty(which_extrema_design_roi)
+%             disp(['which_extrema_design_roi of design num:' num2str(design_num) ' and roi ' roi_name ' is empty']);
+%             return;
+%         end
         
-        if isempty(which_extrema_design_roi)
-            disp(['which_extrema_design_roi of design num:' num2str(design_num) ' and roi ' roi_name ' is empty']);
-            return;
-        end
+        %         switch which_method_find_extrema
+        %             case 'group_noalign'
+        %                 erp_curve_roi_stat.dataroi(nroi).datatw.find_extrema = ...
+        %                     eeglab_study_plot_find_extrema_avg(erp_curve_roi,levels_f1,levels_f2,group_time_windows_list_design,times,which_extrema_design_roi,sel_extrema);
+        %             case 'group_align'
+        %
+        %                 disp('ERROR: still not implemented!!! adopting individual_align ');
+        %                 subject_time_windows_list_design=subject_time_windows_list{design_num};
+        %                 erp_curve_roi_stat.dataroi(nroi).datatw.find_extrema = ...
+        %                     eeglab_study_plot_find_extrema_single(erp_curve_roi,levels_f1,levels_f2,group_time_windows_list_design,subject_time_windows_list_design,times,which_extrema_design_roi,...
+        %                     sel_extrema);
+        %
+        %             case 'individual_noalign'
+        %                 erp_curve_roi_stat.dataroi(nroi).datatw.find_extrema = ...
+        %                     eeglab_study_plot_find_extrema_gru(erp_curve_roi,levels_f1,levels_f2,group_time_windows_list_design,times,which_extrema_design_roi,sel_extrema);
+        %             case 'individual_align'
+        %                 subject_time_windows_list_design=subject_time_windows_list{design_num};
+        %                 erp_curve_roi_stat.dataroi(nroi).datatw.find_extrema = ...
+        %                     eeglab_study_plot_find_extrema_single(erp_curve_roi,levels_f1,levels_f2,group_time_windows_list_design,subject_time_windows_list_design,times,which_extrema_design_roi,...
+        %                     sel_extrema);
+        %         end
+        %
         
-        switch which_method_find_extrema
-            case 'group_noalign'
-                erp_curve_roi_stat.dataroi(nroi).datatw = ...
-                    eeglab_study_plot_find_extrema_avg(erp_curve_roi,levels_f1,levels_f2,group_time_windows_list_design,times,which_extrema_design_roi,sel_extrema);
-            case 'group_align'
-                
-                disp('ERROR: still not implemented!!! adopting individual_align ');
-                subject_time_windows_list_design=subject_time_windows_list{design_num};
-                erp_curve_roi_stat.dataroi(nroi).datatw = ...
-                    eeglab_study_plot_find_extrema_single(erp_curve_roi,levels_f1,levels_f2,group_time_windows_list_design,subject_time_windows_list_design,times,which_extrema_design_roi,...
-                    sel_extrema);
-                
-            case 'individual_noalign'
-                erp_curve_roi_stat.dataroi(nroi).datatw = ...
-                    eeglab_study_plot_find_extrema_gru(erp_curve_roi,levels_f1,levels_f2,group_time_windows_list_design,times,which_extrema_design_roi,sel_extrema);
-            case 'individual_align'
-                subject_time_windows_list_design=subject_time_windows_list{design_num};
-                erp_curve_roi_stat.dataroi(nroi).datatw = ...
-                    eeglab_study_plot_find_extrema_single(erp_curve_roi,levels_f1,levels_f2,group_time_windows_list_design,subject_time_windows_list_design,times,which_extrema_design_roi,...
-                    sel_extrema);
-        end
+        input_find_extrema.which_method_find_extrema             = which_method_find_extrema;
+        input_find_extrema.design_num                            = design_num;
+        input_find_extrema.roi_name                              = roi_name;
+        input_find_extrema.curve                                 = erp_curve_roi;
+        input_find_extrema.levels_f1                             = levels_f1;
+        input_find_extrema.levels_f2                             = levels_f2;
+        input_find_extrema.group_time_windows_list_design        = group_time_windows_list_design;
+        input_find_extrema.subject_time_windows_list             = subject_time_windows_list;
+        input_find_extrema.times                                 = times;
+        input_find_extrema.which_extrema_design_roi              = which_extrema_design_roi;
+        input_find_extrema.sel_extrema                           = sel_extrema;
+        
+        
+        erp_curve_roi_stat.dataroi(nroi).datatw.find_extrema = eeglab_study_plot_find_extrema(input_find_extrema);
+        
         
         
         % M2 viene salvata dentro erp_curve_roi, bisogna creare una nuova struttura con gli estremi ele loro latenze, possibile salvare i dati in forma più grezza
@@ -280,9 +297,9 @@ for design_num=design_num_vec
         
         switch tw_stat_estimator
             case 'tw_mean'
-                erp_curve_roi=erp_curve_roi_stat.dataroi(nroi).datatw.curve;
+                erp_curve_roi=erp_curve_roi_stat.dataroi(nroi).datatw.find_extrema.curve;
             case 'tw_extremum'
-                erp_curve_roi=erp_curve_roi_stat.dataroi(nroi).datatw.extr;
+                erp_curve_roi=erp_curve_roi_stat.dataroi(nroi).datatw.find_extrema.extr;
         end
         
         times_plot=1:length(group_time_windows_list_design);
@@ -547,15 +564,15 @@ for design_num=design_num_vec
                 
             end
             
-            erp_topo_stat.dataroi(nroi).datatw(nwin).time_window_name    = time_window_name;
-            erp_topo_stat.dataroi(nroi).datatw(nwin).time_window         = time_window;
+            erp_topo_stat.dataroi(nroi).datatw.find_extrema(nwin).time_window_name    = time_window_name;
+            erp_topo_stat.dataroi(nroi).datatw.find_extrema(nwin).time_window         = time_window;
             
             
-            erp_topo_stat.dataroi(nroi).datatw(nwin).erp_topo            = erp_topo_tw;
+            erp_topo_stat.dataroi(nroi).datatw.find_extrema(nwin).erp_topo            = erp_topo_tw;
             
-            erp_topo_stat.dataroi(nroi).datatw(nwin).stats               = stats;
-            erp_topo_stat.dataroi(nroi).datatw(nwin).erp_topo_tw_roi_avg = erp_topo_tw_roi_avg;
-            erp_topo_stat.dataroi(nroi).datatw(nwin).erp_topo_tw_sub_avg = erp_topo_tw_sub_avg;
+            erp_topo_stat.dataroi(nroi).datatw.find_extrema(nwin).stats               = stats;
+            erp_topo_stat.dataroi(nroi).datatw.find_extrema(nwin).erp_topo_tw_roi_avg = erp_topo_tw_roi_avg;
+            erp_topo_stat.dataroi(nroi).datatw.find_extrema(nwin).erp_topo_tw_sub_avg = erp_topo_tw_sub_avg;
             
         end
     end
@@ -577,8 +594,8 @@ for design_num=design_num_vec
     
     if ~ ( strcmp(which_method_find_extrema,'group_noalign') || strcmp(which_method_find_extrema,'continuous') );
         [dataexpcols, dataexp]=text_export_erp_struct([out_file_name,'.txt'],erp_curve_roi_stat);
-%         text_export_erp_resume_struct(erp_curve_roi_stat, [out_file_name '_resume']);
-%         text_export_erp_resume_struct(erp_curve_roi_stat, [out_file_name '_resume_signif'], 'p_thresh', erp_curve_roi_stat.study_ls);
+        %         text_export_erp_resume_struct(erp_curve_roi_stat, [out_file_name '_resume']);
+        %         text_export_erp_resume_struct(erp_curve_roi_stat, [out_file_name '_resume_signif'], 'p_thresh', erp_curve_roi_stat.study_ls);
     end
     
     output.STUDY =  STUDY;
