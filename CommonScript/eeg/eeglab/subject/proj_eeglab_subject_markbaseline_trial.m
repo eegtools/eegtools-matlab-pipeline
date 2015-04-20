@@ -22,26 +22,31 @@ function OUTEEG = proj_eeglab_subject_markbaseline_trial(EEG, project, varargin)
 OUTEEG = EEG;
 
 
-target_marker_delay_pts     =  floor(project.epoching.baseline_mark.baseline_begin_target_marker_delay.s * OUTEEG.srate); % convert delay from seconds to points
-baseline_duration_pts       =  floor(project.epoching.baseline_duration.s * OUTEEG.srate);
-
-sel_target_baseline = ismember({OUTEEG.event.type},project.epoching.baseline_mark.baseline_begin_target_marker);
-eve_target_baseline = EEG.event(sel_target_baseline);
-
-for neve = 1:length(eve_target_baseline)
-    n1 = length(OUTEEG.event)+1;
-    n2 = length(OUTEEG.event)+2;
+for ntarg = 1: length(project.preproc.insert_begin_trial.target_event_types)
     
-    OUTEEG.event(n1)         =   eve_target_baseline(neve);
-    OUTEEG.event(n1).latency =   OUTEEG.event(n1).latency + target_marker_delay_pts;
-    OUTEEG.event(n1).type    =   project.preproc.marker_type.begin_baseline;
+    target = project.preproc.marker_type.begin_baseline(ntarg);
+    delay  = project.preproc.insert_begin_trial.delay.s(ntarg);
     
+    delay_pts                   =  floor(delay * OUTEEG.srate); % convert delay from seconds to points
+    baseline_duration_pts       =  floor(project.epoching.baseline_duration.s * OUTEEG.srate);
     
-    OUTEEG.event(n2)         =   eve_target_baseline(neve);
-    OUTEEG.event(n2).latency =   OUTEEG.event(n2).latency + target_marker_delay_pts + baseline_duration_pts;
-    OUTEEG.event(n2).type    =   project.preproc.marker_type.end_baseline;
+    sel_target_baseline = ismember({OUTEEG.event.type},target);
+    eve_target_baseline = EEG.event(sel_target_baseline);
     
+    for neve = 1:length(eve_target_baseline)
+        n1 = length(OUTEEG.event)+1;
+        n2 = length(OUTEEG.event)+2;
+        
+        OUTEEG.event(n1)         =   eve_target_baseline(neve);
+        OUTEEG.event(n1).latency =   OUTEEG.event(n1).latency + delay_pts;
+        OUTEEG.event(n1).type    =   project.preproc.marker_type.begin_baseline;
+        
+        
+        OUTEEG.event(n2)         =   eve_target_baseline(neve);
+        OUTEEG.event(n2).latency =   OUTEEG.event(n2).latency + delay_pts + baseline_duration_pts;
+        OUTEEG.event(n2).type    =   project.preproc.marker_type.end_baseline;
+        
+    end
 end
-
 OUTEEG = eeg_checkset(OUTEEG);
 end

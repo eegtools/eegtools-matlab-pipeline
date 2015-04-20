@@ -4,10 +4,13 @@ OUTEEG = EEG_baseline;
 
 subj_list                       =  {project.subjects.data.name};
 subj_index                      =  ismember(subj_list, subj_name);
+
+
+
 baseline_file_interval_pts      =  floor(project.subjects(subj_index).data.baseline_file_interval_s * OUTEEG.srate);
 baseline_duration_pts           =  floor(project.epoching.baseline_duration.s * OUTEEG.srate);
 
-list_eve_target = {EEG_target.type};
+list_eve_target = {EEG_target.event.type};
 
 for neve = 1:length(list_eve_target)
     
@@ -23,7 +26,7 @@ for neve = 1:length(list_eve_target)
         
     OUTEEG.event(n2)         =   eve_target_baseline(neve);
     OUTEEG.event(n2).latency =   lat2;
-    OUTEEG.event(n2).type    =   project.preproc.marker_type.begin_baseline;
+    OUTEEG.event(n2).type    =   project.preproc.marker_type.end_baseline;
     
 end
 
