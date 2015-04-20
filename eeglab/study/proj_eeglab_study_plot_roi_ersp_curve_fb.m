@@ -63,6 +63,8 @@ dfcond     = [];
 dfinter    = [];
 narrowband = [];
 
+
+
 study_path                  = fullfile(project.paths.output_epochs, project.study.filename);
 results_path                = project.paths.results;
 
@@ -174,7 +176,7 @@ ersp_curve_roi_fb_stat.mode                     = mode;
 % same subject
 nb = [];
 
-if strcmp(do_narrowband,'on')
+if strcmp(do_narrowband,'ref')
     nb = proj_eeglab_subject_extract_narrowband(project,analysis_name);
 end
 
@@ -320,7 +322,7 @@ for nroi = 1:length(roi_list)
                 % fnb for each subject. in a second steps apply fnb to all
                 % conditions of the corresponding subject.
                 
-                if strcmp(do_narrowband,'on')
+                if strcmp(do_narrowband,'ref')||strcmp(do_narrowband,'auto')
                     
                     group_fmin = fmin;
                     group_fmax = fmax;
@@ -341,8 +343,10 @@ for nroi = 1:length(roi_list)
                     
                     
                     %                     if ~isempty([sub_adjusted_fmin, sub_adjusted_fmax])
-                    %                     fmin                                    = narrowband_output.results.sub.fmin;
-                    %                     fmax                                    = narrowband_output.results.sub.fmax;
+                    if strcmp(do_narrowband,'auto')
+                        fmin                                    = narrowband_output.results.sub.fmin;
+                        fmax                                    = narrowband_output.results.sub.fmax;
+                    end
                     %                     end
                     
                     narrowband_output.adjusted_frequency_band{nf1,nf2}(nsub,:)      = [narrowband_output.results.sub.fmin, narrowband_output.results.sub.fmax];
@@ -358,8 +362,15 @@ for nroi = 1:length(roi_list)
                     
                     narrowband{nf1,nf2,nsub}            = narrowband_output;
                     
-                    fmin                                    = nb.results.nb.band(1).sub(nsub).fnb  - project.postprocess.ersp.frequency_bands(nband).dfmin;
-                    fmax                                    = nb.results.nb.band(1).sub(nsub).fnb  + project.postprocess.ersp.frequency_bands(nband).dfmax;
+                    
+                    if strcmp(do_narrowband,'ref')
+                        
+                        fmin                                    = nb.results.nb.band(1).sub(nsub).fnb  - project.postprocess.ersp.frequency_bands(nband).dfmin;
+                        fmax                                    = nb.results.nb.band(1).sub(nsub).fnb  + project.postprocess.ersp.frequency_bands(nband).dfmax;
+                    end
+                    
+                    
+                    
                 end
                 sel_freqs                           = freqs >= fmin & freqs <= fmax;
                 ersp_curve_roi_fb{nf1,nf2}(:,nsub)  = mean(ersp_roi{nf1,nf2}(sel_freqs,:,nsub),1);
@@ -398,29 +409,44 @@ for nroi = 1:length(roi_list)
                 return;
             end
             
-            switch which_method_find_extrema
-                
-                case 'group_noalign'
-                    ersp_curve_roi_fb_stat.dataroi(nroi).databand(nband).datatw = ...
-                        eeglab_study_plot_find_extrema_avg(ersp_curve_roi_fb,levels_f1,levels_f2,group_time_windows_list_design,times,which_extrema_design_roi_band_tw,sel_extrema);
-                case 'group_align'
-                    disp('ERROR: still not implemented!!! adopting individual_align ');
-                    subject_time_windows_list_design=subject_time_windows_list{design_num};
-                    ersp_curve_roi_fb_stat.dataroi(nroi).databand(nband).datatw = ...
-                        eeglab_study_plot_find_extrema_single(ersp_curve_roi_fb,levels_f1,levels_f2,group_time_windows_list_design,subject_time_windows_list_design,times,...
-                        which_extrema_design_roi_band_tw,sel_extrema);
-                    ...ersp_curve_roi_fb_stat.dataroi(nroi).databand(nband).datatw = ...
-                        ...  eeglab_study_plot_find_extrema_avg(ersp_curve_roi_fb,levels_f1,levels_f2,group_time_windows_list_design,times,which_extrema_design_roi_band,sel_extrema);
-                        
-                case 'individual_noalign'
-                    ersp_curve_roi_fb_stat.dataroi(nroi).databand(nband).datatw = ...
-                        eeglab_study_plot_find_extrema_gru(ersp_curve_roi_fb,levels_f1,levels_f2,group_time_windows_list_design,times,which_extrema_design_roi_band_tw,sel_extrema);
-                case 'individual_align'
-                    subject_time_windows_list_design=subject_time_windows_list{design_num};
-                    ersp_curve_roi_fb_stat.dataroi(nroi).databand(nband).datatw = ...
-                        eeglab_study_plot_find_extrema_single(ersp_curve_roi_fb,levels_f1,levels_f2,group_time_windows_list_design,subject_time_windows_list_design,times,...
-                        which_extrema_design_roi_band_tw,sel_extrema);
-            end
+            %             switch which_method_find_extrema
+            %
+            %                 case 'group_noalign'
+            %                     ersp_curve_roi_fb_stat.dataroi(nroi).databand(nband).datatw.find_extrema = ...
+            %                         eeglab_study_plot_find_extrema_avg(ersp_curve_roi_fb,levels_f1,levels_f2,group_time_windows_list_design,times,which_extrema_design_roi_band_tw,sel_extrema);
+            %                 case 'group_align'
+            %                     disp('ERROR: still not implemented!!! adopting individual_align ');
+            %                     subject_time_windows_list_design=subject_time_windows_list{design_num};
+            %                     ersp_curve_roi_fb_stat.dataroi(nroi).databand(nband).datatw.find_extrema = ...
+            %                         eeglab_study_plot_find_extrema_single(ersp_curve_roi_fb,levels_f1,levels_f2,group_time_windows_list_design,subject_time_windows_list_design,times,...
+            %                         which_extrema_design_roi_band_tw,sel_extrema);
+            %                     ...ersp_curve_roi_fb_stat.dataroi(nroi).databand(nband).datatw.find_extrema = ...
+            %                         ...  eeglab_study_plot_find_extrema_avg(ersp_curve_roi_fb,levels_f1,levels_f2,group_time_windows_list_design,times,which_extrema_design_roi_band,sel_extrema);
+            %
+            %                 case 'individual_noalign'
+            %                     ersp_curve_roi_fb_stat.dataroi(nroi).databand(nband).datatw.find_extrema = ...
+            %                         eeglab_study_plot_find_extrema_gru(ersp_curve_roi_fb,levels_f1,levels_f2,group_time_windows_list_design,times,which_extrema_design_roi_band_tw,sel_extrema);
+            %                 case 'individual_align'
+            %                     subject_time_windows_list_design=subject_time_windows_list{design_num};
+            %                     ersp_curve_roi_fb_stat.dataroi(nroi).databand(nband).datatw.find_extrema = ...
+            %                         eeglab_study_plot_find_extrema_single(ersp_curve_roi_fb,levels_f1,levels_f2,group_time_windows_list_design,subject_time_windows_list_design,times,...
+            %                         which_extrema_design_roi_band_tw,sel_extrema);
+            %             end
+            
+            
+            input_find_extrema.which_method_find_extrema             = which_method_find_extrema;
+            input_find_extrema.design_num                            = design_num;
+            input_find_extrema.roi_name                              = roi_name;
+            input_find_extrema.curve                                 = ersp_curve_roi_fb;
+            input_find_extrema.levels_f1                             = levels_f1;
+            input_find_extrema.levels_f2                             = levels_f2;
+            input_find_extrema.group_time_windows_list_design        = group_time_windows_list_design;
+            input_find_extrema.subject_time_windows_list             = subject_time_windows_list;
+            input_find_extrema.times                                 = times;
+            input_find_extrema.which_extrema_design_roi              = which_extrema_design_roi_band_tw;
+            input_find_extrema.sel_extrema                           = sel_extrema;
+            
+            ersp_curve_roi_fb_stat.dataroi(nroi).databand(nband).datatw.find_extrema  = eeglab_study_plot_find_extrema(input_find_extrema);
         end
         
         times_plot=times;
@@ -432,9 +458,9 @@ for nroi = 1:length(roi_list)
             
             switch tw_stat_estimator
                 case 'tw_mean'
-                    ersp_curve_roi_fb=ersp_curve_roi_fb_stat.dataroi(nroi).databand(nband).datatw.curve;
+                    ersp_curve_roi_fb=ersp_curve_roi_fb_stat.dataroi(nroi).databand(nband).datatw.find_extrema.curve;
                 case 'tw_extremum'
-                    ersp_curve_roi_fb=ersp_curve_roi_fb_stat.dataroi(nroi).databand(nband).datatw.extr;
+                    ersp_curve_roi_fb=ersp_curve_roi_fb_stat.dataroi(nroi).databand(nband).datatw.find_extrema.extr;
             end
             
             times_plot=1:length(group_time_windows_list_design);

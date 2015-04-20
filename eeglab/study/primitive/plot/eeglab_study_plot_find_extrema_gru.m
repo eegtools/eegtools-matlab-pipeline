@@ -1,22 +1,32 @@
-function datatw = eeglab_study_plot_find_extrema_gru(curve,levels_f1,levels_f2,group_time_windows_list_design,times,which_extrema_design_roi,sel_extrema)
+function output = eeglab_study_plot_find_extrema_gru(input)
+
+% curve,levels_f1,levels_f2,group_time_windows_list_design,times,which_extrema_design_roi,sel_extrema
+curve                                                                      = input.curve;               
+levels_f1                                                                  = input.levels_f1;
+levels_f2                                                                  = input.levels_f2;
+group_time_windows_list_design                                             = input.group_time_windows_list_design;
+times                                                                      = input.times;
+which_extrema_design_roi                                                   = input.which_extrema_design_roi;
+sel_extrema                                                                = input.sel_extrema;
+
    
-% datatw.curve{nf1,nf2}                     % (nsubj) MEAN per ogni soggetto nella finestra
-% datatw.curve_tw{nf1,nf2}                  % (nsubj x ntp) serie temporale per ogni soggetto nella finestra
+% output.curve{nf1,nf2}                     % (nsubj) MEAN per ogni soggetto nella finestra
+% output.curve_tw{nf1,nf2}                  % (nsubj x ntp) serie temporale per ogni soggetto nella finestra
 
-% datatw.extr{nf1,nf2}                  % (nsubj) EXTR per ogni soggetto nella finestra  
+% output.extr{nf1,nf2}                  % (nsubj) EXTR per ogni soggetto nella finestra  
 
-% datatw.extr_mean{nf1,nf2}             % (1) MEAN di ampiezza nella finestra
-% datatw.extr_sd{nf1,nf2}               % (1) SD di ampiezza nella finestra
-% datatw.extr_median{nf1,nf2}           % (1) MEDIAN di ampiezza nella finestra
-% datatw.extr_range{nf1,nf2}            % (2) MAX e MIN delle ampiezze tra tutti i soggetti
+% output.extr_mean{nf1,nf2}             % (1) MEAN di ampiezza nella finestra
+% output.extr_sd{nf1,nf2}               % (1) SD di ampiezza nella finestra
+% output.extr_median{nf1,nf2}           % (1) MEDIAN di ampiezza nella finestra
+% output.extr_range{nf1,nf2}            % (2) MAX e MIN delle ampiezze tra tutti i soggetti
       
-% datatw.extr_lat{nf1,nf2}              % (nsubj) EXTR LATENCY (in funzione pero del criterio di occorrenza definito nel project config....e.g la prima occorrenza o la media delle occorrenze...)
-% datatw.extr_lat_mean{nf1,nf2}         % (1) MEAN di latenza nella finestra
-% datatw.extr_lat_sd{nf1,nf2}           % (1) SD di latenza nella finestra
-% datatw.extr_lat_median{nf1,nf2}       % (1) MEDIAN di latenza nella finestra
-% datatw.extr_lat_range{nf1,nf2}        % (2) MAX e MIN delle latenza tra tutti i soggetti
+% output.extr_lat{nf1,nf2}              % (nsubj) EXTR LATENCY (in funzione pero del criterio di occorrenza definito nel project config....e.g la prima occorrenza o la media delle occorrenze...)
+% output.extr_lat_mean{nf1,nf2}         % (1) MEAN di latenza nella finestra
+% output.extr_lat_sd{nf1,nf2}           % (1) SD di latenza nella finestra
+% output.extr_lat_median{nf1,nf2}       % (1) MEDIAN di latenza nella finestra
+% output.extr_lat_range{nf1,nf2}        % (2) MAX e MIN delle latenza tra tutti i soggetti
 
-% datatw.extr_lat_vec{nf1,nf2}          % (nsubj x n) vettore con tutte le occorrenze dell'estremo per ogni soggetto                     
+% output.extr_lat_vec{nf1,nf2}          % (nsubj x n) vettore con tutte le occorrenze dell'estremo per ogni soggetto                     
 
 
 
@@ -24,7 +34,7 @@ function datatw = eeglab_study_plot_find_extrema_gru(curve,levels_f1,levels_f2,g
 
 % in questo metodo per trovare gli estremi viene usata la finestra globale di gruppo applicata direttamente al pattern medio di
 % gruppo: si trovano gli estremi nella finestra selezionata basandosi sulpattern mediato tra tutti i soggetti. 
-       datatw=[];
+       output=[];
        M=[];
        % il cell array su cui fare la statistica
        % curve;
@@ -151,41 +161,41 @@ function datatw = eeglab_study_plot_find_extrema_gru(curve,levels_f1,levels_f2,g
         
                % finestre temporali). questa matrice verra' passata alle funzioni        
                % per la statistica e la rappresentazione        
-               datatw.curve{nf1,nf2} = M2;       
+               output.curve{nf1,nf2} = M2;       
         
                % i pattern di tutti i soggetti nelle
                % finestre selezionate (per poter verificare / rifare i conti        
                % altrove). in questo caso le finestre sono le stesse per ogni
                % soggetto e sono quelle globali di gruppo.
-               datatw.curve_tw{nf1,nf2}=curve_tw_f12; 
+               output.curve_tw{nf1,nf2}=curve_tw_f12; 
 
                % il valore degli estremi su        
                % tutte le finestre temporali        
-               datatw.extr{nf1,nf2} = extr_f12;
+               output.extr{nf1,nf2} = extr_f12;
                
                % le corrispondenti latenze (per ogni finestra, possibilmente un vettore con tutte le occorrenze)                      
-               datatw.extr_lat_vec{nf1,nf2} = extr_lat_vec_f12;
+               output.extr_lat_vec{nf1,nf2} = extr_lat_vec_f12;
                
                % per tutte le finestre, la latenza selezionata (e.g la prima occorrenza o la media delle occorrenze...)
-               datatw.extr_lat{nf1,nf2} = extr_lat_f12;
+               output.extr_lat{nf1,nf2} = extr_lat_f12;
                
                
                % aggiungo anche i campi aggiuntivi legati alla specificita'
                % dei soggetti
-               datatw.extr_mean{nf1,nf2}=extr_mean_f12;
-               datatw.extr_sd{nf1,nf2}=extr_sd_f12;
-               datatw.extr_median{nf1,nf2}=extr_median_f12;
-               datatw.extr_range{nf1,nf2}=extr_range_f12;
+               output.extr_mean{nf1,nf2}=extr_mean_f12;
+               output.extr_sd{nf1,nf2}=extr_sd_f12;
+               output.extr_median{nf1,nf2}=extr_median_f12;
+               output.extr_range{nf1,nf2}=extr_range_f12;
                
-               datatw.extr_lat_mean{nf1,nf2}=extr_lat_mean_f12;
-               datatw.extr_lat_sd{nf1,nf2}=extr_lat_sd_f12;
-               datatw.extr_lat_median{nf1,nf2}=extr_lat_median_f12;
-               datatw.extr_lat_range{nf1,nf2}=extr_lat_range_f12;       
+               output.extr_lat_mean{nf1,nf2}=extr_lat_mean_f12;
+               output.extr_lat_sd{nf1,nf2}=extr_lat_sd_f12;
+               output.extr_lat_median{nf1,nf2}=extr_lat_median_f12;
+               output.extr_lat_range{nf1,nf2}=extr_lat_range_f12;       
            end
            %fine ciclo su f2
        end
        %fine ciclo su f1
-       datatw.which_extrema_design_roi=which_extrema_design_roi;
-%        display(datatw)
+       output.which_extrema_design_roi=which_extrema_design_roi;
+%        display(output)
 end
 
