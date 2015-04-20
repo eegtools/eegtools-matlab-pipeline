@@ -26,7 +26,7 @@ function OUTEEG = proj_eeglab_subject_mark_trial_end(EEG, project,  varargin)
 % soggetto, marcare nella struttura project l'inizio e la fine [t_inizio_base t_fine]
 % per piazzare le serie di eventi b1 e b2. il parametro [t_inizio_base
 % t_fine] potrebbe essere lasciato come facoltativo anche per i file di
-% base esterni.                                                                                          
+% base esterni.
 %
 % % INSERT END TRIAL MARKERS
 % project.preproc.insert_end_trial.target_event_types         =     {'target1','target2'};        % string or cell array of strings denoting the type(s) (i.e. labels) of the target events used to set the the end trial markers
@@ -36,20 +36,27 @@ function OUTEEG = proj_eeglab_subject_mark_trial_end(EEG, project,  varargin)
 
 OUTEEG = EEG;
 
-target_marker_end_delay_pts       =  floor(project.preproc.insert_end_trial.delay.s   * OUTEEG.srate);
 
-sel_target_end   = ismember({OUTEEG.event.type},project.preproc.insert_end_trial.target_event_types{:});
-
-eve_target_end = EEG.event(sel_target_end);
-
-for neve = 1:length(eve_target_end)
-    n1 = length(OUTEEG.event)+1;
-    OUTEEG.event(n1)         =   eve_target_end(neve);
-    OUTEEG.event(n1).latency =   OUTEEG.event(n1).latency + target_marker_end_delay_pts+1;
-    OUTEEG.event(n1).type    =   project.preproc.insert_end_trial.end_trial_marker_type;
+for ntarg = 1: length(project.preproc.insert_begin_trial.target_event_types)
+    
+    target = project.preproc.insert_end_trial.target_event_types(ntarg);
+    delay  = project.preproc.insert_end_trial.delay.s(ntarg);
+    
+    
+    delay_pts     =  floor(delay * OUTEEG.srate); % convert delay from seconds to points
+    
+    sel_target_end   = ismember({OUTEEG.event.type},target);
+    
+    eve_target_end = EEG.event(sel_target_end);
+    
+    for neve = 1:length(eve_target_end)
+        n1 = length(OUTEEG.event)+1;
+        OUTEEG.event(n1)         =   eve_target_end(neve);
+        OUTEEG.event(n1).latency =   OUTEEG.event(n1).latency + delay_pts + 1;
+        OUTEEG.event(n1).type    =   project.preproc.marker_type.end_trial;
+    end
+    
 end
-
-
 
 OUTEEG = eeg_checkset(OUTEEG);
 

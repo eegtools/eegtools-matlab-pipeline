@@ -229,19 +229,19 @@ project.preproc.marker_type.end_baseline    = 'b2';
 
 % INSERT BEGIN TRIAL MARKERS (only if both the target and the begin trial
 % types are NOT empty)
-project.preproc.insert_begin_trial.target_event_types       = {'b1'};        % string or cell array of strings denoting the type(s) (i.e. labels) of the target events used to set the the begin trial markers 
-project.preproc.insert_begin_trial.delay.s                  = 0;                           % time shift (in ms) to anticipate (negative values ) or posticipate (positive values) the new begin trial markers
-                                                                                                %      with respect to the target events, if empty ([]) time shift = 0.
+project.preproc.insert_begin_trial.target_event_types       = {'b1'};        % if it is empty, no begin trial is inserted. string or cell array of strings denoting the type(s) (i.e. labels) of the target events used to set the the begin trial markers 
+project.preproc.insert_begin_trial.delay.s                  = [0];           % array with the same length of project.preproc.insert_end_trial.target_event_types: for each target type time shift (in ms) to anticipate (negative values ) or posticipate (positive values) the new begin trial markers
+                                                                                                
 
 % INSERT END TRIAL MARKERS (only if both the target and the begin trial
 % types are NOT empty)
-project.preproc.insert_end_trial.target_event_types         = {'b1'};        % string or cell array of strings denoting the type(s) (i.e. labels) of the target events used to set the the end trial markers 
-project.preproc.insert_end_trial.delay.s                    = [2.5];                           % time shift (in ms) to anticipate (negative values ) or posticipate (positive values) the new end trial markers
+project.preproc.insert_end_trial.target_event_types         = {'b1'};        % if it is empty, no end trial is inserted.string or cell array of strings denoting the type(s) (i.e. labels) of the target events used to set the the end trial markers 
+project.preproc.insert_end_trial.delay.s                    = [2.5];         % array with the same length of project.preproc.insert_end_trial.target_event_types: for each target type time shift (in ms) to anticipate (negative values ) or posticipate (positive values) the new end trial markers
 
 
 % INSERT BEGIN BASELINE MARKERS (project.epoching.baseline_replace.baseline_begin_marker)
-project.preproc.insert_begin_baseline.target_event_types    = {'S 20','S 22','S 24','S 26'};                % a target event for placing the baseline markers: baseline begin marker will be placed at the target marker with a selected delay.
-project.preproc.insert_begin_baseline.delay.s               = -0.5;                                         % the delay (in seconds) between the target marker and the begin baseline marker to be placed: 
+project.preproc.insert_begin_baseline.target_event_types    = {'S 20'};      % a target event for placing the baseline markers: baseline begin marker will be placed at the target marker with a selected delay.
+project.preproc.insert_begin_baseline.delay.s               = [-0.5];        % array with the same length of project.preproc.insert_begin_baseline.target_event_types: for each target type the delay (in seconds) between the target marker and the begin baseline marker to be placed: 
                                                                                                                         % >0 means that baseline begin FOLLOWS the target, 
                                                                                                                         % =0 means that baseline begin IS AT THE SAME TIME the target, 
                                                                                                                         % <0 means that baseline begin ANTICIPATES the target.
@@ -252,8 +252,8 @@ project.preproc.insert_begin_baseline.delay.s               = -0.5;             
                                                                                                                         % relative to the beginning of the continuous data matrix (EEG.data). 
 
 % INSERT END BASELINE MARKERS (project.epoching.baseline_replace.baseline_end_marker)                                                                                                                        
-project.preproc.insert_end_baseline.target_event_types          = {'S 20','S 22','S 24','S 26'};                % a target event for placing the baseline markers: baseline begin marker will be placed at the target marker with a selected delay.
-project.preproc.insert_end_baseline.delay.s                     = 0;                                            % the delay (in seconds) between the target marker and the begin baseline marker to be placed: 
+project.preproc.insert_end_baseline.target_event_types      = {'S 20'};           % a target event for placing the baseline markers: baseline begin marker will be placed at the target marker with a selected delay.
+project.preproc.insert_end_baseline.delay.s                 = [0];                % array with the same length of project.preproc.insert_end_baseline.target_event_types: for each target type the delay (in seconds) between the target marker and the begin baseline marker to be placed: 
                                                                                                                         % >0 means that baseline begin FOLLOWS the target, 
                                                                                                                         % =0 means that baseline begin IS AT THE SAME TIME the target, 
                                                                                                                         % <0 means that baseline begin ANTICIPATES the target.
@@ -1220,6 +1220,6 @@ project.results_display.ersp.time_range.ms          = project.results_display.er
 % ======================================================================================================
 % ======================================================================================================
 % ======================================================================================================
-
-
+% eeglab_derived_parameters_project(project)
+% eeglab_check_project(project)
 

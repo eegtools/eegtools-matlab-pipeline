@@ -58,6 +58,16 @@ if project.operations.do_uniform_montage
     EEG = proj_eeglab_subject_uniform_montage(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
 end
 %==================================================================================
+if project.operations.do_mark_trial
+    % mark trial begin and end
+    EEG = proj_eeglab_subject_marktrial(project, 'list_select_subjects', list_select_subjects);
+end
+%==================================================================================
+if project.operations.do_mark_baseline
+    % mark baseline begin and end
+    EEG = proj_eeglab_subject_markbaseline(project,  'list_select_subjects', list_select_subjects);
+end
+%==================================================================================
 if project.operations.do_epochs
     % do preprocessing up to epochs: avgref, epochs, rmbase: create one trails dataset for each condition
     EEG = proj_eeglab_subject_epoching(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);

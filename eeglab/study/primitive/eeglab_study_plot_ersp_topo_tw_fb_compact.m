@@ -175,7 +175,7 @@ if strcmp(do_narrowband,'on')
     nb = proj_eeglab_subject_extract_narrowband(project,stat_analysis_suffix);
 end
 
-
+narrowband= [];
 
 
 
@@ -390,9 +390,9 @@ for nband=1:length(frequency_bands_list)
                 
                 
                 %                 %                     if ~isempty([sub_adjusted_fmin, sub_adjusted_fmax])
-                %                 fmin                                    = narrowband_output.results.sub.fmin;
-                %                 fmax                                    = narrowband_output.results.sub.fmax;
-                %                 %                     end
+                                fmin                                    = narrowband_output.results.sub.fmin;
+                                fmax                                    = narrowband_output.results.sub.fmax;
+                                %                     end
                 %
                 narrowband_output.adjusted_frequency_band{nf1,nf2}(nsub,:)      = [narrowband_output.results.sub.fmin, narrowband_output.results.sub.fmax];
                 narrowband_output.realign_freq{nf1,nf2}(nsub)                   = narrowband_output.results.sub.realign_freq;
@@ -406,9 +406,9 @@ for nband=1:length(frequency_bands_list)
                     
                 
                 narrowband{nf1,nf2,nsub}            = narrowband_output;
-                fmin                                    = nb.results.nb.band(1).sub(nsub).fnb  - project.postprocess.ersp.frequency_bands(nband).dfmin;
-                fmax                                    = nb.results.nb.band(1).sub(nsub).fnb  + project.postprocess.ersp.frequency_bands(nband).dfmax;
-                
+%                 fmin                                    = nb.results.nb.band(1).sub(nsub).fnb  - project.postprocess.ersp.frequency_bands(nband).dfmin;
+%                 fmax                                    = nb.results.nb.band(1).sub(nsub).fnb  + project.postprocess.ersp.frequency_bands(nband).dfmax;
+%                 
             end
             sel_freqs = freqs >= fmin & freqs <= fmax;
             ersp_curve_roi_fb{nf1,nf2}(:,nsub)=mean(ersp_roi{nf1,nf2}(sel_freqs,:,nsub),1);
