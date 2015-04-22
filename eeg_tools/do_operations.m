@@ -30,6 +30,10 @@ if project.do_emg_analysis
 end
 %==================================================================================
 if project.operations.do_auto_pauses_removal
+    if isempty(list_select_subjects)
+        list_select_subjects = project.subjects.list;
+    end
+    numsubj = length(list_select_subjects);
     for subj=1:numsubj
         subj_name   = list_select_subjects{subj};
         file_name   = proj_eeglab_subject_get_filename(project, subj_name, 'custom_pre_epochs', 'custom_suffix', custom_suffix);
