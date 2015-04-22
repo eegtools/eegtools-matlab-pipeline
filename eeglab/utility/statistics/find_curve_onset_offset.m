@@ -7,7 +7,7 @@ times                                                                      = inp
 deflection_polarity                                                        = input.deflection_polarity; % 'unknown', 'positive','negative'
 sig_th                                                                     = input.sig_th;
 min_duration                                                               = input.min_duration; % minima durata di un segmento significativamente diverso dalla baseline, per evitare rumore
-
+correction                                                                 = input.correction;
 dt = abs(times(2) - times(2));
 
 if (isempty(sig_th) || isnan(sig_th))
