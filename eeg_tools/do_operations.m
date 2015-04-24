@@ -69,12 +69,17 @@ end
 %==================================================================================
 if project.operations.do_mark_baseline
     % mark baseline begin and end
-    EEG = proj_eeglab_subject_markbaseline(project,  'list_select_subjects', list_select_subjects);
+    EEG = proj_eeglab_subject_markbaseline(project, 'list_select_subjects', list_select_subjects);
 end
 %==================================================================================
 if project.operations.do_epochs
     % do preprocessing up to epochs: avgref, epochs, rmbase: create one trails dataset for each condition
     EEG = proj_eeglab_subject_epoching(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
+end
+%==================================================================================
+if project.operations.do_handedness_epochs
+    % swap data according to handedness and to epoching 
+    EEG = proj_eeglab_subject_handedness_epoching(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
 end
 %==================================================================================
 if project.operations.do_factors

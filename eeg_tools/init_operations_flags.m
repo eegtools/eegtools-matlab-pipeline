@@ -51,6 +51,10 @@ project.operations.do_epochs                                                    
 project.operations.do_custom_epochs                                                 = 0;
 
 %---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+% custom epoching that swap electrodes according to handedness
+project.operations.do_handedness_epochs                                             = 0;
+
+%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 % add experimental factors information to the data
 project.operations.do_factors                                                       = 0;
 

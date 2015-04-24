@@ -24,7 +24,7 @@ function EEG = eeglab_subject_events_rename(input_file_name, old_names, new_name
         for nev=1:length(old_names)
             if (strcmp(all_events_type{ev}, old_names{nev}))
                 EEG.event(ev).type = new_names{nev}; 
-                disp(['rename event in file: ' input_name_noext]);
+                ...disp(['rename event in file: ' input_name_noext]);
                 continue;
             end
         end
