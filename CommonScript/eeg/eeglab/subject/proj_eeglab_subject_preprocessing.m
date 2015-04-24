@@ -42,15 +42,6 @@ function EEG = proj_eeglab_subject_preprocessing(project, varargin)
         emg_channels_list       = project.eegdata.emg_channels_list;
 
         %===============================================================================================
-        % check if SUBSAMPLING
-        %===============================================================================================
-        if (EEG.srate > project.eegdata.fs)
-            disp(['subsampling to ' num2str(project.eegdata.fs)]);
-            EEG = pop_resample( EEG, project.eegdata.fs);
-            EEG = eeg_checkset( EEG );
-        end
-
-        %===============================================================================================
         % CHANNELS TRANSFORMATION
         %===============================================================================================
         num_ch2transform = length(project.import.ch2transform);
@@ -191,6 +182,15 @@ function EEG = proj_eeglab_subject_preprocessing(project, varargin)
         % filter for EMG channels
         if not(isempty(emg_channels_list))
             EEG = proj_eeglab_subject_filter(EEG, project,'emg','bandpass');
+            EEG = eeg_checkset( EEG );
+        end
+        
+        %===============================================================================================
+        % check if SUBSAMPLING
+        %===============================================================================================
+        if (EEG.srate > project.eegdata.fs)
+            disp(['subsampling to ' num2str(project.eegdata.fs)]);
+            EEG = pop_resample( EEG, project.eegdata.fs);
             EEG = eeg_checkset( EEG );
         end
         
