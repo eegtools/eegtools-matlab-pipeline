@@ -523,8 +523,8 @@ for design_num=design_num_vec
     % ogni roi, cond, soggetto, ... il tutto su 2 file di testo separati
     % per non fare casino: alla fine hai curve, linee di significatività,
     % statistiche riassuntive
-     [dataexpcols, dataexp] = text_export_erp_continuous_struct([out_file_name,'onset_offset.txt'],erp_curve_roi_stat); 
-    
+     [dataexpcols, dataexp] = text_export_erp_onset_offset_sub_struct([out_file_name,'_sub_onset_offset.txt'],erp_curve_roi_stat); 
+    [dataexpcols, dataexp] = text_export_erp_onset_offset_avgsub_struct([out_file_name,'_avgsub_onset_offset.txt'],erp_curve_roi_stat); 
     
     
     

@@ -1,7 +1,7 @@
 function output = find_curve_onset_offset(input,  varargin)
 
 curve                                                                      = input.curve;
-deflection_tw                                                              = input.deflection_tw;
+deflection_tw_list                                                         = input.deflection_tw_list;
 base_tw                                                                    = input.base_tw;
 times                                                                      = input.times;
 deflection_polarity                                                        = input.deflection_polarity; % 'unknown', 'positive','negative'
@@ -34,35 +34,60 @@ switch deflection_polarity
 end
 
 
-tt     = length(times);
-pvec   = nan(tt,1);
+tt          = length(times);
+pvec        = nan(tt,1);
+sel_tw_list = false(tt,1);
 
 % mask to select the baseline
 sel_base    = times >= base_tw(1) & times <= base_tw(2);
 base        = curve(sel_base);
 
-% mask to select the possible deflection to be compared with the baseline
-ind_deflection        = find(times >= deflection_tw(1) & times <= deflection_tw(2));
-deflection            = curve(ind_deflection);
-ttt=length(deflection);
 
-% for each time point within the time window of the possible deflection to be compared with the baseline
-for ntt=1:ttt
-    ind2test             = ind_deflection(ntt);
-    point2test           = deflection(ntt);
-    [h,pval]             = ttest2(point2test, base,'tail',tail);
-    pvec(ind2test)       = pval;
+% bisogna dividere il calcolo in 2 parti:
+% 1)trovare deflessioni significative
+% da baseline sull'unione di tutte le tw, applicando poi correzione
+% richiesta a tempi solo dell tw.
+% 2) estrarre parametri da ciascuna tw
+
+
+
+for ntw = 1:length(deflection_tw_list)
+    
+    % mask to select the possible deflection to be compared with the baseline
+    ind_deflection        = find(times >= deflection_tw_list{ntw}(1) & times <= deflection_tw_list{ntw}(2));
+    deflection            = curve(ind_deflection);
+    ttt=length(deflection);
+    sel_tw_list(ind_deflection) = true;
+    
+    % for each time point within the time window of the possible deflection to be compared with the baseline
+    for ntt=1:ttt
+        ind2test             = ind_deflection(ntt);
+        point2test           = deflection(ntt);
+        [h,pval]             = ttest2(point2test, base,'tail',tail);
+        pvec(ind2test)       = pval;
+    end
+    
 end
+
+
+
+
+
+
+
+
+
+
 
 pvec       = mcorrect(pvec,correction);
 sigvec     = pvec<sig_th;
 
 
 if not(isempty(min_duration) | isnan(min_duration))
-
+    
     input_ls.curve        = sigvec;
     input_ls.min_duration = round(min_duration/dt); % converto in samples da tempo
-
+    
     sigvec                = find_long_steps(input_ls);
 end
 
@@ -97,7 +122,7 @@ if not(isempty(tonset)) && not(isempty(tonset))
     barycenter                                                                 = sum( times(selt).*curve(selt)') / sum(curve(selt));
     
     %% output
-%     output.input                                                                = input;
+    %     output.input                                                                = input;
     output.pvec                                                         = pvec;                                              % vettore con valori di p
     output.sigvec                                                       = sigvec;                                            % vettore con maschera significatività
     output.tonset                                                       = tonset;                                            % tempo di onset
