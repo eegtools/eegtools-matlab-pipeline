@@ -168,7 +168,6 @@ function EEG = proj_eeglab_subject_preprocessing(project, varargin)
         %===============================================================================================
         % SPECIFIC FILTERING
         %===============================================================================================
-
         % filter for EEG channels
         EEG = proj_eeglab_subject_filter(EEG, project,'eeg','bandpass');
         EEG = eeg_checkset( EEG );
