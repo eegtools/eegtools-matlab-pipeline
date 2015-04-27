@@ -27,8 +27,7 @@ correction                                                                 = inp
 
 
 %% parametri per i contatori
-tt          = length(times);
-ttw         = length(group_time_windows_list_design);
+% ttw         = length(group_time_windows_list_design);
 tf1         = length(levels_f1);
 tf2         = length(levels_f2);
 
@@ -40,19 +39,35 @@ tf2         = length(levels_f2);
 %% for each time window
 for ntw = 1:ttw
     
-    deflection_tw = group_time_windows_list_design{ntw};
+%     deflection_tw = group_time_windows_list_design{ntw};
     
-  
+  %% calcolo onset-offset per singolo soggetto
     for nf1 =1:tf1
         for nf2 =1:tf2
-            
-             
-            
-            tsub = size(curve{nf1,nf2},2);
-            
+            tsub = size(curve{nf1,nf2},2);            
             for nsub = 1:tsub
                 
                 input_fcoo.curve                                           = curve{nf1,nf2}(:,nsub);
+                input_fcoo.deflection_tw_list                              = group_time_windows_list_design;%deflection_tw;
+                input_fcoo.base_tw                                         = base_tw;
+                input_fcoo.times                                           = times;
+                input_fcoo.deflection_polarity                             = deflection_polarity_list{ntw}; % 'unknown', 'positive','negative'
+                input_fcoo.sig_th                                          = pvalue;
+                input_fcoo.min_duration                                    = min_duration; % minima durata di un segmento significativamente diverso dalla baseline, per evitare rumore
+                input_fcoo.correction                                      = correction;
+                
+                % calcolo misure legate ad onset/offset
+                fcoo = find_curve_onset_offset(input_fcoo);
+                output.sub{nf1,nf2,ntw,nsub} = fcoo;
+
+            end
+        end
+    end
+    
+ %% calcolo onset-offset per media tra soggetti
+    for nf1 =1:tf1
+        for nf2 =1:tf2
+                input_fcoo.curve                                           = mean(curve{nf1,nf2},2);
                 input_fcoo.deflection_tw                                   = deflection_tw;
                 input_fcoo.base_tw                                         = base_tw;
                 input_fcoo.times                                           = times;
@@ -63,13 +78,13 @@ for ntw = 1:ttw
                 
                 % calcolo misure legate ad onset/offset
                 fcoo = find_curve_onset_offset(input_fcoo);
-                output{nf1,nf2,ntw,nsub} = fcoo;
+                output.avgsub{nf1,nf2,ntw} = fcoo;
 
-            end
+            
         end
     end
-    
-   
+ 
+
     
     
     
