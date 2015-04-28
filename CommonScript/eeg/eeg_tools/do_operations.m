@@ -72,6 +72,11 @@ if project.operations.do_mark_baseline
     EEG = proj_eeglab_subject_markbaseline(project, 'list_select_subjects', list_select_subjects);
 end
 %==================================================================================
+if project.operations.do_check_mc
+    % mark baseline begin and end
+    EEG = proj_eeglab_subject_check_mc(project, 'list_select_subjects', list_select_subjects);
+end
+%==================================================================================
 if project.operations.do_epochs
     % do preprocessing up to epochs: avgref, epochs, rmbase: create one trails dataset for each condition
     EEG = proj_eeglab_subject_epoching(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
