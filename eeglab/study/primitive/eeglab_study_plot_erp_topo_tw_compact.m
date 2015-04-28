@@ -222,14 +222,14 @@ for design_num=design_num_vec
         which_extrema_design            = project.postprocess.erp.design(design_num).which_extrema_curve;
         which_extrema_design_roi        = which_extrema_design{nroi};
         
-%         if ~eeglab_check_tw_compliancy(group_time_windows_list_design, times);
-%             return;
-%         end
-%         
-%         if isempty(which_extrema_design_roi)
-%             disp(['which_extrema_design_roi of design num:' num2str(design_num) ' and roi ' roi_name ' is empty']);
-%             return;
-%         end
+        %         if ~eeglab_check_tw_compliancy(group_time_windows_list_design, times);
+        %             return;
+        %         end
+        %
+        %         if isempty(which_extrema_design_roi)
+        %             disp(['which_extrema_design_roi of design num:' num2str(design_num) ' and roi ' roi_name ' is empty']);
+        %             return;
+        %         end
         
         %         switch which_method_find_extrema
         %             case 'group_noalign'
@@ -268,6 +268,23 @@ for design_num=design_num_vec
         
         
         erp_curve_roi_stat.dataroi(nroi).datatw.find_extrema = eeglab_study_plot_find_extrema(input_find_extrema);
+        
+        
+        deflection_polarity_list                                       = project.postprocess.erp.design(design_num).deflection_polarity_list;
+        deflection_polarity_roi                                        = deflection_polarity_list{nroi};
+        
+        input_onset_offset.curve                                       = erp_curve_roi;
+        input_onset_offset.levels_f1                                   = levels_f1;
+        input_onset_offset.levels_f2                                   = levels_f2;
+        input_onset_offset.group_time_windows_list_design              = group_time_windows_list_design;
+        input_onset_offset.times                                       = times;
+        input_onset_offset.deflection_polarity_list                    = deflection_polarity_roi;
+        input_onset_offset.min_duration                                = project.postprocess.erp.design(design_num).min_duration ;
+        input_onset_offset.base_tw                                     = [project.epoching.bc_st.ms project.epoching.bc_end.ms] ;                           % baseline in ms
+        input_onset_offset.pvalue                                      = study_ls;                          % default will be 0.05
+        input_onset_offset.correction                                  = correction ;                       % string. correction for multiple comparisons 'none'| 'fdr' | 'holms' | 'bonferoni'
+        
+        erp_curve_roi_stat.dataroi(nroi).datatw.onset_offset = eeglab_study_curve_tw_onset_offset(input_onset_offset);
         
         
         
@@ -597,6 +614,13 @@ for design_num=design_num_vec
         %         text_export_erp_resume_struct(erp_curve_roi_stat, [out_file_name '_resume']);
         %         text_export_erp_resume_struct(erp_curve_roi_stat, [out_file_name '_resume_signif'], 'p_thresh', erp_curve_roi_stat.study_ls);
     end
+    
+    
+    [dataexpcols, dataexp] = text_export_erp_onset_offset_sub_struct([out_file_name,'_sub_onset_offset.txt'],erp_curve_roi_stat);
+    [dataexpcols, dataexp] = text_export_erp_onset_offset_avgsub_struct([out_file_name,'_avgsub_onset_offset.txt'],erp_curve_roi_stat);
+    
+    [dataexpcols, dataexp] = text_export_erp_onset_offset_sub_continuous_struct([out_file_name,'_sub_onset_offset_continuous.txt'],erp_curve_roi_stat);
+    [dataexpcols, dataexp] = text_export_erp_onset_offset_avgsub_continuous_struct([out_file_name,'_avgsub_onset_offset_continuous.txt'],erp_curve_roi_stat);
     
     output.STUDY =  STUDY;
     output.EEG   =  EEG;
