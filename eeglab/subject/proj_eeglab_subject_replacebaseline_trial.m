@@ -114,7 +114,15 @@ function OUTEEG =  proj_eeglab_subject_replacebaseline_trial(EEG, project,vararg
 
         OUTEEG_baseline = pop_epoch( OUTEEG, {begin_baseline}, baseline_tw, 'eventindices', baseline_noboudary);
 
-
+        target_trials   = OUTEEG_target.trials;
+        baseline_trials = OUTEEG_baseline.trials;
+        
+        if target_trials ~= baseline_trials
+           warning(['ntype: ' type ' number of target trials differs from baseline trials: ' num2str(target_trials) '::' num2str(baseline_trials)]); 
+           OUTEEG = [];
+           return;
+        end
+        
         switch final_baseline
             case 'before'
                 sel_replace_baseline = OUTEEG_target.times < 0;
