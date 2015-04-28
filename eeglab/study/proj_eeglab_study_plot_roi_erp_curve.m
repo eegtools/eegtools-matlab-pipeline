@@ -525,6 +525,9 @@ for design_num=design_num_vec
     % statistiche riassuntive
      [dataexpcols, dataexp] = text_export_erp_onset_offset_sub_struct([out_file_name,'_sub_onset_offset.txt'],erp_curve_roi_stat); 
     [dataexpcols, dataexp] = text_export_erp_onset_offset_avgsub_struct([out_file_name,'_avgsub_onset_offset.txt'],erp_curve_roi_stat); 
+    
+     [dataexpcols, dataexp] = text_export_erp_onset_offset_sub_continuous_struct([out_file_name,'_sub_onset_offset_continuous.txt'],erp_curve_roi_stat); 
+    [dataexpcols, dataexp] = text_export_erp_onset_offset_avgsub_continuous_struct([out_file_name,'_avgsub_onset_offset_continuous.txt'],erp_curve_roi_stat); 
 %     
 %     
     
