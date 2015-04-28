@@ -4,7 +4,7 @@ curve                                                                      = inp
 deflection_tw_list                                                         = input.deflection_tw_list;
 base_tw                                                                    = input.base_tw;
 times                                                                      = input.times;
-deflection_polarity                                                        = input.deflection_polarity; % 'unknown', 'positive','negative'
+deflection_polarity_list                                                   = input.deflection_polarity_list; % 'unknown', 'positive','negative'
 sig_th                                                                     = input.sig_th;
 min_duration                                                               = input.min_duration; % minima durata di un segmento significativamente diverso dalla baseline, per evitare rumore
 correction                                                                 = input.correction;
@@ -24,19 +24,11 @@ end
 
 
 
-switch deflection_polarity
-    case 'unknown'
-        tail = 'both';
-    case 'positive'
-        tail = 'right';
-    case 'negative'
-        tail = 'left';
-end
 
 
-tt          = length(times);
-pvec        = nan(tt,1);
-sel_tw_list = false(tt,1);
+tt              = length(times);
+pvec_raw        = nan(tt,1);
+sel_tw_list     = false(tt,1);
 
 % mask to select the baseline
 sel_base    = times >= base_tw(1) & times <= base_tw(2);
@@ -53,8 +45,21 @@ base        = curve(sel_base);
 
 for ntw = 1:length(deflection_tw_list)
     
+    
+    switch deflection_polarity_list{ntw}
+        case 'unknown'
+            tail = 'both';
+        case 'positive'
+            tail = 'right';
+        case 'negative'
+            tail = 'left';
+    end
+    
+    
+    
     % mask to select the possible deflection to be compared with the baseline
-    ind_deflection        = find(times >= deflection_tw_list{ntw}(1) & times <= deflection_tw_list{ntw}(2));
+    selt = times >= deflection_tw_list{ntw}(1) & times <= deflection_tw_list{ntw}(2);
+    ind_deflection        = find(selt);
     deflection            = curve(ind_deflection);
     ttt=length(deflection);
     sel_tw_list(ind_deflection) = true;
@@ -64,27 +69,24 @@ for ntw = 1:length(deflection_tw_list)
         ind2test             = ind_deflection(ntt);
         point2test           = deflection(ntt);
         [h,pval]             = ttest2(point2test, base,'tail',tail);
-        pvec(ind2test)       = pval;
+        pvec_raw(ind2test)       = pval;
     end
     
 end
 
 
-pvec()
+pvec_corrected                 = pvec_raw;
+pvec_corrected(sel_tw_list)    = mcorrect(pvec_raw(sel_tw_list),correction);
 
 
 
 
+sigvec     = pvec_corrected < sig_th;
 
 
-
-
-pvec       = mcorrect(pvec,correction);
-sigvec     = pvec<sig_th;
-
+% ora andiamo a selezionare solo le deflessioni sufficientemente lunghe
 
 if not(isempty(min_duration) | isnan(min_duration))
-    
     input_ls.curve        = sigvec;
     input_ls.min_duration = round(min_duration/dt); % converto in samples da tempo
     
@@ -92,63 +94,115 @@ if not(isempty(min_duration) | isnan(min_duration))
 end
 
 
-tonset                                                                     = min(times(sigvec>0));
-toffset                                                                    = max(times(sigvec>0));
+% salviamo i risultati sulla curva continua: la curva, la p grezza, la p
+% corretta, le deflessioni significative in base alla soglia selezionata
 
-if not(isempty(tonset)) && not(isempty(tonset))
-    vonset                                                                     = curve(times == tonset);
-    voffset                                                                    = curve(times == toffset);
-    max_deflection                                                             = max(curve(sigvec>0));
-    tmax_deflection                                                            = times(curve == max_deflection);
-    min_deflection                                                             = min(curve(sigvec>0));
-    tmin_deflection                                                            = times(curve == min_deflection);
-    dt_onset_max_deflection                                                    = tmax_deflection - tonset;
-    dt_max_deflection_offset                                                   = toffset - tmax_deflection;
-    selt = times >= tonset & times <= max_deflection;
-    area_onset_max_deflection                                                  = sum(curve(selt));
-    selt = times >= max_deflection & times <= toffset;
-    area_max_deflection_offset                                                 = sum(curve(selt));
-    dt_onset_min_deflection                                                    = tmin_deflection - tonset;
-    dt_min_deflection_offset                                                   = toffset - tmin_deflection;
-    selt = times >= tonset & times <= min_deflection;
-    area_onset_min_deflection                                                  = sum(curve(selt));
-    selt = times >= min_deflection & times <= toffset;
-    area_min_deflection_offset                                                 = sum(curve(selt));
-    dt_onset_offset                                                            = toffset - tonset;
-    selt = times >= tonset & times <= toffset;
-    area_onset_offset                                                          = sum(curve(selt));
-    vmean_onset_offset                                                         = mean(curve(selt));
-    vmedian_onset_offset                                                       = median(curve(selt));
-    barycenter                                                                 = sum( times(selt).*curve(selt)') / sum(curve(selt));
-    
-    %% output
-    %     output.input                                                                = input;
-    output.pvec                                                         = pvec;                                              % vettore con valori di p
-    output.sigvec                                                       = sigvec;                                            % vettore con maschera significatività
-    output.tonset                                                       = tonset;                                            % tempo di onset
-    output.vonset                                                       = vonset;                                            % valore di onset
-    output.toffset                                                      = toffset;                                           % tempo di offset
-    output.voffset                                                      = voffset;                                           % valore di offset
-    output.tmax_deflection                                              = tmax_deflection;                                   % tempo di valore massimo della deflessione
-    output.max_deflection                                               = max_deflection;                                    % valore massimo della deflessione
-    output.tmin_deflection                                              = tmin_deflection;                                   % tempo di valore minimo della deflessione
-    output.min_deflection                                               = min_deflection;                                    % valore valore minimo della deflessione
-    output.dt_onset_max_deflection                                      = dt_onset_max_deflection;                           % tempo tra onset e massimo di deflessione
-    output.dt_max_deflection_offset                                     = dt_max_deflection_offset;                          % tempo tra massimo di deflessione e offset
-    output.area_onset_max_deflection                                    = area_onset_max_deflection;                         % area tra onset e massimo di deflessione
-    output.area_max_deflection_offset                                   = area_max_deflection_offset;                        % area tra massimo di deflessione e offset
-    output.dt_onset_min_deflection                                      = dt_onset_min_deflection;                           % tempo tra onset e mainimo di deflessione
-    output.dt_min_deflection_offset                                     = dt_min_deflection_offset;                          % tempo tra minimo di deflessione e offset
-    output.area_onset_min_deflection                                    = area_onset_min_deflection;                         % area tra onset e minimo di deflessione
-    output.area_min_deflection_offset                                   = area_min_deflection_offset;                        % area tra minimo di deflessione e offset
-    output.dt_onset_offset                                              = dt_onset_offset;                                   % tempo tra onset e offset
-    output.area_onset_offset                                            = area_onset_offset;                                 % area tra onset e offset
-    output.vmean_onset_offset                                           = vmean_onset_offset;                                % media curva tra onset e offset
-    output.vmedian_onset_offset                                         = vmedian_onset_offset;                              % mediana curva tra onset e offset
-    output.barycenter                                                   = barycenter;                                        % baricentro (tempo pesato sulle ampiezze) curva tra onset e offset
+output.continuous.curve          = curve;
+output.continuous.pvec_corrected = pvec_corrected;
+output.continuous.pvec_raw       = pvec_raw;
+output.continuous.sigvec         = sigvec;
+
+
+% ora andiamo ad estrarre i parametri per ogni tw
+
+for ntw = 1:length(deflection_tw_list)
+    selt = times >= deflection_tw_list{ntw}(1) & times <= deflection_tw_list{ntw}(2);
+    if sum(size(selt) == size(sigvec)) ==2
+        seltsig = selt & sigvec>0;
+    else
+        seltsig = selt & sigvec'>0;
+    end
+    tonset                                                                     = min(times(seltsig));
+    toffset                                                                    = max(times(seltsig));
     
     
+        output.tw(ntw).tonset                                                       = nan;                                            % tempo di onset
+        output.tw(ntw).vonset                                                       = nan;                                            % valore di onset
+        output.tw(ntw).toffset                                                      = nan;                                           % tempo di offset
+        output.tw(ntw).voffset                                                      = nan;                                           % valore di offset
+        output.tw(ntw).tmax_deflection                                              = nan;                                   % tempo di valore massimo della deflessione
+        output.tw(ntw).max_deflection                                               = nan;                                    % valore massimo della deflessione
+        output.tw(ntw).tmin_deflection                                              = nan;                                   % tempo di valore minimo della deflessione
+        output.tw(ntw).min_deflection                                               = nan;                                    % valore valore minimo della deflessione
+        output.tw(ntw).dt_onset_max_deflection                                      = nan;                           % tempo tra onset e massimo di deflessione
+        output.tw(ntw).dt_max_deflection_offset                                     = nan;                          % tempo tra massimo di deflessione e offset
+        output.tw(ntw).area_onset_max_deflection                                    = nan;                         % area tra onset e massimo di deflessione
+        output.tw(ntw).area_max_deflection_offset                                   = nan;                        % area tra massimo di deflessione e offset
+        output.tw(ntw).dt_onset_min_deflection                                      = nan;                           % tempo tra onset e mainimo di deflessione
+        output.tw(ntw).dt_min_deflection_offset                                     = nan;                          % tempo tra minimo di deflessione e offset
+        output.tw(ntw).area_onset_min_deflection                                    = nan;                         % area tra onset e minimo di deflessione
+        output.tw(ntw).area_min_deflection_offset                                   = nan;                        % area tra minimo di deflessione e offset
+        output.tw(ntw).dt_onset_offset                                              = nan;                                   % tempo tra onset e offset
+        output.tw(ntw).area_onset_offset                                            = nan;                                 % area tra onset e offset
+        output.tw(ntw).vmean_onset_offset                                           = nan;                                % media curva tra onset e offset
+        output.tw(ntw).vmedian_onset_offset                                         = nan;                              % mediana curva tra onset e offset
+        output.tw(ntw).barycenter                                                   = nan;                                        % baricentro (tempo pesato sulle ampiezze) curva tra onset e offset
+        
+    
+    
+    
+    
+    if not(isempty(tonset)) && not(isempty(tonset))
+        vonset                                                                     = curve(times == tonset);
+        voffset                                                                    = curve(times == toffset);
+        max_deflection                                                             = max(curve(seltsig));
+        tmax_deflection                                                            = times(curve == max_deflection);
+        min_deflection                                                             = min(curve(seltsig));
+        tmin_deflection                                                            = times(curve == min_deflection);
+        dt_onset_max_deflection                                                    = tmax_deflection - tonset;
+        dt_max_deflection_offset                                                   = toffset - tmax_deflection;
+        
+        
+        selt2 = times >= tonset & times <= max_deflection;
+        area_onset_max_deflection                                                  = sum(curve(selt2));
+        
+        selt2 = times >= max_deflection & times <= toffset;
+        area_max_deflection_offset                                                 = sum(curve(selt2));
+        
+        dt_onset_min_deflection                                                    = tmin_deflection - tonset;
+        dt_min_deflection_offset                                                   = toffset - tmin_deflection;
+        
+        selt2 = times >= tonset & times <= min_deflection;
+        area_onset_min_deflection                                                  = sum(curve(selt2));
+        
+        selt2 = times >= min_deflection & times <= toffset;
+        area_min_deflection_offset                                                 = sum(curve(selt2));
+        
+        dt_onset_offset                                                            = toffset - tonset;
+        
+        selt2 = times >= tonset & times <= toffset;
+        area_onset_offset                                                          = sum(curve(selt2));
+        vmean_onset_offset                                                         = mean(curve(selt2));
+        vmedian_onset_offset                                                       = median(curve(selt2));
+        
+        barycenter                                                                 = sum( times(selt2).*curve(selt2)') / sum(curve(selt2));
+        
+        %% output
+        
+        output.tw(ntw).tonset                                                       = tonset;                                            % tempo di onset
+        output.tw(ntw).vonset                                                       = vonset;                                            % valore di onset
+        output.tw(ntw).toffset                                                      = toffset;                                           % tempo di offset
+        output.tw(ntw).voffset                                                      = voffset;                                           % valore di offset
+        output.tw(ntw).tmax_deflection                                              = tmax_deflection;                                   % tempo di valore massimo della deflessione
+        output.tw(ntw).max_deflection                                               = max_deflection;                                    % valore massimo della deflessione
+        output.tw(ntw).tmin_deflection                                              = tmin_deflection;                                   % tempo di valore minimo della deflessione
+        output.tw(ntw).min_deflection                                               = min_deflection;                                    % valore valore minimo della deflessione
+        output.tw(ntw).dt_onset_max_deflection                                      = dt_onset_max_deflection;                           % tempo tra onset e massimo di deflessione
+        output.tw(ntw).dt_max_deflection_offset                                     = dt_max_deflection_offset;                          % tempo tra massimo di deflessione e offset
+        output.tw(ntw).area_onset_max_deflection                                    = area_onset_max_deflection;                         % area tra onset e massimo di deflessione
+        output.tw(ntw).area_max_deflection_offset                                   = area_max_deflection_offset;                        % area tra massimo di deflessione e offset
+        output.tw(ntw).dt_onset_min_deflection                                      = dt_onset_min_deflection;                           % tempo tra onset e mainimo di deflessione
+        output.tw(ntw).dt_min_deflection_offset                                     = dt_min_deflection_offset;                          % tempo tra minimo di deflessione e offset
+        output.tw(ntw).area_onset_min_deflection                                    = area_onset_min_deflection;                         % area tra onset e minimo di deflessione
+        output.tw(ntw).area_min_deflection_offset                                   = area_min_deflection_offset;                        % area tra minimo di deflessione e offset
+        output.tw(ntw).dt_onset_offset                                              = dt_onset_offset;                                   % tempo tra onset e offset
+        output.tw(ntw).area_onset_offset                                            = area_onset_offset;                                 % area tra onset e offset
+        output.tw(ntw).vmean_onset_offset                                           = vmean_onset_offset;                                % media curva tra onset e offset
+        output.tw(ntw).vmedian_onset_offset                                         = vmedian_onset_offset;                              % mediana curva tra onset e offset
+        output.tw(ntw).barycenter                                                   = barycenter;                                        % baricentro (tempo pesato sulle ampiezze) curva tra onset e offset
+        
+        
+    end
 end
-
 
 end
