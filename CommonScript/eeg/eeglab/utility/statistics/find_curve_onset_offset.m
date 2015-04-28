@@ -101,6 +101,9 @@ output.continuous.curve          = curve;
 output.continuous.pvec_corrected = pvec_corrected;
 output.continuous.pvec_raw       = pvec_raw;
 output.continuous.sigvec         = sigvec;
+output.continuous.times          = times;
+
+
 
 
 % ora andiamo ad estrarre i parametri per ogni tw
