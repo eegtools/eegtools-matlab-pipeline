@@ -76,7 +76,9 @@ for nn = 1:length(sel_noboudary)
     begin_t = begin_trial_ind(nn);
     end_t   = end_trial_ind(nn);
     
-    with_boundary = sum(boudary_ind >= begin_t) && sum(boudary_ind <= end_t);
+    % if one of the boundaries occurs between the begin and the end of the
+    % trial
+    with_boundary = sum(boudary_ind >= begin_t & boudary_ind <= end_t);
     if with_boundary
         sel_noboudary(nn) = false;
     end

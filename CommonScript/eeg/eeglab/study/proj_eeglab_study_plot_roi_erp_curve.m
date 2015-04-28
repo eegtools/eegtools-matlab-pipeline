@@ -295,7 +295,7 @@ for design_num=design_num_vec
             input_onset_offset.pvalue                                      = study_ls;                          % default will be 0.05
             input_onset_offset.correction                                  = correction ;                       % string. correction for multiple comparisons 'none'| 'fdr' | 'holms' | 'bonferoni'
             
-            erp_curve_roi_stat.dataroi(nroi).datatw.onset_offset = eeglab_study_curve_tw_onset_offset(input_onset_offset);
+%             erp_curve_roi_stat.dataroi(nroi).datatw.onset_offset = eeglab_study_curve_tw_onset_offset(input_onset_offset);
             
         end
         
@@ -523,10 +523,10 @@ for design_num=design_num_vec
     % ogni roi, cond, soggetto, ... il tutto su 2 file di testo separati
     % per non fare casino: alla fine hai curve, linee di significatività,
     % statistiche riassuntive
-     [dataexpcols, dataexp] = text_export_erp_onset_offset_sub_struct([out_file_name,'_sub_onset_offset.txt'],erp_curve_roi_stat); 
-    [dataexpcols, dataexp] = text_export_erp_onset_offset_avgsub_struct([out_file_name,'_avgsub_onset_offset.txt'],erp_curve_roi_stat); 
-    
-    
+%      [dataexpcols, dataexp] = text_export_erp_onset_offset_sub_struct([out_file_name,'_sub_onset_offset.txt'],erp_curve_roi_stat); 
+%     [dataexpcols, dataexp] = text_export_erp_onset_offset_avgsub_struct([out_file_name,'_avgsub_onset_offset.txt'],erp_curve_roi_stat); 
+%     
+%     
     
     
     %% export onset_offset

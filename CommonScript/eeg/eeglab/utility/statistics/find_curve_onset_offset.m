@@ -70,7 +70,7 @@ for ntw = 1:length(deflection_tw_list)
 end
 
 
-
+pvec()
 
 
 
