@@ -411,7 +411,7 @@ for nband=1:length(frequency_bands_list)
                 
                 narrowband{nf1,nf2,nsub}            = narrowband_output;
                 
-                if strcmp(do_narrowband,'ref') 
+                if strcmp(do_narrowband,'ref')
                     
                     fmin                                    = nb.results.nb.band(1).sub(nsub).fnb  - project.postprocess.ersp.frequency_bands(nband).dfmin;
                     fmax                                    = nb.results.nb.band(1).sub(nsub).fnb  + project.postprocess.ersp.frequency_bands(nband).dfmax;
@@ -488,6 +488,31 @@ for nband=1:length(frequency_bands_list)
     input_find_extrema.sel_extrema                           = sel_extrema;
     
     ersp_curve_roi_fb_stat.dataroi(nroi).databand(nband).datatw.find_extrema  = eeglab_study_plot_find_extrema(input_find_extrema);
+    
+    
+    
+    deflection_polarity_list                                       = project.postprocess.ersp.design(design_num).deflection_polarity_list;
+    
+    deflection_polarity_roi                                        =  deflection_polarity_list{nroi};
+    deflection_polarity_band                                       =  deflection_polarity_roi{nband};
+    
+    input_onset_offset.curve                                       = ersp_curve_roi_fb;
+    input_onset_offset.levels_f1                                   = levels_f1;
+    input_onset_offset.levels_f2                                   = levels_f2;
+    input_onset_offset.group_time_windows_list_design              = group_time_windows_list_design;
+    input_onset_offset.times                                       = times;
+    input_onset_offset.deflection_polarity_list                    = deflection_polarity_band;
+    input_onset_offset.min_duration                                = project.postprocess.ersp.design(design_num).min_duration ;
+    input_onset_offset.base_tw                                     = [project.epoching.bc_st.ms project.epoching.bc_end.ms] ;                           % baseline in ms
+    input_onset_offset.pvalue                                      = study_ls;                          % default will be 0.05
+    input_onset_offset.correction                                  = correction ;                       % string. correction for multiple comparisons 'none'| 'fdr' | 'holms' | 'bonferoni'
+    
+    erp_curve_roi_stat.dataroi(nroi).databand(nband).datatw.onset_offset = eeglab_study_curve_tw_onset_offset(input_onset_offset);
+    
+    
+    
+    
+    
     
     times_plot=times;
     
