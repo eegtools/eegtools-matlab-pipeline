@@ -290,7 +290,7 @@ for design_num=design_num_vec
             input_onset_offset.group_time_windows_list_design              = group_time_windows_list_design;
             input_onset_offset.times                                       = times;
             input_onset_offset.deflection_polarity_list                    = deflection_polarity_roi;
-            input_onset_offset.min_duration                                = project.postprocess.erp.design(design_num).min_duration ;                      
+            input_onset_offset.min_duration                                = project.postprocess.erp.design(design_num).min_duration ;
             input_onset_offset.base_tw                                     = [project.epoching.bc_st.ms project.epoching.bc_end.ms] ;                           % baseline in ms
             input_onset_offset.pvalue                                      = study_ls;                          % default will be 0.05
             input_onset_offset.correction                                  = correction ;                       % string. correction for multiple comparisons 'none'| 'fdr' | 'holms' | 'bonferoni'
@@ -518,18 +518,21 @@ for design_num=design_num_vec
         %         text_export_erp_resume_struct(erp_curve_roi_stat, [out_file_name '_resume_signif'], 'p_thresh', erp_curve_roi_stat.study_ls);
     end
     
-    % esportare statistiche onset-offset: sia statistiche riassuntive di
-    % ogni tw, sia il risultato punto a punto (linee sotto le curve) per
-    % ogni roi, cond, soggetto, ... il tutto su 2 file di testo separati
-    % per non fare casino: alla fine hai curve, linee di significatività,
-    % statistiche riassuntive
-     [dataexpcols, dataexp] = text_export_erp_onset_offset_sub_struct([out_file_name,'_sub_onset_offset.txt'],erp_curve_roi_stat); 
-    [dataexpcols, dataexp] = text_export_erp_onset_offset_avgsub_struct([out_file_name,'_avgsub_onset_offset.txt'],erp_curve_roi_stat); 
-    
-     [dataexpcols, dataexp] = text_export_erp_onset_offset_sub_continuous_struct([out_file_name,'_sub_onset_offset_continuous.txt'],erp_curve_roi_stat); 
-    [dataexpcols, dataexp] = text_export_erp_onset_offset_avgsub_continuous_struct([out_file_name,'_avgsub_onset_offset_continuous.txt'],erp_curve_roi_stat); 
-%     
-%     
+    if strcmp(time_resolution_mode,'tw')
+        
+        % esportare statistiche onset-offset: sia statistiche riassuntive di
+        % ogni tw, sia il risultato punto a punto (linee sotto le curve) per
+        % ogni roi, cond, soggetto, ... il tutto su 2 file di testo separati
+        % per non fare casino: alla fine hai curve, linee di significatività,
+        % statistiche riassuntive
+        [dataexpcols, dataexp] = text_export_erp_onset_offset_sub_struct([out_file_name,'_sub_onset_offset.txt'],erp_curve_roi_stat);
+        [dataexpcols, dataexp] = text_export_erp_onset_offset_avgsub_struct([out_file_name,'_avgsub_onset_offset.txt'],erp_curve_roi_stat);
+        
+        [dataexpcols, dataexp] = text_export_erp_onset_offset_sub_continuous_struct([out_file_name,'_sub_onset_offset_continuous.txt'],erp_curve_roi_stat);
+        [dataexpcols, dataexp] = text_export_erp_onset_offset_avgsub_continuous_struct([out_file_name,'_avgsub_onset_offset_continuous.txt'],erp_curve_roi_stat);
+    end
+    %
+    %
     
     
     %% export onset_offset
