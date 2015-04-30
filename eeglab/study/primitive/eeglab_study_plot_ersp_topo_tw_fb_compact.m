@@ -507,7 +507,7 @@ for nband=1:length(frequency_bands_list)
     input_onset_offset.pvalue                                      = study_ls;                          % default will be 0.05
     input_onset_offset.correction                                  = correction ;                       % string. correction for multiple comparisons 'none'| 'fdr' | 'holms' | 'bonferoni'
     
-    erp_curve_roi_stat.dataroi(nroi).databand(nband).datatw.onset_offset = eeglab_study_curve_tw_onset_offset(input_onset_offset);
+    ersp_curve_roi_fb_stat.dataroi(nroi).databand(nband).datatw.onset_offset = eeglab_study_curve_tw_onset_offset(input_onset_offset);
     
     
     
@@ -786,6 +786,14 @@ save([out_file_name,'.mat'],'ersp_compact');
 if ~ ( strcmp(which_method_find_extrema,'group_noalign') || strcmp(which_method_find_extrema,'continuous') );
     [dataexpcols, dataexp]=text_export_ersp_struct([out_file_name,'.txt'],ersp_curve_roi_fb_stat);
 end
+
+
+[dataexpcols, dataexp] = text_export_ersp_onset_offset_sub_struct([out_file_name,'_sub_onset_offset.txt'],ersp_curve_roi_fb_stat);
+[dataexpcols, dataexp] = text_export_ersp_onset_offset_avgsub_struct([out_file_name,'_avgsub_onset_offset.txt'],ersp_curve_roi_fb_stat);
+
+[dataexpcols, dataexp] = text_export_ersp_onset_offset_sub_continuous_struct([out_file_name,'_sub_onset_offset_continuous.txt'],ersp_curve_roi_fb_stat);
+[dataexpcols, dataexp] = text_export_ersp_onset_offset_avgsub_continuous_struct([out_file_name,'_avgsub_onset_offset_continuous.txt'],ersp_curve_roi_fb_stat);
+
 
 output.STUDY = STUDY;
 output.EEG   = EEG;
