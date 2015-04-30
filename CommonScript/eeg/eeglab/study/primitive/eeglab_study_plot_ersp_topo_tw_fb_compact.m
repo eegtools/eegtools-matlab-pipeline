@@ -787,14 +787,14 @@ if ~ ( strcmp(which_method_find_extrema,'group_noalign') || strcmp(which_method_
     [dataexpcols, dataexp]=text_export_ersp_struct([out_file_name,'.txt'],ersp_curve_roi_fb_stat);
 end
 
-
-[dataexpcols, dataexp] = text_export_ersp_onset_offset_sub_struct([out_file_name,'_sub_onset_offset.txt'],ersp_curve_roi_fb_stat);
-[dataexpcols, dataexp] = text_export_ersp_onset_offset_avgsub_struct([out_file_name,'_avgsub_onset_offset.txt'],ersp_curve_roi_fb_stat);
-
-[dataexpcols, dataexp] = text_export_ersp_onset_offset_sub_continuous_struct([out_file_name,'_sub_onset_offset_continuous.txt'],ersp_curve_roi_fb_stat);
-[dataexpcols, dataexp] = text_export_ersp_onset_offset_avgsub_continuous_struct([out_file_name,'_avgsub_onset_offset_continuous.txt'],ersp_curve_roi_fb_stat);
-
-
+if strcmp(time_resolution_mode,'tw')
+    [dataexpcols, dataexp] = text_export_ersp_onset_offset_sub_struct([out_file_name,'_sub_onset_offset.txt'],ersp_curve_roi_fb_stat);
+    [dataexpcols, dataexp] = text_export_ersp_onset_offset_avgsub_struct([out_file_name,'_avgsub_onset_offset.txt'],ersp_curve_roi_fb_stat);
+    
+    [dataexpcols, dataexp] = text_export_ersp_onset_offset_sub_continuous_struct([out_file_name,'_sub_onset_offset_continuous.txt'],ersp_curve_roi_fb_stat);
+    [dataexpcols, dataexp] = text_export_ersp_onset_offset_avgsub_continuous_struct([out_file_name,'_avgsub_onset_offset_continuous.txt'],ersp_curve_roi_fb_stat);
+    
+end
 output.STUDY = STUDY;
 output.EEG   = EEG;
 end
