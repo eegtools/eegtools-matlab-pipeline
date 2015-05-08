@@ -148,8 +148,10 @@ function results  =  eeglab_subject_check_mc(EEG, checks, varargin)
             disp(str);
         end
         results.can_epoch = 0;
+        str               = 'errors!!';
     else
         results.can_epoch = 1;
+        str               = 'OK';
     end
     
     disp('good trials available....');
@@ -160,6 +162,7 @@ function results  =  eeglab_subject_check_mc(EEG, checks, varargin)
     end
     
     disp([num2str(size(EEG.icaact,1)) ' ICA components are present in the file']);
+    disp(['status: ' str]);
     
     % ========================================================================================
     % ========================================================================================
