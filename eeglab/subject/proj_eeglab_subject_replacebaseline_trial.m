@@ -177,7 +177,7 @@ function OUTEEG =  proj_eeglab_subject_replacebaseline_trial(EEG, project,vararg
 
 
 
-    OUTEEG = pop_mergeset( ALLEEG2, 1:length(ALLEEG2), 0 );
+    OUTEEG = pop_mergeset( ALLEEG2, 1:length(ALLEEG2), 1 );
     OUTEEG = eeg_checkset(OUTEEG);
     
     
