@@ -1,7 +1,0 @@
-function p = fcdf(f,n,d);
-%function p = fcdf(f,n,d)
-% wrapper for the 
-% inverse f-distribution at f with v degrees of freedom
-% If you have matlab stats toolbox delete this function and put matlab's
-% stats toolbox in your path. 
-p = fp(f,n,d);

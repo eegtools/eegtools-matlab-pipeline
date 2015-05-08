@@ -1,7 +1,0 @@
-function q = finv(p,n,d);
-%function q = finv(p,n,d);
-% wrapper for the 
-% inverse f-distribution at p with n, numerator, and d,denominator, degrees of freedom
-% If you have matlab stats toolbox delete this function and put matlab's
-% stats toolbox in your path. 
-q = fq(p,n,d);
