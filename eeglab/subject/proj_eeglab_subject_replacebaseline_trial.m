@@ -42,7 +42,7 @@ function OUTEEG =  proj_eeglab_subject_replacebaseline_trial(EEG, project,vararg
     epoch_tw           = [project.epoching.epo_st.s project.epoching.epo_end.s];
     baseline_tw        = [0         project.epoching.baseline_duration.s];
 
-    replace                           = project.epoching.baseline_replace.replace;
+    replace            = project.epoching.baseline_replace.replace;
 
 
     type_list   = project.epoching.valid_marker;
@@ -52,11 +52,10 @@ function OUTEEG =  proj_eeglab_subject_replacebaseline_trial(EEG, project,vararg
     tot_eve       = length(OUTEEG.event);
     all_eve_ind   = 1:tot_eve;
 
+    % marker indexes
     boudary_ind   = find(   ismember(all_eve_types, 'boundary')  );
-
     begin_trial_ind = find(   ismember(all_eve_types, begin_trial)  ); % se ho aggiunto una baseline prima del primo evento, il trigger di inizio trial è il nuovo inizio baseline
     end_trial_ind   = find(   ismember(all_eve_types, end_trial)    );
-
     begin_baseline_ind = find(   ismember(all_eve_types, begin_baseline)  );
     end_baseline_ind   = find(   ismember(all_eve_types, end_baseline)  );
 
@@ -76,6 +75,8 @@ function OUTEEG =  proj_eeglab_subject_replacebaseline_trial(EEG, project,vararg
     % trial_noboudary =  begin_trial_ind(  (boundary_trial_ind < begin_trial_ind ) | (boundary_trial_ind > end_trial_ind )  );
 
     sel_noboudary = true(size(begin_trial_ind));
+    sel_noboudary_eve = true(size(all_eve_types));
+
     for nn = 1:length(sel_noboudary)
         begin_t = begin_trial_ind(nn);
         end_t   = end_trial_ind(nn);
@@ -84,6 +85,7 @@ function OUTEEG =  proj_eeglab_subject_replacebaseline_trial(EEG, project,vararg
         with_boundary = sum(boudary_ind >= begin_t & boudary_ind <= end_t);
         if with_boundary
             sel_noboudary(nn) = false;
+            sel_noboudary_eve(all_eve_ind > begin_t & all_eve_ind < end_t ) = false;
         end
     end    
 
@@ -95,10 +97,11 @@ function OUTEEG =  proj_eeglab_subject_replacebaseline_trial(EEG, project,vararg
     for ntype = 1:length(type_list)
 
         type          = type_list{ntype};
-        type_ind      = find(   ismember(all_eve_types, type)  );
+        ...type_ind      = find(   ismember(all_eve_types, type)  );
+        type_ind      = find(   ismember(all_eve_types, type)  & sel_noboudary_eve);
 
         out = find_next_vec(trial_noboudary, type_ind);
-        type_noboudary = out.vec2_next;
+        type_noboudary = unique(out.vec2_next(not(isnan(out.vec2_next))));
 
         switch original_baseline
             case 'before'
@@ -109,10 +112,14 @@ function OUTEEG =  proj_eeglab_subject_replacebaseline_trial(EEG, project,vararg
                 out = find_next_vec(type_ind, begin_baseline_ind);
                 baseline_noboudary = out.vec2_next;
         end
+        
+        if not(isempty(type_noboudary))
+            [OUTEEG_target, target_indices]     = pop_epoch( OUTEEG, {type},           epoch_tw,    'eventindices', type_noboudary);
+        end
 
-        OUTEEG_target   = pop_epoch( OUTEEG, {type},           epoch_tw,    'eventindices', type_noboudary);
-
-        OUTEEG_baseline = pop_epoch( OUTEEG, {begin_baseline}, baseline_tw, 'eventindices', baseline_noboudary);
+        if not(isempty(baseline_noboudary))
+            [OUTEEG_baseline, baseline_indices] = pop_epoch( OUTEEG, {begin_baseline}, baseline_tw, 'eventindices', baseline_noboudary);
+        end
 
         target_trials   = OUTEEG_target.trials;
         baseline_trials = OUTEEG_baseline.trials;
@@ -175,11 +182,8 @@ function OUTEEG =  proj_eeglab_subject_replacebaseline_trial(EEG, project,vararg
         ALLEEG2(ntype) = OUTEEG_target;
     end
 
-
-
     OUTEEG = pop_mergeset( ALLEEG2, 1:length(ALLEEG2), 1 );
     OUTEEG = eeg_checkset(OUTEEG);
-    
     
 end
 

@@ -1,6 +1,42 @@
 function results  =  eeglab_subject_check_mc(EEG, checks, varargin)
 
-    errors = cell(1, length(EEG.event));
+    all_eve_types           = {EEG.event.type};
+    tot_eve                 = length(EEG.event);
+    all_eve_ind             = 1:tot_eve;
+    
+    begin_trial_marker      = checks.begin_trial.input.begin_trial_marker;
+    end_trial_marker        = checks.begin_trial.input.end_trial_marker;
+    begin_baseline_marker   = checks.begin_baseline.input.begin_baseline_marker;
+    end_baseline_marker     = checks.begin_baseline.input.end_baseline_marker;        
+    
+    % marker indexes
+    boudary_ind             = find(ismember(all_eve_types, 'boundary'));
+    begin_trial_ind         = find(ismember(all_eve_types, begin_trial_marker)); % se ho aggiunto una baseline prima del primo evento, il trigger di inizio trial è il nuovo inizio baseline
+    end_trial_ind           = find(ismember(all_eve_types, end_trial_marker));
+    begin_baseline_ind      = find(ismember(all_eve_types, begin_baseline_marker));
+    end_baseline_ind        = find(ismember(all_eve_types, end_baseline_marker));
+    
+    errors                  = cell(1, length(EEG.event));
+    sel_noboudary           = true(size(begin_trial_ind));
+    sel_noboudary_eve       = true(size(all_eve_types));
+
+    %----------------------------------------------------------------------------------------------------------------------------------------------------------------
+    for nn = 1:length(sel_noboudary)
+        begin_t = begin_trial_ind(nn);
+        end_t   = end_trial_ind(nn);
+
+        % if one of the boundaries occurs between the begin and the end of the trial
+        with_boundary = sum(boudary_ind >= begin_t & boudary_ind <= end_t);
+        if with_boundary
+            sel_noboudary(nn) = false;
+            sel_noboudary_eve(all_eve_ind > begin_t & all_eve_ind < end_t ) = false;
+        end
+    end        
+
+    trial_noboudary     =  begin_trial_ind(sel_noboudary);
+    trial_withboudary   =  begin_trial_ind(not(sel_noboudary));
+    
+
     % ========================================================================================
     % begin_trial
     % ogni begin trial deve essere seguito da un end trial prima che da un altro begin trial
@@ -9,31 +45,27 @@ function results  =  eeglab_subject_check_mc(EEG, checks, varargin)
     
     if strcmp(checks.begin_trial.switch,'on')
 
-        begin_trial_marker  = checks.begin_trial.input.begin_trial_marker;
-        begin_ind           = find(ismember({EEG.event.type}, {begin_trial_marker}));
-        num_begin           = length(begin_ind);
+        num_begin           = length(begin_trial_ind);
         results.good_bt_et  = false(1, num_begin);
-        begin_begin         = [begin_ind(1:end-1); begin_ind(2:end)]';
+        begin_begin         = [begin_trial_ind(1:end-1); begin_trial_ind(2:end)]';
 
         % end_trial
-        end_trial_marker    = checks.begin_trial.input.end_trial_marker;
-        end_ind             = find(ismember({EEG.event.type}, {end_trial_marker}));
         
         for nbi = 1:size(begin_begin, 1)
             
-            b1 = begin_begin(nbi,1);    b2 = begin_begin(nbi,2);
-            v1 = end_ind >= b1;         v2 = end_ind <= b2;
+            b1 = begin_begin(nbi,1);        b2 = begin_begin(nbi,2);
+            v1 = end_trial_ind >= b1;       v2 = end_trial_ind <= b2;
             
             if sum(v1 & v2) == 1
                 results.good_bt_et(nbi) = true;
             else
-                errors{begin_ind(nbi)} = [errors{begin_ind(nbi)} 'begin_trial::end_trial '];
+                errors{begin_trial_ind(nbi)} = [errors{begin_trial_ind(nbi)} 'begin_trial::end_trial '];
             end
         end
-        if sum(end_ind > b2) == 1
+        if sum(end_trial_ind > b2) == 1
             results.good_bt_et(num_begin) = true;
         else
-            errors{begin_ind(nbi)} = [errors{begin_ind(nbi)} 'begin_trial::end_trial '];
+            errors{begin_trial_ind(nbi)} = [errors{begin_trial_ind(nbi)} 'begin_trial::end_trial '];
         end
     end
 
@@ -41,28 +73,22 @@ function results  =  eeglab_subject_check_mc(EEG, checks, varargin)
     % end_trial 
     % ogni end trial deve essere seguito da un begin trial prima che da un altro end trial
     % al più l'begin trial del trial corrente può coincidere col end trial successivo)        
-    
-    if strcmp(checks.end_trial.switch,'on') 
+    if strcmp(checks.end_trial.switch, 'on') 
 
-        end_trial_marker    = checks.end_trial.input.end_trial_marker;
-        end_ind             = find(ismember({EEG.event.type}, {end_trial_marker}));
-        num_end             = length(end_ind);
-        results.good_et_bt          = false(1, num_end);
-        end_end             = [end_ind(1:end-1); end_ind(2:end)]';
+        num_end             = length(end_trial_ind);
+        results.good_et_bt  = false(1, num_end);
+        end_end             = [end_trial_ind(1:end-1); end_trial_ind(2:end)]';
 
         % begin trial
-        begin_trial_marker  = checks.end_trial.input.begin_trial_marker;
-        begin_ind           = find(ismember({EEG.event.type}, {begin_trial_marker}));
-        
         for nei = 1:size(end_end,1)
             
-            e1 = end_end(nei,1);        e2 = end_end(nei,2);
-            v1 = begin_ind >= e1;       v2 = begin_ind <= e2;
+            e1 = end_end(nei,1);            e2 = end_end(nei,2);
+            v1 = begin_trial_ind >= e1;     v2 = begin_trial_ind <= e2;
             
             if sum(v1 & v2) == 1
                 results.good_et_bt(nei) = true;
             else
-                errors{end_ind(nei)} = [errors{end_ind(nei)} 'end_trial::begin_trial '];
+                errors{end_trial_ind(nei)} = [errors{end_trial_ind(nei)} 'end_trial::begin_trial '];
             end
         end        
     end
@@ -70,21 +96,17 @@ function results  =  eeglab_subject_check_mc(EEG, checks, varargin)
     % ========================================================================================
     % begin_baseline 
     % controllo che ci sia sempre un solo end_baseline
-    if strcmp(checks.begin_baseline.switch,'on') 
+    if strcmp(checks.begin_baseline.switch, 'on') 
         
-        begin_baseline_marker   = checks.begin_baseline.input.begin_baseline_marker;
-        begin_ind               = find(ismember({EEG.event.type}, {begin_baseline_marker}));
-        num_begin               = length(begin_ind);       
-        results.good_bb_eb              = false(1, num_begin);
+        num_begin               = length(begin_trial_ind);       
+        results.good_bb_eb      = false(1, num_begin);
         
         % end_baseline_marker
-        end_baseline_marker     = checks.begin_baseline.input.end_baseline_marker;        
-        
         for bb=1:num_begin
-            if strcmp(EEG.event(begin_ind(bb)+1).type, end_baseline_marker)
+            if strcmp(EEG.event(begin_trial_ind(bb)+1).type, end_baseline_marker)
                 results.good_bb_eb(bb) = true;
             else
-                errors{begin_ind(bb)} = [errors{begin_ind(bb)} 'begin_baseline::end_baseline '];
+                errors{begin_trial_ind(bb)} = [errors{begin_trial_ind(bb)} 'begin_baseline::end_baseline '];
             end
         end
     end
@@ -93,45 +115,40 @@ function results  =  eeglab_subject_check_mc(EEG, checks, varargin)
     % end_baseline
     % ogni end_baseline deve essere seguito da un begin baseline prima che da un altro end_baseline
     % inoltre dopo ogni end baseline ci deve essere un solo end trial.
-    if strcmp(checks.end_baseline.switch,'on')
+    if strcmp(checks.end_baseline.switch, 'on')
         
-        end_baseline_marker         = checks.end_baseline.input.end_baseline_marker;
-        eb_ind                      = find(ismember({EEG.event.type}, {end_baseline_marker}));
-        num_eb                      = length(eb_ind);
+        num_eb                      = length(end_baseline_ind);
         results.good_eb_bb          = false(1, num_eb);
         results.good_eb_et          = false(1, num_eb);
-        end_end                     = [eb_ind(1:end-1); eb_ind(2:end)]';
+        end_end                     = [end_baseline_ind(1:end-1); end_baseline_ind(2:end)]';
         
         % begin_baseline
-        begin_baseline_marker       = checks.end_baseline.input.begin_baseline_marker;
-        bb_ind                      = find(ismember({EEG.event.type}, {begin_baseline_marker}));
-
         for nbi = 1:size(end_end,1)
-            b1 = end_end(nbi,1);    b2 = end_end(nbi,2);
-            v1 = bb_ind >= b1;      v2 = bb_ind <= b2;
+            b1 = end_end(nbi,1);                b2 = end_end(nbi,2);
+            v1 = begin_baseline_ind >= b1;      v2 = begin_baseline_ind <= b2;
             
             if sum(v1 & v2) == 1
                 results.good_eb_bb(nbi) = true;
             else
-                errors{eb_ind(nbi)} = [errors{eb_ind(nbi)} 'end_baseline::begin_baseline '];
+                errors{end_baseline_ind(nbi)} = [errors{end_baseline_ind(nbi)} 'end_baseline::begin_baseline '];
             end
         end
         
         % end_trial_marker
-        end_trial_marker            = checks.end_baseline.input.end_trial_marker;
-        et_ind                      = find(ismember({EEG.event.type}, {end_trial_marker}));
-        
-        for nbi = 1:size(end_end,1)
-            b1 = end_end(nbi,1);    b2 = end_end(nbi,2);
-            v1 = et_ind >= b1;      v2 = et_ind <= b2;
+       for nbi = 1:size(end_end,1)
+            b1 = end_end(nbi,1);        b2 = end_end(nbi,2);
+            v1 = end_trial_ind >= b1;   v2 = end_trial_ind <= b2;
             
             if sum(v1 & v2) == 1
                 results.good_eb_et(nbi) = true;
             else
-                errors{eb_ind(nbi)} = [errors{eb_ind(nbi)} 'end_baseline::end_trial_marker '];
+                errors{end_baseline_ind(nbi)} = [errors{end_baseline_ind(nbi)} 'end_baseline::end_trial_marker '];
             end
         end        
     end
+    % ========================================================================================
+    % ========================================================================================
+    % ========================================================================================
     % ========================================================================================
     % ========================================================================================
     % summarize, display results
@@ -163,6 +180,16 @@ function results  =  eeglab_subject_check_mc(EEG, checks, varargin)
     
     disp([num2str(size(EEG.icaact,1)) ' ICA components are present in the file']);
     disp(['status: ' str]);
+    
+    if not(isempty(trial_withboudary))
+        disp('=====================================trial with boundary......')
+        for res=1:length(trial_withboudary)
+            lat = EEG.event(trial_withboudary(res)).latency/EEG.srate;
+            str = ['start trial id ' num2str(trial_withboudary(res)) ', at latency : ' num2str(lat)]; 
+            disp(str);        
+            ...trial_withboudary
+        end
+    end
     
     % ========================================================================================
     % ========================================================================================
