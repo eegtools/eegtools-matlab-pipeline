@@ -16,8 +16,9 @@
 %%  
 function file_name = proj_eeglab_subject_get_filename(project, subj_name, analysis_step, varargin)
 
-    custom_suffix = '';
-
+    custom_suffix           = '';
+    custom_input_folder     = '';
+    
     options_num=size(varargin,2);
     for opt=1:2:options_num    
         switch varargin{opt}
@@ -28,6 +29,8 @@ function file_name = proj_eeglab_subject_get_filename(project, subj_name, analys
 %                 if not(strcmp(analysis_step, 'output_epoching')) && not(strcmp(analysis_step, 'add_factor'))
 %                     error(['error in proj_eeglab_subject_get_filename with cond_name parameter specified, the analysis_step is not ''output_epoching'' or ''add_factor'', please correct the function call']);
 %                 end
+            case 'custom_input_folder'
+                custom_input_folder   = varargin{opt+1};
         end
     end
 
@@ -50,6 +53,12 @@ function file_name = proj_eeglab_subject_get_filename(project, subj_name, analys
         case {'output_epoching', 'add_factor', 'extract_narrowband'}
             file_name = fullfile(project.paths.output_epochs, ...
                         [project.import.original_data_prefix subj_name project.import.original_data_suffix project.import.output_suffix project.epoching.input_suffix custom_suffix '_' cond_name '.set']);
+        case {'custom_step'}
+            if strcmp(custom_input_folder, '')
+                error('proj_eeglab_subject_get_filename.... you selected a custom_step without specifying a custom input folder');
+            end
+            file_name = fullfile(custom_input_folder, ...
+                        [project.import.original_data_prefix subj_name project.import.original_data_suffix project.import.output_suffix custom_suffix '.set']);
     end
 end
 
