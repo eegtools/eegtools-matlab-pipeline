@@ -8,18 +8,19 @@ EEG = pop_loadset(input_file_name1);
         nevents = length(EEG.event);
         i = 1;
         for index = 1 : nevents
-           if strcmpi(EEG.event(index).code, 'Stimulus')     % Add events relative to existing events
+           if strcmpi(EEG.event(index).type, 'S20')     % Add events relative to existing events
                 EEG.event(end+1) = EEG.event(index);    % Add event to end of event list
+                ...EEG.event(end).latency = EEG.event(index).latency + (data_vector(EEG.event(index).epoch)/1000)*EEG.srate;    %  ...     % Specifying the event latency  before the referent event (in real data points) 
                 EEG.event(end).latency = EEG.event(index).latency + (data_vector(i)/1000)*EEG.srate;    %  ...     % Specifying the event latency  before the referent event (in real data points) 
                 EEG.event(end).type = new_marker_type;    % Make the type of the new event 'P'
-                EEG.event(end).code = new_marker_class; 
+                ...EEG.event(end).code = new_marker_class; 
                 i = i+1;
            end;
         end;
 
         EEG = eeg_checkset(EEG, 'eventconsistency');     % Check all events for consistency
-        ...EEG = pop_saveset( EEG, 'filename',EEG.filename,'filepath',EEG.filepath);
-        pop_saveset(EEG);
+        EEG = pop_saveset( EEG, 'filename',EEG.filename,'filepath',EEG.filepath);
+        ...EEG = pop_saveset(EEG);
 end
         
         
