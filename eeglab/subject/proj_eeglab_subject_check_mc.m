@@ -22,6 +22,7 @@ function EEG  =  proj_eeglab_subject_check_mc(project, varargin)
     numsubj = length(list_select_subjects);
 
 
+    checks.condition_triggers                           = project.task.events.valid_marker;
     
     checks.begin_trial.switch                           = 'on';
     checks.begin_trial.input.begin_trial_marker         = project.task.events.trial_start_trigger_value;
@@ -49,7 +50,7 @@ function EEG  =  proj_eeglab_subject_check_mc(project, varargin)
         input_file_name             = proj_eeglab_subject_get_filename(project, subj_name,'input_epoching','custom_suffix', custom_suffix);
         EEG                         = pop_loadset(input_file_name);
 
-        results                     = eeglab_subject_check_mc(EEG, checks);
+        results                     = eeglab_subject_check_mc2(EEG, checks);
 
     end
 
