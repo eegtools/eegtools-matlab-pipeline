@@ -8,53 +8,54 @@ function EEG = eeglab_subject_ica(input_file_name, output_path, eeg_ch_list, ch_
 %    ica_type is the algorithm employed to peform ica decomposition (see EEGLab manua, eg. 'runica'). The cuda implementation of ica ('cudaica')
 %    is only available on linux or mac and only if the PC has been previously properly configured
 
-[path,name_noext,ext] = fileparts(input_file_name);
+    [path,name_noext,ext] = fileparts(input_file_name);
 
-% DEFAULTS
-gpu_id=0;
-out_file_name=name_noext;
+    % DEFAULTS
+    gpu_id=0;
+    out_file_name=name_noext;
 
-options_num=size(varargin,2);
-for opt=1:options_num
-    switch varargin{opt}
-        case 'gpu_id'
-            opt=opt+1;
-            gpu_id=varargin{opt};
-        case 'ofn'
-            opt=opt+1;
-            out_file_name=varargin{opt};
+
+    for par=1:2:length(varargin)
+        switch varargin{par}
+            case {'gpu_id', 'ofn'}
+                if isempty(varargin{par+1})
+                    continue;
+                else
+                    assign(varargin{par}, varargin{par+1});
+                end                
+        end
+    end 
+
+    % ......................................................................................................
+
+    EEG = pop_loadset(input_file_name);
+
+    ll = length({EEG.chanlocs.labels});
+    if ll < length(eeg_ch_list)
+        eeg_ch_list = 1:ll;
     end
-end
-% ......................................................................................................
 
-EEG = pop_loadset(input_file_name);
+    % if length(ch_ref) == 1
+        sel_ch_ref = ismember({EEG.chanlocs(1:length(eeg_ch_list)).labels},ch_ref);
+        eeg_ch_list = eeg_ch_list(not(sel_ch_ref)); 
 
-ll = length({EEG.chanlocs.labels});
-if ll < length(eeg_ch_list)
-    eeg_ch_list = 1:ll;
-end
-
-% if length(ch_ref) == 1
-    sel_ch_ref = ismember({EEG.chanlocs(1:length(eeg_ch_list)).labels},ch_ref);
-    eeg_ch_list = eeg_ch_list(not(sel_ch_ref)); 
-        
-% end
+    % end
 
 
 
-if gpu_id>0
-    EEG = pop_runica_octave_matlab(EEG, 'icatype',ica_type,'chanind',eeg_ch_list,'options',{'extended' 1 'd' gpu_id});
-else
-    EEG = pop_runica_octave_matlab(EEG, 'icatype',ica_type,'chanind',eeg_ch_list,'options',{'extended' 1});
-end
+    if gpu_id>0
+        EEG = pop_runica_octave_matlab(EEG, 'icatype',ica_type,'chanind',eeg_ch_list,'options',{'extended' 1 'd' gpu_id});
+    else
+        EEG = pop_runica_octave_matlab(EEG, 'icatype',ica_type,'chanind',eeg_ch_list,'options',{'extended' 1});
+    end
 
-if strcmp(ica_type, 'cudaica')
-    delete('cudaica*');
-end
-if isempty(EEG.icaact)
-    EEG.icaact = EEG.icaweights*EEG.icasphere*EEG.data(eeg_ch_list, :);
-end
-EEG = pop_saveset( EEG, 'filename',out_file_name,'filepath',output_path);
+    if strcmp(ica_type, 'cudaica')
+        delete('cudaica*');
+    end
+    if isempty(EEG.icaact)
+        EEG.icaact = EEG.icaweights*EEG.icasphere*EEG.data(eeg_ch_list, :);
+    end
+    EEG = pop_saveset( EEG, 'filename',out_file_name,'filepath',output_path);
 end
 
 
