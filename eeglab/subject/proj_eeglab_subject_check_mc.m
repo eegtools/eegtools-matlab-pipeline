@@ -25,10 +25,10 @@ function EEG  =  proj_eeglab_subject_check_mc(project, varargin)
     
     checks.begin_trial.switch                           = 'on';
     checks.begin_trial.input.begin_trial_marker         = project.task.events.trial_start_trigger_value;
-    checks.begin_trial.input.end_trial_marker           = project.task.events.videoend_trigger_value;
+    checks.begin_trial.input.end_trial_marker           = project.task.events.trial_end_trigger_value;
 
     checks.end_trial.switch                             = 'on';
-    checks.end_trial.input.end_trial_marker             = project.task.events.videoend_trigger_value;
+    checks.end_trial.input.end_trial_marker             = project.task.events.trial_end_trigger_value;
     checks.end_trial.input.begin_trial_marker           = project.task.events.trial_start_trigger_value;
 
     checks.begin_baseline.switch                        = 'on';
@@ -38,7 +38,7 @@ function EEG  =  proj_eeglab_subject_check_mc(project, varargin)
     checks.end_baseline.switch                          = 'on';
     checks.end_baseline.input.begin_baseline_marker     = project.task.events.baseline_start_trigger_value;
     checks.end_baseline.input.end_baseline_marker       = project.task.events.baseline_end_trigger_value;
-    checks.end_baseline.input.end_trial_marker          = project.task.events.videoend_trigger_value;
+    checks.end_baseline.input.end_trial_marker          = project.task.events.trial_end_trigger_value;
     
     checks.conditions_triggers                          = project.task.events.mrkcode_cond;
     
