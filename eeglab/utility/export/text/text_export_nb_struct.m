@@ -18,6 +18,8 @@ tmax =[];
 ref_roi_name =[];
 ref_cond =[];
 fnb = [];
+centroid_mean = [];
+
 realign_meaure =[];
 
 if nargin < 1
@@ -48,8 +50,8 @@ for nband=1:tband % for each frequency band
     
     realign_meaure    = [realign_meaure;      repmat({band_struct.which_realign_measure},tsub,1)];
     
-    fnb   = [fnb; [output.results.nb.band(nband).sub.fnb]'];
-    
+    fnb               = [fnb; [output.results.nb.band(nband).sub.fnb]'];
+    centroid_mean     = [centroid_mean; [output.results.nb.band(nband).sub.centroid_mean]'];
 end
 
 sub = repmat( {output.results.nb.band(1).sub.sub_name}, 1,tband)';
@@ -61,12 +63,13 @@ dfmax=num2cell(dfmax);
 tmin=num2cell(tmin);
 tmax=num2cell(tmax);
 fnb=num2cell(fnb);
+centroid_mean=num2cell(centroid_mean);
 
-dataexpcols    = {'subect', 'band_name', 'fmin','fmax', 'ref_tw_name','tmin','tmax','ref_roi','ref_cond','realign_meaure','fnb','dfmin','dfmax'};
+dataexpcols    = {'subect', 'band_name', 'fmin','fmax', 'ref_tw_name','tmin','tmax','ref_roi','ref_cond','realign_meaure','fnb','dfmin','dfmax','centroid_mean'};
 formatSpecCols = [repmat('%s\t',1,length(dataexpcols)-1),'%s\r\n'];
 
-formatSpecData =  '%s\t%s\t%f\t%f\t%s\t%f\t%f\t%s\t%s\t%s\t%f\t%f\t%f\r\n';
-dataexp        = [sub,       band_name,   fmin,  fmax,  ref_tw_name,   tmin,  tmax,  ref_roi_name,  ref_cond,realign_meaure,  fnb,  dfmin,  dfmax];
+formatSpecData =  '%s\t%s\t%f\t%f\t%s\t%f\t%f\t%s\t%s\t%s\t%f\t%f\t%f\t%f\r\n';
+dataexp        = [sub,       band_name,   fmin,  fmax,  ref_tw_name,   tmin,  tmax,  ref_roi_name,  ref_cond,realign_meaure,  fnb,  dfmin,  dfmax,centroid_mean];
 
 fileID = fopen(out_file,'w');
 fprintf(fileID,formatSpecCols,dataexpcols{:});
