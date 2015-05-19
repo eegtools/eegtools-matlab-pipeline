@@ -1,4 +1,4 @@
-function fnb = eeglab_subject_extract_narrowband(input)
+function [fnb, centroid_mean]= eeglab_subject_extract_narrowband(input)
 % struct('name','teta','min',4,'max',8,'dfmin',1,'dfmax',1,'ref_roi_list',{'Cpz'}, 'ref_roi_name','Cpz','ref_cond', 'ao', 'ref_tw_list', [0 100], 'ref_tw_name', 'gigi', 'realign_method','auc');
 project                                                                    = input.project;
 input_file_name                                                            = input.input_file_name;
@@ -129,8 +129,8 @@ narrowband_input.which_realign_measure  = which_realign_measure; % questa gli ab
 
 [project, narrowband_output]            = eeglab_get_narrowband(project,narrowband_input);
 
-fnb = narrowband_output.results.sub.realign_freq;
-
+fnb           = narrowband_output.results.sub.realign_freq;
+centroid_mean = narrowband_output.results.sub.centroid_mean; 
 % nota: extract narrowband restituirebbe molte più info, vedere
 % come capializzarle (possibile salvare / scrivere struttura su txt?)
 end
