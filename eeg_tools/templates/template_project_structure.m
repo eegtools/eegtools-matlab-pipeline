@@ -932,7 +932,7 @@ project.postprocess.ersp.design(1).which_extrema_curve_tw = {     .... design x 
                                     };
 };
 
-
+%
 
  project.postprocess.ersp.design(1).deflection_polarity_list = {  ... design x roi x frequency band x time_windows
                                {...
