@@ -50,7 +50,7 @@ function EEG  =  proj_eeglab_subject_check_mc(project, varargin)
         input_file_name             = proj_eeglab_subject_get_filename(project, subj_name,'input_epoching','custom_suffix', custom_suffix);
         EEG                         = pop_loadset(input_file_name);
 
-        results                     = eeglab_subject_check_mc2(EEG, checks);
+        results                     = eeglab_subject_check_mc(EEG, checks);
 
     end
 

@@ -66,7 +66,7 @@ for nband = 1:tband
         
         if exist(input_nb.input_file_name, 'file')
             %% output of the low level extract narrow band
-            [output.results.nb.band(nband).sub(nsub).fnb, output.results.nb.band(nband).sub(nsub).centrod_mean]      = eeglab_subject_extract_narrowband(input_nb);
+            [output.results.nb.band(nband).sub(nsub).fnb, output.results.nb.band(nband).sub(nsub).centroid_mean]      = eeglab_subject_extract_narrowband(input_nb);
             output.results.nb.band(nband).sub(nsub).sub_name    = sub_name;
         else
             disp('Error: missing file!!!!')

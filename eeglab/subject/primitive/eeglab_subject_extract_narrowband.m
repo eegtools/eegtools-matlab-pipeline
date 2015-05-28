@@ -130,7 +130,7 @@ narrowband_input.which_realign_measure  = which_realign_measure; % questa gli ab
 [project, narrowband_output]            = eeglab_get_narrowband(project,narrowband_input);
 
 fnb           = narrowband_output.results.sub.realign_freq;
-centroid_mean = narrowband_output.results.sub.centroid_mean; 
+centroid_mean = narrowband_output.results.sub.fb.centroid_mean; 
 % nota: extract narrowband restituirebbe molte più info, vedere
 % come capializzarle (possibile salvare / scrivere struttura su txt?)
 end
