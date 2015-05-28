@@ -77,113 +77,122 @@ function OUTEEG =  proj_eeglab_subject_replacebaseline_trial(EEG, project,vararg
     sel_noboudary = true(size(begin_trial_ind));
     sel_noboudary_eve = true(size(all_eve_types));
 
-    for nn = 1:length(sel_noboudary)
-        begin_t = begin_trial_ind(nn);
-        end_t   = end_trial_ind(nn);
+    try
+        for nn = 1:length(sel_noboudary)
+            begin_t = begin_trial_ind(nn);
+            end_t   = end_trial_ind(nn);
 
-        % if one of the boundaries occurs between the begin and the end of the trial
-        with_boundary = sum(boudary_ind >= begin_t & boudary_ind <= end_t);
-        if with_boundary
-            sel_noboudary(nn) = false;
-            sel_noboudary_eve(all_eve_ind > begin_t & all_eve_ind < end_t ) = false;
-        end
-    end    
-
-
-    trial_noboudary =  begin_trial_ind(sel_noboudary);
-
-
-    % for each type of target event
-    for ntype = 1:length(type_list)
-
-        type          = type_list{ntype};
-        ...type_ind      = find(   ismember(all_eve_types, type)  );
-        type_ind      = find(   ismember(all_eve_types, type)  & sel_noboudary_eve);
-
-        out = find_next_vec(trial_noboudary, type_ind);
-        type_noboudary = unique(out.vec2_next(not(isnan(out.vec2_next))));
-
-        switch original_baseline
-            case 'before'
-                out = find_previous_vec(type_ind, begin_baseline_ind);
-                baseline_noboudary = out.vec2_previous;
-
-            case 'after'
-                out = find_next_vec(type_ind, begin_baseline_ind);
-                baseline_noboudary = out.vec2_next;
-        end
-        
-        if not(isempty(type_noboudary))
-            [OUTEEG_target, target_indices]     = pop_epoch( OUTEEG, {type},           epoch_tw,    'eventindices', type_noboudary);
-        end
-
-        if not(isempty(baseline_noboudary))
-            [OUTEEG_baseline, baseline_indices] = pop_epoch( OUTEEG, {begin_baseline}, baseline_tw, 'eventindices', baseline_noboudary);
-        end
-
-        target_trials   = OUTEEG_target.trials;
-        baseline_trials = OUTEEG_baseline.trials;
-        
-        if target_trials ~= baseline_trials
-           warning(['ntype: ' type ' number of target trials differs from baseline trials: ' num2str(target_trials) '::' num2str(baseline_trials)]); 
-           OUTEEG = [];
-           return;
-        end
-        
-        switch final_baseline
-            case 'before'
-                sel_replace_baseline = OUTEEG_target.times < 0;
-
-            case 'after'
-                sel_replace_baseline = OUTEEG_target.times > 0;
-        end
-
-        ltt = sum(sel_replace_baseline);
-        lbt= OUTEEG_baseline.pnts;
-
-
-
-        if ltt < lbt
-            data4replace =  OUTEEG_baseline.data(:,1:ltt,:);
-
-        elseif ltt > lbt
-
-            dlt = ltt -lbt;
-
-            switch replace
-                case 'all'
-                    data4replace = cat(2, OUTEEG_baseline.data, OUTEEG_baseline.data(:,1:dlt,:));
-
-                case 'part'
-                    data4replace = OUTEEG_target.data(:,sel_replace_baseline,:);
-
-                    if strcmp(final_baseline,'before')
-                        data4replace(:,1:lbt,:) = OUTEEG_baseline.data(:,:,:);
-
-
-                    elseif strcmp(final_baseline,'after')
-                        data4replace(:,	dlt+1:ltt,:) = OUTEEG_baseline.data(:,:,:);
-
-                    else
-                        disp('select a valid project.epoching.baseline_replace.replace');
-                        return
-                    end
-
-
-
+            % if one of the boundaries occurs between the begin and the end of the trial
+            with_boundary = sum(boudary_ind >= begin_t & boudary_ind <= end_t);
+            if with_boundary
+                sel_noboudary(nn) = false;
+                sel_noboudary_eve(all_eve_ind > begin_t & all_eve_ind < end_t ) = false;
             end
-        else
-            data4replace =  OUTEEG_baseline.data;
+        end    
+
+
+        trial_noboudary =  begin_trial_ind(sel_noboudary);
+
+
+        % for each type of target event
+        for ntype = 1:length(type_list)
+
+            type          = type_list{ntype};
+            ...type_ind      = find(   ismember(all_eve_types, type)  );
+            type_ind      = find(   ismember(all_eve_types, type)  & sel_noboudary_eve);
+
+            out = find_next_vec(trial_noboudary, type_ind);
+            type_noboudary = unique(out.vec2_next(not(isnan(out.vec2_next))));
+
+            switch original_baseline
+                case 'before'
+                    out = find_previous_vec(type_ind, begin_baseline_ind);
+                    baseline_noboudary = out.vec2_previous;
+
+                case 'after'
+                    out = find_next_vec(type_ind, begin_baseline_ind);
+                    baseline_noboudary = out.vec2_next;
+            end
+
+            if not(isempty(type_noboudary))
+                [OUTEEG_target, target_indices]     = pop_epoch( OUTEEG, {type},           epoch_tw,    'eventindices', type_noboudary);
+            end
+
+            if not(isempty(baseline_noboudary))
+                [OUTEEG_baseline, baseline_indices] = pop_epoch( OUTEEG, {begin_baseline}, baseline_tw, 'eventindices', baseline_noboudary);
+            end
+
+            target_trials   = OUTEEG_target.trials;
+            baseline_trials = OUTEEG_baseline.trials;
+
+            if target_trials ~= baseline_trials
+               warning(['ntype: ' type ' number of target trials differs from baseline trials: ' num2str(target_trials) '::' num2str(baseline_trials)]); 
+               OUTEEG = [];
+               return;
+            end
+
+            switch final_baseline
+                case 'before'
+                    sel_replace_baseline = OUTEEG_target.times < 0;
+
+                case 'after'
+                    sel_replace_baseline = OUTEEG_target.times > 0;
+            end
+
+            ltt = sum(sel_replace_baseline);
+            lbt= OUTEEG_baseline.pnts;
+
+
+
+            if ltt < lbt
+                data4replace =  OUTEEG_baseline.data(:,1:ltt,:);
+
+            elseif ltt > lbt
+
+                dlt = ltt -lbt;
+
+                switch replace
+                    case 'all'
+                        data4replace = cat(2, OUTEEG_baseline.data, OUTEEG_baseline.data(:,1:dlt,:));
+
+                    case 'part'
+                        data4replace = OUTEEG_target.data(:,sel_replace_baseline,:);
+
+                        if strcmp(final_baseline,'before')
+                            data4replace(:,1:lbt,:) = OUTEEG_baseline.data(:,:,:);
+
+
+                        elseif strcmp(final_baseline,'after')
+                            data4replace(:,	dlt+1:ltt,:) = OUTEEG_baseline.data(:,:,:);
+
+                        else
+                            disp('select a valid project.epoching.baseline_replace.replace');
+                            return
+                        end
+
+
+
+                end
+            else
+                data4replace =  OUTEEG_baseline.data;
+            end
+
+
+            OUTEEG_target.data(:,sel_replace_baseline,:) = data4replace;
+
+            ALLEEG2(ntype) = OUTEEG_target;
         end
-
-
-        OUTEEG_target.data(:,sel_replace_baseline,:) = data4replace;
-
-        ALLEEG2(ntype) = OUTEEG_target;
+        
+        if length(ALLEEG2) > 1
+            OUTEEG = pop_mergeset( ALLEEG2, 1:length(ALLEEG2), 1 );
+        else
+            OUT_EEG = ALLEEG2(1);
+        end
+        OUTEEG = eeg_checkset(OUTEEG);
+        
+    catch err
+        err;
     end
-
-    OUTEEG = pop_mergeset( ALLEEG2, 1:length(ALLEEG2), 1 );
-    OUTEEG = eeg_checkset(OUTEEG);
     
 end
 

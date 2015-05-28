@@ -33,18 +33,18 @@ function [STUDY, EEG] = proj_eeglab_study_compute_channels_measures(project, var
     end;
 
 % possibile passare da un recompute globale ad uno specifico di una misura
-    erp             = project.study.precompute.erp;
-    ersp            = project.study.precompute.ersp;
-    spec            = project.study.precompute.spec;
-    erpim           = project.study.precompute.erpim;
+    erp                     = project.study.precompute.erp;
+    ersp                    = project.study.precompute.ersp;
+    spec                    = project.study.precompute.spec;
+    erpim                   = project.study.precompute.erpim;
     
-    design_num_vec  = [1:length(project.design)];
-    sel_cell_string = [];
+    design_num_vec          = [1:length(project.design)];
+    list_select_subjects    = [];
     do_erp=0; do_erpim=0; do_spec=0; do_ersp=0;
     
     for par=1:2:length(varargin)
        switch varargin{par}
-           case {'design_num_vec', 'sel_cell_string'}
+           case {'design_num_vec', 'list_select_subjects'}
                 if isempty(varargin{par+1})
                     continue;
                 else
@@ -88,9 +88,13 @@ end
         STUDY = std_selectdesign(STUDY, ALLEEG, design_num);
         list_cell_design={STUDY.design(design_num).cell.filebase};
         
-        
-        if ~isempty(sel_cell_string)
-            vec_sel_cell=strfind_index(list_cell_design,sel_cell_string);            
+        vec_sel_cell = [];
+        if not(isempty(list_select_subjects))
+            for s=1:length(list_select_subjects)
+                vv = strfind_index(list_cell_design, list_select_subjects{s});            
+                vec_sel_cell = [vec_sel_cell, vv];
+            end
+            vec_sel_cell = sort(vec_sel_cell);
         else
             vec_sel_cell=1:length(list_cell_design);
         end

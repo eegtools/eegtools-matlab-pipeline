@@ -467,7 +467,7 @@ for nroi = 1:length(roi_list)
             input_onset_offset.pvalue                                      = study_ls;                          % default will be 0.05
             input_onset_offset.correction                                  = correction ;                       % string. correction for multiple comparisons 'none'| 'fdr' | 'holms' | 'bonferoni'
             
-            ersp_curve_roi_fb_stat.dataroi(nroi).databand(nband).datatw.onset_offset = eeglab_study_curve_tw_onset_offset(input_onset_offset);
+            ...ersp_curve_roi_fb_stat.dataroi(nroi).databand(nband).datatw.onset_offset = eeglab_study_curve_tw_onset_offset(input_onset_offset);
             
             
             
