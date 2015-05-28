@@ -35,6 +35,9 @@ end
 if not(iscell(list_select_subjects)), list_select_subjects = {list_select_subjects}; end
 numsubj = length(list_select_subjects);
 
+if not(iscell(project.preproc.marker_type.begin_baseline)), project.preproc.marker_type.begin_baseline = {project.preproc.marker_type.begin_baseline}; end
+if not(iscell(project.preproc.marker_type.begin_baseline)), project.preproc.marker_type.begin_baseline = {project.preproc.marker_type.begin_baseline}; end
+
 
 switch project.epoching.baseline_replace.mode
     
