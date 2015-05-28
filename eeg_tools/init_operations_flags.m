@@ -137,39 +137,6 @@ project.operations.do_study_plot_roi_erp_curve_tw_individual_noalign            
 project.operations.do_study_plot_roi_erp_curve_tw_individual_align                  = 0;
 
 
-%% -------------------------------------------------------------------------------------------
-% FOR ERP, EOG CURVE_standard, standard curve erp modality: evaluate and represent standard EEGLab statistics on the curve of ERP, plot together levels of design factors
-%--------------------------------------------------------------------------------------------
-% master-function:                                      proj_eeglab_study_plot_roi_erpeog_curve
-
-% CONTINUOUS: analyzes and plots of erp curve for all time points
-if project.operations.do_study_plot_roi_erpeog_curve_continous
-    proj_eeglab_study_plot_roi_erpeog_curve(project, stat_analysis_suffix, project.postprocess.erp.mode.continous, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
-end
-
-% TIMEWINDOW: perform (and save) statistics based time windows
-
-% analyzes and plots of erp curve for time windows of the selected design
-if project.operations.do_study_plot_roi_erpeog_curve_tw_group_noalign
-    proj_eeglab_study_plot_roi_erpeog_curve(project, stat_analysis_suffix, project.postprocess.erp.mode.tw_group_noalign, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
-end
-
-% analyzes and plots of erp curve for time windows of the selected design
-if project.operations.do_study_plot_roi_erpeog_curve_tw_group_align
-    proj_eeglab_study_plot_roi_erpeog_curve(project, stat_analysis_suffix, project.postprocess.erp.mode.tw_group_align, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
-end
-
-% analyzes and plots of erp curve for time windows of the selected design
-if project.operations.do_study_plot_roi_erpeog_curve_tw_individual_noalign
-    proj_eeglab_study_plot_roi_erpeog_curve(project, stat_analysis_suffix, project.postprocess.erp.mode.tw_individual_noalign, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
-end
-
-% analyzes and plots of erp curve for time windows of the selected design
-if project.operations.do_study_plot_roi_erpeog_curve_tw_individual_align
-    proj_eeglab_study_plot_roi_erpeog_curve(project, stat_analysis_suffix, project.postprocess.erp.mode.tw_individual_align, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
-end
-
-
 
 %% -------------------------------------------------------------------------------------------
 % FOR ERP, eog CURVE_standard, standard curve erp modality: evaluate and represent standard EEGLab statistics on the curve of ERP, plot together levels of design factors
