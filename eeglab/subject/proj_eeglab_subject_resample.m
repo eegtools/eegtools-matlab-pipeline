@@ -1,0 +1,70 @@
+%% EEG = proj_eeglab_subject_testart(project, varargin)
+%
+%%
+
+
+function EEG = proj_eeglab_subject_resample(project, varargin)
+
+list_select_subjects    = project.subjects.list;
+custom_suffix ='';
+
+for par=1:2:length(varargin)
+    switch varargin{par}
+        case {  ...
+                'list_select_subjects', ...
+                'custom_suffix' ...
+                }
+            
+            if isempty(varargin{par+1})
+                continue;
+            else
+                assign(varargin{par}, varargin{par+1});
+            end
+    end
+end
+
+if not(iscell(list_select_subjects)), list_select_subjects = {list_select_subjects}; end
+numsubj = length(list_select_subjects);
+
+
+for subj=1:numsubj
+    
+    subj_name   = list_select_subjects{subj};
+    inputfile   = proj_eeglab_subject_get_filename(project, subj_name, 'input_epoching', 'custom_suffix', custom_suffix);
+    
+    
+    EEG         = pop_loadset(inputfile);
+    
+    
+    reference=[];
+    if not(strcmp(project.import.reference_channels{1}, 'CAR'))
+        
+        tchanref        = length(project.import.reference_channels);
+        channels_list   = {EEG.chanlocs.labels};
+        for nchref=1:tchanref;
+            ll                  = length(project.import.reference_channels{nchref});
+            match_ref(nchref,:) = strncmp(channels_list, project.import.reference_channels(nchref), ll);
+        end
+        refvec      = find(sum(match_ref,1)>0);
+        reference   = refvec;
+    end
+    
+   
+        disp(['subsampling to ' num2str(project.eegdata.fs)]);
+        EEG = pop_resample( EEG, project.eegdata.fs);
+   
+    
+    EEG = eeg_checkset( EEG );
+    EEG = pop_saveset( EEG, 'filename',EEG.filename,'filepath',EEG.filepath);
+    
+    
+end
+end
+% ====================================================================================================
+% ====================================================================================================
+% CHANGE LOG
+% ====================================================================================================
+% ====================================================================================================
+% 29/12/2014
+% the function now accept also a cell array of subject names, instead of a single subject name
+% utilization of proj_eeglab_subject_get_filename function to define IO file name

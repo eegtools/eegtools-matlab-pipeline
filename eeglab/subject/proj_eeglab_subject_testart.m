@@ -30,7 +30,8 @@ function EEG = proj_eeglab_subject_testart(project, varargin)
         
         subj_name   = list_select_subjects{subj};        
         inputfile   = proj_eeglab_subject_get_filename(project, subj_name, 'custom_pre_epochs', 'custom_suffix', custom_suffix);
-        EEG         = eeglab_subject_testart(inputfile, project.paths.output_preprocessing);
+        outputfile   = proj_eeglab_subject_get_filename(project, subj_name, 'input_epoching', 'custom_suffix', custom_suffix);
+        EEG         = eeglab_subject_testart(inputfile, outputfile);
     
     end 
 end    
