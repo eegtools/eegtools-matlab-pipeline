@@ -35,8 +35,8 @@ end
 if not(iscell(list_select_subjects)), list_select_subjects = {list_select_subjects}; end
 numsubj = length(list_select_subjects);
 
-if not(iscell(project.preproc.marker_type.begin_baseline)), project.preproc.marker_type.begin_baseline = {project.preproc.marker_type.begin_baseline}; end
-if not(iscell(project.preproc.marker_type.begin_baseline)), project.preproc.marker_type.begin_baseline = {project.preproc.marker_type.begin_baseline}; end
+if (iscell(project.preproc.marker_type.begin_baseline)), project.preproc.marker_type.begin_baseline = project.preproc.marker_type.begin_baseline{:}; end
+if (iscell(project.preproc.marker_type.end_baseline)), project.preproc.marker_type.end_baseline = project.preproc.marker_type.end_baseline{:}; end
 if not(iscell(project.preproc.insert_begin_baseline.target_event_types)), project.preproc.insert_begin_baseline.target_event_types = {project.preproc.insert_begin_baseline.target_event_types}; end
 if not(iscell(project.preproc.insert_end_baseline.target_event_types)), project.preproc.insert_end_baseline.target_event_types = {project.preproc.insert_end_baseline.target_event_types}; end
 
