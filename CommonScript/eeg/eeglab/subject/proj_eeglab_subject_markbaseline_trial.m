@@ -25,9 +25,14 @@ OUTEEG = EEG;
 for ntarg = 1: length(project.preproc.insert_begin_trial.target_event_types)
     
     target = project.preproc.insert_begin_trial.target_event_types{ntarg};
-    delay  = project.preproc.insert_begin_trial.delay.s;
     
-    delay_pts                   =  floor(delay * OUTEEG.srate); % convert delay from seconds to points
+    delay_begin  = project.preproc.insert_begin_baseline.delay.s;
+    delay_begin_pts                   =  floor(delay_begin * OUTEEG.srate); % convert delay from seconds to points
+    
+    delay_end  = project.preproc.insert_end_baseline.delay.s;
+    delay_end_pts                   =  floor(delay_end * OUTEEG.srate); % convert delay from seconds to points
+    
+    
     baseline_duration_pts       =  floor(project.epoching.baseline_duration.s * OUTEEG.srate);
     
     sel_target_baseline = ismember({OUTEEG.event.type},target);
@@ -38,12 +43,12 @@ for ntarg = 1: length(project.preproc.insert_begin_trial.target_event_types)
         n2 = length(OUTEEG.event)+2;
         
         OUTEEG.event(n1)         =   eve_target_baseline(neve);
-        OUTEEG.event(n1).latency =   OUTEEG.event(n1).latency + delay_pts;
+        OUTEEG.event(n1).latency =   OUTEEG.event(n1).latency + delay_begin_pts;
         OUTEEG.event(n1).type    =   project.preproc.marker_type.begin_baseline;
         
         
         OUTEEG.event(n2)         =   eve_target_baseline(neve);
-        OUTEEG.event(n2).latency =   OUTEEG.event(n2).latency + delay_pts + baseline_duration_pts;
+        OUTEEG.event(n2).latency =   OUTEEG.event(n2).latency + delay_end_pts + baseline_duration_pts;
         OUTEEG.event(n2).type    =   project.preproc.marker_type.end_baseline;
         
     end
