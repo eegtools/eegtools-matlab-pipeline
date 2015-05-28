@@ -40,7 +40,7 @@ OUTEEG = EEG;
 for ntarg = 1: length(project.preproc.insert_begin_trial.target_event_types)
     
     target = project.preproc.insert_begin_trial.target_event_types(ntarg);
-    delay  = project.preproc.insert_begin_trial.delay.s(ntarg);
+    delay  = project.preproc.insert_begin_trial.delay.s;
     
     delay_pts     =  floor(delay * OUTEEG.srate); % convert delay from seconds to points
     
