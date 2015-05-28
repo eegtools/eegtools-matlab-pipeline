@@ -81,7 +81,7 @@
 % do_plots
 % ====================================================================================================
 
-function [STUDY, EEG] = proj_eeglab_study_plot_roieog_erp_curve(project, analysis_name, mode, varargin)
+function [STUDY, EEG] = proj_eeglab_study_plot_roiemg_ersp_curve(project, analysis_name, mode, varargin)
 
 if nargin < 1
     help proj_eeglab_study_plot_roi_erp_curve;
@@ -100,32 +100,32 @@ end
 list_select_subjects        = {};
 design_num_vec              = [1:length(project.design)];
 
-roi_list                    = project.postprocess.erp.eog.roi_list;
-roi_names                   = project.postprocess.erp.eog.roi_names;
+roi_list                    = project.postprocess.ersp.eog.roi_list;
+roi_names                   = project.postprocess.ersp.eog.roi_names;
 
-study_ls                    = project.stats.erp.pvalue;
-num_permutations            = project.stats.erp.num_permutations;
-correction                  = project.stats.eeglab.erp.correction;
-stat_method                 = project.stats.eeglab.erp.method;
+study_ls                    = project.stats.ersp.pvalue;
+num_permutations            = project.stats.ersp.num_permutations;
+correction                  = project.stats.eeglab.ersp.correction;
+stat_method                 = project.stats.eeglab.ersp.method;
 
-filter                      = project.results_display.erp.time_smoothing;
-masked_times_max            = project.results_display.erp.masked_times_max;
-display_only_significant    = project.results_display.erp.display_only_significant_curve;
-display_compact_plots       = project.results_display.erp.compact_plots;
-compact_display_h0          = project.results_display.erp.compact_h0;
-compact_display_v0          = project.results_display.erp.compact_v0;
-compact_display_sem         = project.results_display.erp.compact_sem;
-compact_display_stats       = project.results_display.erp.compact_stats;
-display_single_subjects     = project.results_display.erp.single_subjects;
-compact_display_xlim        = project.results_display.erp.compact_display_xlim;
-compact_display_ylim        = project.results_display.erp.compact_display_ylim;
+filter                      = project.results_display.ersp.time_smoothing;
+masked_times_max            = project.results_display.ersp.masked_times_max;
+display_only_significant    = project.results_display.ersp.display_only_significant_curve;
+display_compact_plots       = project.results_display.ersp.compact_plots;
+compact_display_h0          = project.results_display.ersp.compact_h0;
+compact_display_v0          = project.results_display.ersp.compact_v0;
+compact_display_sem         = project.results_display.ersp.compact_sem;
+compact_display_stats       = project.results_display.ersp.compact_stats;
+display_single_subjects     = project.results_display.ersp.single_subjects;
+compact_display_xlim        = project.results_display.ersp.compact_display_xlim;
+compact_display_ylim        = project.results_display.ersp.compact_display_ylim;
 
 
-group_time_windows_list     = arrange_structure(project.postprocess.erp.design, 'group_time_windows');
-subject_time_windows_list   = arrange_structure(project.postprocess.erp.design, 'subject_time_windows');
-group_time_windows_names    = arrange_structure(project.postprocess.erp.design, 'group_time_windows_names');
+group_time_windows_list     = arrange_structure(project.postprocess.ersp.design, 'group_time_windows');
+subject_time_windows_list   = arrange_structure(project.postprocess.ersp.design, 'subject_time_windows');
+group_time_windows_names    = arrange_structure(project.postprocess.ersp.design, 'group_time_windows_names');
 
-do_plots                    = project.results_display.erp.do_plots;
+do_plots                    = project.results_display.ersp.do_plots;
 
 % ANALYSIS MODALITIES
 if strcmp(mode.peak_type, 'group') && strcmp(mode.align, 'off')
@@ -142,7 +142,7 @@ end
 
 tw_stat_estimator           = mode.tw_stat_estimator;
 time_resolution_mode        = mode.time_resolution_mode;
-sel_extrema                 = project.postprocess.erp.eog.sel_extrema;
+sel_extrema                 = project.postprocess.ersp.eog.sel_extrema;
 
 for par=1:2:length(varargin)
     switch varargin{par}
@@ -262,7 +262,7 @@ for design_num=design_num_vec
             erp_curve_roi_stat.group_time_windows_list_design=group_time_windows_list_design;
             erp_curve_roi_stat.group_time_windows_names_design=group_time_windows_names_design;
             
-            which_extrema_design            = project.postprocess.erp.eog.design(design_num).which_extrema_curve;
+            which_extrema_design            = project.postprocess.ersp.eog.design(design_num).which_extrema_curve;
             which_extrema_design_roi        = which_extrema_design{nroi};
             
             input_find_extrema.which_method_find_extrema             = which_method_find_extrema;
@@ -281,7 +281,7 @@ for design_num=design_num_vec
             erp_curve_roi_stat.dataroi(nroi).datatw.find_extrema = eeglab_study_plot_find_extrema(input_find_extrema);
             
             
-            deflection_polarity_list                                       = project.postprocess.erp.eog.design(design_num).deflection_polarity_list;
+            deflection_polarity_list                                       = project.postprocess.ersp.eog.design(design_num).deflection_polarity_list;
             deflection_polarity_roi                                        = deflection_polarity_list{nroi};
             
             input_onset_offset.curve                                       = erp_curve_roi;
@@ -290,7 +290,7 @@ for design_num=design_num_vec
             input_onset_offset.group_time_windows_list_design              = group_time_windows_list_design;
             input_onset_offset.times                                       = times;
             input_onset_offset.deflection_polarity_list                    = deflection_polarity_roi;
-            input_onset_offset.min_duration                                = project.postprocess.erp.eog.design(design_num).min_duration ;
+            input_onset_offset.min_duration                                = project.postprocess.ersp.eog.design(design_num).min_duration ;
             input_onset_offset.base_tw                                     = [project.epoching.bc_st.ms project.epoching.bc_end.ms] ;                           % baseline in ms
             input_onset_offset.pvalue                                      = study_ls;                          % default will be 0.05
             input_onset_offset.correction                                  = correction ;                       % string. correction for multiple comparisons 'none'| 'fdr' | 'holms' | 'bonferoni'
