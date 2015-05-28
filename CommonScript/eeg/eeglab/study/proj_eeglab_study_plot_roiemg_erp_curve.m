@@ -81,7 +81,7 @@
 % do_plots
 % ====================================================================================================
 
-function [STUDY, EEG] = proj_eeglab_study_plot_roieog_erp_curve(project, analysis_name, mode, varargin)
+function [STUDY, EEG] = proj_eeglab_study_plot_roiemg_erp_curve(project, analysis_name, mode, varargin)
 
 if nargin < 1
     help proj_eeglab_study_plot_roi_erp_curve;

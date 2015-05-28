@@ -595,6 +595,35 @@ project.postprocess.erp.roi_list = {  ...
 project.postprocess.erp.roi_names={'left-ifg','right-ifg','left-PMd','right-PMd','left-SM1','right-SM1','SMA'}; ...,'left-ipl','right-ipl','left-spl','right-spl','left-sts','right-sts','left-occipital','right-occipital'};
 project.postprocess.erp.numroi=length(project.postprocess.erp.roi_list);
 
+
+
+project.postprocess.erp.eog.roi_list = {  ...
+          {'UP_LEOG','DOWN_LEOG'};  ... 
+          {'UP_REOG','DOWN_REOG'};  ... 
+          {'UP_LEOG','UP_REOG'};            ... 
+          {'DOWN_LEOG','DOWN_REOG'};            ... 
+};
+project.postprocess.erp.eog.roi_names={'L','R','U','D'}; ...,
+project.postprocess.erp.eog.numroi=length(project.postprocess.erp.eog.roi_list);
+
+
+
+project.postprocess.erp.emg.roi_list = {  ...
+          {'EMG1','EMG2'};  ... 
+          {'EMG3','EMG4'};  ... 
+          {'EMG5','EMG6'};            ... 
+          {'EMG7','EMG8'};            ... 
+};
+project.postprocess.erp.emg.roi_names={'1','2','3','4'}; ...,
+project.postprocess.erp.emg.numroi=length(project.postprocess.erp.emg.roi_list);
+
+
+
+
+
+
+
+
 if isfield(project, 'postprocess')
     if isfield(project.postprocess, 'erp')
         if isfield(project.postprocess.erp, 'design')
@@ -645,6 +674,49 @@ project.postprocess.erp.design(1).which_extrema_curve       = {  ... design x ro
                                 {'max';'min';'min';'min'}  ...112
 };
 
+
+project.postprocess.erp.eog.design(1).which_extrema_curve       = {  ... design x roi x time_windows
+                            ...   tw1   tw2  ...
+                                {'max';'min';'min';'min'}; ... roi 1
+                                {'max';'min';'min';'min'}; ... roi 2
+                                {'max';'min';'min';'min'}; ... roi 3
+                                {'max';'min';'min';'min'}; ...
+                                {'max';'min';'min';'min'}; ...
+                                {'max';'min';'min';'min'}; ...
+                                {'max';'min';'min';'min'}; ...
+                                {'max';'min';'min';'min'}; ...
+                                {'max';'min';'min';'min'}; ...
+                                {'max';'min';'min';'min'}; ...
+                                {'max';'min';'min';'min'}; ...
+                                {'max';'min';'min';'min'}; ...
+                                {'max';'min';'min';'min'}; ...
+                                {'max';'min';'min';'min'}; ...
+                                {'max';'min';'min';'min'}  ...112
+};
+
+
+
+
+project.postprocess.erp.emg.design(1).which_extrema_curve       = {  ... design x roi x time_windows
+                            ...   tw1   tw2  ...
+                                {'max';'min';'min';'min'}; ... roi 1
+                                {'max';'min';'min';'min'}; ... roi 2
+                                {'max';'min';'min';'min'}; ... roi 3
+                                {'max';'min';'min';'min'}; ...
+                                {'max';'min';'min';'min'}; ...
+                                {'max';'min';'min';'min'}; ...
+                                {'max';'min';'min';'min'}; ...
+                                {'max';'min';'min';'min'}; ...
+                                {'max';'min';'min';'min'}; ...
+                                {'max';'min';'min';'min'}; ...
+                                {'max';'min';'min';'min'}; ...
+                                {'max';'min';'min';'min'}; ...
+                                {'max';'min';'min';'min'}; ...
+                                {'max';'min';'min';'min'}; ...
+                                {'max';'min';'min';'min'}  ...112
+};
+
+
 % parameters for onset_offset analysis
 
 % expected deflection, if any  (to perform 1 o 2 tail t-test): 'positive' |
@@ -675,15 +747,49 @@ project.postprocess.erp.design(1).deflection_polarity_list = {  ... design x roi
                                 {'positive';'positive';'positive';'positive';'positive';'negative'}  ... 
 };
 
+project.postprocess.erp.eog.design(1).deflection_polarity_list = {  ... design x roi x time_windows
+                                ...   tw1      tw2  ...
+                                {'positive';'positive';'positive';'positive';'positive';'negative'}; ... roi 1
+                                {'positive';'positive';'positive';'positive';'positive';'negative'}; ... roi 2
+                                {'positive';'positive';'positive';'positive';'positive';'positive'}; ... roi 3
+                                {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
+                                {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
+                                {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
+                                {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
+                                {'positive';'positive';'positive';'positive';'positive';'negative'}  ... 
+};
+
+project.postprocess.erp.emg.design(1).deflection_polarity_list = {  ... design x roi x time_windows
+                                ...   tw1      tw2  ...
+                                {'positive';'positive';'positive';'positive';'positive';'negative'}; ... roi 1
+                                {'positive';'positive';'positive';'positive';'positive';'negative'}; ... roi 2
+                                {'positive';'positive';'positive';'positive';'positive';'positive'}; ... roi 3
+                                {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
+                                {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
+                                {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
+                                {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
+                                {'positive';'positive';'positive';'positive';'positive';'negative'}  ... 
+};
+
 
 % minimum duration in ms of the deflections: deflections shorter than this
 % threshold will be removed
-project.postprocess.erp.design(1).min_duration = 10;
+project.postprocess.erp.design(1).min_duration     = 10;
+project.postprocess.erp.eog.design(1).min_duration = 10;
+project.postprocess.erp.emg.design(1).min_duration = 10;
 
 
 
 for ds=2:length(project.design)
     project.postprocess.erp.design(ds) = project.postprocess.erp.design(1);
+end
+
+for ds=2:length(project.design)
+    project.postprocess.erp.eog.design(ds) = project.postprocess.erp.eog.design(1);
+end
+
+for ds=2:length(project.design)
+    project.postprocess.erp.emg.design(ds) = project.postprocess.erp.emg.design(1);
 end
 
 
@@ -744,17 +850,45 @@ project.postprocess.ersp.frequency_bands_names      = {project.postprocess.ersp.
 %===============================================================================
 
 project.postprocess.ersp.roi_list = { ...
-          
-          {'C4'};                   ... cM1 hand
-          {'C3'};                   ... iM1 hand
-          {'Cz'};                   ... SMA
+            {'F5','F7','AF7','FT7'};  ... left IFG
+          {'F6','F8','AF8','FT8'};  ... right IFG
           {'FC3','FC5'};            ... l PMD
           {'FC4','FC6'};            ... r PMD    
-          {'F5','F7','AF7','FT7'};  ... left IFG
-          {'F6','F8','AF8','FT8'}  ... right IFG
+          {'C3'};                   ... iM1 hand
+          {'C4'};                   ... cM1 hand
+          {'Cz'}   
 };
 project.postprocess.ersp.roi_names                              = {'contralateral-SM1','ipsilateral-SM1','SMA','ipsilateral-PMd','contralateral-PMd','ipsilateral-ifg','contralateral-ifg'}; ... ,'left-ipl','right-ipl','left-spl','right-spl','left-sts','right-sts','left-occipital','right-occipital'};
 project.postprocess.ersp.numroi                                 = length(project.postprocess.ersp.roi_list);
+
+
+
+project.postprocess.ersp.eog.roi_list = { ...
+          {'UP_LEOG','DOWN_LEOG'};  ... 
+          {'UP_REOG','DOWN_REOG'};  ... 
+          {'UP_LEOG','UP_REOG'};            ... 
+          {'DOWN_LEOG','DOWN_REOG'};     
+};
+project.postprocess.ersp.eog.roi_names                              = {'L','R','U','D'}; ... 
+project.postprocess.ersp.eog.numroi                                 = length(project.postprocess.ersp.eog.roi_list);
+
+
+project.postprocess.erp.emg.roi_list = {  ...
+          {'EMG1','EMG2'};  ... 
+          {'EMG3','EMG4'};  ... 
+          {'EMG5','EMG6'};            ... 
+          {'EMG7','EMG8'};            ... 
+};
+project.postprocess.ersp.emg.roi_names={'1','2','3','4'}; ...,
+project.postprocess.ersp.emg.numroi=length(project.postprocess.ersp.emg.roi_list);
+
+
+
+
+
+
+
+
 
 if isfield(project, 'postprocess')
     if isfield(project.postprocess, 'ersp')
@@ -765,6 +899,8 @@ if isfield(project, 'postprocess')
 end
 
 project.postprocess.ersp.nroi = length(project.postprocess.ersp.roi_list);
+project.postprocess.ersp.eog.nroi = length(project.postprocess.ersp.eog.roi_list);
+project.postprocess.ersp.emg.nroi = length(project.postprocess.ersp.emg.roi_list);
 %===============================================================================
 % DESIGNS' TIME WINDOWS
 %===============================================================================
@@ -932,7 +1068,29 @@ project.postprocess.ersp.design(1).which_extrema_curve_tw = {     .... design x 
                                     };
 };
 
-%
+
+
+
+project.postprocess.ersp.eog.design(1).which_extrema_curve       = {  ... design x roi x time_windows
+                            ...   tw1   tw2  ...
+                                {'max';'min';'min';'min'}; ... roi 1
+                                {'max';'min';'min';'min'}; ... roi 2
+                                {'max';'min';'min';'min'}; ... roi 3
+                                {'max';'min';'min';'min'}; ...
+                                {'max';'min';'min';'min'}; ...
+                                {'max';'min';'min';'min'}; ...
+                                {'max';'min';'min';'min'}; ...
+                                {'max';'min';'min';'min'}; ...
+                                {'max';'min';'min';'min'}; ...
+                                {'max';'min';'min';'min'}; ...
+                                {'max';'min';'min';'min'}; ...
+                                {'max';'min';'min';'min'}; ...
+                                {'max';'min';'min';'min'}; ...
+                                {'max';'min';'min';'min'}; ...
+                                {'max';'min';'min';'min'}  ...112
+};
+
+
 
  project.postprocess.ersp.design(1).deflection_polarity_list = {  ... design x roi x frequency band x time_windows
                                {...
@@ -992,7 +1150,35 @@ project.postprocess.ersp.design(1).which_extrema_curve_tw = {     .... design x 
 };
 
 
+
+project.postprocess.ersp.eog.design(1).deflection_polarity_list = {  ... design x roi x time_windows
+                                ...   tw1      tw2  ...
+                                {'positive';'positive';'positive';'positive';'positive';'negative'}; ... roi 1
+                                {'positive';'positive';'positive';'positive';'positive';'negative'}; ... roi 2
+                                {'positive';'positive';'positive';'positive';'positive';'positive'}; ... roi 3
+                                {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
+                                {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
+                                {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
+                                {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
+                                {'positive';'positive';'positive';'positive';'positive';'negative'}  ... 
+};
+
+
+project.postprocess.ersp.emg.design(1).deflection_polarity_list = {  ... design x roi x time_windows
+                                ...   tw1      tw2  ...
+                                {'positive';'positive';'positive';'positive';'positive';'negative'}; ... roi 1
+                                {'positive';'positive';'positive';'positive';'positive';'negative'}; ... roi 2
+                                {'positive';'positive';'positive';'positive';'positive';'positive'}; ... roi 3
+                                {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
+                                {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
+                                {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
+                                {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
+                                {'positive';'positive';'positive';'positive';'positive';'negative'}  ... 
+};
+
 project.postprocess.ersp.design(1).min_duration = 10;
+project.postprocess.ersp.eog.design(1).min_duration = 10;
+project.postprocess.ersp.emg.design(1).min_duration = 10;
 
 
 
@@ -1001,7 +1187,14 @@ for ds=2:length(project.design)
     project.postprocess.ersp.design(ds) = project.postprocess.ersp.design(1);
 end
 
+for ds=2:length(project.design)
+    project.postprocess.ersp.eog.design(ds) = project.postprocess.ersp.design(1);
+end
 
+
+for ds=2:length(project.design)
+    project.postprocess.ersp.emg.design(ds) = project.postprocess.ersp.design(1);
+end
 
 
 % semi-automatic (simplified) input mode: set values for the first roi/design and

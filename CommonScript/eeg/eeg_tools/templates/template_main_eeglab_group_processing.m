@@ -136,6 +136,56 @@ project.operations.do_study_plot_roi_erp_curve_tw_individual_align              
 
 
 %% -------------------------------------------------------------------------------------------
+% FOR ERP, eog CURVE_standard, standard curve erp modality: evaluate and represent standard EEGLab statistics on the curve of ERP, plot together levels of design factors
+%--------------------------------------------------------------------------------------------
+% master-function:                                      proj_eeglab_study_plot_roi_erpeog_curve
+
+% CONTINUOUS: analyzes and plots of erp curve for all time points
+project.operations.do_study_plot_roi_erpeog_curve_continous                            = 0;
+
+% TIMEWINDOW: perform (and save) statistics based time windows
+
+% analyzes and plots of erp curve for time windows of the selected design
+project.operations.do_study_plot_roi_erpeog_curve_tw_group_noalign                     = 0;
+
+% analyzes and plots of erp curve for time windows of the selected design
+project.operations.do_study_plot_roi_erpeog_curve_tw_group_align                       = 0;
+
+% analyzes and plots of erp curve for time windows of the selected design
+project.operations.do_study_plot_roi_erpeog_curve_tw_individual_noalign                = 0;
+    
+
+% analyzes and plots of erp curve for time windows of the selected design
+project.operations.do_study_plot_roi_erpeog_curve_tw_individual_align                  = 0;
+
+
+
+%% -------------------------------------------------------------------------------------------
+% FOR ERP, emg CURVE_standard, standard curve erp modality: evaluate and represent standard EEGLab statistics on the curve of ERP, plot together levels of design factors
+%--------------------------------------------------------------------------------------------
+% master-function:                                      proj_eeglab_study_plot_roi_erpemg_curve
+
+% CONTINUOUS: analyzes and plots of erp curve for all time points
+project.operations.do_study_plot_roi_erpemg_curve_continous                            = 0;
+
+% TIMEWINDOW: perform (and save) statistics based time windows
+
+% analyzes and plots of erp curve for time windows of the selected design
+project.operations.do_study_plot_roi_erpemg_curve_tw_group_noalign                     = 0;
+
+% analyzes and plots of erp curve for time windows of the selected design
+project.operations.do_study_plot_roi_erpemg_curve_tw_group_align                       = 0;
+
+% analyzes and plots of erp curve for time windows of the selected design
+project.operations.do_study_plot_roi_erpemg_curve_tw_individual_noalign                = 0;
+    
+
+% analyzes and plots of erp curve for time windows of the selected design
+project.operations.do_study_plot_roi_erpemg_curve_tw_individual_align                  = 0;
+
+
+
+%% -------------------------------------------------------------------------------------------
 % ERP_TOPO_TW
 %--------------------------------------------------------------------------------------------
 % master-function:                                      proj_eeglab_study_plot_erp_topo_tw
@@ -265,6 +315,54 @@ project.operations.do_study_plot_roi_ersp_curve_tw_individual_noalign_compact   
 % perform (and save) statistics based on individual subjects within time windows, adjusting the group time windows to time windws which are re-aligned to the latencies of time window extrema
 project.operations.do_study_plot_roi_ersp_curve_tw_individual_align_compact         = 0;
 
+
+%% -------------------------------------------------------------------------------------------
+% FOR ersp, eog CURVE_standard, standard curve ersp modality: evaluate and represent standard EEGLab statistics on the curve of ersp, plot together levels of design factors
+%--------------------------------------------------------------------------------------------
+% master-function:                                      proj_eeglab_study_plot_roi_erspeog_curve
+
+% CONTINUOUS: analyzes and plots of ersp curve for all time points
+project.operations.do_study_plot_roi_erspeog_curve_continous                            = 0;
+
+% TIMEWINDOW: perform (and save) statistics based time windows
+
+% analyzes and plots of ersp curve for time windows of the selected design
+project.operations.do_study_plot_roi_erspeog_curve_tw_group_noalign                     = 0;
+
+% analyzes and plots of ersp curve for time windows of the selected design
+project.operations.do_study_plot_roi_erspeog_curve_tw_group_align                       = 0;
+
+% analyzes and plots of ersp curve for time windows of the selected design
+project.operations.do_study_plot_roi_erspeog_curve_tw_individual_noalign                = 0;
+    
+
+% analyzes and plots of ersp curve for time windows of the selected design
+project.operations.do_study_plot_roi_erspeog_curve_tw_individual_align                  = 0;
+
+
+
+%% -------------------------------------------------------------------------------------------
+% FOR ersp, emg CURVE_standard, standard curve ersp modality: evaluate and represent standard EEGLab statistics on the curve of ersp, plot together levels of design factors
+%--------------------------------------------------------------------------------------------
+% master-function:                                      proj_eeglab_study_plot_roi_erspemg_curve
+
+% CONTINUOUS: analyzes and plots of ersp curve for all time points
+project.operations.do_study_plot_roi_erspemg_curve_continous                            = 0;
+
+% TIMEWINDOW: perform (and save) statistics based time windows
+
+% analyzes and plots of ersp curve for time windows of the selected design
+project.operations.do_study_plot_roi_erspemg_curve_tw_group_noalign                     = 0;
+
+% analyzes and plots of ersp curve for time windows of the selected design
+project.operations.do_study_plot_roi_erspemg_curve_tw_group_align                       = 0;
+
+% analyzes and plots of ersp curve for time windows of the selected design
+project.operations.do_study_plot_roi_erspemg_curve_tw_individual_noalign                = 0;
+    
+
+% analyzes and plots of ersp curve for time windows of the selected design
+project.operations.do_study_plot_roi_erspemg_curve_tw_individual_align                  = 0;
 
 
 %% ------------------------------------------------------------------------------------------
