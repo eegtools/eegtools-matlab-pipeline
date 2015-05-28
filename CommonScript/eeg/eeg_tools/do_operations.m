@@ -128,7 +128,7 @@ if project.operations.do_design
 end
 %==================================================================================
 if project.operations.do_study_compute_channels_measures
-    proj_eeglab_study_compute_channels_measures(project, 'recompute', project.study.precompute.recompute, 'do_erp', project.study.precompute.do_erp, 'do_ersp', project.study.precompute.do_ersp, 'do_erpim', project.study.precompute.do_erpim, 'do_spec', project.study.precompute.do_spec, 'design_num_vec', design_num_vec); ..., 'sel_cell_string', 'CC_01'); ... ,
+    proj_eeglab_study_compute_channels_measures(project, 'recompute', project.study.precompute.recompute, 'do_erp', project.study.precompute.do_erp, 'do_ersp', project.study.precompute.do_ersp, 'do_erpim', project.study.precompute.do_erpim, 'do_spec', project.study.precompute.do_spec, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects); 
 end
 %==================================================================================
 
