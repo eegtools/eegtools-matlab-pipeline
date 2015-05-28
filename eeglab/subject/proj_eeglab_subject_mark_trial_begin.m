@@ -57,6 +57,10 @@ for ntarg = 1: length(project.preproc.insert_begin_trial.target_event_types)
     
 end
 
+sorted_event      = OUTEEG.event;
+[xx sort_vec]     = sort(OUTEEG.event.latency);
+sorted_event      = sorted_event(sort_vec);
+OUTEEG.event      = sorted_event;
 
 
 OUTEEG = eeg_checkset(OUTEEG);
