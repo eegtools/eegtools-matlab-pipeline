@@ -1,4 +1,4 @@
-function OUTEEG = proj_eeglab_subject_markbaseline(project, subj_name, varargin)
+function OUTEEG = proj_eeglab_subject_markbaseline(project, varargin)
 
 %      per la base in modalità external bisognerà, per ogni soggetto, poter
 %      selezionare il file da cui prendere la baseline (default, stesso
