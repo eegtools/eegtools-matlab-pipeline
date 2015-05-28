@@ -83,6 +83,21 @@ project.task.events.AOCS_audio_trigger_value        = 7;
 project.task.events.AOIS_audio_trigger_value        = 8;
 project.task.events.cross_trigger_value             = 9;
 
+
+project.task.events.mrkcode_cond                    = { ...
+                                                        {'11' '12' '13' '14' '15' '16'};...     % G15:  triggers defining conditions...even if only one trigger is used for each condition, a cell matrix is used
+                                                        {'21' '22' '23' '24' '25' '26'};...            
+                                                        {'31' '32' '33' '34' '35' '36'};...
+                                                        {'41' '42' '43' '44' '45' '46'};...  
+                                                     };
+                                                 
+                                                 
+                                               
+                                                 
+project.task.events.valid_marker                    = [project.task.events.mrkcode_cond{1:length(project.task.events.mrkcode_cond)}];
+project.task.events.import_marker                   = [{'1' '2' '3' '4' '5' '6' '7' '8' '9' '10'} project.task.events.valid_marker];  
+                                                 
+
 %% ======================================================================================================
 % D:    IMPORT
 % ======================================================================================================
@@ -329,14 +344,10 @@ project.epoching.emg_bc_st_point        = round((project.epoching.emg_bc_st.s-pr
 project.epoching.emg_bc_end_point       = round((project.epoching.emg_bc_end.s-project.epoching.emg_epo_st.s)*project.eegdata.fs)+1; % G14:   EMG baseline correction end point
 
 % markers
-project.epoching.mrkcode_cond = { ...
-                                {'11' '12' '13' '14' '15' '16'};...     % G15:  triggers defining conditions...even if only one trigger is used for each condition, a cell matrix is used
-                                {'21' '22' '23' '24' '25' '26'};...            
-                                {'31' '32' '33' '34' '35' '36'};...
-                                {'41' '42' '43' '44' '45' '46'};...  
-                              };
-project.epoching.numcond        = length(project.epoching.mrkcode_cond);       % G16: conditions' number 
-project.epoching.valid_marker   = [project.epoching.mrkcode_cond{1:length(project.epoching.mrkcode_cond)}];
+
+project.epoching.mrkcode_cond       = project.task.events.mrkcode_cond;
+project.epoching.numcond            = length(project.epoching.mrkcode_cond);       % G16: conditions' number 
+project.epoching.valid_marker       = [project.epoching.mrkcode_cond{1:length(project.epoching.mrkcode_cond)}];
 
 project.epoching.condition_names={'control' 'AO' 'AOCS' 'AOIS'};        % G 17: conditions' labels
 if length(project.epoching.condition_names) ~= project.epoching.numcond
