@@ -31,7 +31,7 @@ for neve = 1:length(list_eve_target)
 end
 
 sorted_event      = OUTEEG.event;
-[xx sort_vec]     = sort(OUTEEG.event.latency);
+[xx sort_vec]     = sort([OUTEEG.event.latency]);
 sorted_event      = sorted_event(sort_vec);
 OUTEEG.event      = sorted_event;
 
