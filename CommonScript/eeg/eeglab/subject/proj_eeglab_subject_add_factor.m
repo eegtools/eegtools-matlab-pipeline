@@ -4,26 +4,30 @@
 function EEG = proj_eeglab_subject_add_factor(project, varargin)
 
     list_select_subjects    = project.subjects.list;
-    custom_suffix  = '';
-
+    get_filename_step       = 'add_factor';
+    custom_suffix           = '';
+    custom_input_folder     = '';
+    
     for par=1:2:length(varargin)
         switch varargin{par}
             case {  ...
                     'list_select_subjects', ...
+                    'get_filename_step',    ... 
+                    'custom_input_folder',  ...
                     'custom_suffix' ...
-                 }
+                    }
 
                 if isempty(varargin{par+1})
                     continue;
                 else
                     assign(varargin{par}, varargin{par+1});
                 end
-        end 
-    end     
-    
+        end
+    end
 
     if not(iscell(list_select_subjects)), list_select_subjects = {list_select_subjects}; end
     numsubj = length(list_select_subjects);
+    % -------------------------------------------------------------------------------------------------------------------------------------
 
     for subj=1:numsubj
         subj_name       = list_select_subjects{subj};
@@ -34,7 +38,7 @@ function EEG = proj_eeglab_subject_add_factor(project, varargin)
         if not(isempty(add_factor_list))
             for nc=1:project.epoching.numcond
                 cond_name                               = project.epoching.condition_names{nc};
-                input_file_name                         = proj_eeglab_subject_get_filename(project, subj_name, 'add_factor', 'cond_name', cond_name, 'custom_suffix', custom_suffix);
+                input_file_name                         = proj_eeglab_subject_get_filename(project, subj_name, get_filename_step, 'cond_name', cond_name, 'custom_suffix', custom_suffix, 'custom_input_folder', custom_input_folder);
                 [input_path,input_name_noext,input_ext] = fileparts(input_file_name);
 
                 if exist(input_file_name, 'file')

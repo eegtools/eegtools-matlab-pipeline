@@ -12,12 +12,19 @@
 %%
 function EEG = proj_eeglab_subject_preprocessing(project, varargin)
 
-    list_select_subjects  = project.subjects.list;
 
+    list_select_subjects    = project.subjects.list;
+    get_filename_step       = 'output_import_data';
+    custom_suffix           = '';
+    custom_input_folder     = '';
+    
     for par=1:2:length(varargin)
         switch varargin{par}
             case {  ...
                     'list_select_subjects', ...
+                    'get_filename_step',    ... 
+                    'custom_input_folder',  ...
+                    'custom_suffix' ...
                     }
 
                 if isempty(varargin{par+1})
@@ -30,16 +37,16 @@ function EEG = proj_eeglab_subject_preprocessing(project, varargin)
 
     if not(iscell(list_select_subjects)), list_select_subjects = {list_select_subjects}; end
     numsubj = length(list_select_subjects);
+    % -------------------------------------------------------------------------------------------------------------------------------------
 
+    eog_channels_list           = project.eegdata.eog_channels_list;
+    emg_channels_list           = project.eegdata.emg_channels_list;
+    
     for subj=1:numsubj
 
         subj_name               = list_select_subjects{subj};
-        input_file_name         = proj_eeglab_subject_get_filename(project, subj_name, 'output_import_data');
-        [path,name_noext,ext]   = fileparts(input_file_name);
+        input_file_name         = proj_eeglab_subject_get_filename(project, subj_name, get_filename_step, 'custom_suffix', custom_suffix, 'custom_input_folder', custom_input_folder);
         EEG                     = pop_loadset(input_file_name);
-
-        eog_channels_list       = project.eegdata.eog_channels_list;
-        emg_channels_list       = project.eegdata.emg_channels_list;
 
         %===============================================================================================
         % CHANNELS TRANSFORMATION
@@ -61,22 +68,23 @@ function EEG = proj_eeglab_subject_preprocessing(project, varargin)
                 transf = project.import.ch2transform(nb);
                 if ~isempty(transf.new_label)
                     ... new ch
-                        num_new_ch = num_new_ch + 1;
+                    num_new_ch  = num_new_ch + 1;
                     new_label   = [new_label transf.new_label];
+                    
                     if isempty(transf.ch2)
                         ... monopolar
-                            ch2discard              = [ch2discard transf.ch1];
+                        ch2discard              = [ch2discard transf.ch1];
                         new_data(num_new_ch,:)  = EEG.data(transf.ch1,:);
                         num_mono                = num_mono + 1;
                     else
                         ... bipolar
-                            ch2discard              = [ch2discard transf.ch1 transf.ch2];
+                        ch2discard              = [ch2discard transf.ch1 transf.ch2];
                         new_data(num_new_ch,:)  = EEG.data(transf.ch1,:)-EEG.data(transf.ch2,:);
                         num_poly                = num_poly + 1;
                     end
                 else
                     ... ch 2 discard
-                        ch2discard = [ch2discard transf.ch1];
+                    ch2discard      = [ch2discard transf.ch1];
                     num_disc        = num_disc + 1;
                 end
             end
