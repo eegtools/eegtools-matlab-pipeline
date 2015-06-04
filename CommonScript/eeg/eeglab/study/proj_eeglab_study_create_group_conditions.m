@@ -42,6 +42,7 @@ function EEG = proj_eeglab_study_create_group_conditions(project, varargin)
             output_file = [group_name '_group_' cond_name '.set'];
             merged_EEG  = pop_mergeset ( ALLEEG,[1:length(ALLEEG)],0);
             pop_saveset(merged_EEG, 'filepath', project.paths.output_epochs, 'filename', output_file);
+            ALLEEG = []; EEG = [];
             eeglab
         end
     end

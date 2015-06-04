@@ -1,10 +1,10 @@
 %% EEG = proj_eeglab_subject_newchannel_difference(project, varargin)
 %
 %%
-function EEG = proj_eeglab_subject_newchannel_difference(project, varargin)
+function EEG = proj_eeglab_subject_newchannel_difference(project, newch_name, chlabel1, chlabel2, varargin)
 
     list_select_subjects    = project.subjects.list;
-    get_filename_step       = 'add_factor';
+    get_filename_step       = 'output_preprocessing';
     custom_suffix           = '';
     custom_input_folder     = '';
     
@@ -12,9 +12,7 @@ function EEG = proj_eeglab_subject_newchannel_difference(project, varargin)
         switch varargin{par}
             case {  ...
                     'list_select_subjects', ...
-                    'get_filename_step',    ... 
-                    'custom_input_folder',  ...
-                    'custom_suffix' ...
+                    'get_filename_step' ...
                     }
 
                 if isempty(varargin{par+1})
@@ -32,9 +30,9 @@ function EEG = proj_eeglab_subject_newchannel_difference(project, varargin)
     for subj=1:numsubj
 
         subj_name               = list_select_subjects{subj};
-        input_file_name         = proj_eeglab_subject_get_filename(project, subj_name, get_filename_step, 'custom_suffix', custom_suffix, 'custom_input_folder', custom_input_folder);
+        input_file_name         = proj_eeglab_subject_get_filename(project, subj_name, get_filename_step, varargin{:});
         
-        EEG                     = eeglab_subject_newchannel_difference(input_file_name, 'hEye', 'AF7', 'AF8');
+        EEG                     = eeglab_subject_newchannel_difference(input_file_name, newch_name, chlabel1, chlabel2);
     end
 end
 % ====================================================================================================

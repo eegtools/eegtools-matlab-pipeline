@@ -63,7 +63,7 @@ function EEG = proj_eeglab_subject_preprocessing(project, varargin)
             new_label           = {};
             new_data            = [];
             ch2discard          = [];
-
+            chpos2copy          = [];   % used to store from which channel get the position information
             for nb=1:num_ch2transform
                 transf = project.import.ch2transform(nb);
                 if ~isempty(transf.new_label)
@@ -74,12 +74,14 @@ function EEG = proj_eeglab_subject_preprocessing(project, varargin)
                     if isempty(transf.ch2)
                         ... monopolar
                         ch2discard              = [ch2discard transf.ch1];
-                        new_data(num_new_ch,:)  = EEG.data(transf.ch1,:);
+                        chpos2copy              = [chpos2copy transf.ch1];
+                        new_data(num_new_ch, :) = EEG.data(transf.ch1,:);
                         num_mono                = num_mono + 1;
                     else
                         ... bipolar
                         ch2discard              = [ch2discard transf.ch1 transf.ch2];
-                        new_data(num_new_ch,:)  = EEG.data(transf.ch1,:)-EEG.data(transf.ch2,:);
+                        chpos2copy              = [chpos2copy transf.ch1];
+                        new_data(num_new_ch, :) = EEG.data(transf.ch1,:)-EEG.data(transf.ch2,:);
                         num_poly                = num_poly + 1;
                     end
                 else
@@ -90,11 +92,15 @@ function EEG = proj_eeglab_subject_preprocessing(project, varargin)
             end
 
             for nb=1:num_new_ch
-                EEG.data((EEG.nbchan+nb),:) = new_data(nb, :);
-                if ~isempty(EEG.chanlocs)
-                    EEG.chanlocs(EEG.nbchan+nb).labels  = new_label{nb};
-                end;
+                EEG.data((EEG.nbchan+nb), :)        = new_data(nb, :);
+                EEG.chanlocs(EEG.nbchan+nb)         = EEG.chanlocs(chpos2copy(nb));
+                EEG.chanlocs(EEG.nbchan+nb).labels  = new_label{nb};
             end
+
+            for nd=1:length(ch2discard)
+                EEG.chanlocs(ch2discard(nd)).labels = ['temp_' num2str(nd)];
+            end
+            
             EEG             = eeg_checkset(EEG);
             EEG             = pop_select(EEG, 'nochannel', ch2discard); ... remove the polych and all the remaining ch up to list end
             EEG             = eeg_checkset(EEG);
@@ -215,17 +221,20 @@ end
 % CHANGE LOG
 % ====================================================================================================
 % ====================================================================================================
+% 04/06/2015
+% corrected polygraphic channels transformation, you can now name new channels as previous ones
+%
 % 30/12/2014
 % restored event filtering routine, if project.import.valid_marker is not empty
-
+%
 % 29/12/2014
 % the function now accept also a cell array of subject names, instead of a single subject name
 % utilization of proj_eeglab_subject_get_filename function to define IO file name
-
+%
 % 23/9/2014
 % completely redesigned the channel transformation section. a proper structure has been introduced, allowing user to select discarded channels
 % and how to treat bipolar and monopolar channels
-
+%
 % 16/9/2014 (invalid change, modified by following modification)
 % referencing exclude channels according to items in project.eegdata.no_eeg_channels_list
 % added channels manipulation info
