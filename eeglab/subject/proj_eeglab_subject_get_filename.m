@@ -18,6 +18,7 @@ function file_name = proj_eeglab_subject_get_filename(project, subj_name, analys
 
     custom_suffix           = '';
     custom_input_folder     = '';
+    cond_name               = '';
     
     options_num=size(varargin,2);
     for opt=1:2:options_num    

@@ -332,13 +332,14 @@ for design_num=design_num_vec
                     
                     
             end
-            
             times_plot=1:length(group_time_windows_list_design);
+
+            %-------------------------------------------------------------------------------------------------------------
+            % 04/06/15 : HERE SHOULD BE INTRODUCED ANY DESIRED CORRECTION TO THE DATA BEFORE STATISTICAL ANALYSIS
+            %-------------------------------------------------------------------------------------------------------------
             
             [pcond, pgroup, pinter, statscond, statsgroup, statsinter] = std_stat_corr(erp_curve_roi, 2, 'groupstats','on','condstats','on','mcorrect','none',...
                 'threshold',NaN,'naccu',num_permutations,'method', stat_method,'paired',paired_list{design_num});
-            
-            
             
             [stat df pvals] = statcond_corr(erp_curve_roi, 2, 'alpha',NaN,'naccu',num_permutations,'method', stat_method);
             
@@ -386,7 +387,7 @@ for design_num=design_num_vec
                 input_graph.name_f2                                        = name_f2;
                 input_graph.levels_f1                                      = levels_f1;
                 input_graph.levels_f2                                      = levels_f2;
-                input_graph.erp_curve                                      = erp_curve_roi;
+                input_graph.erp_curve                                      = cellfunc(@abs, erp_curve_roi, 'UniformOutput', false);
                 input_graph.times                                          = times_plot;
                 input_graph.time_windows_design_names                      = group_time_windows_names{design_num};
                 input_graph.pcond                                          = pcond_corr;

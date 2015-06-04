@@ -76,10 +76,10 @@ function project = define_project_paths(project, varargin)
     end
 
     % SPM
-    project.paths.spm                           = fullfile(project.paths.plugins_root, 'spm8', '');
-    if isempty(strfind(strpath, project.paths.spm)) && exist(project.paths.spm, 'dir')
-        addpath(genpath2(project.paths.spm));      
-    end
+%     project.paths.spm                           = fullfile(project.paths.plugins_root, 'spm8', '');
+%     if isempty(strfind(strpath, project.paths.spm)) && exist(project.paths.spm, 'dir')
+%         addpath(genpath2(project.paths.spm));      
+%     end
 
     % fieldtrip
     project.paths.plugin.fieldtrip                     = fullfile(project.paths.plugins_root, 'fieldtrip-20130423', '');
