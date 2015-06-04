@@ -8,7 +8,7 @@ function EEG = eeglab_subject_ica(input_file_name, output_path, eeg_ch_list, ch_
 %    ica_type is the algorithm employed to peform ica decomposition (see EEGLab manua, eg. 'runica'). The cuda implementation of ica ('cudaica')
 %    is only available on linux or mac and only if the PC has been previously properly configured
 
-    [path,name_noext,ext] = fileparts(input_file_name);
+    [~, name_noext, ~] = fileparts(input_file_name);
 
     % DEFAULTS
     gpu_id=0;
@@ -35,13 +35,12 @@ function EEG = eeglab_subject_ica(input_file_name, output_path, eeg_ch_list, ch_
         eeg_ch_list = 1:ll;
     end
 
-    % if length(ch_ref) == 1
-        sel_ch_ref = ismember({EEG.chanlocs(1:length(eeg_ch_list)).labels},ch_ref);
-        eeg_ch_list = eeg_ch_list(not(sel_ch_ref)); 
-
-    % end
-
-
+    if not(isempty(ch_ref))
+        if not(strcmp(ch_ref{1}, 'CAR'))
+            sel_ch_ref  = ismember({EEG.chanlocs(1:length(eeg_ch_list)).labels}, ch_ref);
+            eeg_ch_list = eeg_ch_list(not(sel_ch_ref)); 
+        end
+    end
 
     if gpu_id>0
         EEG = pop_runica_octave_matlab(EEG, 'icatype',ica_type,'chanind',eeg_ch_list,'options',{'extended' 1 'd' gpu_id});
@@ -58,4 +57,6 @@ function EEG = eeglab_subject_ica(input_file_name, output_path, eeg_ch_list, ch_
     EEG = pop_saveset( EEG, 'filename',out_file_name,'filepath',output_path);
 end
 
-
+%===========================================================================================================================
+% 04/06/2015
+% corrected reference management, exclude reference channels from ICA
