@@ -164,17 +164,17 @@ function text_export_erp_resume_struct(result_struct, output_filepath, varargin)
                 p       = result_struct.dataroi(roi).pcond_corr{1}(tw)/sub_correction;
                 f       = result_struct.dataroi(roi).statscond{1}(tw);
 
-                row1 = [contr_names{1} ': F=(1,' num2str(df) ')=' num2str(f) ', p=' num2str(p) ];
+                row1 = [contr_names{1} ': F(1,' num2str(df) ')=' num2str(f) ', p=' num2str(p) ];
 
                 % get mean & std of all levels of the factor
-                row2 = [f1_levels{1} ' = ' num2str(result_struct.dataroi(roi).datatw.extr_mean{1}{tw}) ' +- ' num2str(result_struct.dataroi(roi).datatw.extr_sd{1}{tw}) ];
+                row2 = [f1_levels{1} ' = ' num2str(result_struct.dataroi(roi).datatw.find_extrema.extr_mean{1}{tw}) ' +- ' num2str(result_struct.dataroi(roi).datatw.find_extrema.extr_sd{1}{tw}) ];
                 for lvl1=2:length(f1_levels)
-                    row2 = [row2 ', ' f1_levels{lvl1} ' = ' num2str(result_struct.dataroi(roi).datatw.extr_mean{lvl1}{tw}) ' +- ' num2str(result_struct.dataroi(roi).datatw.extr_sd{lvl1}{tw})];
+                    row2 = [row2 ', ' f1_levels{lvl1} ' = ' num2str(result_struct.dataroi(roi).datatw.find_extrema.extr_mean{lvl1}{tw}) ' +- ' num2str(result_struct.dataroi(roi).datatw.find_extrema.extr_sd{lvl1}{tw})];
                 end
 
-                row3 = [f1_levels{1} ' = ' num2str(result_struct.dataroi(roi).datatw.extr_lat_mean{1}{tw}) ' +- ' num2str(result_struct.dataroi(roi).datatw.extr_lat_sd{1}{tw}) ', range=' num2str(result_struct.dataroi(roi).datatw.extr_lat_range{1}{tw}(1)) ':' num2str(result_struct.dataroi(roi).datatw.extr_lat_range{1}{tw}(2))];
+                row3 = [f1_levels{1} ' = ' num2str(result_struct.dataroi(roi).datatw.find_extrema.extr_lat_mean{1}{tw}) ' +- ' num2str(result_struct.dataroi(roi).datatw.find_extrema.extr_lat_sd{1}{tw}) ', range=' num2str(result_struct.dataroi(roi).datatw.find_extrema.extr_lat_range{1}{tw}(1)) ':' num2str(result_struct.dataroi(roi).datatw.find_extrema.extr_lat_range{1}{tw}(2))];
                 for lvl1=2:length(f1_levels)
-                    row3 = [row3 ', ' f1_levels{lvl1} ' = ' num2str(result_struct.dataroi(roi).datatw.extr_lat_mean{lvl1}{tw}) ' +- ' num2str(result_struct.dataroi(roi).datatw.extr_lat_sd{lvl1}{tw}) ', range=' num2str(result_struct.dataroi(roi).datatw.extr_lat_range{lvl1}{tw}(1)) ':' num2str(result_struct.dataroi(roi).datatw.extr_lat_range{lvl1}{tw}(2))];
+                    row3 = [row3 ', ' f1_levels{lvl1} ' = ' num2str(result_struct.dataroi(roi).datatw.find_extrema.extr_lat_mean{lvl1}{tw}) ' +- ' num2str(result_struct.dataroi(roi).datatw.find_extrema.extr_lat_sd{lvl1}{tw}) ', range=' num2str(result_struct.dataroi(roi).datatw.find_extrema.extr_lat_range{lvl1}{tw}(1)) ':' num2str(result_struct.dataroi(roi).datatw.find_extrema.extr_lat_range{lvl1}{tw}(2))];
                 end                
                 
                 if (p_thresh == 0 || (p_thresh > 0 && p < p_thresh))
@@ -195,15 +195,15 @@ function text_export_erp_resume_struct(result_struct, output_filepath, varargin)
                     row1 = [contr_names{lvl2} ': F=(' num2str(df(1)) ',' num2str(df(2)) ')=' num2str(f) ', p=' num2str(p) ];
 
                     % get mean & std of all levels of the factor
-                    row2 = [f2_levels{lvl2} '-' conditions_labels{1}{1}{1} ' = ' num2str(result_struct.dataroi(roi).datatw.extr_mean{lvl2,1}{tw}) ' +- ' num2str(result_struct.dataroi(roi).datatw.extr_sd{lvl2,1}{tw}) ];
+                    row2 = [f2_levels{lvl2} '-' conditions_labels{1}{1}{1} ' = ' num2str(result_struct.dataroi(roi).datatw.find_extrema.extr_mean{lvl2,1}{tw}) ' +- ' num2str(result_struct.dataroi(roi).datatw.find_extrema.extr_sd{lvl2,1}{tw}) ];
                     for lvl1=2:length(f1_levels)
-                        row2 = [row2 ', ' f2_levels{lvl2} '-' conditions_labels{lvl1}{1}{lvl1} ' = ' num2str(result_struct.dataroi(roi).datatw.extr_mean{lvl2,lvl1}{tw}) ' +- ' num2str(result_struct.dataroi(roi).datatw.extr_sd{lvl2,lvl1}{tw})];
+                        row2 = [row2 ', ' f2_levels{lvl2} '-' conditions_labels{lvl1}{1}{lvl1} ' = ' num2str(result_struct.dataroi(roi).datatw.find_extrema.extr_mean{lvl2,lvl1}{tw}) ' +- ' num2str(result_struct.dataroi(roi).datatw.find_extrema.extr_sd{lvl2,lvl1}{tw})];
                     end                        
 
                     % get mean & std of all levels of the factor
-                    row3 = [f2_levels{lvl2} '-' conditions_labels{1}{1}{1} ' = ' num2str(result_struct.dataroi(roi).datatw.extr_lat_mean{lvl2,1}{tw}) ' +- ' num2str(result_struct.dataroi(roi).datatw.extr_lat_sd{lvl2,1}{tw}) ', range=' num2str(result_struct.dataroi(roi).datatw.extr_lat_range{lvl2,1}{tw}(1)) ':' num2str(result_struct.dataroi(roi).datatw.extr_lat_range{lvl2,1}{tw}(2))];
+                    row3 = [f2_levels{lvl2} '-' conditions_labels{1}{1}{1} ' = ' num2str(result_struct.dataroi(roi).datatw.find_extrema.extr_lat_mean{lvl2,1}{tw}) ' +- ' num2str(result_struct.dataroi(roi).datatw.find_extrema.extr_lat_sd{lvl2,1}{tw}) ', range=' num2str(result_struct.dataroi(roi).datatw.find_extrema.extr_lat_range{lvl2,1}{tw}(1)) ':' num2str(result_struct.dataroi(roi).datatw.find_extrema.extr_lat_range{lvl2,1}{tw}(2))];
                     for lvl1=2:length(f1_levels)
-                        row3 = [row3 ', ' f2_levels{lvl2} '-' conditions_labels{lvl1}{1}{lvl1} ' = ' num2str(result_struct.dataroi(roi).datatw.extr_mean{lvl2,lvl1}{tw}) ' +- ' num2str(result_struct.dataroi(roi).datatw.extr_sd{lvl2,lvl1}{tw}) ', range=' num2str(result_struct.dataroi(roi).datatw.extr_lat_range{lvl2,lvl1}{tw}(1)) ':' num2str(result_struct.dataroi(roi).datatw.extr_lat_range{lvl2,lvl1}{tw}(2))];
+                        row3 = [row3 ', ' f2_levels{lvl2} '-' conditions_labels{lvl1}{1}{lvl1} ' = ' num2str(result_struct.dataroi(roi).datatw.find_extrema.extr_mean{lvl2,lvl1}{tw}) ' +- ' num2str(result_struct.dataroi(roi).datatw.find_extrema.extr_sd{lvl2,lvl1}{tw}) ', range=' num2str(result_struct.dataroi(roi).datatw.find_extrema.extr_lat_range{lvl2,lvl1}{tw}(1)) ':' num2str(result_struct.dataroi(roi).datatw.find_extrema.extr_lat_range{lvl2,lvl1}{tw}(2))];
                     end                        
                     
                     if (p_thresh == 0 || (p_thresh > 0 && p < p_thresh))
@@ -225,16 +225,16 @@ function text_export_erp_resume_struct(result_struct, output_filepath, varargin)
                     row1 = [contr_names{length(f2_levels) + lvl1} ': F=(' num2str(df(1)) ',' num2str(df(2)) ')=' num2str(f) ', p=' num2str(p) ];
 
                     % get mean & std of all levels of the factor
-                    row2 = [f1_levels{lvl1} '-' conditions_labels{length(f2_levels) + 1}{1}{1} ' = ' num2str(result_struct.dataroi(roi).datatw.extr_mean{1,lvl1}{tw}) ' +- ' num2str(result_struct.dataroi(roi).datatw.extr_sd{1,lvl1}{tw}) ];
+                    row2 = [f1_levels{lvl1} '-' conditions_labels{length(f2_levels) + 1}{1}{1} ' = ' num2str(result_struct.dataroi(roi).datatw.find_extrema.extr_mean{1,lvl1}{tw}) ' +- ' num2str(result_struct.dataroi(roi).datatw.find_extrema.extr_sd{1,lvl1}{tw}) ];
                     for lvl2=2:length(f2_levels)
-                        row2 = [row2 ', ' f1_levels{lvl1} '-' conditions_labels{length(f2_levels) + lvl1}{1}{lvl2} ' = ' num2str(result_struct.dataroi(roi).datatw.extr_mean{lvl2,lvl1}{tw}) ' +- ' num2str(result_struct.dataroi(roi).datatw.extr_sd{lvl2,lvl1}{tw})];
+                        row2 = [row2 ', ' f1_levels{lvl1} '-' conditions_labels{length(f2_levels) + lvl1}{1}{lvl2} ' = ' num2str(result_struct.dataroi(roi).datatw.find_extrema.extr_mean{lvl2,lvl1}{tw}) ' +- ' num2str(result_struct.dataroi(roi).datatw.find_extrema.extr_sd{lvl2,lvl1}{tw})];
                     end                          
 
                     
                     % get mean & std of all levels of the factor
-                    row3 = [f1_levels{lvl1} '-' conditions_labels{length(f2_levels) + 1}{1}{1} ' = ' num2str(result_struct.dataroi(roi).datatw.extr_lat_mean{1,lvl1}{tw}) ' +- ' num2str(result_struct.dataroi(roi).datatw.extr_lat_sd{1,lvl1}{tw}) ', range=' num2str(result_struct.dataroi(roi).datatw.extr_lat_range{1,lvl1}{tw}(1)) ':' num2str(result_struct.dataroi(roi).datatw.extr_lat_range{1,lvl1}{tw}(2))];
+                    row3 = [f1_levels{lvl1} '-' conditions_labels{length(f2_levels) + 1}{1}{1} ' = ' num2str(result_struct.dataroi(roi).datatw.find_extrema.extr_lat_mean{1,lvl1}{tw}) ' +- ' num2str(result_struct.dataroi(roi).datatw.find_extrema.extr_lat_sd{1,lvl1}{tw}) ', range=' num2str(result_struct.dataroi(roi).datatw.find_extrema.extr_lat_range{1,lvl1}{tw}(1)) ':' num2str(result_struct.dataroi(roi).datatw.find_extrema.extr_lat_range{1,lvl1}{tw}(2))];
                     for lvl2=2:length(f2_levels)
-                        row3 = [row3 ', ' f1_levels{lvl1} '-' conditions_labels{length(f2_levels) + lvl1}{1}{lvl2} ' = ' num2str(result_struct.dataroi(roi).datatw.extr_lat_mean{lvl2,lvl1}{tw}) ' +- ' num2str(result_struct.dataroi(roi).datatw.extr_lat_sd{lvl2,lvl1}{tw}) ', range=' num2str(result_struct.dataroi(roi).datatw.extr_lat_range{lvl2,lvl1}{tw}(1)) ':' num2str(result_struct.dataroi(roi).datatw.extr_lat_range{lvl2,lvl1}{tw}(2))];
+                        row3 = [row3 ', ' f1_levels{lvl1} '-' conditions_labels{length(f2_levels) + lvl1}{1}{lvl2} ' = ' num2str(result_struct.dataroi(roi).datatw.find_extrema.extr_lat_mean{lvl2,lvl1}{tw}) ' +- ' num2str(result_struct.dataroi(roi).datatw.find_extrema.extr_lat_sd{lvl2,lvl1}{tw}) ', range=' num2str(result_struct.dataroi(roi).datatw.find_extrema.extr_lat_range{lvl2,lvl1}{tw}(1)) ':' num2str(result_struct.dataroi(roi).datatw.find_extrema.extr_lat_range{lvl2,lvl1}{tw}(2))];
                     end                          
                     
                     if (p_thresh == 0 || (p_thresh > 0 && p < p_thresh))

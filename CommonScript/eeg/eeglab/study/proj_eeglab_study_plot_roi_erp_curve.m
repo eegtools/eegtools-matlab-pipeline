@@ -387,7 +387,7 @@ for design_num=design_num_vec
                 input_graph.name_f2                                        = name_f2;
                 input_graph.levels_f1                                      = levels_f1;
                 input_graph.levels_f2                                      = levels_f2;
-                input_graph.erp_curve                                      = cellfunc(@abs, erp_curve_roi, 'UniformOutput', false);
+                input_graph.erp_curve                                      = erp_curve_roi;
                 input_graph.times                                          = times_plot;
                 input_graph.time_windows_design_names                      = group_time_windows_names{design_num};
                 input_graph.pcond                                          = pcond_corr;
@@ -509,8 +509,8 @@ for design_num=design_num_vec
     %     end
     if not( strcmp(which_method_find_extrema,'group_noalign') || strcmp(which_method_find_extrema,'continuous') );
         [dataexpcols, dataexp] = text_export_erp_struct([out_file_name,'.txt'],erp_curve_roi_stat);
-        %         text_export_erp_resume_struct(erp_curve_roi_stat, [out_file_name '_resume']);
-        %         text_export_erp_resume_struct(erp_curve_roi_stat, [out_file_name '_resume_signif'], 'p_thresh', erp_curve_roi_stat.study_ls);
+        text_export_erp_resume_struct(erp_curve_roi_stat, [out_file_name '_resume']);
+        text_export_erp_resume_struct(erp_curve_roi_stat, [out_file_name '_resume_signif'], 'p_thresh', erp_curve_roi_stat.study_ls);
     end
     
     if strcmp(which_method_find_extrema,'continuous') ;
