@@ -27,44 +27,42 @@ function OUTEEG =  proj_eeglab_subject_replacebaseline_trial(EEG, project,vararg
 
     [sort_lat sort_order] = sort([OUTEEG.event.latency]);
 
-    OUTEEG.event = OUTEEG.event (sort_order);
+    OUTEEG.event        = OUTEEG.event (sort_order);
 
-    OUTEEG = eeg_checkset(OUTEEG);
+    OUTEEG              = eeg_checkset(OUTEEG);
 
-    begin_trial      = project.preproc.marker_type.begin_trial;
-    end_trial        = project.preproc.marker_type.end_trial;
-    begin_baseline   = project.preproc.marker_type.begin_baseline;
-    end_baseline     = project.preproc.marker_type.end_baseline;
+    begin_trial         = project.preproc.marker_type.begin_trial;
+    end_trial           = project.preproc.marker_type.end_trial;
+    begin_baseline      = project.preproc.marker_type.begin_baseline;
+    end_baseline        = project.preproc.marker_type.end_baseline;
 
-    original_baseline     = project.epoching.baseline_replace.baseline_originalposition;
-    final_baseline        = project.epoching.baseline_replace.baseline_finalposition;
+    original_baseline   = project.epoching.baseline_replace.baseline_originalposition;
+    final_baseline      = project.epoching.baseline_replace.baseline_finalposition;
 
-    epoch_tw           = [project.epoching.epo_st.s project.epoching.epo_end.s];
-    baseline_tw        = [0         project.epoching.baseline_duration.s];
+    epoch_tw            = [project.epoching.epo_st.s project.epoching.epo_end.s];
+    baseline_tw         = [0 project.epoching.baseline_duration.s];
 
-    replace            = project.epoching.baseline_replace.replace;
-
-
-    type_list   = project.epoching.valid_marker;
+    replace             = project.epoching.baseline_replace.replace;
 
 
-    all_eve_types = {OUTEEG.event.type};
-    tot_eve       = length(OUTEEG.event);
-    all_eve_ind   = 1:tot_eve;
+    type_list           = project.epoching.valid_marker;
+
+
+    all_eve_types       = {OUTEEG.event.type};
+    tot_eve             = length(OUTEEG.event);
+    all_eve_ind         = 1:tot_eve;
 
     % marker indexes
-    boudary_ind   = find(   ismember(all_eve_types, 'boundary')  );
-    begin_trial_ind = find(   ismember(all_eve_types, begin_trial)  ); % se ho aggiunto una baseline prima del primo evento, il trigger di inizio trial è il nuovo inizio baseline
-    end_trial_ind   = find(   ismember(all_eve_types, end_trial)    );
-    begin_baseline_ind = find(   ismember(all_eve_types, begin_baseline)  );
-    end_baseline_ind   = find(   ismember(all_eve_types, end_baseline)  );
+    boudary_ind         = find(ismember(all_eve_types, 'boundary'));
+    begin_trial_ind     = find(ismember(all_eve_types, begin_trial)); % se ho aggiunto una baseline prima del primo evento, il trigger di inizio trial è il nuovo inizio baseline
+    end_trial_ind       = find(ismember(all_eve_types, end_trial));
+    begin_baseline_ind  = find(ismember(all_eve_types, begin_baseline));
+    end_baseline_ind    = find(ismember(all_eve_types, end_baseline));
 
 
     if isempty(begin_trial_ind) || isempty(end_trial_ind) || isempty(begin_baseline_ind) || isempty(end_baseline_ind)
-       error(['error in proj_eeglab_subject_replacebaseline_trial. length begin_trial_ind=' num2str(length(begin_trial_ind)) ',length end_trial_ind=' num2str(length(end_trial_ind)) ',length begin_baseline_ind=' num2str(length(begin_baseline_ind)) ',length end_baseline_ind=' num2str(length(end_baseline_ind))]); 
+        error(['error in proj_eeglab_subject_replacebaseline_trial. length begin_trial_ind=' num2str(length(begin_trial_ind)) ',length end_trial_ind=' num2str(length(end_trial_ind)) ',length begin_baseline_ind=' num2str(length(begin_baseline_ind)) ',length end_baseline_ind=' num2str(length(end_baseline_ind))]);
     end
-
-
 
     % % trovare più vicini boudary successivi a ogni inizio trial
     % out = find_next_vec(begin_trial_ind, boudary_ind);
@@ -74,8 +72,8 @@ function OUTEEG =  proj_eeglab_subject_replacebaseline_trial(EEG, project,vararg
 
     % trial_noboudary =  begin_trial_ind(  (boundary_trial_ind < begin_trial_ind ) | (boundary_trial_ind > end_trial_ind )  );
 
-    sel_noboudary = true(size(begin_trial_ind));
-    sel_noboudary_eve = true(size(all_eve_types));
+    sel_noboudary       = true(size(begin_trial_ind));
+    sel_noboudary_eve   = true(size(all_eve_types));
 
     try
         for nn = 1:length(sel_noboudary)
@@ -88,7 +86,7 @@ function OUTEEG =  proj_eeglab_subject_replacebaseline_trial(EEG, project,vararg
                 sel_noboudary(nn) = false;
                 sel_noboudary_eve(all_eve_ind > begin_t & all_eve_ind < end_t ) = false;
             end
-        end    
+        end
 
 
         trial_noboudary =  begin_trial_ind(sel_noboudary);
@@ -97,22 +95,39 @@ function OUTEEG =  proj_eeglab_subject_replacebaseline_trial(EEG, project,vararg
         % for each type of target event
         for ntype = 1:length(type_list)
 
-            type          = type_list{ntype};
-            ...type_ind      = find(   ismember(all_eve_types, type)  );
-            type_ind      = find(   ismember(all_eve_types, type)  & sel_noboudary_eve);
+            type            = type_list{ntype};
+            type_noboudary  = find(   ismember(all_eve_types, type)  & sel_noboudary_eve);
 
-            out = find_next_vec(trial_noboudary, type_ind);
-            type_noboudary = unique(out.vec2_next(not(isnan(out.vec2_next))));
+            ...out             = find_next_vec(trial_noboudary, type_ind);...type_noboudary  = unique(out.vec2_next(not(isnan(out.vec2_next))));
+
+        
+            % select those baseline intervals within those trials containing the specified type
+            sel_trial       = false(size(begin_trial_ind));
+            sel_trial_eve   = false(size(all_eve_types));
+
+            for nn = 1:length(begin_trial_ind)
+                begin_t = begin_trial_ind(nn);
+                end_t   = end_trial_ind(nn);
+
+                with_eve = sum( type_noboudary >= begin_t &  type_noboudary <= end_t);
+                if with_eve
+                    sel_trial(nn) = true;
+                    sel_trial_eve(all_eve_ind > begin_t & all_eve_ind < end_t ) = true;
+                end
+            end
+            sel_begin_baseline_ind = find(ismember(all_eve_ind,begin_baseline_ind) & sel_trial_eve);
+
 
             switch original_baseline
                 case 'before'
-                    out = find_previous_vec(type_ind, begin_baseline_ind);
+                    out = find_previous_vec(type_noboudary, sel_begin_baseline_ind);
                     baseline_noboudary = out.vec2_previous;
 
                 case 'after'
-                    out = find_next_vec(type_ind, begin_baseline_ind);
+                    out = find_next_vec(type_noboudary, sel_begin_baseline_ind);
                     baseline_noboudary = out.vec2_next;
             end
+
 
             if not(isempty(type_noboudary))
                 [OUTEEG_target, target_indices]     = pop_epoch( OUTEEG, {type},           epoch_tw,    'eventindices', type_noboudary);
@@ -126,9 +141,9 @@ function OUTEEG =  proj_eeglab_subject_replacebaseline_trial(EEG, project,vararg
             baseline_trials = OUTEEG_baseline.trials;
 
             if target_trials ~= baseline_trials
-               warning(['ntype: ' type ' number of target trials differs from baseline trials: ' num2str(target_trials) '::' num2str(baseline_trials)]); 
-               OUTEEG = [];
-               return;
+                warning(['ntype: ' type ' number of target trials differs from baseline trials: ' num2str(target_trials) '::' num2str(baseline_trials)]);
+                OUTEEG = [];
+                return;
             end
 
             switch final_baseline
@@ -182,18 +197,18 @@ function OUTEEG =  proj_eeglab_subject_replacebaseline_trial(EEG, project,vararg
 
             ALLEEG2(ntype) = OUTEEG_target;
         end
-        
+
         if length(ALLEEG2) > 1
             OUTEEG = pop_mergeset( ALLEEG2, 1:length(ALLEEG2), 1 );
         else
             OUT_EEG = ALLEEG2(1);
         end
         OUTEEG = eeg_checkset(OUTEEG);
-        
+
     catch err
         err;
     end
-    
+
 end
 
 
