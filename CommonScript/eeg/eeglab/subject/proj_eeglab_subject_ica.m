@@ -37,7 +37,8 @@ function EEG = proj_eeglab_subject_ica(project, varargin)
     for subj=1:numsubj
         
         subj_name   = list_select_subjects{subj}; 
-        inputfile   = proj_eeglab_subject_get_filename(project, subj_name, get_filename_step, 'custom_suffix', custom_suffix, 'custom_input_folder', custom_input_folder);
+        inputfile   = proj_eeglab_subject_get_filename(project, subj_name, 'input_epoching' , 'custom_suffix', custom_suffix, 'custom_input_folder', custom_input_folder);
+                     %proj_eeglab_subject_get_filename(project, subj_name, get_filename_step, 'custom_suffix', custom_suffix, 'custom_input_folder', custom_input_folder);
         EEG         = eeglab_subject_ica(inputfile, project.paths.output_preprocessing, project.eegdata.eeg_channels_list, project.import.reference_channels, 'cudaica');    
     
     end
