@@ -552,15 +552,14 @@ project.stats.ersp.decimation_factor_freqs_tf   = 10;
 project.stats.ersp.tf_resolution_mode           = 'continuous';         %'continuous'; 'decimate_times';'decimate_freqs';'decimate_times_freqs';'tw_fb';
 project.stats.ersp.measure                      = 'dB';                 % 'Pfu';  dB decibel, Pfu, (A-R)/R * 100 = (A/R-1) * 100 = (10^.(ERSP/10)-1)*100 variazione percentuale definita da pfursheller
 
-project.stats.ersp.do_narrowband                = 'off';                         % off|ref|auto  the adjustment of spectral band for each subject: off=no adhiustment, ref adjust based on a ref condition, auto ajust each condition separately
-project.stats.ersp.narrowband.group_tmin        = [];                     % lowest time of the time windows considered to select the narrow band. if empty, consider the start of the epoch
-project.stats.ersp.narrowband.group_tmax        = [];                     % highest time of the time windows considered to select the narrow band. if empty, consider the end of the epoch
-project.stats.ersp.narrowband.dfmin             =  2  ;                         % low variation in Hz from the barycenter frequency
-project.stats.ersp.narrowband.dfmax             =  2  ;                         % high variation in Hz from the barycenter frequency
-
-
+project.stats.ersp.do_narrowband                = 'off';                % off|ref|auto  the adjustment of spectral band for each subject: off=no adhiustment, ref adjust based on a ref condition, auto ajust each condition separately
+project.stats.ersp.narrowband.group_tmin        = [];                   % lowest time of the time windows considered to select the narrow band. if empty, consider the start of the epoch
+project.stats.ersp.narrowband.group_tmax        = [];                   % highest time of the time windows considered to select the narrow band. if empty, consider the end of the epoch
+project.stats.ersp.narrowband.dfmin             = 2;                    % low variation in Hz from the barycenter frequency
+project.stats.ersp.narrowband.dfmax             = 2;                    % high variation in Hz from the barycenter frequency
 
 project.stats.ersp.narrowband.which_realign_measure = {'max','min','min','min'}; % min |max |auc for each band, select the frequency with the maximum or the minumum ersp or the largest area under the curve to reallign the narrowband
+project.stats.ersp.narrowband.which_realign_param   = {'cog_pos','cog_neg','cog_neg','cog_neg'};             % fnb | cog_pos | cog_neg | cog_all : set if re-allign the narrowband to the peak (defined above) of to the center-of-gravity within the wide band
 
 project.stats.eeglab.ersp.method                = 'bootstrap';          % method applied in ERP statistical analysis
 project.stats.eeglab.ersp.correction            = 'none';               % multiple comparison correction applied in ERP statistical analysis
