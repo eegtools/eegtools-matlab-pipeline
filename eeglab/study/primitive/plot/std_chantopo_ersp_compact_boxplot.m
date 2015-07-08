@@ -153,8 +153,9 @@ if tlf1 < 2 || tlf2 < 2
     ylab=ersp_meaure;
     
     num_comparisons = size(comparisons,2);
-    signif_vec = pcomparisons < study_ls;
-    signif_pairs = comparisons(:,signif_vec);
+    signif_vec      = pcomparisons < study_ls;
+    signif_pairs    = comparisons(:,signif_vec);
+    psignif_vec     = pcomparisons(signif_vec);    
     
     % create figure
      fig=figure( 'color', 'w', 'Visible', 'off');
@@ -196,7 +197,9 @@ if tlf1 < 2 || tlf2 < 2
             plot([signif_pairs(1,i) signif_pairs(2,i)], [offset_segment offset_segment],'col','black','LineWidth',1.5)
             plot([signif_pairs(1,i) signif_pairs(1,i)], [offset_segment offset_segment-deltay*0.2],'col','black','LineWidth',1.5)
             plot([signif_pairs(2,i) signif_pairs(2,i)], [offset_segment offset_segment-deltay*0.2],'col','black','LineWidth',1.5)
-            text(mean([signif_pairs(2,i),signif_pairs(1,i)]), offset_star,'*','FontSize',15,'LineWidth',2)
+%             text(mean([signif_pairs(2,i),signif_pairs(1,i)]), offset_star,'*','FontSize',15,'LineWidth',2)
+            text(mean([signif_pairs(2,i),signif_pairs(1,i)]), offset_star,num2str(psignif_vec(i)),'FontSize',15,'LineWidth',2)
+            
         end
     end
     if ~isempty(compact_display_ylim)
@@ -322,8 +325,9 @@ cell_error_bar = cell(tlf_between,1);
         ylab=ersp_meaure;
         %comparisons = combn_all(1:tot_topo,2);
         num_comparisons = size(comparisons,2);
-        signif_vec = pcomparisons < study_ls;
-        signif_pairs = comparisons(:,signif_vec);
+        signif_vec      = pcomparisons < study_ls;
+        signif_pairs    = comparisons(:,signif_vec);
+        psignif_vec     = pcomparisons(signif_vec);        
         
         % create figure
           fig=figure( 'color', 'w', 'Visible', 'off');
@@ -366,7 +370,9 @@ cell_error_bar = cell(tlf_between,1);
                 plot([signif_pairs(1,i) signif_pairs(2,i)], [offset_segment offset_segment],'col','black','LineWidth',1.5)
                 plot([signif_pairs(1,i) signif_pairs(1,i)], [offset_segment offset_segment-deltay*0.2],'col','black','LineWidth',1.5)
                 plot([signif_pairs(2,i) signif_pairs(2,i)], [offset_segment offset_segment-deltay*0.2],'col','black','LineWidth',1.5)
-                text(mean([signif_pairs(2,i),signif_pairs(1,i)]), offset_star,'*','FontSize',15,'LineWidth',2)
+%                 text(mean([signif_pairs(2,i),signif_pairs(1,i)]), offset_star,'*','FontSize',15,'LineWidth',2)
+                text(mean([signif_pairs(2,i),signif_pairs(1,i)]), offset_star,num2str(psignif_vec(i)),'FontSize',15,'LineWidth',2)
+                
             end
         end
         if ~isempty(compact_display_ylim)
@@ -500,9 +506,9 @@ save_figures( input_save_fig )
         ylab=ersp_meaure;
         %comparisons = combn_all(1:tot_topo,2);
         num_comparisons = size(comparisons,2);
-        signif_vec = pcomparisons < study_ls;
-        signif_pairs = comparisons(:,signif_vec);
-        
+        signif_vec      = pcomparisons < study_ls;
+        signif_pairs    = comparisons(:,signif_vec);
+        psignif_vec     = pcomparisons(signif_vec);
         % create figure
          fig=figure( 'color', 'w', 'Visible', 'off');
         if strcmp(show_head,'on')
@@ -545,7 +551,9 @@ save_figures( input_save_fig )
                 plot([signif_pairs(1,i) signif_pairs(2,i)], [offset_segment offset_segment],'col','black','LineWidth',1.5)
                 plot([signif_pairs(1,i) signif_pairs(1,i)], [offset_segment offset_segment-deltay*0.2],'col','black','LineWidth',1.5)
                 plot([signif_pairs(2,i) signif_pairs(2,i)], [offset_segment offset_segment-deltay*0.2],'col','black','LineWidth',1.5)
-                text(mean([signif_pairs(2,i),signif_pairs(1,i)]), offset_star,'*','FontSize',15,'LineWidth',2)
+%                 text(mean([signif_pairs(2,i),signif_pairs(1,i)]), offset_star,'*','FontSize',15,'LineWidth',2)
+                text(mean([signif_pairs(2,i),signif_pairs(1,i)]), offset_star,num2str(psignif_vec(i)),'FontSize',15,'LineWidth',2)
+                
             end
         end
         

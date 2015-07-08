@@ -9,6 +9,10 @@ function EEG = eeglab_subject_events_add_event_around_other_events(input_file_na
                                                     
     EEG = pop_loadset(input_file_name);
 
+    if not(iscell(original_codes))
+        original_codes = {original_codes};
+    end
+    
     % force input trigger code to be a string
     for ev=1:length(original_codes)
         if isnumeric(original_codes{ev})
