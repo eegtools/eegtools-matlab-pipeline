@@ -46,11 +46,14 @@ function [STUDY, EEG] = proj_eeglab_study_create(project)
     for grp=1:length(group_list)
         for subj=1:length(group_list{grp})
             for cond=1:length(condition_names)
+                
                 setname=[project.import.original_data_prefix group_list{grp}{subj} project.import.original_data_suffix import_out_suffix project.epoching.input_suffix '_'  condition_names{cond} '.set'];
                 fullsetname=fullfile(epochs_path,setname,'');
-                cmd={'index' nset 'load' fullsetname 'subject' group_list{grp}{subj} 'session' 1 'condition' condition_names{cond} 'group' group_names{grp}};
-                commands=[commands, cmd];    
-                nset=nset+1;    
+                if exist(setname,'file')
+                    cmd={'index' nset 'load' fullsetname 'subject' group_list{grp}{subj} 'session' 1 'condition' condition_names{cond} 'group' group_names{grp}};
+                    commands=[commands, cmd];    
+                    nset=nset+1;    
+                end
             end
         end
     end
