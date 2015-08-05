@@ -64,6 +64,7 @@ function eeglab_subject_tf_plot_onecondition_vs_baseline(input_set, ch_label, va
     end
     baseline_point=[round(abs(xmin-baseline(1)/1000)*srate) round(abs(xmin-baseline(2)/1000)*srate)] + 1;    
     %-------------------------------------------------------------------------------------------------------
+    set(0,'DefaultTextInterpreter','none');    
     figure('visible','off')
     title_name=[name_noext '_in_' ch_label];    
     [ersp,itc,powbase,times,freqs,erspboot,itcboot,tfdata] = newtimef(EEG.data(chan_num,:,:) ,pnt, [xmin xmax]*1000, srate, cycles, 'alpha',pvalue,'erspmax',3,'plotitc','off','mcorrect',correction,'plotersp', 'on', 'baseline', baseline,'trialbase','full'); ... 'timesout', 200, 
