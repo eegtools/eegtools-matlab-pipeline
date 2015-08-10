@@ -199,6 +199,9 @@ STUDY = []; CURRENTSTUDY = 0; ALLEEG = []; EEG=[]; CURRENTSET=[];
 % load the study and working with the study structure
 [STUDY ALLEEG] = pop_loadstudy( 'filename',[study_name_noext study_ext],'filepath',study_path);
 
+chanlocs = eeg_mergelocs(ALLEEG.chanlocs);
+allch         = {chanlocs.labels};
+
 
 for design_num=design_num_vec
     
@@ -222,9 +225,20 @@ for design_num=design_num_vec
     mkdir(plot_dir);
     
     % set representation to time-frequency representation
+    STUDY = pop_erpparams(STUDY, 'topotime',[] ,'plotgroups','apart' ,'plotconditions','apart','averagechan','off','method', stat_method);
+    
+    
+    % erp_curve_allch cell array of dimension tlf1 x tlf2 , each cell of
+    % dimension times x channels x subjects
+    [STUDY, erp_curve_allch, times]=std_erpplot(STUDY,ALLEEG,'channels',allch,'noplot','on'); 
+    
+    
+    
+    erp_curve_roi_stat.erp_curve_allch       = erp_curve_allch;
+    erp_curve_roi_stat.allch                 = allch;
+    erp_curve_roi_stat.times                 = times;
+    
     STUDY = pop_erpparams(STUDY, 'topotime',[] ,'plotgroups','apart' ,'plotconditions','apart','averagechan','on','method', stat_method);
-    
-    
     % for each roi in the list
     for nroi = 1:length(roi_list)
         % lista dei soggetti suddivisi per fattori
@@ -234,6 +248,7 @@ for design_num=design_num_vec
         roi_name=roi_names{nroi};
         STUDY = pop_statparams(STUDY, 'groupstats','off','condstats','off');
         
+      
         [STUDY, erp_curve_roi, times]=std_erpplot(STUDY,ALLEEG,'channels',roi_list{nroi},'noplot','on');
         
         for nf1=1:length(levels_f1)
@@ -245,6 +260,7 @@ for design_num=design_num_vec
                         return;
                     end
                     erp_curve_roi{nf1,nf2}=erp_curve_roi{nf1,nf2}(:,vec_select_subjects);
+                     erp_curve_allch{nf1,nf2}=erp_curve_allch{nf1,nf2}(:,vec_select_subjects);
                     list_design_subjects{nf1,nf2}=list_design_subjects{nf1,nf2}(vec_select_subjects);
                 end
             end
@@ -489,7 +505,6 @@ for design_num=design_num_vec
     erp_curve_roi_stat.list_select_subjects = list_select_subjects;
     
     
-    
     %% EXPORTING DATA AND RESULTS OF ANALYSIS
     %         save(fullfile(plot_dir,'erp_curve_roi-stat.mat'),'erp_curve_roi_stat');
     %
@@ -542,10 +557,11 @@ for design_num=design_num_vec
     
     
     
+   
     
     
     
-    
+    [dataexpcols, dataexp] = text_export_erp_allch_sub_continuous_struct(plot_dir,erp_curve_roi_stat);%[out_file_name,'_allch_sub_continuous.txt']
     
     
     
