@@ -213,15 +213,15 @@ end
     set(fig,'defaulttextinterpreter','none')
    
     
-    ll = findobj(gcf,'Type','axes','Tag','legend');    
+    ll = findobj(fig,'Type','axes','Tag','legend');    
     
     set(ll, 'Interpreter', 'none')
     
-    pp = get(hFig,'Position');
+    pp = get(fig,'Position');
     
     pp(3) = 2 * pp(3);
 
-    set(hFig, 'Position', pp)
+    set(fig, 'Position', pp)
     
 
     
