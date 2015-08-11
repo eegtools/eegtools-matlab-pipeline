@@ -512,32 +512,32 @@ function [STUDY, EEG] = proj_eeglab_study_plot_roi_ersp_curve_fb(project, analys
                     [pcond_corr, pgroup_corr, pinter_corr] = eeglab_study_correct_pvals(pcond, pgroup, pinter,correction);
 
 
-                    input_graph.STUDY                                              = STUDY;
-                    input_graph.design_num                                         = design_num;
-                    input_graph.roi_name                                           = roi_name;
-                    input_graph.name_f1                                            = name_f1;
-                    input_graph.name_f2                                            = name_f2;
-                    input_graph.levels_f1                                          = levels_f1;
-                    input_graph.levels_f2                                          = levels_f2;
-                    input_graph.ersp_curve_fb                                      = ersp_curve_roi_fb;
-                    input_graph.times                                              = times_plot;
-                    input_graph.frequency_band_name                                = frequency_bands_names{nband};
-                    input_graph.time_windows_design_names                          = group_time_windows_names{design_num};
-                    input_graph.pcond                                              = pcond_corr;
-                    input_graph.pgroup                                             = pgroup_corr;
-                    input_graph.pinter                                             = pinter_corr;
-                    input_graph.study_ls                                           = study_ls;
-                    input_graph.plot_dir                                           = plot_dir;
-                    input_graph.display_only_significant                           = display_only_significant;
-                    input_graph.display_compact_plots                              = display_compact_plots;
-                    input_graph.compact_display_h0                                 = compact_display_h0;
-                    input_graph.compact_display_v0                                 = compact_display_v0;
-                    input_graph.compact_display_sem                                = compact_display_sem;
-                    input_graph.compact_display_stats                              = compact_display_stats;
-                    input_graph.compact_display_xlim                               = compact_display_xlim;
-                    input_graph.compact_display_ylim                               = compact_display_ylim;
-                    input_graph.ersp_measure                                       = ersp_measure;
-                    input_graph.list_design_subjects                           = list_design_subjects;
+                    input_graph.STUDY                                               = STUDY;
+                    input_graph.design_num                                          = design_num;
+                    input_graph.roi_name                                            = roi_name;
+                    input_graph.name_f1                                             = name_f1;
+                    input_graph.name_f2                                             = name_f2;
+                    input_graph.levels_f1                                           = levels_f1;
+                    input_graph.levels_f2                                           = levels_f2;
+                    input_graph.ersp_curve_fb                                       = ersp_curve_roi_fb;
+                    input_graph.times                                               = times_plot;
+                    input_graph.frequency_band_name                                 = frequency_bands_names{nband};
+                    input_graph.time_windows_design_names                           = group_time_windows_names{design_num};
+                    input_graph.pcond                                               = pcond_corr;
+                    input_graph.pgroup                                              = pgroup_corr;
+                    input_graph.pinter                                              = pinter_corr;
+                    input_graph.study_ls                                            = study_ls;
+                    input_graph.plot_dir                                            = plot_dir;
+                    input_graph.display_only_significant                            = display_only_significant;
+                    input_graph.display_compact_plots                               = display_compact_plots;
+                    input_graph.compact_display_h0                                  = compact_display_h0;
+                    input_graph.compact_display_v0                                  = compact_display_v0;
+                    input_graph.compact_display_sem                                 = compact_display_sem;
+                    input_graph.compact_display_stats                               = compact_display_stats;
+                    input_graph.compact_display_xlim                                = compact_display_xlim;
+                    input_graph.compact_display_ylim                                = compact_display_ylim;
+                    input_graph.ersp_measure                                        = ersp_measure;
+                    input_graph.list_design_subjects                                = list_design_subjects;
 
 
                     if (strcmp(do_plots,'on'))
@@ -622,33 +622,34 @@ function [STUDY, EEG] = proj_eeglab_study_plot_roi_ersp_curve_fb(project, analys
                         %                     display_compact_plots, compact_display_h0,compact_display_v0,compact_display_sem,compact_display_stats,...
                         %                     display_single_subjects,compact_display_xlim,compact_display_ylim,ersp_measure
 
-                        input_graph.STUDY                                          = STUDY;
-                        input_graph.design_num                                     = design_num;
-                        input_graph.roi_name                                       = roi_name;
-                        input_graph.name_f1                                        = name_f1;
-                        input_graph.name_f2                                        = name_f2;
-                        input_graph.levels_f1                                      = levels_f1;
-                        input_graph.levels_f2                                      = levels_f2;
-                        input_graph.ersp_curve_fb                                  = ersp_curve_roi_fb;
-                        input_graph.times                                          = times_plot;
-                        input_graph.frequency_band_name                            = frequency_bands_names{nband};
-                        input_graph.pcond                                          = pcond_corr;
-                        input_graph.pgroup                                         = pgroup_corr;
-                        input_graph.pinter                                         = pinter_corr;
-                        input_graph.study_ls                                       = study_ls;
-                        input_graph.plot_dir                                       = plot_dir;
-                        input_graph.display_only_significant                       = display_only_significant;
-                        input_graph.display_compact_plots                          = display_compact_plots;
-                        input_graph.compact_display_h0                             = compact_display_h0;
-                        input_graph.compact_display_v0                             = compact_display_v0;
-                        input_graph.compact_display_sem                            = compact_display_sem;
-                        input_graph.compact_display_stats                          = compact_display_stats;
-                        input_graph.display_single_subjects                        = display_single_subjects;
-                        input_graph.compact_display_xlim                           = compact_display_xlim;
-                        input_graph.compact_display_ylim                           = compact_display_ylim;
-                        input_graph.ersp_measure                                   = ersp_measure;
-                        input_graph.time_windows_design_names                      = group_time_windows_names{design_num};
-
+                        input_graph.STUDY                                           = STUDY;
+                        input_graph.design_num                                      = design_num;
+                        input_graph.roi_name                                        = roi_name;
+                        input_graph.name_f1                                         = name_f1;
+                        input_graph.name_f2                                         = name_f2;
+                        input_graph.levels_f1                                       = levels_f1;
+                        input_graph.levels_f2                                       = levels_f2;
+                        input_graph.ersp_curve_fb                                   = ersp_curve_roi_fb;
+                        input_graph.times                                           = times_plot;
+                        input_graph.frequency_band_name                             = frequency_bands_names{nband};
+                        input_graph.pcond                                           = pcond_corr;
+                        input_graph.pgroup                                          = pgroup_corr;
+                        input_graph.pinter                                          = pinter_corr;
+                        input_graph.study_ls                                        = study_ls;
+                        input_graph.plot_dir                                        = plot_dir;
+                        input_graph.display_only_significant                        = display_only_significant;
+                        input_graph.display_compact_plots                           = display_compact_plots;
+                        input_graph.compact_display_h0                              = compact_display_h0;
+                        input_graph.compact_display_v0                              = compact_display_v0;
+                        input_graph.compact_display_sem                             = compact_display_sem;
+                        input_graph.compact_display_stats                           = compact_display_stats;
+                        input_graph.display_single_subjects                         = display_single_subjects;
+                        input_graph.compact_display_xlim                            = compact_display_xlim;
+                        input_graph.compact_display_ylim                            = compact_display_ylim;
+                        input_graph.ersp_measure                                    = ersp_measure;
+                        input_graph.time_windows_design_names                       = group_time_windows_names{design_num};
+                        input_graph.list_design_subjects                            = list_design_subjects;
+                        
                         eeglab_study_roi_ersp_curve_fb_graph(input_graph);
 
                     end

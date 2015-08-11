@@ -413,8 +413,8 @@ for nband=1:length(frequency_bands_list)
                 
                 if strcmp(do_narrowband,'ref')
                     
-                    fmin                                    = nb.results.nb.band(1).sub(nsub).fnb  - project.postprocess.ersp.frequency_bands(nband).dfmin;
-                    fmax                                    = nb.results.nb.band(1).sub(nsub).fnb  + project.postprocess.ersp.frequency_bands(nband).dfmax;
+                    fmin                                    = nb.results.nb.band(nband).sub(nsub).fnb  - project.postprocess.ersp.frequency_bands(nband).dfmin;
+                    fmax                                    = nb.results.nb.band(nband).sub(nsub).fnb  + project.postprocess.ersp.frequency_bands(nband).dfmax;
                 end
             end
             sel_freqs = freqs >= fmin & freqs <= fmax;
