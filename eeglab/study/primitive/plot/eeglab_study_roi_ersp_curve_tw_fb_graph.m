@@ -53,8 +53,30 @@ pinter_nomask=pinter;
 % display (curve) plots with different conditions/groups on the same plots
 switch display_compact_plots
     case 'on'
-        std_plotcurve_ersp_tw_fb_compact(times, ersp_curve_fb, plot_dir, roi_name, study_ls, frequency_band_name, time_windows_design_names, name_f1, name_f2, levels_f1,levels_f2,...
-            pgroup,  pcond, compact_display_h0,compact_display_v0,compact_display_sem,compact_display_stats,compact_display_xlim,compact_display_ylim,ersp_measure)
+        
+        input_graph.times                                                  = times;
+        input_graph.ersp_curve_fb                                          =  ersp_curve_fb;
+        input_graph.plot_dir                                               = plot_dir;
+        input_graph.roi_name                                               = roi_name;
+        input_graph.study_ls                                               = study_ls;
+        input_graph.frequency_band_name                                    = frequency_band_name;
+        input_graph.time_windows_design_names                              = time_windows_design_names;
+        input_graph.name_f1                                                = name_f1;
+        input_graph.name_f2                                                = name_f2;
+        input_graph.levels_f1                                              = levels_f1;
+        input_graph.levels_f2                                              = levels_f2;
+        input_graph.pgroup                                                 = pgroup;
+        input_graph.pcond                                                  = pcond;
+        input_graph.compact_display_h0                                     = compact_display_h0;
+        input_graph.compact_display_v0                                     = compact_display_v0;
+        input_graph.compact_display_sem                                    = compact_display_sem;
+        input_graph.compact_display_stats                                  = compact_display_stats;
+        input_graph.compact_display_xlim                                   = compact_display_xlim;
+        input_graph.compact_display_ylim                                   = compact_display_ylim;
+        input_graph.ersp_mode                                              = ersp_measure;
+        
+        std_plotcurve_ersp_tw_fb_compact(input_graph)
+        
     case 'off'
         % if required, apply a significance treshold
         switch display_only_significant
@@ -68,9 +90,25 @@ switch display_compact_plots
         end
         % plot ersp and statistics
         if  length(time_windows_design_names) >1
-            std_plotcurve_ersp_tw_fb(times, ersp_curve_fb, plot_dir, roi_name, study_ls, frequency_band_name, time_windows_design_names, name_f1, name_f2, levels_f1,levels_f2,ersp_measure, ...
-                pcond_nomask,pgroup_nomask,pinter_nomask,...
-                'groupstats', pgroup, 'condstats', pcond,'interstats', pinter, 'titles',titles  ,'threshold',tr,'plotgroups','apart' ,'plotconditions','apart');
+            
+            input_graph.times                                                          = times;
+            input_graph.data                                                           = ersp_curve_fb;
+            input_graph.plot_dir                                                       =  plot_dir;
+            input_graph.roi_name                                                       = roi_name;
+            input_graph.study_ls                                                       = study_ls;
+            input_graph.frequency_band_name                                            = frequency_band_name;
+            input_graph.time_windows_design_names                                      = time_windows_design_names;
+            input_graph.name_f1                                                        = name_f1;
+            input_graph.name_f2                                                        = name_f2;
+            input_graph.levels_f1                                                      = levels_f1;
+            input_graph.levels_f2                                                      = levels_f2;
+            input_graph.ersp_mode                                                      = ersp_measure;
+            input_graph.pcond_nomask                                                   = pcond_nomask;
+            input_graph.pgroup_nomask                                                  = pgroup_nomask;
+            input_graph.pinter_nomask                                                  = pinter_nomask;
+            
+            
+            std_plotcurve_ersp_tw_fb(input_graph, 'groupstats', pgroup, 'condstats', pcond,'interstats', pinter, 'titles',titles  ,'threshold',tr,'plotgroups','apart' ,'plotconditions','apart');
         else
             display('ERROR: Select at least 2 time windows!!!!')
             return;
