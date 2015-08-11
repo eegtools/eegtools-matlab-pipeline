@@ -71,23 +71,36 @@ switch display_only_significant
         
         if strcmp(display_only_significant_mode,'thresholded')
             tr=NaN;
-           
+            
             for ind = 1:length(pcond),    pmaskcond{ind}  =  abs(pcond{ind}<study_ls); end;
             for ind = 1:length(pgroup),  pmaskgru{ind}  =  abs(pgroup{ind}<study_ls); end;
             for ind = 1:length(pinter),  pmaskinter{ind}  =  abs(pinter{ind}<study_ls); end;
-           
+            
         end
         
     case 'off'
         tr=NaN;
 end
 
-
+input_graph.times                                                          = times;
+input_graph.freqs                                                          = freqs;
+input_graph.data                                                           = ersp;
+input_graph.plot_dir                                                       = plot_dir;
+input_graph.roi_name                                                       = roi_name;
+input_graph.name_f1                                                        = name_f1;
+input_graph.name_f2                                                        = name_f2;
+input_graph.levels_f1                                                      = levels_f1;
+input_graph.levels_f2                                                      = levels_f2;
+input_graph.pmaskcond                                                      = pmaskcond;
+input_graph.pmaskgru                                                       = pmaskgru;
+input_graph.pmaskinter                                                     = pmaskinter;
+input_graph.ersp_mode                                                      = ersp_mode;
+% input_graph.group_time_windows_list                                        = group_time_windows_list;
+input_graph.frequency_bands_list                                           = frequency_bands_list;
+input_graph.display_pmode                                                  = display_pmode;
 
 % plot ersp and statistics
-std_plottf_ersp(times, freqs, ersp,plot_dir,roi_name, name_f1, name_f2, levels_f1,levels_f2,...
-    pmaskcond, pmaskgru, pmaskinter,ersp_mode, group_time_windows_list,frequency_bands_list,display_pmode,...
-    'datatype', 'ersp','groupstats', pgroup, 'condstats', pcond,'interstats', pinter, 'plotmode','normal','titles',titles ,...
+std_plottf_ersp(input_graph, 'datatype', 'ersp','groupstats', pgroup, 'condstats', pcond,'interstats', pinter, 'plotmode','normal','titles',titles ,...
     'tftopoopt',{'mode', 'ave'},'caxis',set_caxis ,'threshold',tr,'freqscale',freq_scale);
 
 end

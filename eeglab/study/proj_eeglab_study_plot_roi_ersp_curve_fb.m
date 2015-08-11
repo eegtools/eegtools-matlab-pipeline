@@ -526,6 +526,7 @@ for nroi = 1:length(roi_list)
             input_graph.compact_display_xlim                               = compact_display_xlim;
             input_graph.compact_display_ylim                               = compact_display_ylim;
             input_graph.ersp_measure                                       = ersp_measure;
+            input_graph.list_design_subjects                           = list_design_subjects;
             
             
             if (strcmp(do_plots,'on'))

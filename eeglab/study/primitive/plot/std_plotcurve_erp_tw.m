@@ -71,7 +71,21 @@
 %
 % See also: pop_erspparams(), pop_erpparams(), pop_specparams(), statcond()
 
-function std_plotcurve_erp_tw(allx, data, plot_dir, roi_name, study_ls,time_windows_design_names, name_f1, name_f2, levels_f1,levels_f2,pcond_nomask,pgroup_nomask,pinter_nomask,varargin)
+function std_plotcurve_erp_tw(input,varargin)
+
+times                                                                      = input.times;
+data                                                                       = input.data; 
+plot_dir                                                                   = input.plot_dir; 
+roi_name                                                                   = input.roi_name; 
+study_ls                                                                   = input.study_ls;
+time_windows_design_names                                                  = input.time_windows_design_names; 
+name_f1                                                                    = input.name_f1; 
+name_f2                                                                    = input.name_f2; 
+levels_f1                                                                  = input.levels_f1;
+levels_f2                                                                  = input.levels_f2;
+pcond_nomask                                                               = input.pcond_nomask;
+pgroup_nomask                                                              = input.pgroup_nomask;
+pinter_nomask                                                              = input.pinter_nomask;
 
 pgroup = [];
 pcond  = [];
@@ -355,11 +369,11 @@ for c = 1:ncplot
                 end;
             end;
             
-            if ~isempty(opt.filter), tmpdata = myfilt(tmpdata, 1000/(allx(2)-allx(1)), 0, opt.filter); end;
+            if ~isempty(opt.filter), tmpdata = myfilt(tmpdata, 1000/(times(2)-times(1)), 0, opt.filter); end;
             
             % plotting options
             % ----------------
-            plotopt = { allx };
+            plotopt = { times };
             % -------------------------------------------------------------
             % tmpdata is of size "points x channels x subject x conditions"
             % or                 "points x   1   x components x conditions"
@@ -396,17 +410,17 @@ for c = 1:ncplot
                 metaplottopo(tmpdata, 'chanlocs', opt.chanlocs, 'plotfunc', 'plotcurve', ...
                     'plotargs', { plotopt{:} }, 'datapos', [2 3], 'title', opt.titles{c,g});
             elseif iscell(tmpdata)
-                plotcurve( allx, tmpdata{1}, 'colors', tmpcol, 'maskarray', tmpdata{2}, plotopt{3:end}, 'title', opt.titles{c,g});
+                plotcurve( times, tmpdata{1}, 'colors', tmpcol, 'maskarray', tmpdata{2}, plotopt{3:end}, 'title', opt.titles{c,g});
             else
                 if isempty(findstr(opt.plotstderr, 'nocurve'))
-                    plotcurve( allx, tmpdata, 'colors', tmpcol, plotopt{2:end}, 'traceinfo', 'on', 'title', opt.titles{c,g});
+                    plotcurve( times, tmpdata, 'colors', tmpcol, plotopt{2:end}, 'traceinfo', 'on', 'title', opt.titles{c,g});
                 end;
                 if ~strcmpi(opt.plotstderr, 'off')
                     if ~dimreduced_sizediffers
                         if ~isempty(findstr(opt.plotstderr, 'diff')), begind = 3; else begind = 1; end;
                         set(gcf, 'renderer', 'OpenGL')
                         for tmpi = begind:size(tmpdata,1)
-                            hold on; chandle = fillcurves( allx, tmpdata(tmpi,:)-tmpstd(tmpi,:), tmpdata(tmpi,:)+tmpstd(tmpi,:), tmpcol{tmpi}); hold on;
+                            hold on; chandle = fillcurves( times, tmpdata(tmpi,:)-tmpstd(tmpi,:), tmpdata(tmpi,:)+tmpstd(tmpi,:), tmpcol{tmpi}); hold on;
                             numfaces = size(get(chandle(1), 'Vertices'),1);
                             set(chandle(1), 'FaceVertexCData', repmat([1 1 1], [numfaces 1]), 'Cdatamapping', 'direct', 'facealpha', 0.3, 'edgecolor', 'none');
                         end;
@@ -418,7 +432,7 @@ for c = 1:ncplot
         end;
         
         if strcmpi(opt.plottopo, 'off'), % only non-topographic
-            xlim([allx(1) allx(end)]); hold on;
+            xlim([times(1) times(end)]); hold on;
             if isempty(opt.ylim)
                 tmp = ylim;
                 tmplim = [ min(tmplim(1), tmp(1)) max(tmplim(2), tmp(2)) ];
@@ -445,11 +459,11 @@ for c = 1:ncplot
                 if ~isnan(opt.threshold)
                     if strcmpi(opt.plottopo, 'on'),
                         metaplottopo({zeros(size(pgroupplot{c}')) pgroupplot{c}'}, 'chanlocs', opt.chanlocs, 'plotfunc', 'plotcurve', ...
-                            'plotargs', { allx 'maskarray' statopt{:} }, 'datapos', [2 3], 'title', opt.titles{c, g+1});
+                            'plotargs', { times 'maskarray' statopt{:} }, 'datapos', [2 3], 'title', opt.titles{c, g+1});
                     else
-                        %                          plotcurve(allx, zeros(size(allx)), 'maskarray', mean(pgroupplot{c},2), 'ylim', [0.1 1], 'title', opt.titles{c, g+1}, statopt{:});
+                        %                          plotcurve(times, zeros(size(times)), 'maskarray', mean(pgroupplot{c},2), 'ylim', [0.1 1], 'title', opt.titles{c, g+1}, statopt{:});
                         sel_star=mean(pgroupplot{c},2)==1;
-                        xx=allx(sel_star);
+                        xx=times(sel_star);
                         yy=mean(pgroupplot{c},2);yy=yy(sel_star);
                         scatter(xx,yy,200,'*','LineWidth',2);box()
                         xl=get(gca,'xlim');
@@ -464,41 +478,41 @@ for c = 1:ncplot
                         pvec=mean(pgroup_nomask{c},2);
                         %                         for nss=1:length(pvec)
                         %                             pstr= sprintf('%0.1e',pvec(nss));
-                        %                             text(allx(nss),1.5,pstr);
+                        %                             text(times(nss),1.5,pstr);
                         %                         end
                         lv=length(pvec);
                         sh=repmat([1.3,1.6],1,round(lv/2));
                         sh = sh(1:lv);
                         for nss=1:length(pvec)
                             pstr= sprintf('%0.1e',pvec(nss));
-                            text(allx(nss),sh(nss),pstr);
+                            text(times(nss),sh(nss),pstr);
                         end
                         
                     end;
                 else
                     if strcmpi(opt.plottopo, 'on'),
                         metaplottopo(pgroupplot{c}', 'chanlocs', opt.chanlocs, 'plotfunc', 'plotcurve', ...
-                            'plotargs', { allx statopt{:} }, 'datapos', [2 3], 'title', opt.titles{c, g+1});
+                            'plotargs', { times statopt{:} }, 'datapos', [2 3], 'title', opt.titles{c, g+1});
                     else
-                        plotcurve(allx, mean(pgroupplot{c},2), 'title', opt.titles{c, g+1}, statopt{:});
+                        plotcurve(times, mean(pgroupplot{c},2), 'title', opt.titles{c, g+1}, statopt{:});
                         yl1=get(gca,'ylim');
                         yylim=[-.1 yl1(2)+3];
                         set(gca,'ylim',yylim);set(gcf, 'Visible', 'off');
                         hold on
                         th2=-log10(study_ls);
-                        plot(allx,ones(1,length(allx))* th2,'--','color','blue','linewidth',3,'color','blue')
+                        plot(times,ones(1,length(times))* th2,'--','color','blue','linewidth',3,'color','blue')
                         hold on
                         pvec=10.^-(mean(pgroupplot{c},2));
 %                         for nss=1:length(pvec)
 %                             pstr= sprintf('%0.1e',pvec(nss));
-%                             text(allx(nss),(yylim(2)-0.5),pstr);
+%                             text(times(nss),(yylim(2)-0.5),pstr);
 %                         end
                          lv=length(pvec);
                          sh=repmat([-0.3,-0.9],1,round(lv/2));
                         sh = yylim(2)+sh(1:lv);
                         for nss=1:length(pvec)
                             pstr= sprintf('%0.1e',pvec(nss));
-                            text(allx(nss),sh(nss),pstr);
+                            text(times(nss),sh(nss),pstr);
                         end
                         
                     end;
@@ -527,11 +541,11 @@ for g = 1:ng
             if ~isnan(opt.threshold)
                 if strcmpi(opt.plottopo, 'on'),
                     metaplottopo({zeros(size(pcondplot{g}')) pcondplot{g}'}, 'chanlocs', opt.chanlocs, 'plotfunc', 'plotcurve', ...
-                        'plotargs', { allx 'maskarray' statopt{:} }, 'datapos', [2 3], 'title', opt.titles{end, g});
+                        'plotargs', { times 'maskarray' statopt{:} }, 'datapos', [2 3], 'title', opt.titles{end, g});
                 else
-                    %                      plotcurve(allx, zeros(size(allx)), 'maskarray', mean(pcondplot{g},2), 'ylim', [0.1 1], 'title', opt.titles{end, g}, statopt{:});
+                    %                      plotcurve(times, zeros(size(times)), 'maskarray', mean(pcondplot{g},2), 'ylim', [0.1 1], 'title', opt.titles{end, g}, statopt{:});
                     sel_star=mean(pcondplot{g},2)==1;
-                    xx=allx(sel_star);
+                    xx=times(sel_star);
                     yy=mean(pcondplot{g},2);yy=yy(sel_star);
                     scatter(xx,yy,200,'*','LineWidth',2);box()
                     xl=get(gca,'xlim');
@@ -547,7 +561,7 @@ for g = 1:ng
                     pvec=mean(pcond_nomask{g},2);
                     %                      for nss=1:length(pvec)
                     %                                 pstr= sprintf('%0.1e',pvec(nss));
-                    %                                 text(allx(nss),1.5,pstr);
+                    %                                 text(times(nss),1.5,pstr);
                     %
                     %                      end
                     lv=length(pvec);
@@ -555,7 +569,7 @@ for g = 1:ng
                     sh = sh(1:lv);
                     for nss=1:length(pvec)
                         pstr= sprintf('%0.1e',pvec(nss));
-                        text(allx(nss),sh(nss),pstr);
+                        text(times(nss),sh(nss),pstr);
                     end
                     
                     
@@ -563,20 +577,20 @@ for g = 1:ng
             else
                 if strcmpi(opt.plottopo, 'on'),
                     metaplottopo(pcondplot{g}', 'chanlocs', opt.chanlocs, 'plotfunc', 'plotcurve', ...
-                        'plotargs', { allx statopt{:} }, 'datapos', [2 3], 'title', opt.titles{end, g});
+                        'plotargs', { times statopt{:} }, 'datapos', [2 3], 'title', opt.titles{end, g});
                 else
-                    plotcurve(allx, mean(pcondplot{g},2), 'title',  opt.titles{end, g}, statopt{:});
+                    plotcurve(times, mean(pcondplot{g},2), 'title',  opt.titles{end, g}, statopt{:});
                     yl1=get(gca,'ylim');
                     yylim=[-.1 yl1(2)+3];
                     set(gca,'ylim',yylim)
                     hold on
                     th2=-log10(study_ls);
-                    plot(allx,ones(1,length(allx))* th2,'--','color','blue','linewidth',3,'color','blue')
+                    plot(times,ones(1,length(times))* th2,'--','color','blue','linewidth',3,'color','blue')
                     hold on
                     pvec=10.^-(mean(pcondplot{g},2));
 %                     for nss=1:length(pvec)
 %                         pstr= sprintf('%0.1e',pvec(nss));
-%                         text(allx(nss),(yylim(2)-0.5),pstr);
+%                         text(times(nss),(yylim(2)-0.5),pstr);
 %                         
 %                     end
                      lv=length(pvec);
@@ -584,7 +598,7 @@ for g = 1:ng
                         sh = yylim(2)+sh(1:lv);
                         for nss=1:length(pvec)
                             pstr= sprintf('%0.1e',pvec(nss));
-                            text(allx(nss),sh(nss),pstr);
+                            text(times(nss),sh(nss),pstr);
                         end
 
                 end;
@@ -606,11 +620,11 @@ if ~isempty(opt.groupstats) && ~isempty(opt.condstats) && ng > 1 && nc > 1
     if ~isnan(opt.threshold)
         if strcmpi(opt.plottopo, 'on'),
             metaplottopo({zeros(size(pinterplot')) pinterplot'}, 'chanlocs', opt.chanlocs, 'plotfunc', 'plotcurve', ...
-                'plotargs', { allx 'maskarray' statopt{:} }, 'datapos', [2 3], 'title', opt.titles{end, end});
+                'plotargs', { times 'maskarray' statopt{:} }, 'datapos', [2 3], 'title', opt.titles{end, end});
         else
-            %              plotcurve(allx, zeros(size(allx)), 'maskarray', mean(pinterplot,2), 'ylim', [0.1 1], 'title', opt.titles{end, end}, statopt{:});
+            %              plotcurve(times, zeros(size(times)), 'maskarray', mean(pinterplot,2), 'ylim', [0.1 1], 'title', opt.titles{end, end}, statopt{:});
             sel_star=mean(pinterplot,2)==1;
-            xx=allx(sel_star);
+            xx=times(sel_star);
             yy=mean(pinterplot,2);yy=yy(sel_star);
             scatter(xx,yy,200,'*','LineWidth',2);box()
             xl=get(gca,'xlim');
@@ -628,7 +642,7 @@ if ~isempty(opt.groupstats) && ~isempty(opt.condstats) && ng > 1 && nc > 1
             
             %               for nss=1:length(pvec)
             %                     pstr= sprintf('%0.1e',pvec(nss));
-            %                     text(allx(nss),1.5,pstr);
+            %                     text(times(nss),1.5,pstr);
             %              end
             
             lv=length(pvec);
@@ -636,27 +650,27 @@ if ~isempty(opt.groupstats) && ~isempty(opt.condstats) && ng > 1 && nc > 1
             sh = sh(1:lv);
             for nss=1:length(pvec)
                 pstr= sprintf('%0.1e',pvec(nss));
-                text(allx(nss),sh(nss),pstr);
+                text(times(nss),sh(nss),pstr);
             end
             
         end;
     else
         if strcmpi(opt.plottopo, 'on'),
             metaplottopo(pinterplot', 'chanlocs', opt.chanlocs, 'plotfunc', 'plotcurve', ...
-                'plotargs', { allx statopt{:} }, 'datapos', [2 3], 'title', opt.titles{end, end});
+                'plotargs', { times statopt{:} }, 'datapos', [2 3], 'title', opt.titles{end, end});
         else
-            plotcurve(allx, mean(pinterplot,2), 'title', opt.titles{end, end}, statopt{:});
+            plotcurve(times, mean(pinterplot,2), 'title', opt.titles{end, end}, statopt{:});
             yl1=get(gca,'ylim');
             yylim=[-.1 yl1(2)+3];
             set(gca,'ylim',yylim);set(gcf, 'Visible', 'off');
             hold on
             th2=-log10(study_ls);
-            plot(allx,ones(1,length(allx))* th2,'--','color','blue','linewidth',3,'color','blue')
+            plot(times,ones(1,length(times))* th2,'--','color','blue','linewidth',3,'color','blue')
             hold on
             pvec=10.^-(mean(pinterplot,2));
             %              for nss=1:length(pvec)
             %                     pstr= sprintf('%0.1e',pvec(nss));
-            %                     text(allx(nss),(yylim(2)-0.5),pstr);
+            %                     text(times(nss),(yylim(2)-0.5),pstr);
             %
             %              end
             
@@ -665,7 +679,7 @@ if ~isempty(opt.groupstats) && ~isempty(opt.condstats) && ng > 1 && nc > 1
             sh = yylim(2)+sh(1:lv);
             for nss=1:length(pvec)
                 pstr= sprintf('%0.1e',pvec(nss));
-                text(allx(nss),sh(nss),pstr);
+                text(times(nss),sh(nss),pstr);
             end
             
         end;

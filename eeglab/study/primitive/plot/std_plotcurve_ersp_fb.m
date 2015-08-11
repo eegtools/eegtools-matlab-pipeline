@@ -72,7 +72,19 @@
 % See also: pop_erspparams(), pop_erpparams(), pop_specparams(), statcond()
 % claudio campus: rendo libera la lable
 
-function std_plotcurve_ersp_fb(allx, data, plot_dir, roi_name, study_ls, frequency_band_name, name_f1, name_f2, levels_f1,levels_f2, display_single_subjects, ersp_mode, varargin) 
+function std_plotcurve_ersp_fb(input, varargin) 
+times                                                                      = input.times; 
+data                                                                       = input.data; 
+plot_dir                                                                   = input.plot_dir; 
+roi_name                                                                   = input.roi_name; 
+study_ls                                                                   = input.study_ls; 
+frequency_band_name                                                        = input.frequency_band_name; 
+name_f1                                                                    = input.name_f1; 
+name_f2                                                                    = input.name_f2; 
+levels_f1                                                                  = input.levels_f1; 
+levels_f2                                                                  = input.levels_f2; 
+ersp_mode                                                                  = input.ersp_mode; 
+                                                                   
 
 pgroup = [];
 pcond  = [];
@@ -354,11 +366,11 @@ for c = 1:ncplot
                 end;
             end;
             
-            if ~isempty(opt.filter), tmpdata = myfilt(tmpdata, 1000/(allx(2)-allx(1)), 0, opt.filter); end;
+            if ~isempty(opt.filter), tmpdata = myfilt(tmpdata, 1000/(times(2)-times(1)), 0, opt.filter); end;
             
             % plotting options
             % ----------------
-            plotopt = { allx };
+            plotopt = { times };
             % -------------------------------------------------------------
             % tmpdata is of size "points x channels x subject x conditions"
             % or                 "points x   1   x components x conditions"
@@ -395,47 +407,47 @@ for c = 1:ncplot
                 metaplottopo(tmpdata, 'chanlocs', opt.chanlocs, 'plotfunc', 'plotcurve', ...
                     'plotargs', { plotopt{:} }, 'datapos', [2 3], 'title', opt.titles{c,g});
             elseif iscell(tmpdata)
-                plotcurve( allx, tmpdata{1}, 'colors', tmpcol, 'maskarray', tmpdata{2}, plotopt{3:end}, 'title', opt.titles{c,g});
+                plotcurve( times, tmpdata{1}, 'colors', tmpcol, 'maskarray', tmpdata{2}, plotopt{3:end}, 'title', opt.titles{c,g});
             else
                 if isempty(findstr(opt.plotstderr, 'nocurve'))
-                    plotcurve( allx, tmpdata, 'colors', tmpcol, plotopt{2:end}, 'traceinfo', 'on', 'title', opt.titles{c,g});
+                    plotcurve( times, tmpdata, 'colors', tmpcol, plotopt{2:end}, 'traceinfo', 'on', 'title', opt.titles{c,g});
                     
-                    if strcmp(display_single_subjects,'on')
-                    
-                        % make the line of the mean pattern thicker to be distinguished from single subjects 
-                        a=findobj(gcf); % get the handles associated with the current figure
-                        % allaxes=findall(a,'Type','axes');
-                        alllines=findall(a,'Type','line');
-                        % size(alllines)
-                        % alltext=findall(a,'Type','text');
-                        % set(allaxes,'FontName','Arial','FontWeight','Bold','LineWidth',2,'FontSize',14);
-                        set(alllines(1),'Linewidth',6);
-                        % set(alltext,'FontName','Arial','FontWeight','Bold','FontSize',14);
-
-                        % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
-                        %  display single subjects
-
-                        tmpdata_subs = squeeze(real(data{c,g}));
-                        tsub=size(tmpdata_subs,2);
-                        list_col=hsv(tsub+1);  
-                        list_sub={};
-                        for nsub=1:tsub
-                            list_sub{nsub}=['s',num2str(nsub)];
-                        end
-                        hold on
-                        for nsub=1:tsub    
-                            plot(allx,tmpdata_subs(:,nsub),'col',list_col(nsub+1,:))
-                            hold on
-                        end
-
-                        miny=min(min(tmpdata_subs));
-                        maxy=max(max(tmpdata_subs));
-                        deltay=abs(maxy-miny)*0.1;
-                        ylim([(miny-deltay),(maxy+deltay)]);
-                        legend(['mean',list_sub],'box','off', 'FontSize', 13,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1],'Location','EastOutside')
-                        % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
-
-                    end                    
+%                     if strcmp(display_single_subjects,'on')
+%                     
+%                         % make the line of the mean pattern thicker to be distinguished from single subjects 
+%                         a=findobj(gcf); % get the handles associated with the current figure
+%                         % allaxes=findall(a,'Type','axes');
+%                         alllines=findall(a,'Type','line');
+%                         % size(alllines)
+%                         % alltext=findall(a,'Type','text');
+%                         % set(allaxes,'FontName','Arial','FontWeight','Bold','LineWidth',2,'FontSize',14);
+%                         set(alllines(1),'Linewidth',6);
+%                         % set(alltext,'FontName','Arial','FontWeight','Bold','FontSize',14);
+% 
+%                         % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
+%                         %  display single subjects
+% 
+%                         tmpdata_subs = squeeze(real(data{c,g}));
+%                         tsub=size(tmpdata_subs,2);
+%                         list_col=hsv(tsub+1);  
+%                         list_sub={};
+%                         for nsub=1:tsub
+%                             list_sub{nsub}=['s',num2str(nsub)];
+%                         end
+%                         hold on
+%                         for nsub=1:tsub    
+%                             plot(times,tmpdata_subs(:,nsub),'col',list_col(nsub+1,:))
+%                             hold on
+%                         end
+% 
+%                         miny=min(min(tmpdata_subs));
+%                         maxy=max(max(tmpdata_subs));
+%                         deltay=abs(maxy-miny)*0.1;
+%                         ylim([(miny-deltay),(maxy+deltay)]);
+%                         legend(['mean',list_sub],'box','off', 'FontSize', 13,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1],'Location','EastOutside')
+%                         % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
+% 
+%                     end                    
                     
                     
                 end;
@@ -444,7 +456,7 @@ for c = 1:ncplot
                         if ~isempty(findstr(opt.plotstderr, 'diff')), begind = 3; else begind = 1; end;
                         set(gcf, 'renderer', 'OpenGL')
                         for tmpi = begind:size(tmpdata,1)
-                            hold on; chandle = fillcurves( allx, tmpdata(tmpi,:)-tmpstd(tmpi,:), tmpdata(tmpi,:)+tmpstd(tmpi,:), tmpcol{tmpi}); hold on;
+                            hold on; chandle = fillcurves( times, tmpdata(tmpi,:)-tmpstd(tmpi,:), tmpdata(tmpi,:)+tmpstd(tmpi,:), tmpcol{tmpi}); hold on;
                             numfaces = size(get(chandle(1), 'Vertices'),1);
                             set(chandle(1), 'FaceVertexCData', repmat([1 1 1], [numfaces 1]), 'Cdatamapping', 'direct', 'facealpha', 0.3, 'edgecolor', 'none');
                         end;
@@ -456,7 +468,7 @@ for c = 1:ncplot
         end;
         
         if strcmpi(opt.plottopo, 'off'), % only non-topographic
-            xlim([allx(1) allx(end)]); hold on;
+            xlim([times(1) times(end)]); hold on;
             if isempty(opt.ylim)
                 tmp = ylim;
                 tmplim = [ min(tmplim(1), tmp(1)) max(tmplim(2), tmp(2)) ];
@@ -477,25 +489,25 @@ for c = 1:ncplot
                 if ~isnan(opt.threshold)
                      if strcmpi(opt.plottopo, 'on'), 
                           metaplottopo({zeros(size(pgroupplot{c}')) pgroupplot{c}'}, 'chanlocs', opt.chanlocs, 'plotfunc', 'plotcurve', ...
-                              'plotargs', { allx 'maskarray' statopt{:} }, 'datapos', [2 3], 'title', opt.titles{c, g+1});
-                     else plotcurve(allx, zeros(size(allx)), 'maskarray', mean(pgroupplot{c},2), 'ylim', [0.1 1], 'title', opt.titles{c, g+1}, statopt{:});
+                              'plotargs', { times 'maskarray' statopt{:} }, 'datapos', [2 3], 'title', opt.titles{c, g+1});
+                     else plotcurve(times, zeros(size(times)), 'maskarray', mean(pgroupplot{c},2), 'ylim', [0.1 1], 'title', opt.titles{c, g+1}, statopt{:});
                      end;
                 else
                      if strcmpi(opt.plottopo, 'on'), 
                           metaplottopo(pgroupplot{c}', 'chanlocs', opt.chanlocs, 'plotfunc', 'plotcurve', ...
-                              'plotargs', { allx statopt{:} }, 'datapos', [2 3], 'title', opt.titles{c, g+1});
+                              'plotargs', { times statopt{:} }, 'datapos', [2 3], 'title', opt.titles{c, g+1});
                      else
-                         plotcurve(allx, mean(pgroupplot{c},2), 'title', opt.titles{c, g+1}, statopt{:});
+                         plotcurve(times, mean(pgroupplot{c},2), 'title', opt.titles{c, g+1}, statopt{:});
                          yl1=get(gca,'ylim'); 
                          yylim=[-.1 yl1(2)+3];
                          set(gca,'ylim',yylim)
                          hold on  
                          th2=-log10(study_ls);
-                         plot(allx,ones(1,length(allx))* th2,'--','color','blue','linewidth',3)             
+                         plot(times,ones(1,length(times))* th2,'--','color','blue','linewidth',3)             
                          hold on                        
                          ss=(10.^-(mean(pgroupplot{c},2)))<study_ls;
                          if ~isempty(ss)
-                             ss2=allx(ss);
+                             ss2=times(ss);
                              hold on
                              scatter(ss2,ones(1,length(ss2))*(yylim(2)-0.5),'.','linewidth',3)
                          end
@@ -519,25 +531,25 @@ for g = 1:ng
             if ~isnan(opt.threshold)
                  if strcmpi(opt.plottopo, 'on'), 
                       metaplottopo({zeros(size(pcondplot{g}')) pcondplot{g}'}, 'chanlocs', opt.chanlocs, 'plotfunc', 'plotcurve', ...
-                          'plotargs', { allx 'maskarray' statopt{:} }, 'datapos', [2 3], 'title', opt.titles{end, g});
-                 else plotcurve(allx, zeros(size(allx)), 'maskarray', mean(pcondplot{g},2), 'ylim', [0.1 1], 'title', opt.titles{end, g}, statopt{:});
+                          'plotargs', { times 'maskarray' statopt{:} }, 'datapos', [2 3], 'title', opt.titles{end, g});
+                 else plotcurve(times, zeros(size(times)), 'maskarray', mean(pcondplot{g},2), 'ylim', [0.1 1], 'title', opt.titles{end, g}, statopt{:});
                  end;
             else
                  if strcmpi(opt.plottopo, 'on'), 
                       metaplottopo(pcondplot{g}', 'chanlocs', opt.chanlocs, 'plotfunc', 'plotcurve', ...
-                          'plotargs', { allx statopt{:} }, 'datapos', [2 3], 'title', opt.titles{end, g});
+                          'plotargs', { times statopt{:} }, 'datapos', [2 3], 'title', opt.titles{end, g});
                  else
-                     plotcurve(allx, mean(pcondplot{g},2), 'title',  opt.titles{end, g}, statopt{:});
+                     plotcurve(times, mean(pcondplot{g},2), 'title',  opt.titles{end, g}, statopt{:});
                       yl1=get(gca,'ylim'); 
                      yylim=[-.1 yl1(2)+3];
                      set(gca,'ylim',yylim)
                      hold on  
                      th2=-log10(study_ls);
-                     plot(allx,ones(1,length(allx))* th2,'--','color','blue','linewidth',3)             
+                     plot(times,ones(1,length(times))* th2,'--','color','blue','linewidth',3)             
                      hold on                       
                      ss=(10.^-(mean(pcondplot{g},2)))<study_ls;
                      if ~isempty(ss)
-                         ss2=allx(ss);
+                         ss2=times(ss);
                          hold on
                          scatter(ss2,ones(1,length(ss2))*(yylim(2)-0.5),'.','linewidth',3)
                      end
@@ -554,26 +566,26 @@ if ~isempty(opt.groupstats) && ~isempty(opt.condstats) && ng > 1 && nc > 1
     if ~isnan(opt.threshold)
          if strcmpi(opt.plottopo, 'on'), 
               metaplottopo({zeros(size(pinterplot')) pinterplot'}, 'chanlocs', opt.chanlocs, 'plotfunc', 'plotcurve', ...
-                  'plotargs', { allx 'maskarray' statopt{:} }, 'datapos', [2 3], 'title', opt.titles{end, end});
-         else plotcurve(allx, zeros(size(allx)), 'maskarray', mean(pinterplot,2), 'ylim', [0.1 1], 'title', opt.titles{end, end}, statopt{:});
+                  'plotargs', { times 'maskarray' statopt{:} }, 'datapos', [2 3], 'title', opt.titles{end, end});
+         else plotcurve(times, zeros(size(times)), 'maskarray', mean(pinterplot,2), 'ylim', [0.1 1], 'title', opt.titles{end, end}, statopt{:});
               xlabel(xlab); ylabel('-log10(p)');
         end;
     else
          if strcmpi(opt.plottopo, 'on'), 
               metaplottopo(pinterplot', 'chanlocs', opt.chanlocs, 'plotfunc', 'plotcurve', ...
-                  'plotargs', { allx statopt{:} }, 'datapos', [2 3], 'title', opt.titles{end, end});
+                  'plotargs', { times statopt{:} }, 'datapos', [2 3], 'title', opt.titles{end, end});
          else
-             plotcurve(allx, mean(pinterplot,2), 'title', opt.titles{end, end}, statopt{:});set(gcf, 'Visible', 'off')
+             plotcurve(times, mean(pinterplot,2), 'title', opt.titles{end, end}, statopt{:});set(gcf, 'Visible', 'off')
              yl1=get(gca,'ylim'); 
              yylim=[-.1 yl1(2)+3];
              set(gca,'ylim',yylim)
              hold on  
              th2=-log10(study_ls);
-             plot(allx,ones(1,length(allx))* th2,'--','color','blue','linewidth',3)             
+             plot(times,ones(1,length(times))* th2,'--','color','blue','linewidth',3)             
              hold on                       
              ss=(10.^-(mean(pinterplot,2)))<study_ls;
              if ~isempty(ss)
-                 ss2=allx(ss);
+                 ss2=times(ss);
                  hold on
                  scatter(ss2,ones(1,length(ss2))*(yylim(2)-0.5),'.','linewidth',3)
              end

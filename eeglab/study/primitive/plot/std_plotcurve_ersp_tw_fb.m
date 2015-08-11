@@ -72,8 +72,23 @@
 % See also: pop_erspparams(), pop_erpparams(), pop_specparams(), statcond()
 % claudio campus: rendo libera la lable
 
-function std_plotcurve_ersp_tw_fb(allx, data, plot_dir, roi_name, study_ls, frequency_band_name,time_windows_design_names, name_f1, name_f2, levels_f1,levels_f2,ersp_mode,...
-    pcond_nomask,pgroup_nomask,pinter_nomask,varargin)
+function std_plotcurve_ersp_tw_fb(input,varargin)
+
+allx                                                                       = input.allx;
+data                                                                       = input.data;
+plot_dir                                                                   = input.plot_dir;
+roi_name                                                                   = input.roi_name;
+study_ls                                                                   = input.study_ls;
+frequency_band_name                                                        = input.frequency_band_name;
+time_windows_design_names                                                  = input.time_windows_design_names;
+name_f1                                                                    = input.name_f1;
+name_f2                                                                    = input.name_f2;
+levels_f1                                                                  = input.levels_f1;
+levels_f2                                                                  = input.levels_f2;
+ersp_mode                                                                  = input.ersp_mode;
+pcond_nomask                                                               = input.pcond_nomask;
+pgroup_nomask                                                              = input.pgroup_nomask;
+pinter_nomask                                                              = input.pinter_nomask;
 
 pgroup = [];
 pcond  = [];

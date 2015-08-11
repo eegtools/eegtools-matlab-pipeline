@@ -463,6 +463,7 @@ for design_num=design_num_vec
                 input_graph.display_single_subjects                        = display_single_subjects;
                 input_graph.compact_display_xlim                           = compact_display_xlim;
                 input_graph.compact_display_ylim                           = compact_display_ylim;
+                input_graph.list_design_subjects                           = list_design_subjects;
                 
                 eeglab_study_roi_erp_curve_graph(input_graph);
             end

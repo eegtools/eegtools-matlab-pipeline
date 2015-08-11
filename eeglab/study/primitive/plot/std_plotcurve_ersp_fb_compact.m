@@ -1,6 +1,24 @@
-function [] = std_plotcurve_ersp_fb_compact(times, ersp_curve_fb, plot_dir, roi_name, study_ls, frequency_band_name, name_f1, name_f2, levels_f1,levels_f2, pgroup,  pcond,...
-    compact_display_h0,compact_display_v0,compact_display_sem,compact_display_stats,compact_display_xlim,compact_display_ylim,ersp_mode)
+function [] =  std_plotcurve_ersp_fb_compact(input)
 
+times                                                                      = input.times;
+ersp_curve_fb                                                              = input.ersp_curve_fb;
+plot_dir                                                                   = input.plot_dir;
+roi_name                                                                   = input.roi_name;
+study_ls                                                                   = input.study_ls;
+frequency_band_name                                                        = input.frequency_band_name;
+name_f1                                                                    = input.name_f1;
+name_f2                                                                    = input.name_f2;
+levels_f1                                                                  = input.levels_f1;
+levels_f2                                                                  = input.levels_f2;
+pgroup                                                                     = input.pgroup;
+pcond                                                                      = input.pcond;
+compact_display_h0                                                         = input.compact_display_h0;
+compact_display_v0                                                         = input.compact_display_v0;
+compact_display_sem                                                        = input.compact_display_sem;
+compact_display_stats                                                      = input.compact_display_stats;
+compact_display_xlim                                                       = input.compact_display_xlim;
+compact_display_ylim                                                       = input.compact_display_ylim;
+ersp_mode                                                                  = input.ersp_measure;
 
 
 

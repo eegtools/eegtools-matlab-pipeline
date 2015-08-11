@@ -1,11 +1,4 @@
-function std_chantopo_ersp_compact_errorbar(ersp_topo_tw_fb_roi_avg, ...
-    plot_dir, roi_name, ...
-    chanlocs,...
-    time_window_name, time_window, ...
-    frequency_band_name, ...
-    name_f1, name_f2, levels_f1,levels_f2,...
-    pgroup,  pcond, study_ls, ...
-    roi_mask, compcond, compgroup, ersp_mode,show_head,compact_display_ylim,show_text,z_transform,which_error_measure)
+function std_chantopo_ersp_compact_errorbar(input)
 
 %  data  -  [cell array] mean data for each subject group and/or data
 %           condition. For example, to compute mean ERPs statistics from a
@@ -24,6 +17,29 @@ function std_chantopo_ersp_compact_errorbar(ersp_topo_tw_fb_roi_avg, ...
 
 % Markers=['o','x','+','*','s','d','v','^','<','>','p','h','.'];
 
+ersp_topo_tw_fb_roi_avg                                                    = input.ersp_topo_tw_fb_roi_avg;
+plot_dir                                                                   = input.plot_dir;
+roi_name                                                                   = input.roi_name;
+chanlocs                                                                   = input.chanlocs;
+time_window_name                                                           = input.time_window_name;
+time_window                                                                = input.time_window;
+frequency_band_name                                                        = input.frequency_band_name;
+name_f1                                                                    = input.name_f1;                                                      
+name_f2                                                                    = input.name_f2;
+levels_f1                                                                  = input.levels_f1;
+levels_f2                                                                  = input.levels_f2;
+pgroup                                                                     = input.pgroup;
+pcond                                                                      = input.pcond;
+study_ls                                                                   = input.study_ls;
+roi_mask                                                                   = input.roi_mask;
+compcond                                                                   = input.compcond;
+compgroup                                                                  = input.compgroup;
+ersp_mode                                                                  = input.ersp_mode;
+show_head                                                                  = input.show_head;
+compact_display_ylim                                                       = input.compact_display_ylim;
+show_text                                                                  = input.show_text;
+z_transform                                                                = input.z_transform;
+which_error_measure                                                        = input.which_error_measure;
 
 
 
