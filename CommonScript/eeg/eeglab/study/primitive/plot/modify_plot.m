@@ -211,7 +211,11 @@ end
     
     % set latex off
     set(fig,'defaulttextinterpreter','none')
-    set(fig, 'DefaultLegendInterpreter', 'none')
+   
+    
+    ll = findobj(gcf,'Type','axes','Tag','legend');    
+    
+    set(ll, 'Interpreter', 'none')
     
     pp = get(hFig,'Position');
     
