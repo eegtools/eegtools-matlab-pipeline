@@ -19,7 +19,7 @@ compact_display_sem                                                        = inp
 compact_display_stats                                                      = input.compact_display_stats;
 compact_display_xlim                                                       = input.compact_display_xlim;
 compact_display_ylim                                                       = input.compact_display_ylim;
-ersp_mode                                                                  = input.ersp_mode;
+ersp_mode                                                                  = input.ersp_measure;
 
 
 
