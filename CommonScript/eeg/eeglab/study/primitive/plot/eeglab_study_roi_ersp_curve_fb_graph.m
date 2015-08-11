@@ -48,14 +48,14 @@ titles=eeglab_study_set_subplot_titles(STUDY,design_num);
 switch display_single_subjects
     case 'on'
         
-        input_graph.list_design_subjects;
-        input_graph.times;
-        input_graph.ersp_curve_fb;
-        input_graph.plot_dir;
-        input_graph.roi_name;
-        input_graph.levels_f1;
-        input_graph.levels_f2;
-        input_graph.frequency_band_name;
+        input_graph.list_design_subjects                                   = list_design_subjects;
+        input_graph.times                                                  = times;
+        input_graph.ersp_curve_fb                                          = ersp_curve_fb; 
+        input_graph.plot_dir                                               = plot_dir;
+        input_graph.roi_name                                               = roi_name;
+        input_graph.levels_f1                                              = levels_f1;
+        input_graph.levels_f2                                              = levels_f2;
+        input_graph.frequency_band_name                                    = frequency_band_name;
         
         std_plotcurve_ersp_fb_single_subject(input_graph)
         
