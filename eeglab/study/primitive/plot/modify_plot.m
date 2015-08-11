@@ -211,7 +211,14 @@ end
     
     % set latex off
     set(fig,'defaulttextinterpreter','none')
+    set(fig, 'DefaultLegendInterpreter', 'none')
     
+    pp = get(hFig,'Position');
     
+    pp(3) = 2 * pp(3);
+
+    set(hFig, 'Position', pp)
+    
+
     
 end
