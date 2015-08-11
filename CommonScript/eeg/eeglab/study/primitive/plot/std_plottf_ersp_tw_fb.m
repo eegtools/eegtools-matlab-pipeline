@@ -79,8 +79,25 @@
 % along with this program; if not, write to the Free Software
 % Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-function [pgroup, pcond, pinter] = std_plottf_ersp_tw_fb(timevals, freqs, data, time_windows_names, frequency_bands_names, plot_dir,roi_name, name_f1, name_f2, levels_f1,levels_f2,...
-                                                        pmaskcond, pmaskgru, pmaskinter,ersp_mode,display_pmode, varargin)
+function [pgroup, pcond, pinter] = std_plottf_ersp_tw_fb(input, varargin)
+
+times                                                                   = input.times; 
+freqs                                                                      = input.freqs; 
+data                                                                       = input.data; 
+time_windows_names                                                         = input.time_windows_names; 
+frequency_bands_names                                                      = input.frequency_bands_names; 
+plot_dir                                                                   = input.plot_dir; 
+roi_name                                                                   = input.roi_name; 
+name_f1                                                                    = input.name_f1; 
+name_f2                                                                    = input.name_f2; 
+levels_f1                                                                  = input.levels_f1; 
+levels_f2                                                                  = input.levels_f2; 
+pmaskcond                                                                  = input.pmaskcond; 
+pmaskgru                                                                   = input.pmaskgru; 
+pmaskinter                                                                 = input.pmaskinter; 
+ersp_mode                                                                  = input.ersp_mode; 
+display_pmode                                                              = input.display_pmode; 
+
 
 pgroup = [];
 pcond  = [];
@@ -167,7 +184,7 @@ if strcmpi(opt.plotmode, 'condensed')
         
     if strcmpi(opt.freqscale, 'log'), options = { options{:} 'logfreq', 'native' }; end;
      fig=figure( 'color', 'w', 'Visible', 'off');
-   tftopo_tw_fb( meanplot', timevals, freqs, 'title', opt.titles{1}, options{:}); set(gcf, 'Visible', 'off');
+   tftopo_tw_fb( meanplot', times, freqs, 'title', opt.titles{1}, options{:}); set(gcf, 'Visible', 'off');
     currentHangle = gca;
     if ~isempty( opt.caxis )
         caxis( currentHangle, opt.caxis )
@@ -290,7 +307,7 @@ for c = 1:nc
             
             
             
-            tftopo_tw_fb( tmpplot, timevals, freqs, 'events', tmpevents, 'title', opt.titles{c,g}, options{:});set(gcf, 'Visible', 'off');
+            tftopo_tw_fb( tmpplot, times, freqs, 'events', tmpevents, 'title', opt.titles{c,g}, options{:});set(gcf, 'Visible', 'off');
             xlabel('Time window','FontSize',12);
             ylabel('Frequency band','FontSize',12);
             
@@ -332,7 +349,7 @@ for c = 1:nc
            if ng == 2 && length(unique(pgroupplot{c}))<4  
                 if strcmp(display_pmode,'raw_diff')
                     pp = sign( (mean(data{c,1},3) - mean(data{c,2},3)) .* pgroupplot{c});
-                    imagesc(timevals,freqs,pp)
+                    imagesc(times,freqs,pp)
                     set(gca,'YDir','normal')
                     caxis([-2 2])
                     title(['P(',levels_f2{1},' - ',levels_f2{2},')'])
@@ -341,7 +358,7 @@ for c = 1:nc
                     hold off
                 elseif strcmp(display_pmode,'abs_diff')                       
                     pp = sign( (abs(mean(data{c,1},3)) - abs(mean(data{c,2},3))) .* pgroupplot{c});
-                    imagesc(timevals,freqs,pp)
+                    imagesc(times,freqs,pp)
                     set(gca,'YDir','normal')
                     caxis([-2 2])
                     title(['P(|',levels_f2{1},'| - |',levels_f2{2},'|)'])
@@ -349,11 +366,11 @@ for c = 1:nc
 %                     plot(zeros(length(freqs)),freqs,'-.')
                     hold off
 		else
-		        tftopo_tw_fb( pgroupplot{c}, timevals, freqs, 'title', opt.titles{c,g+1}, options{:});
+		        tftopo_tw_fb( pgroupplot{c}, times, freqs, 'title', opt.titles{c,g+1}, options{:});
 		        caxis([-maxplot maxplot]);
                 end
             else
-               tftopo_tw_fb( pgroupplot{c}, timevals, freqs, 'title', opt.titles{c,g+1}, options{:});
+               tftopo_tw_fb( pgroupplot{c}, times, freqs, 'title', opt.titles{c,g+1}, options{:});
                 caxis([-maxplot maxplot]);
             end
 
@@ -388,7 +405,7 @@ for g = 1:ng
         if nc == 2 && length(unique(pcondplot{g}))<4 
             if strcmp(display_pmode,'raw_diff')
                 pp = sign( (mean(data{1,g},3) - mean(data{2,g},3)) .*  pcondplot{g});
-                imagesc(timevals,freqs,pp)
+                imagesc(times,freqs,pp)
                 set(gca,'YDir','normal')
                 caxis([-2 2])
                 title(['P(',levels_f1{1},' - ',levels_f1{2},')'])
@@ -397,7 +414,7 @@ for g = 1:ng
                 hold off
            elseif strcmp(display_pmode,'abs_diff')   
                 pp = sign( (abs(mean(data{g,1},3)) - abs(mean(data{g,2},3))) .*  pcondplot{g});
-                imagesc(timevals,freqs,pp)
+                imagesc(times,freqs,pp)
                 set(gca,'YDir','normal')
                 caxis([-2 2])
                 title(['P(|',levels_f1{1},'| - |',levels_f1{2},'|)'])
@@ -405,11 +422,11 @@ for g = 1:ng
 %                 plot(zeros(length(freqs)),freqs,'-.')
                 hold off
 		else
-				tftopo_tw_fb( pgroupplot{c}, timevals, freqs, 'title', opt.titles{c,g+1}, options{:});
+				tftopo_tw_fb( pgroupplot{c}, times, freqs, 'title', opt.titles{c,g+1}, options{:});
 				caxis([-maxplot maxplot]);
             end
         else
-           tftopo_tw_fb( pcondplot{g}, timevals, freqs, 'title', opt.titles{nc+1,g}, options{:});
+           tftopo_tw_fb( pcondplot{g}, times, freqs, 'title', opt.titles{nc+1,g}, options{:});
             caxis([-maxplot maxplot]);
         end
         xlabel('Time window','FontSize',12);
@@ -450,7 +467,7 @@ if ~isempty(opt.groupstats) && ~isempty(opt.condstats) && ng > 1 && nc > 1
         pinterplot(~pmaskinter{3})=0;
     end
     
-    tftopo_tw_fb( pinterplot,  timevals, freqs, 'title', opt.titles{nc+1,ng+1}, options{:});set(gcf, 'Visible', 'off');
+    tftopo_tw_fb( pinterplot,  times, freqs, 'title', opt.titles{nc+1,ng+1}, options{:});set(gcf, 'Visible', 'off');
     caxis([-maxplot maxplot]);
     %     ylabel('');
     xlabel('Time window','FontSize',12);

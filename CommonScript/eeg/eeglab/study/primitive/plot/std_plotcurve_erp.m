@@ -71,7 +71,19 @@
 %
 % See also: pop_erspparams(), pop_erpparams(), pop_specparams(), statcond()
 
-function std_plotcurve_erp(allx, data, plot_dir, roi_name, study_ls, name_f1, name_f2, levels_f1,levels_f2, display_single_subjects, varargin) 
+function std_plotcurve_erp(input, varargin) 
+
+allx                                                                       = input.erp; 
+data                                                                       = input.data; 
+plot_dir                                                                   = input.plot_dir; 
+roi_name                                                                   = input.roi_name; 
+study_ls                                                                   = input.study_ls; 
+name_f1                                                                    = input.name_f1; 
+name_f2                                                                    = input.name_f2; 
+levels_f1                                                                  = input.levels_f1; 
+levels_f2                                                                  = input.levels_f2; 
+% display_single_subjects                                                    = input.display_single_subjects; 
+
 
 pgroup = [];
 pcond  = [];
@@ -395,56 +407,56 @@ for c = 1:ncplot
                     plotcurve( allx, tmpdata, 'colors', tmpcol, plotopt{2:end}, 'traceinfo', 'on', 'title', opt.titles{c,g});set(gcf, 'Visible', 'off')
                     
                   
-                    if strcmp(display_single_subjects,'on')
-                    
-                        % make the line of the mean pattern thicker to be distinguished from single subjects 
-                        a=findobj(gcf); % get the handles associated with the current figure
-                        % allaxes=findall(a,'Type','axes');
-                        alllines=findall(a,'Type','line');
-                        % size(alllines)
-                        % alltext=findall(a,'Type','text');
-                        % set(allaxes,'FontName','Arial','FontWeight','Bold','LineWidth',2,'FontSize',14);
-                        set(alllines(1),'Linewidth',3);
-                        % set(alltext,'FontName','Arial','FontWeight','Bold','FontSize',14);
-
-                        % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
-                        %  display single subjects
-
-                        tmpdata_subs = squeeze(real(data{c,g}));
-                        tsub=size(tmpdata_subs,2);
-                        list_col=hsv(tsub+1);  
-                        list_sub={};
-                        for nsub=1:tsub
-                            list_sub{nsub}=num2str(nsub);%list_sub{nsub}=['s',num2str(nsub)];
-                        end
-                        hold on
-                        for nsub=1:tsub    
-                            plot(allx,tmpdata_subs(:,nsub),'col',list_col(nsub+1,:));set(gcf, 'Visible', 'off')
-                            hold on
-                        end
-
-                        miny=min(min(tmpdata_subs));
-                        maxy=max(max(tmpdata_subs));
-                        deltay=abs(maxy-miny)*0.1;
-                        deltax= abs(max(allx)-min(allx))*0.1;
-                        ylim([(miny-deltay),(maxy+deltay)]);
-                        yyylim =get(gca,'ylim');
-                        mmmax = max(yyylim);
-                        mmmin = min(yyylim);                        
-                        dddeltay=abs(mmmax-mmmin)*0.1;
-%                         legend(['mean',list_sub],'box','off', 'FontSize', 13,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1],'Location','EastOutside')
-% legend(['mean',list_sub],'box','off', 'FontSize', 3,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1])
-                        for nsub=1:tsub    
-                            text(max(allx)+deltax,mmmax-dddeltay*(nsub-1)*1.1,num2str(nsub),'col',list_col(nsub+1,:))
-                            hold on
-                        end                     
-
-
-                        
-                        % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
-                        set(gcf, 'Visible', 'off')
-                    end                    
-                    
+%                     if strcmp(display_single_subjects,'on')
+%                     
+%                         % make the line of the mean pattern thicker to be distinguished from single subjects 
+%                         a=findobj(gcf); % get the handles associated with the current figure
+%                         % allaxes=findall(a,'Type','axes');
+%                         alllines=findall(a,'Type','line');
+%                         % size(alllines)
+%                         % alltext=findall(a,'Type','text');
+%                         % set(allaxes,'FontName','Arial','FontWeight','Bold','LineWidth',2,'FontSize',14);
+%                         set(alllines(1),'Linewidth',3);
+%                         % set(alltext,'FontName','Arial','FontWeight','Bold','FontSize',14);
+% 
+%                         % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
+%                         %  display single subjects
+% 
+%                         tmpdata_subs = squeeze(real(data{c,g}));
+%                         tsub=size(tmpdata_subs,2);
+%                         list_col=hsv(tsub+1);  
+%                         list_sub={};
+%                         for nsub=1:tsub
+%                             list_sub{nsub}=num2str(nsub);%list_sub{nsub}=['s',num2str(nsub)];
+%                         end
+%                         hold on
+%                         for nsub=1:tsub    
+%                             plot(allx,tmpdata_subs(:,nsub),'col',list_col(nsub+1,:));set(gcf, 'Visible', 'off')
+%                             hold on
+%                         end
+% 
+%                         miny=min(min(tmpdata_subs));
+%                         maxy=max(max(tmpdata_subs));
+%                         deltay=abs(maxy-miny)*0.1;
+%                         deltax= abs(max(allx)-min(allx))*0.1;
+%                         ylim([(miny-deltay),(maxy+deltay)]);
+%                         yyylim =get(gca,'ylim');
+%                         mmmax = max(yyylim);
+%                         mmmin = min(yyylim);                        
+%                         dddeltay=abs(mmmax-mmmin)*0.1;
+% %                         legend(['mean',list_sub],'box','off', 'FontSize', 13,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1],'Location','EastOutside')
+% % legend(['mean',list_sub],'box','off', 'FontSize', 3,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1])
+%                         for nsub=1:tsub    
+%                             text(max(allx)+deltax,mmmax-dddeltay*(nsub-1)*1.1,num2str(nsub),'col',list_col(nsub+1,:))
+%                             hold on
+%                         end                     
+% 
+% 
+%                         
+%                         % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
+%                         set(gcf, 'Visible', 'off')
+%                     end                    
+%                     
                     
                     
                 end;

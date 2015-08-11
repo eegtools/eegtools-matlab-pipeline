@@ -97,25 +97,65 @@ which_error_measure                                                        = inp
 switch display_compact
     case 'on'
         if strcmp(display_compact_mode,'boxplot')
-            std_chantopo_ersp_compact_boxplot( ersp_topo_tw_fb_roi_avg,...
-                plot_dir,roi_name, ...
-                chanlocs,...
-                time_window_name, time_window, ...
-                frequency_band_name, ...
-                name_f1, name_f2, levels_f1,levels_f2,...
-                pgroup,  pcond, study_ls, ...
-                roi_mask,  compcond, compgroup,ersp_measure,show_head,compact_display_ylim,show_text);
+            
+            input_graph.ersp_topo_tw_fb_roi_avg                            = ersp_topo_tw_fb_roi_avg;
+            input_graph.plot_dir                                           = plot_dir;
+            input_graph.roi_name                                           = roi_name;
+            input_graph.chanlocs                                           = chanlocs;
+            input_graph.time_window_name                                   = time_window_name;
+            input_graph.time_window                                        = time_window;
+            input_graph.frequency_band_name                                = frequency_band_name;
+            input_graph.name_f1                                            = name_f1;
+            input_graph.name_f2                                            = name_f2;
+            input_graph.levels_f1                                          = levels_f1;
+            input_graph.levels_f2                                          = levels_f2;
+            input_graph.pgroup                                             = pgroup;
+            input_graph.pcond                                              = pcond;
+            input_graph.study_ls                                           = study_ls;
+            input_graph.roi_mask                                           = roi_mask;
+            input_graph.compcond                                           = compcond;
+            input_graph.compgroup                                          = compgroup;
+            input_graph.ersp_mode                                          = ersp_mode;
+            input_graph.show_head                                          = show_head;
+            input_graph.compact_display_ylim                               = compact_display_ylim;
+            input_graph.show_text                                          = show_text;
+            
+            
+            std_chantopo_ersp_compact_boxplot(input_graph);
+            
+            
+            
+            
+            
         end
         
         if strcmp(display_compact_mode,'errorbar')
-            std_chantopo_ersp_compact_errorbar(ersp_topo_tw_fb_roi_avg,...
-                plot_dir,roi_name, ...
-                chanlocs,...
-                time_window_name, time_window, ...
-                frequency_band_name, ...
-                name_f1, name_f2, levels_f1,levels_f2,...
-                pgroup,  pcond, study_ls, ...
-                roi_mask,  compcond, compgroup,ersp_measure,show_head,compact_display_ylim,show_text,z_transform,which_error_measure);
+            
+            input_graph.ersp_topo_tw_fb_roi_avg                            = ersp_topo_tw_fb_roi_avg;
+            input_graph.plot_dir                                           = plot_dir;
+            input_graph.roi_name                                           = roi_name;
+            input_graph.chanlocs                                           = chanlocs;
+            input_graph.time_window_name                                   = time_window_name;
+            input_graph.time_window                                        = time_window;
+            input_graph.frequency_band_name                                = frequency_band_name;
+            input_graph.name_f1                                            = name_f1;
+            input_graph.name_f2                                            = name_f2;
+            input_graph.levels_f1                                          = levels_f1;
+            input_graph.levels_f2                                          = levels_f2;
+            input_graph.pgroup                                             = pgroup;
+            input_graph.pcond                                              = pcond;
+            input_graph.study_ls                                           = study_ls;
+            input_graph.roi_mask                                           = roi_mask;
+            input_graph.compcond                                           = compcond;
+            input_graph.compgroup                                          = compgroup;
+            input_graph.ersp_mode                                          = ersp_mode;
+            input_graph.show_head                                          = show_head;
+            input_graph.compact_display_ylim                               = compact_display_ylim;
+            input_graph.show_text                                          = show_text;
+            input_graph.z_transform                                        = z_transform;
+            input_graph.which_error_measure                                = which_error_measure;
+            
+            std_chantopo_ersp_compact_errorbar(input_graph);
             
         end
         
@@ -150,10 +190,22 @@ switch display_compact
                 tr=NaN;
         end
         
+        input_graph.data                                                   = ersp_topo_tw_fb;
+        input_graph.plot_dir                                               = plot_dir;
+        input_graph.time_window_name                                       = time_window_name;
+        input_graph.time_window                                            = time_window;
+        input_graph.frequency_band_name                                    = frequency_band_name;
+        input_graph.name_f1                                                = name_f1;
+        input_graph.name_f2                                                = name_f2;
+        input_graph.levels_f1                                              = levels_f1;
+        input_graph.levels_f2                                              = levels_f2;
+        input_graph.pmaskcond                                              = pmaskcond;
+        input_graph.pmaskgru                                               = pmaskgru;
+        input_graph.pmaskinter                                             = pmaskinter;
+        input_graph.ersp_mode                                              = ersp_measure;
+        input_graph.study_ls                                               = study_ls;
         
-        std_chantopo_ersp(ersp_topo_tw_fb, plot_dir, time_window_name, time_window, frequency_band_name, name_f1, name_f2, levels_f1,levels_f2, ...
-            pmaskcond, pmaskgru, pmaskinter,ersp_measure,study_ls,...
-            'groupstats', pgroup, 'condstats', pcond, 'interstats', pinter, 'caxis', set_caxis, 'chanlocs', chanlocs(roi_mask), 'threshold', tr, 'titles', titles);
+        std_chantopo_ersp(input_graph, 'groupstats', pgroup, 'condstats', pcond, 'interstats', pinter, 'caxis', set_caxis, 'chanlocs', chanlocs(roi_mask), 'threshold', tr, 'titles', titles);
         
 end
 end

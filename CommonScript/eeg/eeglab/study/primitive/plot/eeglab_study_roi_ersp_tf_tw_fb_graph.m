@@ -86,10 +86,25 @@ switch display_only_significant
 end
 
 
+input_graph.times                                                          = times; 
+input_graph.freqs                                                          = freqs; 
+input_graph.data                                                           = ersp; 
+input_graph.time_windows_names                                             = time_windows_names; 
+input_graph.frequency_bands_names                                          = frequency_bands_names; 
+input_graph.plot_dir                                                       = plot_dir; 
+input_graph.roi_name                                                       = roi_name; 
+input_graph.name_f1                                                        = name_f1; 
+input_graph.name_f2                                                        = name_f2; 
+input_graph.levels_f1                                                      = levels_f1; 
+input_graph.levels_f2                                                      = levels_f2; 
+input_graph.pmaskcond                                                      = pmaskcond; 
+input_graph.pmaskgru                                                       = pmaskgru; 
+input_graph.pmaskinter                                                     = pmaskinter; 
+input_graph.ersp_mode                                                      = ersp_mode; 
+input_graph.display_pmode                                                  = display_pmode; 
+
 % plot ersp and statistics
-std_plottf_ersp_tw_fb(times, freqs, ersp, time_windows_names, frequency_bands_names , plot_dir,roi_name, name_f1, name_f2, levels_f1,levels_f2,...
-    pmaskcond, pmaskgru, pmaskinter,ersp_mode,display_pmode,...
-    'datatype', 'ersp','groupstats', pgroup, 'condstats', pcond,'interstats', pinter, ...
+std_plottf_ersp_tw_fb(input_graph, 'datatype', 'ersp','groupstats', pgroup, 'condstats', pcond,'interstats', pinter, ...
     'plotmode','normal','titles',titles ,'tftopoopt',{'mode', 'ave'},'caxis',set_caxis ,...
     'threshold',tr,'freqscale',freq_scale);
 
