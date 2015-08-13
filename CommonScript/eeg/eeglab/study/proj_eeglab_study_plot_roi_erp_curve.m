@@ -533,6 +533,8 @@ for design_num=design_num_vec
         [dataexpcols, dataexp] = text_export_erp_continuous_struct([out_file_name,'.txt'],erp_curve_roi_stat);
         %         text_export_erp_resume_struct(erp_curve_roi_stat, [out_file_name '_resume']);
         %         text_export_erp_resume_struct(erp_curve_roi_stat, [out_file_name '_resume_signif'], 'p_thresh', erp_curve_roi_stat.study_ls);
+            [dataexpcols, dataexp] = text_export_erp_allch_sub_continuous_struct(plot_dir,erp_curve_roi_stat);%[out_file_name,'_allch_sub_continuous.txt']
+
     end
     
     if strcmp(time_resolution_mode,'tw')
@@ -562,7 +564,6 @@ for design_num=design_num_vec
     
     
     
-    [dataexpcols, dataexp] = text_export_erp_allch_sub_continuous_struct(plot_dir,erp_curve_roi_stat);%[out_file_name,'_allch_sub_continuous.txt']
     
     
     
