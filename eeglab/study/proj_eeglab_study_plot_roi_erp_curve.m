@@ -260,7 +260,7 @@ for design_num=design_num_vec
                         return;
                     end
                     erp_curve_roi{nf1,nf2}=erp_curve_roi{nf1,nf2}(:,vec_select_subjects);
-                     erp_curve_allch{nf1,nf2}=erp_curve_allch{nf1,nf2}(:,vec_select_subjects);
+                     erp_curve_allch{nf1,nf2}=erp_curve_roi_stat.erp_curve_allch{nf1,nf2}(:,vec_select_subjects);
                     list_design_subjects{nf1,nf2}=list_design_subjects{nf1,nf2}(vec_select_subjects);
                 end
             end
