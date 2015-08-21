@@ -220,7 +220,7 @@ end
     pp = get(fig,'Position');
     
     pp(3) = 2 * pp(3);
-
+    pp(4) = 2* pp(4);
     set(fig, 'Position', pp)
     
 
