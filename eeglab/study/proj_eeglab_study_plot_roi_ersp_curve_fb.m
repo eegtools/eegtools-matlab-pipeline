@@ -352,20 +352,20 @@ function [STUDY, EEG] = proj_eeglab_study_plot_roi_ersp_curve_fb(project, analys
                                         fmax                                    = narrowband_output.results.sub.fmax;
                                     else
                                         fmin                                    = narrowband_output.results.sub.fb.fcog - narrowband_input.group_dfmin;
-                                        fmax                                    = narrowband_output.results.sub.fb.fcog + narrowband_input.group_dfmax
+                                        fmax                                    = narrowband_output.results.sub.fb.fcog + narrowband_input.group_dfmax;
                                     end
                                 end
                                 %                     end
 
-                                narrowband_output.adjusted_frequency_band{nf1,nf2}(nsub,:)      = [narrowband_output.results.sub.fmin, narrowband_output.results.sub.fmax];
-                                narrowband_output.realign_freq{nf1,nf2}(nsub)                   = narrowband_output.results.sub.realign_freq;
-                                narrowband_output.realign_freq_value{nf1,nf2}(nsub)             = narrowband_output.results.sub.realign_freq;
-                                narrowband_output.realign_freq_value_lat{nf1,nf2}{nsub}         = narrowband_output.results.sub.realign_freq_value_lat;
+                                narrowband_output.adjusted_frequency_band{nf1,nf2}(nsub,:)          = [narrowband_output.results.sub.fmin, narrowband_output.results.sub.fmax];
+                                narrowband_output.realign_freq{nf1,nf2}(nsub)                       = narrowband_output.results.sub.realign_freq;
+                                narrowband_output.realign_freq_value{nf1,nf2}(nsub)                 = narrowband_output.results.sub.realign_freq;
+                                narrowband_output.realign_freq_value_lat{nf1,nf2}{nsub}             = narrowband_output.results.sub.realign_freq_value_lat;
 
-                                narrowband_output.mean_centroid_group_fb{nf1,nf2}(nsub)         = narrowband_output.results.group.fb.centroid_mean; ...   mean_centroid_group_fb;
-                                    narrowband_output.mean_centroid_sub_realign_fb{nf1,nf2}(nsub)   = narrowband_output.results.sub.fb.centroid_mean;   ...mean_centroid_sub_realign_fb;
-                                    narrowband_output.median_centroid_group_fb{nf1,nf2}(nsub)       = narrowband_output.results.group.fb.centroid_median;  ...results.group.fb.centroid_median ...median_centroid_group_fb;
-                                    ...narrowband_output.median_centroid_sub_realign_fb{nf1,nf2}(nsub) = 0; ...narrowband_output.results.sub.fb.centroid_median;  ...median_centroid_sub_realign_fb;
+                                narrowband_output.mean_centroid_group_fb{nf1,nf2}(nsub)             = narrowband_output.results.group.fb.centroid_mean; ...   mean_centroid_group_fb;
+                                narrowband_output.mean_centroid_sub_realign_fb{nf1,nf2}(nsub)       = narrowband_output.results.sub.fb.centroid_mean;   ...mean_centroid_sub_realign_fb;
+                                narrowband_output.median_centroid_group_fb{nf1,nf2}(nsub)           = narrowband_output.results.group.fb.centroid_median;  ...results.group.fb.centroid_median ...median_centroid_group_fb;
+                                ...narrowband_output.median_centroid_sub_realign_fb{nf1,nf2}(nsub) = 0; ...narrowband_output.results.sub.fb.centroid_median;  ...median_centroid_sub_realign_fb;
 
                                 narrowband{nf1,nf2,nsub}            = narrowband_output;
 

@@ -65,12 +65,12 @@ else
         list_select_subjects    = project.subjects.list;
     end
 end
+numsubj                         = length(list_select_subjects);
+project.subjects.curr_list      = list_select_subjects;
 
-numsubj = length(list_select_subjects);
-
-stat_threshold = 0.05;
-electrode2inspect='C4';
-save_figure=0;
+stat_threshold                  = 0.05;
+electrode2inspect               = 'C4';
+save_figure                     = 0;
 
 
 %=====================================================================================================================================================================
