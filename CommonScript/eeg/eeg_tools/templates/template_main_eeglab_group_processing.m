@@ -62,11 +62,12 @@ else
         list_select_subjects    = project.subjects.list;
     end
 end
-
+numsubj                         = length(list_select_subjects);
+project.subjects.curr_list      = list_select_subjects;
 
 % select a specific bannd to focus statistics in ersp tf (experimental)
-mask_coef=[];
-stat_freq_bands_list=[];
+mask_coef                       = [];
+stat_freq_bands_list            = [];
 
 % if the parameters are not set, they are assumed to be empty (i.e. no band
 % selection)

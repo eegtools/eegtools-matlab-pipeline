@@ -73,7 +73,7 @@ switch display_compact_plots
         input_graph.compact_display_stats                                  = compact_display_stats;
         input_graph.compact_display_xlim                                   = compact_display_xlim;
         input_graph.compact_display_ylim                                   = compact_display_ylim;
-        input_graph.ersp_mode                                              = ersp_measure;
+        input_graph.ersp_measure                                              = ersp_measure;
         
         std_plotcurve_ersp_tw_fb_compact(input_graph)
         
