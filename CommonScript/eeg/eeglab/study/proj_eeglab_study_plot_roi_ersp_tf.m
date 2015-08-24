@@ -578,7 +578,7 @@ for design_num=design_num_vec
     ersp_tf_stat.selected_time_windows_names=group_time_windows_names;
     
     
-    save(fullfile(plot_dir,'ersp_tf-stat.mat'),'ersp_tf_stat');
+    save(fullfile(plot_dir,'ersp_tf-stat.mat'),'ersp_tf_stat','project');
     
 end
 end

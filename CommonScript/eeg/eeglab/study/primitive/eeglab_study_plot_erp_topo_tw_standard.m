@@ -59,6 +59,7 @@ num_tails                                                                  = inp
 roi_list                                                                   = input.roi_list;
 roi_names                                                                  = input.roi_names;
 z_transform                                                                = input.z_transform;                                                   
+project                                                                    = input.project;
 
 erp_topo_tw_roi_avg=[];
 compcond=[];
@@ -219,7 +220,7 @@ for design_num=design_num_vec
                 erp_topo_tw_stat.datatw(nwin).pinter_corr=pinter_corr;
                 
             end
-            save(fullfile(plot_dir,'erp_topo_tw-stat.mat'),'erp_topo_tw_stat');
+            save(fullfile(plot_dir,'erp_topo_tw-stat.mat'),'erp_topo_tw_stat','project');
             output.STUDY = STUDY;
             output.EEG   = EEG;
         end
