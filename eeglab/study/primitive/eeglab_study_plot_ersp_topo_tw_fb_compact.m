@@ -781,7 +781,7 @@ ersp_compact.ersp_curve_roi_fb_stat=ersp_curve_roi_fb_stat;
 
 %% EXPORTING DATA AND RESULTS OF ANALYSIS
 out_file_name=fullfile(plot_dir,'ersp_compact')
-save([out_file_name,'.mat'],'ersp_compact');
+save([out_file_name,'.mat'],'ersp_compact','project');
 
 if ~ ( strcmp(which_method_find_extrema,'group_noalign') || strcmp(which_method_find_extrema,'continuous') );
     [dataexpcols, dataexp]=text_export_ersp_struct([out_file_name,'.txt'],ersp_curve_roi_fb_stat);

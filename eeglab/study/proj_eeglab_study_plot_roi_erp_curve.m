@@ -516,7 +516,7 @@ for design_num=design_num_vec
     
     %% EXPORTING DATA AND RESULTS OF ANALYSIS
     out_file_name = fullfile(plot_dir,'erp_curve_roi-stat');
-    save([out_file_name,'.mat'],'erp_curve_roi_stat');
+    save([out_file_name,'.mat'],'erp_curve_roi_stat','project');
     
     %     if ~ ( strcmp(which_method_find_extrema,'group_noalign') || strcmp(which_method_find_extrema,'continuous') );
     %         [dataexpcols, dataexp] = text_export_erp_struct([out_file_name,'.txt'],erp_curve_roi_stat);

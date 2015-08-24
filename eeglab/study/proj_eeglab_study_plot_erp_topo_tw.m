@@ -219,7 +219,7 @@ if strcmp(display_compact_topo,'off')
     input_topo.roi_list                                                        = roi_list;
     input_topo.roi_names                                                       = roi_names;
     input_topo.z_transform                                                     = z_transform;
-    
+    input_topo.project                                                         = project;
     [output_topo] = eeglab_study_plot_erp_topo_tw_standard(input_topo);
     STUDY         = output_topo.STUDY;
     EEG           = output_topo.EEG;

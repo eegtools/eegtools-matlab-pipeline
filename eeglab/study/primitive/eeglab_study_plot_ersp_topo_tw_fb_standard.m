@@ -71,6 +71,8 @@ do_plots                                                                   = inp
 num_tails                                                                  = input.num_tails;
 roi_list                                                                   = input.roi_list;
 roi_names                                                                  = input.roi_names;
+project                                                                    = input.project;
+
 
 ersp_topo_tw_fb_roi_avg=[];
 compcond=[];
@@ -264,7 +266,7 @@ for design_num=design_num_vec
             end
         end
         
-        save(fullfile(plot_dir,'ersp_tf_topo-stat.mat'),'ersp_topo_stat');
+        save(fullfile(plot_dir,'ersp_tf_topo-stat.mat'),'ersp_topo_stat','project');
         output.STUDY = STUDY;
         output.EEG   = EEG;
         end

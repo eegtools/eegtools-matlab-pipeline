@@ -594,7 +594,7 @@ for design_num=design_num_vec
         end
     end
     
-    
+
     
     
     %          %% EXPORTING DATA AND RESULTS OF ANALYSIS
@@ -607,7 +607,7 @@ for design_num=design_num_vec
     
     %% EXPORTING DATA AND RESULTS OF ANALYSIS
     out_file_name=fullfile(plot_dir,'erp_compact')
-    save([out_file_name,'.mat'],'erp_compact');
+    save([out_file_name,'.mat'],'erp_compact','erp_topo_stat','project');
     
     if ~ ( strcmp(which_method_find_extrema,'group_noalign') || strcmp(which_method_find_extrema,'continuous') );
         [dataexpcols, dataexp]=text_export_erp_struct([out_file_name,'.txt'],erp_curve_roi_stat);

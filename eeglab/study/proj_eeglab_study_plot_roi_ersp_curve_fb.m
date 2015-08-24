@@ -707,7 +707,7 @@ function [STUDY, EEG] = proj_eeglab_study_plot_roi_ersp_curve_fb(project, analys
         ersp_curve_roi_fb_stat.list_design_subjects = list_design_subjects;
         %% EXPORTING DATA AND RESULTS OF ANALYSIS
         out_file_name=fullfile(plot_dir,'ersp_curve_roi_fb-stat')
-        save([out_file_name,'.mat'],'ersp_curve_roi_fb_stat');
+        save([out_file_name,'.mat'],'ersp_curve_roi_fb_stat','project');
 
         % if ~ ( strcmp(which_method_find_extrema,'group_noalign') || strcmp(which_method_find_extrema,'continuous') );
         %     [dataexpcols, dataexp]=text_export_ersp_struct([out_file_name,'.txt'],ersp_curve_roi_fb_stat);
