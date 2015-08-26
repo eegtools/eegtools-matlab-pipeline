@@ -26,7 +26,7 @@ function [output] = eeglab_study_roi_ersp_tf_tw_fb(input)
 % stat_method                                     = input.stat_method;
 % list_select_subjects                            = input.list_select_subjects;
 % list_design_subjects                            = input.list_design_subjects;
-% ersp_mode                                       = input.ersp_mode;
+% ersp_measure                                    = input.ersp_measure;
 % num_tails                                       = input.num_tails;
 %
 % output.ersp_tf    = ersp_tf;
@@ -48,7 +48,7 @@ paired                                          = input.paired;
 stat_method                                     = input.stat_method;
 list_select_subjects                            = input.list_select_subjects;
 list_design_subjects                            = input.list_design_subjects;
-ersp_mode                                       = input.ersp_mode;
+ersp_measure                                    = input.ersp_measure;
 num_tails                                       = input.num_tails;
 
 
@@ -72,7 +72,7 @@ for nf1=1:length(levels_f1)
 end
 
 
-if strcmp(ersp_mode, 'Pfu')
+if strcmp(ersp_measure, 'Pfu')
     for nf1=1:length(levels_f1)
         for nf2=1:length(levels_f2)
             ersp_tf{nf1,nf2}=(10.^(ersp_tf{nf1,nf2}/10)-1)*100;

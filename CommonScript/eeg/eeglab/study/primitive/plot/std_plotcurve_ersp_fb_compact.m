@@ -18,7 +18,7 @@ compact_display_sem                                                        = inp
 compact_display_stats                                                      = input.compact_display_stats;
 compact_display_xlim                                                       = input.compact_display_xlim;
 compact_display_ylim                                                       = input.compact_display_ylim;
-ersp_mode                                                                  = input.ersp_measure;
+ersp_measure                                                               = input.ersp_measure;
 
 
 
@@ -141,7 +141,7 @@ plot(times, up_plot_mat(nlf,:),'col',list_col(nlf),'LineWidth',0.5,'LineStyle',l
     box off
     set(gca,'LineWidth',3, 'FontSize', 15)
     xlabel(['Time (ms)'])
-    if strcmp(ersp_mode, 'Pfu')
+    if strcmp(ersp_measure, 'Pfu')
         ylabel(['Delta %'])
     else
         ylabel(['Power (dB)'])
@@ -303,7 +303,7 @@ hold on
         box off
         set(gca,'LineWidth',3, 'FontSize', 15)
         xlabel(['Time (ms)'])
-        if strcmp(ersp_mode, 'Pfu')
+        if strcmp(ersp_measure, 'Pfu')
             ylabel(['Delta %'])
         else
             ylabel(['Power (dB)'])
@@ -461,7 +461,7 @@ plot(times, up_plot_mat(nlf1,:),'col',list_col(nlf1),'LineWidth',0.5,'LineStyle'
         box off
         set(gca,'LineWidth',3, 'FontSize', 15)
         xlabel(['Time (ms)'])
-        if strcmp(ersp_mode, 'Pfu')
+        if strcmp(ersp_measure, 'Pfu')
             ylabel(['Delta %'])
         else
             ylabel(['Power (dB)'])

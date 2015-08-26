@@ -18,7 +18,7 @@ study_ls                                                                   = inp
 roi_mask                                                                   = input.roi_mask;
 compcond                                                                   = input.compcond;
 compgroup                                                                  = input.compgroup;
-ersp_mode                                                                  = input.ersp_mode;
+ersp_measure                                                               = input.ersp_measure;
 show_head                                                                  = input.show_head;
 compact_display_ylim                                                       = input.compact_display_ylim;
 show_text                                                                  = input.show_text;                                 
@@ -37,7 +37,7 @@ show_text                                                                  = inp
 
 
 
-switch ersp_mode
+switch ersp_measure
     case 'dB'
         ersp_meaure='dB';
     case 'Pfu'

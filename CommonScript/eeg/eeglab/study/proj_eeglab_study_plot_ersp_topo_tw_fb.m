@@ -227,7 +227,7 @@ if strcmp(display_compact_topo,'off')
     input_topo.num_tails                                               = num_tails;
     input_topo.roi_list                                                = roi_list;
     input_topo.roi_names                                               = roi_names;
-    input_topo.project                                                         = project;
+    input_topo.project                                                 = project;
 
     
     [output_topo] = eeglab_study_plot_ersp_topo_tw_fb_standard(input_topo);

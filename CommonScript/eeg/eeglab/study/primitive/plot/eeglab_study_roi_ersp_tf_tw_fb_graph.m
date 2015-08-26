@@ -21,7 +21,7 @@ function [] = eeglab_study_roi_ersp_tf_tw_fb_graph(input)
 % freq_scale                      = input.freq_scale;
 % display_only_significant        = input.display_only_significant;
 % display_only_significant_mode   = input.display_only_significant_mode;
-% ersp_mode                       = input.ersp_mode;
+% ersp_measure                    = input.ersp_measure;
 % display_pmode                   = input.display_pmode;
 
 STUDY                           = input.STUDY;
@@ -45,7 +45,7 @@ plot_dir                        = input.plot_dir;
 freq_scale                      = input.freq_scale;
 display_only_significant        = input.display_only_significant;
 display_only_significant_mode   = input.display_only_significant_mode;
-ersp_mode                       = input.ersp_mode;
+ersp_measure                    = input.ersp_measure;
 display_pmode                   = input.display_pmode;
 
 
@@ -100,7 +100,7 @@ input_graph.levels_f2                                                      = lev
 input_graph.pmaskcond                                                      = pmaskcond; 
 input_graph.pmaskgru                                                       = pmaskgru; 
 input_graph.pmaskinter                                                     = pmaskinter; 
-input_graph.ersp_mode                                                      = ersp_mode; 
+input_graph.ersp_measure                                                   = ersp_measure; 
 input_graph.display_pmode                                                  = display_pmode; 
 
 % plot ersp and statistics

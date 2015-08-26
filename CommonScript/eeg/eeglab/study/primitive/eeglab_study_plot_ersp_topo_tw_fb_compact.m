@@ -54,46 +54,46 @@ end;
 
 
 
-project                                                                    = input.project;
-study_path                                                                 = input.study_path;
-design_num_vec                                                             = input.design_num_vec;
-design_factors_ordered_levels                                              = input.design_factors_ordered_levels;
-results_path                                                               = input.results_path;
-stat_analysis_suffix                                                       = input.stat_analysis_suffix;
-roi_list                                                                   = input.roi_list;
-roi_names                                                                  = input.roi_names;
-group_time_windows_list                                                    = input.group_time_windows_list;
-group_time_windows_names                                                   = input.group_time_windows_names;
-subject_time_windows_list                                                  = input.subject_time_windows_list;
-frequency_bands_list                                                       = input.frequency_bands_list;
-frequency_bands_names                                                      = input.frequency_bands_names;
-study_ls                                                                   = input.study_ls;
-num_permutations                                                           = input.num_permutations;
-correction                                                                 = input.correction;
-set_caxis                                                                  = input.set_caxis;
-paired_list                                                                = input.paired_list;
-stat_method                                                                = input.stat_method;
-display_only_significant_topo                                              = input.display_only_significant_topo;
-display_only_significant_topo_mode                                         = input.display_only_significant_topo_mode;
-display_compact_topo                                                       = input.display_compact_topo;
-display_compact_topo_mode                                                  = input.display_compact_topo_mode;
-list_select_subjects                                                       = input.list_select_subjects;
-ersp_measure                                                               = input.ersp_measure;
-subjects_data                                                              = input.subjects_data;
-mode                                                                       = input.mode;
-show_head                                                                  = input.show_head;
-do_plots                                                                   = input.do_plots;
-compact_display_ylim                                                       = input.compact_display_ylim;
-num_tails                                                                  = input.num_tails;
-show_text                                                                  = input.show_text;
-z_transform                                                                = input.z_transform;
-which_error_measure                                                        = input.which_error_measure;
-do_narrowband                                                              = input.do_narrowband;
-group_tmin                  = project.stats.ersp.narrowband.group_tmin;
-group_tmax                  = project.stats.ersp.narrowband.group_tmax;
-group_dfmin                 = project.stats.ersp.narrowband.dfmin;
-group_dfmax                 = project.stats.ersp.narrowband.dfmax;
-which_realign_measure_cell  = project.stats.ersp.narrowband.which_realign_measure;
+project                                                                     = input.project;
+study_path                                                                  = input.study_path;
+design_num_vec                                                              = input.design_num_vec;
+design_factors_ordered_levels                                               = input.design_factors_ordered_levels;
+results_path                                                                = input.results_path;
+stat_analysis_suffix                                                        = input.stat_analysis_suffix;
+roi_list                                                                    = input.roi_list;
+roi_names                                                                   = input.roi_names;
+group_time_windows_list                                                     = input.group_time_windows_list;
+group_time_windows_names                                                    = input.group_time_windows_names;
+subject_time_windows_list                                                   = input.subject_time_windows_list;
+frequency_bands_list                                                        = input.frequency_bands_list;
+frequency_bands_names                                                       = input.frequency_bands_names;
+study_ls                                                                    = input.study_ls;
+num_permutations                                                            = input.num_permutations;
+correction                                                                  = input.correction;
+set_caxis                                                                   = input.set_caxis;
+paired_list                                                                 = input.paired_list;
+stat_method                                                                 = input.stat_method;
+display_only_significant_topo                                               = input.display_only_significant_topo;
+display_only_significant_topo_mode                                          = input.display_only_significant_topo_mode;
+display_compact_topo                                                        = input.display_compact_topo;
+display_compact_topo_mode                                                   = input.display_compact_topo_mode;
+list_select_subjects                                                        = input.list_select_subjects;
+ersp_measure                                                                = input.ersp_measure;
+subjects_data                                                               = input.subjects_data;
+mode                                                                        = input.mode;
+show_head                                                                   = input.show_head;
+do_plots                                                                    = input.do_plots;
+compact_display_ylim                                                        = input.compact_display_ylim;
+num_tails                                                                   = input.num_tails;
+show_text                                                                   = input.show_text;
+z_transform                                                                 = input.z_transform;
+which_error_measure                                                         = input.which_error_measure;
+do_narrowband                                                               = input.do_narrowband;
+group_tmin                                                                  = project.stats.ersp.narrowband.group_tmin;
+group_tmax                                                                  = project.stats.ersp.narrowband.group_tmax;
+group_dfmin                                                                 = project.stats.ersp.narrowband.dfmin;
+group_dfmax                                                                 = project.stats.ersp.narrowband.dfmax;
+which_realign_measure_cell                                                  = project.stats.ersp.narrowband.which_realign_measure;
 
 
 pcond=[];
@@ -103,13 +103,13 @@ output=[];
 narrowband=[];
 
 nb=[];
-display_compact_plots=project.results_display.ersp.compact_plots;
-compact_display_h0 = project.results_display.ersp.compact_h0;
-compact_display_v0 = project.results_display.ersp.compact_v0;
-compact_display_sem = project.results_display.ersp.compact_sem;
-compact_display_stats = project.results_display.ersp.compact_stats;
-compact_display_xlim = project.results_display.ersp.compact_display_xlim;
-compact_display_ylim = project.results_display.ersp.compact_display_ylim;
+display_compact_plots       = project.results_display.ersp.compact_plots;
+compact_display_h0          = project.results_display.ersp.compact_h0;
+compact_display_v0          = project.results_display.ersp.compact_v0;
+compact_display_sem         = project.results_display.ersp.compact_sem;
+compact_display_stats       = project.results_display.ersp.compact_stats;
+compact_display_xlim        = project.results_display.ersp.compact_display_xlim;
+compact_display_ylim        = project.results_display.ersp.compact_display_ylim;
 
 
 
@@ -573,7 +573,7 @@ for nband=1:length(frequency_bands_list)
         input_graph.ersp_measure                                                   = ersp_measure;
         
         
-        eeglab_study_roi_ersp_curve_tw_fb_graph(input_graph);
+%         eeglab_study_roi_ersp_curve_tw_fb_graph(input_graph);
     end
     
     

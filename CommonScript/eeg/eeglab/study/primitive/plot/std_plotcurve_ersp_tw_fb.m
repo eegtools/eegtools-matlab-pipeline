@@ -85,7 +85,7 @@ name_f1                                                                    = inp
 name_f2                                                                    = input.name_f2;
 levels_f1                                                                  = input.levels_f1;
 levels_f2                                                                  = input.levels_f2;
-ersp_mode                                                                  = input.ersp_mode;
+ersp_measure                                                               = input.ersp_measure;
 pcond_nomask                                                               = input.pcond_nomask;
 pgroup_nomask                                                              = input.pgroup_nomask;
 pinter_nomask                                                              = input.pinter_nomask;
@@ -282,7 +282,7 @@ if strcmpi(opt.unitx, 'ms'), xlab = 'Time (ms)';      ylab = 'dB';
 else                         xlab = 'Frequency (Hz)'; ylab = 'dB';
 end;
 
-if strcmp(ersp_mode, 'Pfu')
+if strcmp(ersp_measure, 'Pfu')
     ylab = 'Delta %';
 end
 

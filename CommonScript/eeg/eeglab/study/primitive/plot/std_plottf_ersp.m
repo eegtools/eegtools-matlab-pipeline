@@ -93,7 +93,7 @@ levels_f2                                                                  = inp
 pmaskcond                                                                  = input.pmaskcond;
 pmaskgru                                                                   = input.pmaskgru;
 pmaskinter                                                                 = input.pmaskinter;
-ersp_mode                                                                  = input.ersp_mode;
+ersp_measure                                                               = input.ersp_measure;
 % group_time_windows_list                                                    = input.group_time_windows_list;
 frequency_bands_list                                                       = input.frequency_bands_list;
 display_pmode                                                              = input.display_pmode;
@@ -152,7 +152,7 @@ else         opt.transpose = 'off';
 end;
 
 
-if strcmp(ersp_mode, 'Pfu')
+if strcmp(ersp_measure, 'Pfu')
      ersp_measure = 'Delta %';
     else
      ersp_measure = 'dB';
