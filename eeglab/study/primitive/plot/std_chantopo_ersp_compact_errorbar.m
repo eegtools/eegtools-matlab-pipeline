@@ -34,7 +34,7 @@ study_ls                                                                   = inp
 roi_mask                                                                   = input.roi_mask;
 compcond                                                                   = input.compcond;
 compgroup                                                                  = input.compgroup;
-ersp_mode                                                                  = input.ersp_mode;
+ersp_measure                                                               = input.ersp_measure;
 show_head                                                                  = input.show_head;
 compact_display_ylim                                                       = input.compact_display_ylim;
 show_text                                                                  = input.show_text;
@@ -57,7 +57,7 @@ tlf=max(tlf1,tlf2);
 list_col=repmat(['b','m','g','r','c'],1,10);
 
 
-switch ersp_mode
+switch ersp_measure
     case 'dB'
         ersp_meaure='dB';
     case 'Pfu'

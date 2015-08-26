@@ -5,7 +5,7 @@ function std_chantopo_ersp_compact(ersp_topo_tw_fb_sub_avg, ersp_topo_tw_fb_roi_
                                    frequency_band_name, ...
                                    name_f1, name_f2, levels_f1,levels_f2,... 
                                    pgroup,  pcond, study_ls, ...
-                                   roi_mask, compcond, compgroup, ersp_mode)
+                                   roi_mask, compcond, compgroup, ersp_measure)
 
 %  data  -  [cell array] mean data for each subject group and/or data
 %           condition. For example, to compute mean ERPs statistics from a
@@ -20,7 +20,7 @@ function std_chantopo_ersp_compact(ersp_topo_tw_fb_sub_avg, ersp_topo_tw_fb_roi_
 
 
                                
-    switch ersp_mode     
+    switch ersp_measure     
      case 'dB'
          ersp_meaure='dB';
      case 'Pfu'

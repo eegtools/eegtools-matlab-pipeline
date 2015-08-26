@@ -58,7 +58,7 @@ levels_f2                                                                  = inp
 pmaskcond                                                                  = input.pmaskcond;
 pmaskgru                                                                   = input.pmaskgru;
 pmaskinter                                                                 = input.pmaskinter;
-ersp_mode                                                                  = input.ersp_mode;
+ersp_measure                                                               = input.ersp_measure;
 study_ls                                                                   = input.study_ls;
 
 pgroup = [];
@@ -352,7 +352,7 @@ end;
  tlf1=length(levels_f1);
  tlf2=length(levels_f2);
  
- switch ersp_mode     
+ switch ersp_measure     
      case 'dB'
          ersp_meaure='dB';
      case 'Pfu'

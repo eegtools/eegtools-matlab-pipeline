@@ -25,7 +25,7 @@ function [output] = eeglab_study_roi_ersp_tf_decimate_freqs(input)
 % decimation_factor_freqs                         = input.decimation_factor_freqs;
 % list_select_subjects                            = input.list_select_subjects;
 % list_design_subjects                            = input.list_design_subjects;
-% ersp_mode                                       = input.ersp_mode;
+% ersp_measure                                    = input.ersp_measure;
 % num_tails                                       = input.num_tails;
 % stat_freq_bands_list                            = input.stat_freq_bands_list;
 % mask_coef                                       = input.mask_coef;                              
@@ -49,7 +49,7 @@ stat_method                                     = input.stat_method;
 decimation_factor_freqs                         = input.decimation_factor_freqs;
 list_select_subjects                            = input.list_select_subjects;
 list_design_subjects                            = input.list_design_subjects;
-ersp_mode                                       = input.ersp_mode;
+ersp_measure                                    = input.ersp_measure;
 num_tails                                       = input.num_tails;
 stat_freq_bands_list                            = input.stat_freq_bands_list;
 mask_coef                                       = input.mask_coef;
@@ -76,7 +76,7 @@ for nf1=1:length(levels_f1)
 end
 
 
-if strcmp(ersp_mode, 'Pfu')
+if strcmp(ersp_measure, 'Pfu')
     for nf1=1:length(levels_f1)
         for nf2=1:length(levels_f2)
             ersp_tf{nf1,nf2}=(10.^(ersp_tf{nf1,nf2}/10)-1)*100;

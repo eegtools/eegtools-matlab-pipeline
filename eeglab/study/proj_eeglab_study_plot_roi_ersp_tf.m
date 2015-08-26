@@ -78,7 +78,7 @@
 % frequency_bands_names
 % freq_scale
 % ersp_tf_resolution_mode
-%  ersp_mode
+% ersp_measure
 % group_time_windows_list
 % group_time_windows_names
 % display_pmode
@@ -130,7 +130,7 @@ frequency_bands_names       = project.postprocess.ersp.frequency_bands_names;
 
 freq_scale                  = project.results_display.ersp.freq_scale;
 ersp_tf_resolution_mode     = project.stats.ersp.tf_resolution_mode;
-ersp_mode                   = project.stats.ersp.measure;
+ersp_measure                = project.stats.ersp.measure;
 
 group_time_windows_list     = arrange_structure(project.postprocess.ersp.design, 'group_time_windows');
 group_time_windows_names    = arrange_structure(project.postprocess.ersp.design, 'group_time_windows_names');
@@ -145,7 +145,7 @@ for par=1:2:length(varargin)
     switch varargin{par}
         case {'list_select_subjects', 'design_num_vec', 'roi_list', 'roi_names', 'study_ls', 'num_permutations', 'correction', 'stat_method', 'stat_time_windows_list', ...
                 'display_only_significant', 'display_only_significant_mode', 'set_caxis', 'decimation_factor_times', 'decimation_factor_freqs', ...
-                'timerange','freqrange','frequency_bands_list','frequency_bands_names','freq_scale', 'ersp_tf_resolution_mode', 'ersp_mode', ...
+                'timerange','freqrange','frequency_bands_list','frequency_bands_names','freq_scale', 'ersp_tf_resolution_mode', 'ersp_measure', ...
                 'group_time_windows_list','group_time_windows_names','do_plots','num_tails','stat_freq_bands_list','mask_coef','display_pmode'}
             if isempty(varargin{par+1})
                 continue;
@@ -214,7 +214,7 @@ for design_num=design_num_vec
                 input_calc.stat_method                   = stat_method;
                 input_calc.list_select_subjects          = list_select_subjects;
                 input_calc.list_design_subjects          = list_design_subjects;
-                input_calc.ersp_mode                     = ersp_mode;
+                input_calc.ersp_measure                  = ersp_measure;
                 input_calc.num_tails                     = num_tails;
                 input_calc.stat_freq_bands_list          = stat_freq_bands_list;
                 input_calc.mask_coef                     = mask_coef;
@@ -251,7 +251,7 @@ for design_num=design_num_vec
                     input_graph.freq_scale                    = freq_scale;
                     input_graph.display_only_significant      = display_only_significant;
                     input_graph.display_only_significant_mode = display_only_significant_mode;
-                    input_graph.ersp_mode                     = ersp_mode;
+                    input_graph.ersp_measure                  = ersp_measure;
                     input_graph.group_time_windows_list       = group_time_windows_list;
                     input_graph.frequency_bands_list          = frequency_bands_list;
                     input_graph.display_pmode                 = display_pmode;
@@ -289,7 +289,7 @@ for design_num=design_num_vec
                 input_calc.decimation_factor_times       = decimation_factor_times;
                 input_calc.list_select_subjects          = list_select_subjects;
                 input_calc.list_design_subjects          = list_design_subjects;
-                input_calc.ersp_mode                     = ersp_mode;
+                input_calc.ersp_measure                  = ersp_measure;
                 input_calc.num_tails                     = num_tails;
                 input_calc.stat_freq_bands_list          = stat_freq_bands_list;
                 input_calc.mask_coef                     = mask_coef;
@@ -327,7 +327,7 @@ for design_num=design_num_vec
                     input_graph.freq_scale                    = freq_scale;
                     input_graph.display_only_significant      = display_only_significant;
                     input_graph.display_only_significant_mode = display_only_significant_mode;
-                    input_graph.ersp_mode                     = ersp_mode;
+                    input_graph.ersp_measure                  = ersp_measure;
                     input_graph.group_time_windows_list       = group_time_windows_list;
                     input_graph.frequency_bands_list          = frequency_bands_list;
                     input_graph.display_pmode                 = display_pmode;
@@ -363,7 +363,7 @@ for design_num=design_num_vec
                 input_calc.decimation_factor_freqs          = decimation_factor_freqs;
                 input_calc.list_select_subjects             = list_select_subjects;
                 input_calc.list_design_subjects             = list_design_subjects;
-                input_calc.ersp_mode                        = ersp_mode;
+                input_calc.ersp_measure                     = ersp_measure;
                 input_calc.num_tails                        = num_tails;
                 input_calc.stat_freq_bands_list             = stat_freq_bands_list;
                 input_calc.mask_coef                        = mask_coef;
@@ -401,7 +401,7 @@ for design_num=design_num_vec
                     input_graph.freq_scale                    = freq_scale;
                     input_graph.display_only_significant      = display_only_significant;
                     input_graph.display_only_significant_mode = display_only_significant_mode;
-                    input_graph.ersp_mode                     = ersp_mode;
+                    input_graph.ersp_measure                  = ersp_measure;
                     input_graph.group_time_windows_list       = group_time_windows_list;
                     input_graph.frequency_bands_list          = frequency_bands_list;
                     input_graph.display_pmode                 = display_pmode;
@@ -437,7 +437,7 @@ for design_num=design_num_vec
                 input_calc.decimation_factor_freqs = decimation_factor_freqs;
                 input_calc.list_select_subjects    = list_select_subjects;
                 input_calc.list_design_subjects    = list_design_subjects;
-                input_calc.ersp_mode               = ersp_mode;
+                input_calc.ersp_measure            = ersp_measure;
                 input_calc.num_tails               = num_tails;
                 input_calc.stat_freq_bands_list    = stat_freq_bands_list;
                 input_calc.mask_coef               = mask_coef;
@@ -474,7 +474,7 @@ for design_num=design_num_vec
                     input_graph.freq_scale                    = freq_scale;
                     input_graph.display_only_significant      = display_only_significant;
                     input_graph.display_only_significant_mode = display_only_significant_mode;
-                    input_graph.ersp_mode                     = ersp_mode;
+                    input_graph.ersp_measure                  = ersp_measure;
                     input_graph.group_time_windows_list       = group_time_windows_list;
                     input_graph.frequency_bands_list          = frequency_bands_list;
                     input_graph.display_pmode                 = display_pmode;
@@ -501,20 +501,20 @@ for design_num=design_num_vec
                 roi_channels=roi_list{nroi};
                 roi_name=roi_names{nroi};
                 
-                input_calc.STUDY=STUDY;
-                input_calc.ALLEEG=ALLEEG;
-                input_calc.channels_list=roi_channels;
-                input_calc.levels_f1=levels_f1;
-                input_calc.levels_f2=levels_f2;
-                input_calc.time_windows_list=group_time_windows_list{design_num};
-                input_calc.frequency_bands_list=frequency_bands_list;
-                input_calc.num_permutations=num_permutations;
-                input_calc.paired=paired_list{design_num};
-                input_calc.stat_method=stat_method;
-                input_calc.list_select_subjects=list_select_subjects;
-                input_calc.list_design_subjects=list_design_subjects;
-                input_calc.ersp_mode=ersp_mode;
-                input_calc.num_tails=num_tails;
+                input_calc.STUDY 			= STUDY;
+                input_calc.ALLEEG 			= ALLEEG;
+                input_calc.channels_list 		= roi_channels;
+                input_calc.levels_f1 		= levels_f1;
+                input_calc.levels_f2 		= levels_f2;
+                input_calc.time_windows_list 	= group_time_windows_list{design_num};
+                input_calc.frequency_bands_list = frequency_bands_list;
+                input_calc.num_permutations 	= num_permutations;
+                input_calc.paired 			= paired_list{design_num};
+                input_calc.stat_method 		= stat_method;
+                input_calc.list_select_subjects = list_select_subjects;
+                input_calc.list_design_subjects = list_design_subjects;
+                input_calc.ersp_measure 		= ersp_measure;
+                input_calc.num_tails 		= num_tails;
                 
                 [output_calc]= eeglab_study_roi_ersp_tf_tw_fb(input_calc);
                 
@@ -552,7 +552,7 @@ for design_num=design_num_vec
                     input_graph.freq_scale                         = freq_scale;
                     input_graph.display_only_significant           = display_only_significant;
                     input_graph.display_only_significant_mode      = display_only_significant_mode;
-                    input_graph.ersp_mode                          = ersp_mode;
+                    input_graph.ersp_measure                       = ersp_measure;
                     input_graph.display_pmode                      = display_pmode;
                     
                     eeglab_study_roi_ersp_tf_tw_fb_graph(input_graph)
