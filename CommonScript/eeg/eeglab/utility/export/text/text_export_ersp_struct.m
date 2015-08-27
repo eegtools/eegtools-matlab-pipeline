@@ -37,7 +37,13 @@ function [dataexpcols, dataexp] = text_export_ersp_struct(out_file,ersp_struct)
                         f2=[f2; repmat(ersp_struct.study_des.variable(2).value(nl2),length(ersp_struct.list_design_subjects{nl1,nl2}),1)];                    
                         tw=[tw; repmat(ersp_struct.group_time_windows_names_design(ntw),length(ersp_struct.list_design_subjects{nl1,nl2}),1)];
                         
-                        subj=[subj; ersp_struct.list_design_subjects{nl1,nl2}'];                        
+                        subj=[subj; ersp_struct.list_design_subjects{nl1,nl2}'];         
+                        
+                        
+                        if length(ersp_struct.dataroi(nroi).databand(nband).datatw.find_extrema.curve{nl1,nl2}(ntw,:)) < 12
+                            a=1;
+                        end
+                        
                         erspmean=[erspmean; ersp_struct.dataroi(nroi).databand(nband).datatw.find_extrema.curve{nl1,nl2}(ntw,:)'];                        
                         ersp_extr=[ersp_extr; ersp_struct.dataroi(nroi).databand(nband).datatw.find_extrema.extr{nl1,nl2}(ntw,:)'];
                         ersp_extr_lat=[ersp_extr_lat; ersp_struct.dataroi(nroi).databand(nband).datatw.find_extrema.extr_lat{nl1,nl2}(ntw,:)'];                       
