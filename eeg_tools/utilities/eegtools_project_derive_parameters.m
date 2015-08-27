@@ -1,4 +1,4 @@
-function project = eeglab_derived_parameters_project(project)
+function project = eegtools_project_derive_parameters(project)
 
     % ======================================================================================================
     % EPOCHING
