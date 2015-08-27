@@ -533,54 +533,27 @@ project.design(2).factor1_levels    = {'centered','translating'};
 project.design(3).factor1_levels    = {'scrambled','walker'};
 project.design(4).factor1_levels    = {'scrambled','walker'};
 project.design(4).factor2_levels    = {'centered','translating'};
+
+
+
+  
+
 %% ======================================================================================================
-% M:    STATS
+% N:   STATS + POSTPROCESS (to be fixed, project.stats.  and project.postprocess fields will be merged
 % ======================================================================================================
+
+
+
+
+% ===================================================
 % ERP
+% ===================================================
+
 project.stats.erp.pvalue                        = 0.025; ...0.01;       % level of significance applied in ERP statistical analysis
 project.stats.erp.num_permutations              = 3;                    % number of permutations applied in ERP statistical analysis
 project.stats.erp.num_tails                     = 2;
 project.stats.eeglab.erp.method                 = 'bootstrap';          % method applied in ERP statistical analysis
 project.stats.eeglab.erp.correction             = 'fdr';                % multiple comparison correction applied in ERP statistical analysis
-
-% ERSP
-project.stats.ersp.pvalue                       = 0.05; ...0.01;        % level of significance applied in ERSP statistical analysis
-project.stats.ersp.num_permutations             = 3;                    % number of permutations applied in ERP statistical analysis
-project.stats.ersp.num_tails                    = 2;
-project.stats.ersp.decimation_factor_times_tf   = 10;
-project.stats.ersp.decimation_factor_freqs_tf   = 10;
-project.stats.ersp.tf_resolution_mode           = 'continuous';         %'continuous'; 'decimate_times';'decimate_freqs';'decimate_times_freqs';'tw_fb';
-project.stats.ersp.measure                      = 'dB';                 % 'Pfu';  dB decibel, Pfu, (A-R)/R * 100 = (A/R-1) * 100 = (10^.(ERSP/10)-1)*100 variazione percentuale definita da pfursheller
-
-project.stats.ersp.do_narrowband                = 'off';                % off|ref|auto  the adjustment of spectral band for each subject: off=no adhiustment, ref adjust based on a ref condition, auto ajust each condition separately
-project.stats.ersp.narrowband.group_tmin        = [];                   % lowest time of the time windows considered to select the narrow band. if empty, consider the start of the epoch
-project.stats.ersp.narrowband.group_tmax        = [];                   % highest time of the time windows considered to select the narrow band. if empty, consider the end of the epoch
-project.stats.ersp.narrowband.dfmin             = 2;                    % low variation in Hz from the barycenter frequency
-project.stats.ersp.narrowband.dfmax             = 2;                    % high variation in Hz from the barycenter frequency
-
-project.stats.ersp.narrowband.which_realign_measure = {'max','min','min','min'}; % min |max |auc for each band, select the frequency with the maximum or the minumum ersp or the largest area under the curve to reallign the narrowband
-project.stats.ersp.narrowband.which_realign_param   = {'cog_pos','cog_neg','cog_neg','cog_neg'};             % fnb | cog_pos | cog_neg | cog_all : set if re-allign the narrowband to the peak (defined above) of to the center-of-gravity within the wide band
-
-project.stats.eeglab.ersp.method                = 'bootstrap';          % method applied in ERP statistical analysis
-project.stats.eeglab.ersp.correction            = 'none';               % multiple comparison correction applied in ERP statistical analysis
-
-
-% BRAINSTORM 
-project.stats.brainstorm.pvalue                 = 0.025; ...0.01;       % level of significance applied in ERSP statistical analysis
-project.stats.brainstorm.correction             = 'fdr';                % multiple comparison correction applied in ERP statistical analysis
-
-% SPM
-project.stats.spm.pvalue                        = 0.025; ...0.01;       % level of significance applied in ERSP statistical analysis
-project.stats.spm.correction                    = 'fwe';                % multiple comparison correction applied in ERP statistical analysis
-
-% for each design of interest, perform or not statistical analysis of erp
-project.stats.show_statistics_list              = {'on','on','on','on','on','on','on','on'};   
-
-%% ======================================================================================================
-% N:    POSTPROCESS
-% ======================================================================================================
-
-% ERP
 
 project.postprocess.erp.mode.continous              = struct('time_resolution_mode', 'continuous', 'peak_type', 'off'          , 'align', 'off', 'tw_stat_estimator', 'tw_mean');
 project.postprocess.erp.mode.tw_group_noalign       = struct('time_resolution_mode', 'tw'        , 'peak_type', 'group'        , 'align', 'off', 'tw_stat_estimator', 'tw_mean');
@@ -815,9 +788,20 @@ project.postprocess.ersp.mode.tw_group_align                    = struct('time_r
 project.postprocess.ersp.mode.tw_individual_noalign             = struct('time_resolution_mode', 'tw'        , 'peak_type', 'individual'   , 'align', 'off', 'tw_stat_estimator', 'tw_mean');
 project.postprocess.ersp.mode.tw_individual_align               = struct('time_resolution_mode', 'tw'        , 'peak_type', 'individual'   , 'align', 'on' , 'tw_stat_estimator', 'tw_extremum');
 
-%===============================================================================
+
+project.stats.ersp.pvalue                       = 0.05; ...0.01;        % level of significance applied in ERSP statistical analysis
+project.stats.ersp.num_permutations             = 3;                    % number of permutations applied in ERP statistical analysis
+project.stats.ersp.num_tails                    = 2;
+project.stats.ersp.decimation_factor_times_tf   = 10;
+project.stats.ersp.decimation_factor_freqs_tf   = 10;
+project.stats.ersp.tf_resolution_mode           = 'continuous';         %'continuous'; 'decimate_times';'decimate_freqs';'decimate_times_freqs';'tw_fb';
+project.stats.ersp.measure                      = 'dB';                 % 'Pfu';  dB decibel, Pfu, (A-R)/R * 100 = (A/R-1) * 100 = (10^.(ERSP/10)-1)*100 variazione percentuale definita da pfursheller
+project.stats.eeglab.ersp.method                = 'bootstrap';          % method applied in ERP statistical analysis
+project.stats.eeglab.ersp.correction            = 'none';               % multiple comparison correction applied in ERP statistical analysis
+
+%============================================================
 % FREQUENCY BANDS
-%===============================================================================
+%============================================================
 
 if isfield(project, 'postprocess')
     if isfield(project.postprocess, 'ersp')
@@ -855,9 +839,38 @@ for fb=1:project.postprocess.ersp.nbands
 end
 project.postprocess.ersp.frequency_bands_names      = {project.postprocess.ersp.frequency_bands.name};
 
-%===============================================================================
+
+%==============================================================
+% NARROW BAND
+%==============================================================
+project.stats.ersp.do_narrowband                    = 'off';                % off|ref|auto  the adjustment of spectral band for each subject: off=no adhiustment, ref adjust based on a ref condition, auto ajust each condition separately
+project.stats.ersp.narrowband.group_tmin            = [];                   % lowest time of the time windows considered to select the narrow band. if empty, consider the start of the epoch
+project.stats.ersp.narrowband.group_tmax            = [];                   % highest time of the time windows considered to select the narrow band. if empty, consider the end of the epoch
+project.stats.ersp.narrowband.dfmin                 = 2;                    % low variation in Hz from the barycenter frequency
+project.stats.ersp.narrowband.dfmax                 = 2;                    % high variation in Hz from the barycenter frequency
+
+project.stats.ersp.narrowband.which_realign_measure = {'max','min','min','min'}; % min |max |auc for each band, select the frequency with the maximum or the minumum ersp or the largest area under the curve to reallign the narrowband
+project.stats.ersp.narrowband.which_realign_param   = {'cog_pos','cog_neg','cog_neg','cog_neg'};             % fnb | cog_pos | cog_neg | cog_all : set if re-allign the narrowband to the peak (defined above) of to the center-of-gravity within the wide band
+
+
+% **********CHECK*****************
+if lenght(project.stats.ersp.narrowband.which_realign_measure) ~= project.postprocess.ersp.nbands
+    error(['number of which_realign_measure ' num2str(lenght(project.stats.ersp.narrowband.which_realign_measure)) ' is different than number of defined bands (' num2str(project.postprocess.ersp.nbands) ')']);
+end
+if lenght(project.stats.ersp.narrowband.which_realign_param) ~= project.postprocess.ersp.nbands
+    error(['number of which_realign_param ' num2str(lenght(project.stats.ersp.narrowband.which_realign_param)) ' is different than number of defined bands (' num2str(project.postprocess.ersp.nbands) ')']);
+end
+
+if strcmp(project.stats.ersp.do_narrowband, 'ref')
+    for fb=1:project.postprocess.ersp.nbands
+        if isempty(project.postprocess.ersp.frequency_bands(fb).ref_roi_list)
+           error('you asked to calcultate the narrow band with the ref parameters, but you did not insert the ref_roi_list'); 
+        end
+    end
+end
+%==============================================================
 % ROI LIST
-%===============================================================================
+%==============================================================
 
 project.postprocess.ersp.roi_list = { ...
             {'F5','F7','AF7','FT7'};  ... left IFG
@@ -894,12 +907,6 @@ project.postprocess.ersp.emg.numroi=length(project.postprocess.ersp.emg.roi_list
 
 
 
-
-
-
-
-
-
 if isfield(project, 'postprocess')
     if isfield(project.postprocess, 'ersp')
         if isfield(project.postprocess.ersp, 'design')
@@ -911,9 +918,9 @@ end
 project.postprocess.ersp.nroi = length(project.postprocess.ersp.roi_list);
 project.postprocess.ersp.eog.nroi = length(project.postprocess.ersp.eog.roi_list);
 project.postprocess.ersp.emg.nroi = length(project.postprocess.ersp.emg.roi_list);
-%===============================================================================
+%==============================================
 % DESIGNS' TIME WINDOWS
-%===============================================================================
+%==============================================
 
 project.postprocess.ersp.design(1).group_time_windows(1)        = struct('name','350-650','min',350, 'max',650);
 project.postprocess.ersp.design(1).group_time_windows(2)        = struct('name','750-1500','min',750, 'max',1500);
@@ -1239,6 +1246,23 @@ project.postprocess.design_factors_ordered_levels={...
 };
 
 
+
+%% ===============================================
+% BRAINSTORM 
+%% ===============================================
+project.stats.brainstorm.pvalue                 = 0.025; ...0.01;       % level of significance applied in ERSP statistical analysis
+project.stats.brainstorm.correction             = 'fdr';                % multiple comparison correction applied in ERP statistical analysis
+
+
+%% ===============================================
+% SPM
+%% ===============================================
+project.stats.spm.pvalue                        = 0.025; ...0.01;       % level of significance applied in ERSP statistical analysis
+project.stats.spm.correction                    = 'fwe';                % multiple comparison correction applied in ERP statistical analysis
+
+% for each design of interest, perform or not statistical analysis of erp
+project.stats.show_statistics_list              = {'on','on','on','on','on','on','on','on'}; 
+
 %% ======================================================================================================
 % O:    RESULTS DISPLAY
 % ======================================================================================================
@@ -1250,6 +1274,9 @@ project.results_display.erp.time_smoothing                      = 10;           
 project.results_display.erp.time_range.s                        = [project.study.erp.tmin_analysis.s project.study.erp.tmax_analysis.s];       % time range for erp representation
 
 % ERP CURVE
+
+project.results_display.filter_freq                             = 10;           %frequency (Hz) of low-pass filter to be applied (only for visualization) of ERP data
+
 project.results_display.ylim_plot                               = [];           %y limits (uV)for the representation of ERP
 project.results_display.erp.single_subjects                     = 'off';        % display patterns of the single subjcts (keeping the average pattern)
 project.results_display.erp.masked_times_max                    = [];           % number of ms....all the timepoints before this values are not considered for statistics
@@ -1382,12 +1409,13 @@ project.brainstorm.sources.loose_value          = 0.2;
 project.brainstorm.sources.depth_weighting      = 'nodepth';   % optional parameter, actually it is enabled for wmne and dspm and disabled for sloreta
 project.brainstorm.sources.downsample_atlasname = 's3000';
 
-project.brainstorm.analysis_bands={{ ...
-                    project.postprocess.ersp.frequency_bands(1).name, [num2str(project.postprocess.ersp.frequency_bands(1).min) ', ' num2str(project.postprocess.ersp.frequency_bands(1).max)], 'mean'; ...
-                    project.postprocess.ersp.frequency_bands(2).name, [num2str(project.postprocess.ersp.frequency_bands(2).min) ', ' num2str(project.postprocess.ersp.frequency_bands(2).max)], 'mean'; ...
-                    project.postprocess.ersp.frequency_bands(3).name, [num2str(project.postprocess.ersp.frequency_bands(3).min) ', ' num2str(project.postprocess.ersp.frequency_bands(3).max)], 'mean'; ...
-                    project.postprocess.ersp.frequency_bands(4).name, [num2str(project.postprocess.ersp.frequency_bands(4).min) ', ' num2str(project.postprocess.ersp.frequency_bands(4).max)], 'mean' ...
-                                  }};
+
+for fb=1:length(project.postprocess.ersp.frequency_bands)
+    project.brainstorm.analysis_bands{fb,1} = project.postprocess.ersp.frequency_bands(fb).name;
+    project.brainstorm.analysis_bands{fb,2} = [num2str(project.postprocess.ersp.frequency_bands(fb).min) ', ' num2str(project.postprocess.ersp.frequency_bands(fb).max)];
+    project.brainstorm.analysis_bands{fb,3} = 'mean';
+end
+project.brainstorm.analysis_bands = {project.brainstorm.analysis_bands};
                                   
 project.brainstorm.analysis_times               = {{'t-4', '-0.4000, -0.3040', 'mean'; 't-3', '-0.3000, -0.2040', 'mean'; 't-2', '-0.2000, -0.1040', 'mean'; 't-1', '-0.1000, -0.0040', 'mean'; 't1', '0.0000, 0.0960', 'mean'; 't2', '0.1000, 0.1960', 'mean'; 't3', '0.2000, 0.2960', 'mean'; 't4', '0.3000, 0.3960', 'mean'; 't5', '0.4000, 0.4960', 'mean'; 't6', '0.5000, 0.5960', 'mean'; 't7', '0.6000, 0.6960', 'mean'; 't8', '0.7000, 0.7960', 'mean'; 't9', '0.8000, 0.8960', 'mean'; 't10', '0.9000, 0.9960', 'mean'}};
 
@@ -1426,6 +1454,8 @@ project.brainstorm.stats.ttest_abstype              = 1;
 % ======================================================================================================
 
 
+project = eegtools_project_derive_parameters(project);
+% project = eegtools_project_check(project)
 
 
 
@@ -1441,78 +1471,66 @@ project.brainstorm.stats.ttest_abstype              = 1;
 
 
 
-
-
-% ======================================================================================================
-% ======================================================================================================
-% ======================================================================================================
-% DERIVED TIMES from seconds to milliseconds
-% ======================================================================================================
-% ======================================================================================================
-% ======================================================================================================
-
-% ======================================================================================================
-% EPOCHING
-% ======================================================================================================
-
-%  ********* DERIVED DATA : DO NOT EDIT *****************************************************************
-project.epoching.bc_st.ms   = project.epoching.bc_st.s*1000;            % baseline correction start latency
-project.epoching.bc_end.ms  = project.epoching.bc_end.s*1000;           % baseline correction end latency
-project.epoching.epo_st.ms  = project.epoching.epo_st.s*1000;             % epochs start latency
-project.epoching.epo_end.ms = project.epoching.epo_end.s*1000;             % epochs end latency
-
-project.epoching.baseline_mark.baseline_begin_target_marker_delay.ms = project.epoching.baseline_mark.baseline_begin_target_marker_delay.s *1000; % delay  between target and baseline begin marker to be inserted
-
-%  ********* /DERIVED DATA *****************************************************************
-
-
-% ======================================================================================================
-% POSTPROCESS
-% ======================================================================================================
-
-%  ********* DERIVED DATA : DO NOT EDIT *****************************************************************
-project.postprocess.eeglab.frequency_bands_list={ ...
-    [project.postprocess.ersp.frequency_bands(1).min,project.postprocess.ersp.frequency_bands(1).max]; ... 
-    [project.postprocess.ersp.frequency_bands(2).min,project.postprocess.ersp.frequency_bands(2).max]; ...
-    [project.postprocess.ersp.frequency_bands(3).min,project.postprocess.ersp.frequency_bands(3).max]; ...
-    [project.postprocess.ersp.frequency_bands(4).min,project.postprocess.ersp.frequency_bands(4).max]; ...
-    };
-project.postprocess.eeglab.frequency_bands_names    = {project.postprocess.ersp.frequency_bands(1).name,project.postprocess.ersp.frequency_bands(2).name,project.postprocess.ersp.frequency_bands(3).name,project.postprocess.ersp.frequency_bands(4).name};
-%  ********* /DERIVED DATA  *****************************************************************
-
-
-% ERP
-%  ********* DERIVED DATA : DO NOT EDIT *****************************************************************
-project.study.erp.tmin_analysis.ms                  = project.study.erp.tmin_analysis.s*1000;
-project.study.erp.tmax_analysis.ms                  = project.study.erp.tmax_analysis.s*1000;
-project.study.erp.ts_analysis.ms                    = project.study.erp.ts_analysis.s*1000;
-project.study.erp.timeout_analysis_interval.ms      = project.study.erp.timeout_analysis_interval.s*1000;
-%  ********* /DERIVED DATA  *****************************************************************
-
-
-% ERSP
-%  ********* DERIVED DATA : DO NOT EDIT *****************************************************************
-project.study.ersp.tmin_analysis.ms                 = project.study.ersp.tmin_analysis.s*1000;
-project.study.ersp.tmax_analysis.ms                 = project.study.ersp.tmax_analysis.s*1000;
-project.study.ersp.ts_analysis.ms                   = project.study.ersp.ts_analysis.s*1000;
-project.study.ersp.timeout_analysis_interval.ms     = project.study.ersp.timeout_analysis_interval.s*1000;
-%  ********* /DERIVED DATA  *****************************************************************
-
-
-% ======================================================================================================
-% RESULTS DISPLAY
-% ======================================================================================================
-% insert parameters for ERP and TF analysis in the STUDY
-
-%frequency (Hz) of low-pass filter to be applied (only for visualization) of ERP data
-project.results_display.filter_freq                 = 10;
-%y limits (uV)for the representation of ERP
-project.results_display.ylim_plot                   = [-2.5 2.5];
-      
-%  ********* DERIVED DATA : DO NOT EDIT *****************************************************************
-project.results_display.erp.time_range.ms           = project.results_display.erp.time_range.s*1000;
-project.results_display.ersp.time_range.ms          = project.results_display.ersp.time_range.s*1000;
-%  ********* /DERIVED DATA  *****************************************************************
+% % ======================================================================================================
+% % ======================================================================================================
+% % ======================================================================================================
+% % DERIVED TIMES from seconds to milliseconds
+% % ======================================================================================================
+% % ======================================================================================================
+% % ======================================================================================================
+% 
+% % ======================================================================================================
+% % EPOCHING
+% % ======================================================================================================
+% 
+% %  ********* DERIVED DATA : DO NOT EDIT *****************************************************************
+% project.epoching.bc_st.ms   = project.epoching.bc_st.s*1000;            % baseline correction start latency
+% project.epoching.bc_end.ms  = project.epoching.bc_end.s*1000;           % baseline correction end latency
+% project.epoching.epo_st.ms  = project.epoching.epo_st.s*1000;             % epochs start latency
+% project.epoching.epo_end.ms = project.epoching.epo_end.s*1000;             % epochs end latency
+% 
+% project.epoching.baseline_mark.baseline_begin_target_marker_delay.ms = project.epoching.baseline_mark.baseline_begin_target_marker_delay.s *1000; % delay  between target and baseline begin marker to be inserted
+% 
+% %  ********* /DERIVED DATA *****************************************************************
+% 
+% 
+% % ======================================================================================================
+% % POSTPROCESS
+% % ======================================================================================================
+% 
+% %  ********* DERIVED DATA : DO NOT EDIT *****************************************************************
+% for fb=1:length(project.postprocess.ersp.frequency_bands)
+%     project.postprocess.eeglab.frequency_bands_list{fb,1}=[project.postprocess.ersp.frequency_bands(fb).min,project.postprocess.ersp.frequency_bands(fb).max];
+% end
+% project.postprocess.eeglab.frequency_bands_names = {project.postprocess.ersp.frequency_bands.name};%  ********* /DERIVED DATA  *****************************************************************
+% 
+% 
+% % ERP
+% %  ********* DERIVED DATA : DO NOT EDIT *****************************************************************
+% project.study.erp.tmin_analysis.ms                  = project.study.erp.tmin_analysis.s*1000;
+% project.study.erp.tmax_analysis.ms                  = project.study.erp.tmax_analysis.s*1000;
+% project.study.erp.ts_analysis.ms                    = project.study.erp.ts_analysis.s*1000;
+% project.study.erp.timeout_analysis_interval.ms      = project.study.erp.timeout_analysis_interval.s*1000;
+% %  ********* /DERIVED DATA  *****************************************************************
+% 
+% 
+% % ERSP
+% %  ********* DERIVED DATA : DO NOT EDIT *****************************************************************
+% project.study.ersp.tmin_analysis.ms                 = project.study.ersp.tmin_analysis.s*1000;
+% project.study.ersp.tmax_analysis.ms                 = project.study.ersp.tmax_analysis.s*1000;
+% project.study.ersp.ts_analysis.ms                   = project.study.ersp.ts_analysis.s*1000;
+% project.study.ersp.timeout_analysis_interval.ms     = project.study.ersp.timeout_analysis_interval.s*1000;
+% %  ********* /DERIVED DATA  *****************************************************************
+% 
+% 
+% % ======================================================================================================
+% % RESULTS DISPLAY
+% % ======================================================================================================
+%       
+% %  ********* DERIVED DATA : DO NOT EDIT *****************************************************************
+% project.results_display.erp.time_range.ms           = project.results_display.erp.time_range.s*1000;
+% project.results_display.ersp.time_range.ms          = project.results_display.ersp.time_range.s*1000;
+% %  ********* /DERIVED DATA  *****************************************************************
 
 % ======================================================================================================
 % ======================================================================================================
@@ -1525,5 +1543,5 @@ project.results_display.ersp.time_range.ms          = project.results_display.er
 % ======================================================================================================
 % ======================================================================================================
 % eeglab_derived_parameters_project(project)
-% eeglab_check_project(project)
+
 
