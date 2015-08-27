@@ -551,7 +551,7 @@ function [output] = eeglab_study_plot_ersp_topo_tw_fb_compact(input)
                 input_graph.ersp_measure                                                   = ersp_measure;
 
 
-                %         eeglab_study_roi_ersp_curve_tw_fb_graph(input_graph);
+                         eeglab_study_roi_ersp_curve_tw_fb_graph(input_graph);
             end
 
 
