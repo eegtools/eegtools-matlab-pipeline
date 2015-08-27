@@ -123,10 +123,11 @@ if ~ isempty(stat_time_windows_list)
     
 end
 
-output.ersp_tf    = ersp_tf;
-output.times      = times;
-output.freqs      = freqs;
-output.pcond      = pcond;
-output.pgroup     = pgroup;
-output.pinter     = pinter;
+output.ersp_tf              = ersp_tf;
+output.times                = times;
+output.freqs                = freqs;
+output.pcond                = pcond;
+output.pgroup               = pgroup;
+output.pinter               = pinter;
+output.list_design_subjects = list_design_subjects;
 end

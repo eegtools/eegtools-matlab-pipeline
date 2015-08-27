@@ -115,12 +115,13 @@ for ind = 1:length(pinter),  pinter{ind}  =  abs(pinter{ind}) ; end;
 %          [pcond, pgroup, pinter] = eeglab_study_roi_tf_maskp(pcond, pgroup, pinter,times, masked_times_max);
 %     end
 
-output.ersp_tf    = ersp_tf;
-output.times      = times;
-output.freqs      = freqs;
-output.pcond      = pcond;
-output.pgroup     = pgroup;
-output.pinter     = pinter;
+output.ersp_tf              = ersp_tf;
+output.times                = times;
+output.freqs                = freqs;
+output.pcond                = pcond;
+output.pgroup               = pgroup;
+output.pinter               = pinter;
+output.list_design_subjects = list_design_subjects;
 
 
 end

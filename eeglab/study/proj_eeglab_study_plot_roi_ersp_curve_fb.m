@@ -186,19 +186,12 @@ function [STUDY, EEG] = proj_eeglab_study_plot_roi_ersp_curve_fb(project, analys
 
 
     for design_num=design_num_vec
-        %% subjects list divided by factor levels
-
-        individual_fb_bands                    = eeglab_generate_subjects_bands_by_factor_levels(STUDY, design_num, project.subjects.data, frequency_bands_list);  ... {factor1,factor2}{subj}{band}
 
         %% select the study design for the analyses
         STUDY                                  = std_selectdesign(STUDY, ALLEEG, design_num);
 
         ersp_curve_roi_fb_stat.study_des       = STUDY.design(design_num);
         ersp_curve_roi_fb_stat.study_des.num   = design_num;
-
-
-        ersp_curve_roi_fb_stat.individual_fb_bands  = individual_fb_bands;
-
 
         name_f1                                = STUDY.design(design_num).variable(1).label;
         name_f2                                = STUDY.design(design_num).variable(2).label;
@@ -209,6 +202,9 @@ function [STUDY, EEG] = proj_eeglab_study_plot_roi_ersp_curve_fb(project, analys
         plot_dir                               = fullfile(results_path, analysis_name,[STUDY.design(design_num).name,'-ersp_curve_roi_',which_method_find_extrema,'-',str]);
         mkdir(plot_dir);
 
+        % lista dei soggetti suddivisi per fattori
+        original_list_design_subjects                   = eeglab_generate_subjects_list_by_factor_levels(STUDY, design_num);
+        original_individual_fb_bands                    = eeglab_generate_subjects_bands_by_factor_levels(STUDY, design_num, subjects_data, frequency_bands_list);  ... {factor1,factor2}{subj}{band}
 
 
 
@@ -239,19 +235,20 @@ function [STUDY, EEG] = proj_eeglab_study_plot_roi_ersp_curve_fb(project, analys
             for nf1=1:length(levels_f1)
                 for nf2=1:length(levels_f2)
                     if ~isempty(list_select_subjects)
-                        vec_select_subjects=ismember(list_design_subjects{nf1,nf2},list_select_subjects);
+                        vec_select_subjects=ismember(original_list_design_subjects{nf1,nf2},list_select_subjects);
                         if ~sum(vec_select_subjects)
                             disp('Error: the selected subjects are not represented in the selected design')
                             return;
                         end
                         ersp{nf1,nf2}=ersp{nf1,nf2}(:,:,:,vec_select_subjects);
-                        filtered_individual_fb_bands{nf1,nf2} = {individual_fb_bands{nf1,nf2}{vec_select_subjects}};
-                        list_design_subjects{nf1,nf2} = {list_design_subjects{nf1,nf2}{vec_select_subjects}};
+                        individual_fb_bands{nf1,nf2} = {original_individual_fb_bands{nf1,nf2}{vec_select_subjects}};
+                        list_design_subjects{nf1,nf2} = {original_list_design_subjects{nf1,nf2}{vec_select_subjects}};
                     else
-                        filtered_individual_fb_bands{nf1,nf2} = individual_fb_bands{nf1,nf2};
+                        individual_fb_bands{nf1,nf2} = original_individual_fb_bands{nf1,nf2};
                     end
                 end
             end
+            ersp_curve_roi_fb_stat.individual_fb_bands  = individual_fb_bands;
 
             %% averaging channels in the roi
             ersp_roi=[];
@@ -272,11 +269,11 @@ function [STUDY, EEG] = proj_eeglab_study_plot_roi_ersp_curve_fb(project, analys
                 ersp_curve_roi_fb=[];
                 for nf1=1:length(levels_f1)
                     for nf2=1:length(levels_f2)
-                        subjs = length(filtered_individual_fb_bands{nf1,nf2});
+                        subjs = length(individual_fb_bands{nf1,nf2});
                         for nsub=1:subjs
 
-                            fmin = filtered_individual_fb_bands{nf1,nf2}{nsub}{nband}(1);
-                            fmax = filtered_individual_fb_bands{nf1,nf2}{nsub}{nband}(2);
+                            fmin = individual_fb_bands{nf1,nf2}{nsub}{nband}(1);
+                            fmax = individual_fb_bands{nf1,nf2}{nsub}{nband}(2);
 
                             ...[nfmin, nfmax] = eeglab_get_narrowband(ersp_curve_roi_fb{nf1,nf2}(:,nsub), [fmin fmax], [tmin tmax], [dfmin dfmax]);
                                 sel_freqs = freqs >= fmin & freqs <= fmax;
@@ -700,11 +697,9 @@ function [STUDY, EEG] = proj_eeglab_study_plot_roi_ersp_curve_fb(project, analys
             end
         end
 
-        ersp_curve_roi_fb_stat.list_select_subjects=list_select_subjects;
-
-
-
+        ersp_curve_roi_fb_stat.list_select_subjects = list_select_subjects;
         ersp_curve_roi_fb_stat.list_design_subjects = list_design_subjects;
+        
         %% EXPORTING DATA AND RESULTS OF ANALYSIS
         out_file_name=fullfile(plot_dir,'ersp_curve_roi_fb-stat')
         save([out_file_name,'.mat'],'ersp_curve_roi_fb_stat','project');
