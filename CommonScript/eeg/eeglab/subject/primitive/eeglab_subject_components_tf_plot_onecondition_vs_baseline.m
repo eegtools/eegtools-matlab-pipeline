@@ -1,9 +1,9 @@
 % freq_bands: must be formatted as it:
 
-function eeglab_subject_components_tf_plot_onecondition_vs_baseline(input_set, ch_label, varargin)
+function eeglab_subject_components_tf_plot_onecondition_vs_baseline(input_set_filename, ch_label, varargin)
    
 
-    [path,name_noext,ext] = fileparts(input_set);
+    [path,name_noext,ext] = fileparts(input_set_filename);
     
     EEG             = pop_loadset('filename', {[name_noext ext] }, 'filepath', path);
 

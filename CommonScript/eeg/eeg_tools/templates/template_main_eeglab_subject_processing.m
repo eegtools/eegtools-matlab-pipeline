@@ -246,6 +246,10 @@ end
     %         eeglab_subject_tf_plot_2conditions(cond_files{3}, cond_files{2}, electrode2inspect, 'pvalue', stat_threshold, 'save_fig', save_figure, 'fig_output_path', fullfile(project.paths.results, fig_output_path));
     %         eeglab_subject_tf_plot_2conditions(cond_files{3}, cond_files{1}, electrode2inspect, 'pvalue', stat_threshold, 'save_fig', save_figure, 'fig_output_path', fullfile(project.paths.results, fig_output_path));
     %         eeglab_subject_tf_plot_2conditions(cond_files{3}, cond_files{4}, electrode2inspect, 'pvalue', stat_threshold, 'save_fig', save_figure, 'fig_output_path', fullfile(project.paths.results, fig_output_path));
+    
+            eeglab_subject_components_tf_plot_onecondition_vs_baseline(cond_files{1}, electrode2inspect, 'cycles', cycles, 'pvalue', stat_threshold, 'correct', 'none', 'baseline', [project.epoching.bc_st.ms project.epoching.bc_end.ms], 'save_fig', save_figure, 'fig_output_path', fullfile(project.paths.results, fig_output_path), 'freq_bands', {project.postprocess.ersp.frequency_bands_list{2}});
+            eeglab_subject_components_tf_plot_onecondition_vs_baseline(cond_files{2}, electrode2inspect, 'cycles', cycles, 'pvalue', stat_threshold, 'correct', 'none', 'baseline', [project.epoching.bc_st.ms project.epoching.bc_end.ms], 'save_fig', save_figure, 'fig_output_path', fullfile(project.paths.results, fig_output_path), 'freq_bands', {project.postprocess.ersp.frequency_bands_list{2}});
+    
         end
     end
     %==================================================================================
