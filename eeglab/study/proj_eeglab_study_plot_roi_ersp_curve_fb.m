@@ -74,11 +74,13 @@ function [STUDY, EEG] = proj_eeglab_study_plot_roi_ersp_curve_fb(project, analys
     for ds=1:length(project.design)
         paired_list{ds} = {project.design(ds).factor1_pairing, project.design(ds).factor2_pairing};
     end
+    
+    subjects_data               = project.subjects.data;
 
     %% VARARGIN DEFAULTS
     list_select_subjects        = {};
     design_num_vec              = [1:length(project.design)];
-
+    
     roi_list                    = project.postprocess.ersp.roi_list;
     roi_names                   = project.postprocess.ersp.roi_names;
 
