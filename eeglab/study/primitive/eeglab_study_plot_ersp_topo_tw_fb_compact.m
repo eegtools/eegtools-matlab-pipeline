@@ -207,7 +207,7 @@ function [output] = eeglab_study_plot_ersp_topo_tw_fb_compact(input)
         original_list_design_subjects                   = eeglab_generate_subjects_list_by_factor_levels(STUDY, design_num);
         original_individual_fb_bands                    = eeglab_generate_subjects_bands_by_factor_levels(STUDY, design_num, subjects_data, frequency_bands_list);  ... {factor1,factor2}{subj}{band}
 
-
+        list_design_subjects = [];
 
         %         group_time_windows_list     = arrange_structure(project.postprocess.ersp.design, 'group_time_windows');
         %         subject_time_windows_list   = arrange_structure(project.postprocess.ersp.design, 'subject_time_windows');
