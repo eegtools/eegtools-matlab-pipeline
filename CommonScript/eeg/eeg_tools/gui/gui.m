@@ -5,7 +5,8 @@ function [] = gui()
      % MATLAB_JAVA
      % C:\Program Files (x86)\Java\jdk1.8.0_40\jre
 
-    javaaddpath('/data/behavior_lab_svn/behaviourPlatform/CommonScript/eeg/eeg_tools/gui/eeggui/dist/eeggui.jar')
+    ... javaaddpath('/data/behavior_lab_svn/behaviourPlatform/CommonScript/eeg/eeg_tools/gui/eeggui/dist/eeggui.jar')
+    javaaddpath('\\VBOXSVR\data\behavior_lab_svn\behaviourPlatform\CommonScript\eeg\eeg_tools\gui\eeggui\dist\eeggui.jar')
 %    javaaddpath('C:\Users\goccia\Documents\NetBeansProjects\eeggui\dist\eeggui.jar')
 %    javaaddpath([pwd filesep 'eeggui.jar'])
     global gg  % Make the handle to the main panel global
