@@ -318,7 +318,7 @@ for c = 1:nc
             
             tftopo( tmpplot, times, freqs, 'events', tmpevents, 'title', opt.titles{c,g}, options{:}); set(gcf, 'Visible', 'off');
             hold on
-            
+
             for nband=1:length(frequency_bands_list)
                 plot(times(1,:),ones(1,length(times(1,:)))*frequency_bands_list{nband}(1),'--','Color','black','LineWidth',0.75)
                 hold on

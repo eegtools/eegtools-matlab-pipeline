@@ -106,7 +106,7 @@ switch display_compact_plots
             input_graph.pcond_nomask                                                   = pcond_nomask;
             input_graph.pgroup_nomask                                                  = pgroup_nomask;
             input_graph.pinter_nomask                                                  = pinter_nomask;
-            
+            input_graph.ersp_measure                                                   = ersp_measure;
             
             std_plotcurve_ersp_tw_fb(input_graph, 'groupstats', pgroup, 'condstats', pcond,'interstats', pinter, 'titles',titles  ,'threshold',tr,'plotgroups','apart' ,'plotconditions','apart');
         else

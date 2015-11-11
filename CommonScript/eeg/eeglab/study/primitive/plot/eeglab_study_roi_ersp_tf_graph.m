@@ -100,6 +100,7 @@ input_graph.frequency_bands_list                                           = fre
 input_graph.display_pmode                                                  = display_pmode;
 
 % plot ersp and statistics
+
 std_plottf_ersp(input_graph, 'datatype', 'ersp','groupstats', pgroup, 'condstats', pcond,'interstats', pinter, 'plotmode','normal','titles',titles ,...
     'tftopoopt',{'mode', 'ave'},'caxis',set_caxis ,'threshold',tr,'freqscale',freq_scale);
 

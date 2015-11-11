@@ -41,7 +41,7 @@ function eeglab_subject_tf_plot_2conditions(input_set1, input_set2, ch_label, va
         options_num=options_num-2;
     end
     %-------------------------------------------------------------------------------------------------------
-    
+    set(0,'DefaultTextInterpreter','none');
     title_name=[name_noext1 '_vs_' name_noext2 '_' ch_label];
     ...fig=figure()
     [ersp,itc,powbase,times,freqs,erspboot,itcboot] = newtimef({EEG1.data(chan_num,:,:) EEG2.data(chan_num,:,:)} ,pnt, [xmin xmax]*1000, srate, 0, 'alpha', pvalue,'plotitc', 'off', 'erspmax',4, 'baseline', baseline,'trialbase','full');
