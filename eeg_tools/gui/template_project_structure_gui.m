@@ -2,7 +2,7 @@
 %
 %   this file is loaded and parsed each time I want to 
 %   1)  create a new project structure, fields are filled with default values
-%   2)  I want to display/edit an existing project. fields are filled with existing values, alternatives are taken from values
+%   2)  I want to display/edit an existing project. fields are filled with existing values, alternatives are taken from here
 % 
 % each field is described through a structure with some pre-defined fields and some other ui type dependant
 % = struct('visible', 'on/off', 'type', 'label', 'canbeempty', 'off/on', 'default', ''/[], 'values', [], 'onChange', []);
@@ -46,12 +46,12 @@
 ...project.research_subgroup                        % A2: set in main: e.g.  PAP or MNI
 ...project.name                                     % A3: set in main : must correspond to 'project.paths.local_projects_data' subfolder name
 
-projectgui.study_suffix                                = struct('visible', 'on', 'type', 'canbeempty', 'on', 'input', 'default', '', 'onChange', [], 'input_type', 'string/num/all');                % A4: sub name used to create a different STUDY name (fianl file will be called: [projectgui.name projectgui.study_suffix '.study'])
-projectgui.analysis_name                               = struct('visible', 'on', 'type', 'canbeempty', 'on', 'input', 'default', '', 'onChange', []);    % A5: epoching output folder name, subfolder containing the condition files of the current analysis type
+projectgui.study_suffix                                = struct('visible', 'on', 'type', 'input', 'canbeempty', 'on', 'default', '', 'onChange', [], 'input_type', 'string/num/all');                % A4: sub name used to create a different STUDY name (fianl file will be called: [projectgui.name projectgui.study_suffix '.study'])
+projectgui.analysis_name                               = struct('visible', 'on', 'type', 'input', 'canbeempty', 'on', 'default', '', 'onChange', []);    % A5: epoching output folder name, subfolder containing the condition files of the current analysis type
 
-projectgui.do_source_analysis                          = struct('visible', 'on', 'type', 'canbeempty', 'off', 'checkbox', 'values', {'on', 'off'}, 'default', 'off', 'onChange', []);                    % A6:  
-projectgui.do_emg_analysis                             = struct('visible', 'on', 'type', 'canbeempty', 'off', 'checkbox', 'values', {'on', 'off'}, 'default', 'off', 'onChange', []);                    % A7:
-projectgui.do_cluster_analysis                         = struct('visible', 'on', 'type', 'canbeempty', 'off', 'checkbox', 'values', {'on', 'off'}, 'default', 'off', 'onChange', []);                    % A8:
+projectgui.do_source_analysis                          = struct('visible', 'on', 'type', 'checkbox', 'canbeempty', 'off', 'values', {'on', 'off'}, 'default', 'off', 'onChange', []);                    % A6:  
+projectgui.do_emg_analysis                             = struct('visible', 'on', 'type', 'checkbox', 'canbeempty', 'off', 'values', {'on', 'off'}, 'default', 'off', 'onChange', []);                    % A7:
+projectgui.do_cluster_analysis                         = struct('visible', 'on', 'type', 'checkbox', 'canbeempty', 'off', 'values', {'on', 'off'}, 'default', 'off', 'onChange', []);                    % A8:
 
 %% ======================================================================================================
 % B:    PATHS  
