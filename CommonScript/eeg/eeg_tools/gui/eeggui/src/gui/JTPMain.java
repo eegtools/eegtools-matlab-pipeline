@@ -52,6 +52,7 @@ public class JTPMain extends javax.swing.JPanel {
         btNewProject = new javax.swing.JButton();
         btOpenProject = new javax.swing.JButton();
         btSaveProject = new javax.swing.JButton();
+        btSaveAsProject = new javax.swing.JButton();
         jTabbedPane2 = new javax.swing.JTabbedPane();
         jPimport_data = new javax.swing.JPanel();
         jLabel18 = new javax.swing.JLabel();
@@ -139,12 +140,11 @@ public class JTPMain extends javax.swing.JPanel {
         jPbrainstorm = new javax.swing.JPanel();
         jPpaths = new javax.swing.JPanel();
         jPtask = new javax.swing.JPanel();
-        btSaveAsProject = new javax.swing.JButton();
 
         setName("main_panel"); // NOI18N
 
         btNewProject.setText("New");
-        btNewProject.setName("btNewProject2"); // NOI18N
+        btNewProject.setName("btNewProject"); // NOI18N
         btNewProject.setOpaque(false);
         btNewProject.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -165,6 +165,14 @@ public class JTPMain extends javax.swing.JPanel {
         btSaveProject.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btSaveProjectActionPerformed(evt);
+            }
+        });
+
+        btSaveAsProject.setText("SaveAs");
+        btSaveAsProject.setName("btSaveAsProject"); // NOI18N
+        btSaveAsProject.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btSaveAsProjectActionPerformed(evt);
             }
         });
 
@@ -932,14 +940,6 @@ public class JTPMain extends javax.swing.JPanel {
 
         jTabbedPane2.addTab("Task", jPtask);
 
-        btSaveAsProject.setText("SaveAs");
-        btSaveAsProject.setName("btSaveProject"); // NOI18N
-        btSaveAsProject.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btSaveAsProjectActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -975,7 +975,6 @@ public class JTPMain extends javax.swing.JPanel {
 
     private void btNewProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btNewProjectActionPerformed
 
-        int a=1;
     }//GEN-LAST:event_btNewProjectActionPerformed
 
     private void btOpenProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btOpenProjectActionPerformed
