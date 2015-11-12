@@ -27,7 +27,7 @@ function [] = gui()
 %     %textfield = jbutton.name;
 %     
 %
-     newButton = gg.getHandles().New;
+     newButton = gg.getHandles().btNewProject2;
 %     newButton = gg.find('New');   % Much easier to access the button.
      gg.setCallback(newButton, 'ActionPerformedCallback', @print_string, 'marcello')
 

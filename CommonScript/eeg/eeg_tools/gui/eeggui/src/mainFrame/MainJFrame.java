@@ -27,7 +27,7 @@ public class MainJFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-		jBasePanel = new gui.basePanel();
+		jBasePanel = new gui.JTPMain();
 		
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -83,6 +83,6 @@ public class MainJFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-	private gui.basePanel jBasePanel;
+	private gui.JTPMain jBasePanel;
     // End of variables declaration//GEN-END:variables
 }
