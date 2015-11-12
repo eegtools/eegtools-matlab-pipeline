@@ -70,29 +70,29 @@ projectgui.do_cluster_analysis                         = struct('visible', 'on',
 ...projectgui.paths.global_spm_templates               % B8:
 
 % set by: define_paths_structure
-projectgui.paths.projectgui                             = struct('visible', 'on', 'type', 'canbeempty', 'on', 'label', 'default', '');                        % B9:   folder containing data, epochs, results etc...(not scripts)
-projectgui.paths.original_data                          = struct('visible', 'on', 'type', 'canbeempty', 'on', 'label', 'default', '');                     % B10:  folder containing EEG raw data (BDF, vhdr, eeg, etc...)
-projectgui.paths.input_epochs                           = struct('visible', 'on', 'type', 'canbeempty', 'on', 'label', 'default', '');                      % B11:  folder containing EEGLAB EEG input epochs set files 
-projectgui.paths.output_epochs                          = struct('visible', 'on', 'type', 'canbeempty', 'on', 'label', 'default', '');                     % B12:  folder containing EEGLAB EEG output condition epochs set files
-projectgui.paths.results                                = struct('visible', 'on', 'type', 'canbeempty', 'on', 'label', 'default', '');                           % B13:  folder containing statistical results
-projectgui.paths.emg_epochs                             = struct('visible', 'on', 'type', 'canbeempty', 'on', 'label', 'default', '');                        % B14:  folder containing EEGLAB EMG epochs set files 
-projectgui.paths.emg_epochs_mat                         = struct('visible', 'on', 'type', 'canbeempty', 'on', 'label', 'default', '');                    % B15:  folder containing EMG data strucuture
-projectgui.paths.tf                                     = struct('visible', 'on', 'type', 'canbeempty', 'on', 'label', 'default', '');                                % B16:  folder containing 
-projectgui.paths.cluster_projectguiion_erp              = struct('visible', 'on', 'type', 'canbeempty', 'on', 'label', 'default', '');            % B17:  folder containing 
-projectgui.paths.batches                                = struct('visible', 'on', 'type', 'canbeempty', 'on', 'label', 'default', '');                           % B18:  folder containing bash batches (usually for SPM analysis)
-projectgui.paths.spmsources                             = struct('visible', 'on', 'type', 'canbeempty', 'on', 'label', 'default', '');                        % B19:  folder containing sources images exported by brainstorm
-projectgui.paths.spmstats                               = struct('visible', 'on', 'type', 'canbeempty', 'on', 'label', 'default', '');                          % B20:  folder containing spm stat files
-projectgui.paths.spm                                    = struct('visible', 'on', 'type', 'canbeempty', 'on', 'label', 'default', '');                               % B21:  folder containing spm toolbox
-projectgui.paths.eeglab                                 = struct('visible', 'on', 'type', 'canbeempty', 'on', 'label', 'default', '');                            % B22:  folder containing eeglab toolbox
-projectgui.paths.brainstorm                             = struct('visible', 'on', 'type', 'canbeempty', 'on', 'label', 'default', '');                        % B23:  folder containing brainstorm toolbox
+projectgui.paths.projectgui                             = struct('visible', 'on', 'type', 'label', 'canbeempty', 'on', 'default', '');                        % B9:   folder containing data, epochs, results etc...(not scripts)
+projectgui.paths.original_data                          = struct('visible', 'on', 'type', 'label', 'canbeempty', 'on', 'default', '');                     % B10:  folder containing EEG raw data (BDF, vhdr, eeg, etc...)
+projectgui.paths.input_epochs                           = struct('visible', 'on', 'type', 'label', 'canbeempty', 'on', 'default', '');                      % B11:  folder containing EEGLAB EEG input epochs set files 
+projectgui.paths.output_epochs                          = struct('visible', 'on', 'type', 'label', 'canbeempty', 'on', 'default', '');                     % B12:  folder containing EEGLAB EEG output condition epochs set files
+projectgui.paths.results                                = struct('visible', 'on', 'type', 'label', 'canbeempty', 'on', 'default', '');                           % B13:  folder containing statistical results
+projectgui.paths.emg_epochs                             = struct('visible', 'on', 'type', 'label', 'canbeempty', 'on', 'default', '');                        % B14:  folder containing EEGLAB EMG epochs set files 
+projectgui.paths.emg_epochs_mat                         = struct('visible', 'on', 'type', 'label', 'canbeempty', 'on', 'default', '');                    % B15:  folder containing EMG data strucuture
+projectgui.paths.tf                                     = struct('visible', 'on', 'type', 'label', 'canbeempty', 'on', 'default', '');                                % B16:  folder containing 
+projectgui.paths.cluster_projectguiion_erp              = struct('visible', 'on', 'type', 'label', 'canbeempty', 'on', 'default', '');            % B17:  folder containing 
+projectgui.paths.batches                                = struct('visible', 'on', 'type', 'label', 'canbeempty', 'on', 'default', '');                           % B18:  folder containing bash batches (usually for SPM analysis)
+projectgui.paths.spmsources                             = struct('visible', 'on', 'type', 'label', 'canbeempty', 'on', 'default', '');                        % B19:  folder containing sources images exported by brainstorm
+projectgui.paths.spmstats                               = struct('visible', 'on', 'type', 'label', 'canbeempty', 'on', 'default', '');                          % B20:  folder containing spm stat files
+projectgui.paths.spm                                    = struct('visible', 'on', 'type', 'label', 'canbeempty', 'on', 'default', '');                               % B21:  folder containing spm toolbox
+projectgui.paths.eeglab                                 = struct('visible', 'on', 'type', 'label', 'canbeempty', 'on', 'default', '');                            % B22:  folder containing eeglab toolbox
+projectgui.paths.brainstorm                             = struct('visible', 'on', 'type', 'label', 'canbeempty', 'on', 'default', '');                        % B23:  folder containing brainstorm toolbox
 
 %% ======================================================================================================
 % C:    TASK
 % ======================================================================================================
-projectgui.task.events.start_experiment_trigger_value  = struct('visible', 'on', 'type', 'canbeempty', 'on', 'input', 'default', '');    % C1:   signal experiment start
-projectgui.task.events.pause_trigger_value             = struct('visible', 'on', 'type', 'canbeempty', 'on', 'input', 'default', '');    % C2:   start: pause, feedback and rest period
-projectgui.task.events.resume_trigger_value            = struct('visible', 'on', 'type', 'canbeempty', 'on', 'input', 'default', '');    % C3:   end: pause, feedback and rest period
-projectgui.task.events.end_experiment_trigger_value    = struct('visible', 'on', 'type', 'canbeempty', 'on', 'input', 'default', '');    % C4:   signal experiment end
+projectgui.task.events.start_experiment_trigger_value   = struct('visible', 'on', 'type', 'input', 'canbeempty', 'on', 'default', '');    % C1:   signal experiment start
+projectgui.task.events.pause_trigger_value              = struct('visible', 'on', 'type', 'input', 'canbeempty', 'on', 'default', '');    % C2:   start: pause, feedback and rest period
+projectgui.task.events.resume_trigger_value             = struct('visible', 'on', 'type', 'input', 'canbeempty', 'on', 'default', '');    % C3:   end: pause, feedback and rest period
+projectgui.task.events.end_experiment_trigger_value     = struct('visible', 'on', 'type', 'input', 'canbeempty', 'on', 'default', '');    % C4:   signal experiment end
 
 %% ======================================================================================================
 % D:    IMPORT
@@ -137,18 +137,18 @@ projectgui.eegdata.emg_channels_list_labels    = struct('visible', 'on', 'type',
 projectgui.eegdata.eog_channels_list           = struct('visible', 'on', 'type', 'label', 'canbeempty', 'on', 'values', [], 'default', 'selfvar');
 projectgui.eegdata.eog_channels_list_labels    = struct('visible', 'on', 'type', 'label', 'canbeempty', 'on', 'values', [], 'default', 'selfvar');
 
-for ch_id=1:length(projectgui.import.ch2transform)
-    ch = projectgui.import.ch2transform(ch_id);
-    if ~isempty(ch.new_label)
-        if strcmp(ch.type, 'emg')
-            projectgui.eegdata.emg_channels_list           = [projectgui.eegdata.emg_channels_list (projectgui.eegdata.nch_eeg+ch_id)];
-            projectgui.eegdata.emg_channels_list_labels    = [projectgui.eegdata.emg_channels_list_labels ch.new_label];
-        elseif strcmp(ch.type, 'eog')
-            projectgui.eegdata.eog_channels_list           = [projectgui.eegdata.eog_channels_list (projectgui.eegdata.nch_eeg+ch_id)];
-            projectgui.eegdata.eog_channels_list_labels    = [projectgui.eegdata.eog_channels_list_labels ch.new_label];
-        end
-    end
-end
+% for ch_id=1:length(projectgui.import.ch2transform)
+%     ch = projectgui.import.ch2transform(ch_id);
+%     if ~isempty(ch.new_label)
+%         if strcmp(ch.type, 'emg')
+%             projectgui.eegdata.emg_channels_list           = [projectgui.eegdata.emg_channels_list (projectgui.eegdata.nch_eeg+ch_id)];
+%             projectgui.eegdata.emg_channels_list_labels    = [projectgui.eegdata.emg_channels_list_labels ch.new_label];
+%         elseif strcmp(ch.type, 'eog')
+%             projectgui.eegdata.eog_channels_list           = [projectgui.eegdata.eog_channels_list (projectgui.eegdata.nch_eeg+ch_id)];
+%             projectgui.eegdata.eog_channels_list_labels    = [projectgui.eegdata.eog_channels_list_labels ch.new_label];
+%         end
+%     end
+% end
 
 projectgui.eegdata.no_eeg_channels_list = struct('visible', 'on', 'type', 'label', 'default', 'selfvar');  % D10:  list of NO-EEG channels IDs
 
