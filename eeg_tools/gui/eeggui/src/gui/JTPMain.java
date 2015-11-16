@@ -18,12 +18,12 @@ public class JTPMain extends javax.swing.JPanel {
      */
     public JTPMain() {
         initComponents();
-         addTabs();
+        addTabs();
         
     }
 
     private void addTabs(){
-        pp = new JPPreprocessing();
+        pp = new JPPreprocessing(this);
         jTabbedPane2.add(pp);
         pp.setVisible(true);        
     }
@@ -31,15 +31,20 @@ public class JTPMain extends javax.swing.JPanel {
     public void setGUI(Project proj)
     {
         project = proj;
-        pp.setGUI(project.preproc); 
+        pp.setGUI(project); 
         // set here all the other calls.
     }    
     public Project getGUI(){
         
-        project.preproc = pp.getGUI(); 
+        project = pp.getGUI(); 
         // set here all the other calls.
         return project;
     }     
+    public void updateData()
+    {
+        project = getGUI();
+        setGUI(project);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -967,9 +972,9 @@ public class JTPMain extends javax.swing.JPanel {
                     .addComponent(btOpenProject)
                     .addComponent(btSaveProject)
                     .addComponent(btSaveAsProject))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 739, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
