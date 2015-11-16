@@ -2,8 +2,8 @@ function [] = gui()
 
     % MATLAB_JAVA
 
-    javaj_jar_path = '/data/behavior_lab_svn/behaviourPlatform/CommonScript/eeg/eeg_tools/gui/eeggui/dist/eeggui.jar';
-    ...javaj_jar_path = '\\VBOXSVR\data\behavior_lab_svn\behaviourPlatform\CommonScript\eeg\eeg_tools\gui\eeggui\dist\eeggui.jar';
+    ...javaj_jar_path = '/data/behavior_lab_svn/behaviourPlatform/CommonScript/eeg/eeg_tools/gui/eeggui/dist/eeggui.jar';
+    javaj_jar_path = '\\VBOXSVR\data\behavior_lab_svn\behaviourPlatform\CommonScript\eeg\eeg_tools\gui\eeggui\dist\eeggui.jar';
     
     
     javaaddpath(javaj_jar_path);
