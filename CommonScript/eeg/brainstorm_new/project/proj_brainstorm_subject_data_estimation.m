@@ -2,7 +2,7 @@
 % calculate noise covariance on single trials
 
 %%
-function proj_brainstorm_subject_noise_estimation(project, subj_name, varargin)
+function proj_brainstorm_subject_data_estimation(project, subj_name, varargin)
 
 
     if nargin < 1
@@ -15,8 +15,8 @@ function proj_brainstorm_subject_noise_estimation(project, subj_name, varargin)
     brainstorm_data_path    = protocol.STUDIES;
     
     
-    start_interval_s        = project.epoching.bc_st.s;
-    end_interval_s          = project.epoching.bc_end.s;
+    start_interval_s        = project.epoching.epo_st.s;
+    end_interval_s          = project.epoching.epo_end.s;
     
     options_num=size(varargin,2);
     for opt=1:2:options_num
@@ -55,9 +55,9 @@ function proj_brainstorm_subject_noise_estimation(project, subj_name, varargin)
         'CallProcess', 'process_noisecov', ...
         FileNamesA, [], ...
         'baseline', [start_interval_s, end_interval_s], ...
-        'target', 1, ...  % Noise covariance
+        'target', 2, ...  % Data covariance
         'dcoffset', 1, ...
-        'method', 2, ...  % Diagonal matrix (better if: nTime < nChannel*(nChannel+1)/2)
+        'method', 1, ...  % Full matrix (better if: nTime < nChannel*(nChannel+1)/2)
         'copycond', 1, ...
         'copysubj', 0);
     

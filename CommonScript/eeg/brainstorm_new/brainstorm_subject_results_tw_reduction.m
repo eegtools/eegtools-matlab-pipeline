@@ -6,7 +6,7 @@
 
 
 %%
-function brainstorm_subject_results_tw_reduction(input_data_file, tw_limits, write_mode, output_data_postfix)
+function brainstorm_subject_results_tw_reduction(input_data_file, sec_tw_limits, write_mode, output_data_postfix)
 
     if nargin < 1
         help brainstorm_subject_results_tw_reduction;
@@ -23,16 +23,16 @@ function brainstorm_subject_results_tw_reduction(input_data_file, tw_limits, wri
     [inpath, inname, inext]     = fileparts(input_data_file);
     input_result                = load(input_data_file);
 
-    n_tw                        = length(tw_limits);
+    n_tw                        = length(sec_tw_limits);
     n_src                       = size(input_result.ImageGridAmp, 1);
     
     time_start                  = input_result.Time(1);
     time_step                   = input_result.Time(2) - input_result.Time(1);
     
-    id_tw_limits                = cell(1, n_tw);
+    tp_tw_limits                = cell(1, n_tw);
     for tw=1:n_tw
-        id_tw_limits{tw}(1)     = (tw_limits{tw}(1) - time_start)/time_step;
-        id_tw_limits{tw}(2)     = (tw_limits{tw}(2) - time_start)/time_step;
+        tp_tw_limits{tw}(1)     = (sec_tw_limits{tw}(1) - time_start)/time_step;
+        tp_tw_limits{tw}(2)     = (sec_tw_limits{tw}(2) - time_start)/time_step;
     end
     
     % load original datafile
@@ -48,26 +48,50 @@ function brainstorm_subject_results_tw_reduction(input_data_file, tw_limits, wri
             new_data_f              = zeros(n_ch, tot_tp);
             new_sources             = zeros(n_src, tot_tp);
             for tw=1:n_tw
-                new_data_f(:,tw)    = mean(data_file.F(:, round([id_tw_limits{tw}(1):id_tw_limits{tw}(2)])),2);
-                new_sources(:,tw)   = mean(input_result.ImageGridAmp(:, round([id_tw_limits{tw}(1):id_tw_limits{tw}(2)])),2);
+                new_data_f(:,tw)    = mean(data_file.F(:, round([tp_tw_limits{tw}(1):tp_tw_limits{tw}(2)])),2);
+                new_sources(:,tw)   = mean(input_result.ImageGridAmp(:, round([tp_tw_limits{tw}(1):tp_tw_limits{tw}(2)])),2);
             end
 
+        case 'average_abs'
+            tot_tp                  = n_tw;
+            new_data_f              = zeros(n_ch, tot_tp);
+            new_sources             = zeros(n_src, tot_tp);
+            for tw=1:n_tw
+                new_data_f(:,tw)    = mean(data_file.F(:, round([tp_tw_limits{tw}(1):tp_tw_limits{tw}(2)])),2);
+                new_sources(:,tw)   = mean(abs(input_result.ImageGridAmp(:, round([tp_tw_limits{tw}(1):tp_tw_limits{tw}(2)])),2));
+            end
+            
         case 'all'
             tot_tp                  = 0;
-            num_prev_tp             = cell(1, n_tw);
-            for tw=1:n_tw
-                num_prev_tp{tw}     = tot_tp;
-                tot_tp              = tot_tp + length([id_tw_limits{tw}(1):id_tw_limits{tw}(2)]);
+            curr_tw_end             = cell(1, n_tw);
+            curr_tw_end{1}          = length([tp_tw_limits{1}(1):tp_tw_limits{1}(2)]);
+            for tw=2:n_tw
+                curr_tw_end{tw}     = curr_tw_end{tw-1} + length([tp_tw_limits{tw}(1):tp_tw_limits{tw}(2)]);
             end
+            tot_tp                  = curr_tw_end{end};
             
             new_sources             = zeros(n_src, tot_tp);
             new_data_f              = zeros(n_ch, tot_tp);
-            for tw=1:n_tw-1
-                new_data_f(:,(num_prev_tp{tw}+1):num_prev_tp{tw+1})    = data_file.F(:, round(num_prev_tp{tw}+[id_tw_limits{tw}(1):id_tw_limits{tw}(2)]));
-                new_sources(:,(num_prev_tp{tw}+1):num_prev_tp{tw+1})   = input_result.ImageGridAmp(:, round(num_prev_tp{tw}+[id_tw_limits{tw}(1):id_tw_limits{tw}(2)]));
+
+            new_data_f(:,1:curr_tw_end{1})    = data_file.F(:, round([tp_tw_limits{1}(1):tp_tw_limits{1}(2)]));
+            new_sources(:,1:curr_tw_end{1})   = input_result.ImageGridAmp(:, round([tp_tw_limits{1}(1):tp_tw_limits{1}(2)]));
+            
+            
+            for tw=2:n_tw
+                new_data_f(:,(curr_tw_end{tw-1}+1):curr_tw_end{tw})    = data_file.F(:, round([tp_tw_limits{tw}(1):tp_tw_limits{tw}(2)]));
+                new_sources(:,(curr_tw_end{tw-1}+1):curr_tw_end{tw})   = input_result.ImageGridAmp(:, round([tp_tw_limits{tw}(1):tp_tw_limits{tw}(2)]));
             end
-            new_data_f(:,(num_prev_tp{tw+1}+1):tot_tp)    = data_file.F(:, round(num_prev_tp{tw+1}+[id_tw_limits{tw+1}(1):id_tw_limits{tw+1}(2)]));
-            new_sources(:,(num_prev_tp{tw+1}+1):tot_tp)   = input_result.ImageGridAmp(:, round(num_prev_tp{tw+1}+[id_tw_limits{tw+1}(1):id_tw_limits{tw+1}(2)]));
+
+            
+%             if n_tw > 1
+%                 for tw=1:n_tw-1
+%                     new_data_f(:,(num_prev_tp{tw}+1):num_prev_tp{tw+1})    = data_file.F(:, round(num_prev_tp{tw}+[tp_tw_limits{tw}(1):tp_tw_limits{tw}(2)]));
+%                     new_sources(:,(num_prev_tp{tw}+1):num_prev_tp{tw+1})   = input_result.ImageGridAmp(:, round(num_prev_tp{tw}+[tp_tw_limits{tw}(1):tp_tw_limits{tw}(2)]));
+%                 end
+%                 keyboard
+%                 new_data_f(:,(num_prev_tp{tw+1}+1):tot_tp)    = data_file.F(:, round(num_prev_tp{tw+1}+[tp_tw_limits{tw+1}(1):tp_tw_limits{tw+1}(2)]));
+%                 new_sources(:,(num_prev_tp{tw+1}+1):tot_tp)   = input_result.ImageGridAmp(:, round(num_prev_tp{tw+1}+[tp_tw_limits{tw+1}(1):tp_tw_limits{tw+1}(2)]));
+%             end
     end
     input_result.Time               = [1:tot_tp];    
     
@@ -78,7 +102,7 @@ function brainstorm_subject_results_tw_reduction(input_data_file, tw_limits, wri
     % get full path of original data_file (e.g.  /data/proj/X/bst_db/data/subj/cond)
     [indatafullpath, indatafullname, indatafullext] = fileparts(file_fullpath(input_result.DataFile));
     output_data_fullpath                            = fullfile(indatafullpath, [indatafullname '_tw_' write_mode output_data_postfix indatafullext]);
-    save(output_data_fullpath, '-struct', 'data_file');
+     save(output_data_fullpath, '-struct', 'data_file');
     
     % get brainstorm path of original data_file (e.g.  subj/cond)
     [indatapath, indataname, indataext] = fileparts(input_result.DataFile);
