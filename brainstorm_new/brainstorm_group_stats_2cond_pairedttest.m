@@ -6,16 +6,9 @@ function sFiles = brainstorm_group_stats_2cond_pairedttest(protocol_name, cond1,
     protocol = bst_get('ProtocolInfo');
     brainstorm_data_path = protocol.STUDIES;
     
-    
-    
-    
-    
-    
-    
     len_subj=length(subjects_list);
     FileNamesA = cell(1, len_subj);
     FileNamesB = cell(1, len_subj);
-    
     for nsubj=1:len_subj
         bst_path1    = fullfile(subjects_list{nsubj}, cond1, [analysis_type '.mat']);
         full_path1   = file_fullpath(bst_path1);

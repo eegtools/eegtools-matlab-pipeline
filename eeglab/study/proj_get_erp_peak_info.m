@@ -1,6 +1,6 @@
 %% function [extr_lat] = proj_get_erp_peak_info(project, out_file)
 % open a results file and get the latencies of all the TW peaks in each condition
-% suited for that design reporting all the plain conditions. not structured factors
+% ONLY suited for that design reporting all the plain conditions. not structured factors
 %
 % VARARGIN INPUTs
 % list_windows_names :  {'P100', 'N330', etc...}
@@ -71,11 +71,11 @@ function [extr_lat] = proj_get_erp_peak_info(project, input_mat_file, varargin)
         end
         
         %% get 'reference rois' name for input window
-        ref_roi = [];
+        ref_roi = {};
         curr_des_num = 1; ...erp_struct.study_des.num;
         for ntw_in_proj=1:length(project.postprocess.erp.design(curr_des_num).group_time_windows)
             if strcmp(tw_name, project.postprocess.erp.design(curr_des_num).group_time_windows(ntw_in_proj).name)
-                ref_roi = project.postprocess.erp.design(curr_des_num).group_time_windows(ntw_in_proj).ref_roi;
+                ref_roi = [ref_roi project.postprocess.erp.design(curr_des_num).group_time_windows(ntw_in_proj).ref_roi];
                 break;
             end
         end
@@ -98,7 +98,7 @@ function [extr_lat] = proj_get_erp_peak_info(project, input_mat_file, varargin)
         %% get 
         data_rois = erp_struct.dataroi(roi_id);
         for dr=1:length(data_rois)
-            roi_lat_struct{dr} = data_rois(dr).datatw.extr_lat;
+            roi_lat_struct{dr} = data_rois(dr).datatw.find_extrema.extr_lat;
         end        
 
         
