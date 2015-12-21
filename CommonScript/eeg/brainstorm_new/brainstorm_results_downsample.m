@@ -21,18 +21,19 @@ function ResultFile = brainstorm_results_downsample(protocol_name, result_file, 
     
     output_file_name=sFiles(1).FileName;
     
-    [idir,iname,iext] = fileparts(result_file);
-    [odir,oname,oext] = fileparts(output_file_name);
+    [idir,iname,iext]   = fileparts(result_file);
+    [odir,oname,oext]   = fileparts(output_file_name);
     
-    src=fullfile(brainstorm_data_path, output_file_name);
-    dest=fullfile(brainstorm_data_path, odir, [iname '_' atlas_name oext]);
+    src                 = fullfile(brainstorm_data_path, output_file_name);
+    dest                = fullfile(brainstorm_data_path, odir, [iname '_' atlas_name oext]);
     movefile(src,dest);
-    ResultFile=fullfile(odir, [oname '_' atlas_name oext]);    
+    
+    ResultFile          = fullfile(odir, [oname '_' atlas_name oext]);    
     
     db_reload_studies(sFiles(1).iStudy);
     
     % Save and display report
-    ReportFile = bst_report('Save', sFiles);
+    ReportFile          = bst_report('Save', sFiles);
     bst_report('Open', ReportFile);
 end
 
