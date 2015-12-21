@@ -51,6 +51,12 @@ function brainstorm_subject_results_tw_reduction(input_data_file, sec_tw_limits,
                 new_data_f(:,tw)    = mean(data_file.F(:, round([tp_tw_limits{tw}(1):tp_tw_limits{tw}(2)])),2);
                 new_sources(:,tw)   = mean(input_result.ImageGridAmp(:, round([tp_tw_limits{tw}(1):tp_tw_limits{tw}(2)])),2);
             end
+            
+            if tot_tp == 1 
+                new_data_f(:,2)     = new_data_f(:,1);
+                new_sources(:,2)    = new_sources(:,1);
+                tot_tp              = 2;
+            end
 
         case 'average_abs'
             tot_tp                  = n_tw;
@@ -61,6 +67,12 @@ function brainstorm_subject_results_tw_reduction(input_data_file, sec_tw_limits,
                 new_sources(:,tw)   = mean(abs(input_result.ImageGridAmp(:, round([tp_tw_limits{tw}(1):tp_tw_limits{tw}(2)])),2));
             end
             
+            if tot_tp == 1 
+                new_data_f(:,2)     = new_data_f(:,1);
+                new_sources(:,2)    = new_sources(:,1);
+                tot_tp              = 2;
+            end
+
         case 'all'
             tot_tp                  = 0;
             curr_tw_end             = cell(1, n_tw);
