@@ -12,6 +12,16 @@ function ResultFile = brainstorm_results_get_from_subjectslist_by_tag(subjects_l
             'tag', file_tag, ...
             'search', 2, ...
             'select', 1);  % Select only the files with the tag
+        
+        % Save report
+        ReportFile      = bst_report('Save', sFiles);
+        if isempty(sFiles)
+            bst_report('Open', ReportFile);        
+            rep = load(ReportFile);
+            rep.Reports{3,4}
+           keyboard 
+        end         
+        
         ResultFile{s} = sFiles(1).FileName;
     end
 end

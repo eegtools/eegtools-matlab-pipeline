@@ -1,7 +1,10 @@
-%% function sFiles = brainstorm_group_stats_2cond_pairedttest(protocol_name, cond1, cond2,  analysis_type, abs_type, subjects_list)
+%% function sFiles = brainstorm_group_stats_baseline_ttest(protocol_name, cond,  analysis_type, avg_func, subjects_list, varargin)
 %   analysis_type:   e.g. 'sloreta_fixed_surf'
-%
-function sFiles = brainstorm_group_stats_2cond_pairedttest(protocol_name, cond1, cond2,  analysis_type, abs_type, subjects_list, varargin)
+%   avg_func:                       % 1: Absolute value of average: abs(mean(x))
+                                    % 2: Absolute value of average: abs(mean(x))
+                                    % 3: Absolute value of average: abs(mean(x))
+%                                    
+function sFiles = brainstorm_group_stats_baseline_ttest(protocol_name, cond,  analysis_type, prestim, poststim, avg_func, subjects_list, varargin)
 
     iProtocol               = brainstorm_protocol_open(protocol_name);
     protocol                = bst_get('ProtocolInfo');
@@ -17,30 +20,17 @@ function sFiles = brainstorm_group_stats_2cond_pairedttest(protocol_name, cond1,
         end
     end    
     
-    
     len_subj                = length(subjects_list);
     FileNamesA              = cell(1, len_subj);
-    FileNamesB              = cell(1, len_subj);
     
     for nsubj=1:len_subj
-        bst_path1    = fullfile(subjects_list{nsubj}, cond1, ['results_' cond1 '_' analysis_type '.mat']);
-        full_path1   = file_fullpath(bst_path1);
+        bst_path    = fullfile(subjects_list{nsubj}, cond1, ['results_' cond '_' analysis_type '.mat']);
+        full_path   = file_fullpath(bst_path1);
         
-        bst_path2    = fullfile(subjects_list{nsubj}, cond2, ['results_' cond2 '_' analysis_type '.mat']);
-        full_path2   = file_fullpath(bst_path2);
-        
-        if exist(full_path1,'file')
-            FileNamesA{nsubj} = bst_path1;
+        if exist(full_path,'file')
+            FileNamesA{nsubj} = bst_path;
         else
-            disp(['Error in brainstorm_group_stats_2cond_pairedttest: file ' ]);
-            sFiles = [];
-            return;            
-        end
-        
-        if exist(full_path2,'file')
-            FileNamesB{nsubj} = bst_path2;
-        else
-            disp(['Error in brainstorm_group_stats_2cond_pairedttest: file ' ]);
+            disp(['Error in brainstorm_group_stats_baseline_ttest: file ' ]);
             sFiles = [];
             return;            
         end
@@ -49,11 +39,14 @@ function sFiles = brainstorm_group_stats_2cond_pairedttest(protocol_name, cond1,
     % Start a new report
     bst_report('Start', FileNamesA);
 
-    % Process: paired t-test
-    sFiles = bst_process(...
-        'CallProcess', 'process_ttest_paired', ...
-        FileNamesA, FileNamesB, ...
-        'abs_type', abs_type);  % D = abs(A)-abs(B)   - Default
+    
+    % Process: t-test [abs(avg)]: [0ms,996ms] vs. [-400ms,-4ms]
+    sFiles = bst_process( ...
+        'CallProcess', 'process_ttest_baseline', ...
+        FileNamesA, [], ...
+        'prestim', prestim, ...
+        'poststim', poststim, ...
+        'avg_func', avg_func);      
 
     % Save report
     ReportFile      = bst_report('Save', sFiles);
@@ -83,7 +76,7 @@ function sFiles = brainstorm_group_stats_2cond_pairedttest(protocol_name, cond1,
     'output', 1);  % Add to comment    
     
     src_filename    = fullfile(brainstorm_data_path, sFiles(1).FileName);
-    dest_filename   = fullfile(brainstorm_data_path, '@inter', ['presults_' cond1 '_' cond2 '_' analysis_type '.mat']);
+    dest_filename   = fullfile(brainstorm_data_path, '@inter', ['presults_' cond '_vs_baseline_' analysis_type '.mat']);
     movefile(src_filename, dest_filename, 'f');
     
     db_reload_studies(sFiles(1).iStudy);

@@ -1,5 +1,5 @@
 
-function brainstorm_subject_results_extract_scouts(protocol_name, result_file, scouts_name, time_limits, varargin)
+function brainstorm_result_extract_scouts(protocol_name, result_file, scouts_name, time_limits, varargin)
 
     iProtocol               = brainstorm_protocol_open(protocol_name);
     protocol                = bst_get('ProtocolInfo');
