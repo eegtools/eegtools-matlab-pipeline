@@ -93,17 +93,6 @@ function brainstorm_subject_results_tw_reduction(input_data_file, sec_tw_limits,
                 new_data_f(:,(curr_tw_end{tw-1}+1):curr_tw_end{tw})    = data_file.F(:, round([tp_tw_limits{tw}(1):tp_tw_limits{tw}(2)]));
                 new_sources(:,(curr_tw_end{tw-1}+1):curr_tw_end{tw})   = input_result.ImageGridAmp(:, round([tp_tw_limits{tw}(1):tp_tw_limits{tw}(2)]));
             end
-
-            
-%             if n_tw > 1
-%                 for tw=1:n_tw-1
-%                     new_data_f(:,(num_prev_tp{tw}+1):num_prev_tp{tw+1})    = data_file.F(:, round(num_prev_tp{tw}+[tp_tw_limits{tw}(1):tp_tw_limits{tw}(2)]));
-%                     new_sources(:,(num_prev_tp{tw}+1):num_prev_tp{tw+1})   = input_result.ImageGridAmp(:, round(num_prev_tp{tw}+[tp_tw_limits{tw}(1):tp_tw_limits{tw}(2)]));
-%                 end
-%                 keyboard
-%                 new_data_f(:,(num_prev_tp{tw+1}+1):tot_tp)    = data_file.F(:, round(num_prev_tp{tw+1}+[tp_tw_limits{tw+1}(1):tp_tw_limits{tw+1}(2)]));
-%                 new_sources(:,(num_prev_tp{tw+1}+1):tot_tp)   = input_result.ImageGridAmp(:, round(num_prev_tp{tw+1}+[tp_tw_limits{tw+1}(1):tp_tw_limits{tw+1}(2)]));
-%             end
     end
     input_result.Time               = [1:tot_tp];    
     

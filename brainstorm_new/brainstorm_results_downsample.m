@@ -19,6 +19,15 @@ function ResultFile = brainstorm_results_downsample(protocol_name, result_file, 
         'atlas', atlas_name, ...
         'isnorm', 0);
     
+    % Save report
+    ReportFile      = bst_report('Save', sFiles);
+    if isempty(sFiles)
+        bst_report('Open', ReportFile);        
+        rep = load(ReportFile);
+        rep.Reports{3,4}
+       keyboard 
+    end 
+    
     output_file_name=sFiles(1).FileName;
     
     [idir,iname,iext]   = fileparts(result_file);
@@ -31,9 +40,5 @@ function ResultFile = brainstorm_results_downsample(protocol_name, result_file, 
     ResultFile          = fullfile(odir, [oname '_' atlas_name oext]);    
     
     db_reload_studies(sFiles(1).iStudy);
-    
-    % Save and display report
-    ReportFile          = bst_report('Save', sFiles);
-    bst_report('Open', ReportFile);
 end
 

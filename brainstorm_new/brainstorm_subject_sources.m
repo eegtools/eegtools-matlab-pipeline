@@ -94,8 +94,20 @@ function ResultFile = brainstorm_subject_sources(protocol_name, subj_name, cond_
          'sensortypes', 'EEG', ...
          'output', 3);  % Full results: one per file
 
+    % Save report
+    ReportFile      = bst_report('Save', sFiles);
+    if isempty(sFiles)
+        bst_report('Open', ReportFile);        
+        rep = load(ReportFile);
+        rep.Reports{3,4}
+       keyboard 
+    end     
+     
+     
     ResultFile = sFiles(1).FileName;
     sFiles={ResultFile};
+
+    
     
     % rename output files according to analysis specs
     % standard tag is : cond_name_[wmne/dspm/sloreta]_[free/fixed/loose]_[loosevalue]
