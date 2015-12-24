@@ -32,7 +32,12 @@ end
 %==================================================================================
 % create subjects differences between two experimental conditions
 if do_sensors_conditions_differences
-    brainstorm_conditions_differences(project);
+    for subj=1:project.subjects.numsubj 
+        subj_name = project.subjects.list{subj};     
+        for pwc=1:length(pairwise_comparisons)
+            brainstorm_conditions_differences(project, subj_name, pairwise_comparisons{pwc}{1}, pairwise_comparisons{pwc}{2});
+        end
+    end
 end
 %==================================================================================
 % create group averages of erp experimental conditions
