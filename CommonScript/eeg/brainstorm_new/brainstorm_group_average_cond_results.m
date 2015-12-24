@@ -26,14 +26,7 @@ function sFiles = brainstorm_group_average_cond_results(db_name, subjects_list, 
             'avg_func', 1, ... 
             'keepevents', 1); 
 
-        % Save report
-        ReportFile      = bst_report('Save', sFiles);
-        if isempty(sFiles)
-            bst_report('Open', ReportFile);        
-            rep = load(ReportFile);
-            rep.Reports{3,4}
-           keyboard 
-        end 
+        brainstorm_utility_check_process_success(sFiles);
 
         % APPLY TAG NAME 
         sFiles = bst_process(...

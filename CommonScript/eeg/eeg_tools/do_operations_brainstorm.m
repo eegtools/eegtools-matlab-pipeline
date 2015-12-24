@@ -11,7 +11,7 @@ else
 end
 %==================================================================================
 % import EEGLAB epochs into BRAINSTORM and do averaging
-if do_brainstorm_import_averaging
+if do_sensors_import_averaging
     % for each epochs set file (subject and condition) perform: import, averaging, channelset, 
     for subj=1:project.subjects.numsubj 
         subj_name = project.subjects.list{subj};    
@@ -21,7 +21,7 @@ if do_brainstorm_import_averaging
 end
 %==================================================================================
 % do averaging of main effects...average n-conditions epochs and create a new condition
-if do_brainstorm_averaging_main_effects
+if do_sensors_averaging_main_effects
     for subj=1:project.subjects.numsubj 
         subj_name = project.subjects.list{subj};  
         for f=1:length(project.study.factors)
@@ -30,23 +30,33 @@ if do_brainstorm_averaging_main_effects
     end
 end    
 %==================================================================================
-% common noise estimation, calculated with the 4 basic conditions recordings and then copied to the other ones (main effects).
-if do_common_noise_estimation
+% create subjects differences between two experimental conditions
+if do_sensors_conditions_differences
+    brainstorm_conditions_differences(project);
+end
+%==================================================================================
+% create group averages of erp experimental conditions
+if do_sensors_group_erp_averaging
+    proj_brainstorm_group_average_cond(project);
+end
+%==================================================================================
+% common noise estimation, calculated with the basic conditions recordings and then copied to the other ones (main effects).
+if do_sensors_common_noise_estimation
     for subj=1:project.subjects.numsubj 
         subj_name=project.subjects.list{subj};  
         proj_brainstorm_subject_noise_estimation(project, subj_name);
     end    
 end
 %==================================================================================
-% common data estimation, calculated with the 4 basic conditions recordings and then copied to the other ones (main effects).
-if do_common_data_estimation
+% common data estimation, calculated with the basic conditions recordings and then copied to the other ones (main effects).
+if do_sensors_common_data_estimation
     for subj=1:project.subjects.numsubj 
         subj_name=project.subjects.list{subj};  
         proj_brainstorm_subject_data_estimation(project, subj_name);
     end    
 end
 %==================================================================================
-% BEM calculation over first subject (and first condition) and copy to all subjects
+% BEM calculation over first subject (and first condition) and copy to all subjects (assuming all the subjects used the same montage)
 if do_bem
     ProtocolSubjects    = bst_get('ProtocolSubjects');
     subj1_name          = ProtocolSubjects.Subject(1).Name;
@@ -75,8 +85,8 @@ end
 %================================================================================================================================================================================
 %================================================================================================================================================================================
 %================================================================================================================================================================================
-% sources calculation over full Vertices (15000) surface
-if do_sources
+% sources calculation over full Vertices (usually 15000) surface
+if do_sources_calculation
     % perform sources processing over subject/condition/data_average.mat
     sources_results = cell(project.subjects.numsubj, tot_num_contrasts);
     
@@ -93,7 +103,7 @@ end
 %==================================================================================
 % sources time-frequency calculation: four freq bands, temporary over-ride
 % output : [timefreq_morlet_' source_norm band_desc '_zscore.mat']
-if do_sources_tf
+if do_sources_tf_calculation
     
     sources_norm=[sources_norm '_s3000'];    
         
@@ -118,7 +128,7 @@ end
 %==================================================================================
 % scouts time-frequency calculation: four freq bands, temporary over-ride
 % output: [timefreq_morlet_' source_norm band_desc '_69scouts_zscore.mat']
-if do_sources_scouts_tf
+if do_sources_scouts_tf_calculation
     name_cond={'cwalker','cscrambled'};
     name_maineffects={};
     % sources_norm=[sources_norm '_s500'];
@@ -338,11 +348,6 @@ end
 %======================================================================================================================================================================================================================================================
 %======================================================================================================================================================================================================================================================
 %======================================================================================================================================================================================================================================================
-% GROUP AVERAGING
-%==================================================================================
-if do_group_erp_averaging
-    proj_brainstorm_group_average_cond(project);
-end
 %==================================================================================
 % STATS
 %==================================================================================
@@ -368,7 +373,8 @@ if do_process_stats_baseline_ttest_sources
         results{bc} = brainstorm_group_stats_baseline_ttest(project.brainstorm.db_name, ...
                                                             baseline_comparisons{bc}, ...
                                                             group_comparison_analysis_type, ...
-                                                            1, project.subjects.list, ...
+                                                            baseline, poststim, 2 , ... 
+                                                            project.subjects.list, ...
                                                             'comment', group_comparison_comment ...
                                                             );
     end
