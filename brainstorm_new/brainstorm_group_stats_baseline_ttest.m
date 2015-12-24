@@ -24,8 +24,8 @@ function sFiles = brainstorm_group_stats_baseline_ttest(protocol_name, cond,  an
     FileNamesA              = cell(1, len_subj);
     
     for nsubj=1:len_subj
-        bst_path    = fullfile(subjects_list{nsubj}, cond1, ['results_' cond '_' analysis_type '.mat']);
-        full_path   = file_fullpath(bst_path1);
+        bst_path    = fullfile(subjects_list{nsubj}, cond, ['results_' cond '_' analysis_type '.mat']);
+        full_path   = file_fullpath(bst_path);
         
         if exist(full_path,'file')
             FileNamesA{nsubj} = bst_path;
@@ -48,14 +48,7 @@ function sFiles = brainstorm_group_stats_baseline_ttest(protocol_name, cond,  an
         'poststim', poststim, ...
         'avg_func', avg_func);      
 
-    % Save report
-    ReportFile      = bst_report('Save', sFiles);
-    if isempty(sFiles)
-        bst_report('Open', ReportFile);        
-        rep = load(ReportFile);
-        rep.Reports{3,4}
-       keyboard 
-    end     
+    brainstorm_utility_check_process_success(sFiles);   
 
     
     ResultFile = sFiles(1).FileName;

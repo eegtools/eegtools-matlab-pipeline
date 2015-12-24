@@ -37,14 +37,14 @@ function proj_brainstorm_subject_average_conditions(project, subj_name, new_cond
 
 
     % Save and display report
-    ReportFile = bst_report('Save', sFiles);
+    ReportFile      = bst_report('Save', sFiles);
     bst_report('Open', ReportFile);  
     
-    src_filename=sFiles(1).FileName;
-    dest_filename=[subj_name '/' new_condition_name '/' 'data_average.mat'];
+    src_filename    = sFiles(1).FileName;
+    dest_filename   = fullfile(subj_name, new_condition_name, 'data_average.mat');
     
-    srcfile  = fullfile(brainstorm_data_path, src_filename);
-    destfile = fullfile(brainstorm_data_path, dest_filename);
+    srcfile         = fullfile(brainstorm_data_path, src_filename);
+    destfile        = fullfile(brainstorm_data_path, dest_filename);
     
     movefile(srcfile, destfile);
     
