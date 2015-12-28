@@ -1039,8 +1039,15 @@ project.postprocess.ersp.design(1).group_time_windows_continuous = {     .... de
                                     };                                  
 };
 
-
-
+% ****CHECK****
+if size(project.postprocess.ersp.design(1).group_time_windows_continuous, 1) ~= project.postprocess.ersp.nroi
+   error(['number of roi in group_time_windows_continuous parameters (' num2str(size(project.postprocess.ersp.design(1).group_time_windows_continuous,1)) ') does not correspond to number of defined ROI (' num2str(project.postprocess.ersp.nroi) ')']); 
+else
+    if size(project.postprocess.ersp.design(1).group_time_windows_continuous{1}, 1) ~= project.postprocess.ersp.nbands
+        error(['number of bands in the first roi of group_time_windows_continuous parameters (' num2str(size(project.postprocess.ersp.design(1).group_time_windows_continuous{1},1)) ') does not correspond to number of defined frequency bands (' num2str(project.postprocess.ersp.nbands) ')']); 
+    end
+end
+%*************
 
 
 
