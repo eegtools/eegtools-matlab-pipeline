@@ -19,14 +19,7 @@ function ResultFile = brainstorm_results_downsample(protocol_name, result_file, 
         'atlas', atlas_name, ...
         'isnorm', 0);
     
-    % Save report
-    ReportFile      = bst_report('Save', sFiles);
-    if isempty(sFiles)
-        bst_report('Open', ReportFile);        
-        rep = load(ReportFile);
-        rep.Reports{3,4}
-       keyboard 
-    end 
+    brainstorm_utility_check_process_success(sFiles);
     
     output_file_name=sFiles(1).FileName;
     

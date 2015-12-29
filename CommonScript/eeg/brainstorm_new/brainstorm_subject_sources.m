@@ -17,6 +17,7 @@ function ResultFile = brainstorm_subject_sources(protocol_name, subj_name, cond_
     loose           = [];
     tag             = '';
     headmodelfile   = '';
+    do_norm         = 0;
     
     options_num=size(varargin,2);
     for opt=1:2:options_num
@@ -56,6 +57,8 @@ function ResultFile = brainstorm_subject_sources(protocol_name, subj_name, cond_
             case 'headmodelfile'
                 headmodelfile = varargin{opt+1};
                 brainstorm_subject_set_headmodel_by_file(protocol_name, subj_name, headmodelfile);
+            case 'do_norm'
+                do_norm = varargin{opt+1};
         end
     end
     
@@ -94,14 +97,7 @@ function ResultFile = brainstorm_subject_sources(protocol_name, subj_name, cond_
          'sensortypes', 'EEG', ...
          'output', 3);  % Full results: one per file
 
-    % Save report
-    ReportFile      = bst_report('Save', sFiles);
-    if isempty(sFiles)
-        bst_report('Open', ReportFile);        
-        rep = load(ReportFile);
-        rep.Reports{3,4}
-       keyboard 
-    end     
+    brainstorm_utility_check_process_success(sFiles);     
      
      
     ResultFile = sFiles(1).FileName;
@@ -145,5 +141,9 @@ function ResultFile = brainstorm_subject_sources(protocol_name, subj_name, cond_
     ReportFile = bst_report('Save', sFiles);
     bst_report('Open', ReportFile);
 
+    
+    if do_norm
+        brainstorm_result_uncontrained2flat(protocol_name, fullfile(dir, [output_file_name ext]));
+    end
 end
 
