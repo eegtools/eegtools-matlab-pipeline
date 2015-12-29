@@ -163,6 +163,24 @@ end
 %================================================================================================================================================================================
 %================================================================================================================================================================================
 %==================================================================================
+% project unconstrained 3oriented sources to a scalar value
+if do_sources_unconstrained2flat
+    list_subjects               = project.subjects.list;
+    condition_names             = project.epoching.condition_names;    cond_length = length(condition_names);    
+    for t=1:length(postprocess_sources_tag_list)
+        tag         = postprocess_sources_tag_list{t};
+        input_file  = [project.brainstorm.average_file_name '.mat'];   .... e.g. 'data_average.mat'        
+        
+        for cond=1:project.epoching.numcond
+           cond_files = brainstorm_results_get_from_subjectslist_by_tag(list_subjects, condition_names{cond}, input_file, tag);
+           for s=1:length(cond_files)
+                result_file = fullfile(project.paths.project, project.brainstorm.db_name, 'data', cond_files{s});
+                brainstorm_result_uncontrained2flat(project.brainstorm.db_name, result_file, source_flatting_method);
+           end
+        end
+   end
+end
+%==================================================================================
 % time dimensionality reduction: averaging samples within a number of timewindows
 if do_sources_time_reduction
 
