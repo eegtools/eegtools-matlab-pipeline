@@ -27,7 +27,14 @@ function EEG = eeglab_subject_ica(input_file_name, output_path, eeg_ch_list, ch_
     end 
 
     % ......................................................................................................
-
+    
+    % CLA inserisco passaggio a modalità base (non cudaica) su pc che non
+    % hanno cudaica
+    if (not(exist('cudaica'))
+        ica_type = 'runica';
+    end
+    
+    
     EEG = pop_loadset(input_file_name);
 
     ll = length({EEG.chanlocs.labels});
