@@ -222,37 +222,7 @@ for design_num=design_num_vec
         which_extrema_design            = project.postprocess.erp.design(design_num).which_extrema_curve;
         which_extrema_design_roi        = which_extrema_design{nroi};
         
-        %         if ~eeglab_check_tw_compliancy(group_time_windows_list_design, times);
-        %             return;
-        %         end
-        %
-        %         if isempty(which_extrema_design_roi)
-        %             disp(['which_extrema_design_roi of design num:' num2str(design_num) ' and roi ' roi_name ' is empty']);
-        %             return;
-        %         end
-        
-        %         switch which_method_find_extrema
-        %             case 'group_noalign'
-        %                 erp_curve_roi_stat.dataroi(nroi).datatw.find_extrema = ...
-        %                     eeglab_study_plot_find_extrema_avg(erp_curve_roi,levels_f1,levels_f2,group_time_windows_list_design,times,which_extrema_design_roi,sel_extrema);
-        %             case 'group_align'
-        %
-        %                 disp('ERROR: still not implemented!!! adopting individual_align ');
-        %                 subject_time_windows_list_design=subject_time_windows_list{design_num};
-        %                 erp_curve_roi_stat.dataroi(nroi).datatw.find_extrema = ...
-        %                     eeglab_study_plot_find_extrema_single(erp_curve_roi,levels_f1,levels_f2,group_time_windows_list_design,subject_time_windows_list_design,times,which_extrema_design_roi,...
-        %                     sel_extrema);
-        %
-        %             case 'individual_noalign'
-        %                 erp_curve_roi_stat.dataroi(nroi).datatw.find_extrema = ...
-        %                     eeglab_study_plot_find_extrema_gru(erp_curve_roi,levels_f1,levels_f2,group_time_windows_list_design,times,which_extrema_design_roi,sel_extrema);
-        %             case 'individual_align'
-        %                 subject_time_windows_list_design=subject_time_windows_list{design_num};
-        %                 erp_curve_roi_stat.dataroi(nroi).datatw.find_extrema = ...
-        %                     eeglab_study_plot_find_extrema_single(erp_curve_roi,levels_f1,levels_f2,group_time_windows_list_design,subject_time_windows_list_design,times,which_extrema_design_roi,...
-        %                     sel_extrema);
-        %         end
-        %
+      
         
         input_find_extrema.which_method_find_extrema             = which_method_find_extrema;
         input_find_extrema.design_num                            = design_num;
