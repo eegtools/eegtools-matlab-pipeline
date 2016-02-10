@@ -8,7 +8,7 @@ function project = eegtools_project_derive_parameters(project)
     project.epoching.epo_st.ms  = project.epoching.epo_st.s*1000;             % epochs start latency
     project.epoching.epo_end.ms = project.epoching.epo_end.s*1000;             % epochs end latency
 
-    project.epoching.baseline_mark.baseline_begin_target_marker_delay.ms = project.epoching.baseline_mark.baseline_begin_target_marker_delay.s *1000; % delay  between target and baseline begin marker to be inserted
+    project.epoching.baseline_mark.baseline_insert_begin_target_marker_delay.ms = project.epoching.baseline_mark.baseline_insert_begin_target_marker_delay.s *1000; % delay  between target and baseline begin marker to be inserted
 
     % ======================================================================================================
     % POSTPROCESS
