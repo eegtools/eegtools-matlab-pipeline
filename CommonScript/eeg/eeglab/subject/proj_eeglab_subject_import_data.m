@@ -75,10 +75,10 @@ function EEG = proj_eeglab_subject_import_data(project, varargin)
                 error(['unrecognized device (' project.import.acquisition_system ')']);
         end
 
-        if(not(strcmp(project.import.acquisition_system,'GEODESIC')))
+%         if(not(strcmp(project.import.acquisition_system,'GEODESIC')))
             EEG = pop_chanedit( EEG, 'lookup',eeglab_channels_file);    ...  considering using a same file, suitable for whichever electrodes configuration
                 EEG = eeg_checkset( EEG );
-        end
+%         end
 
         % global filtering
 
