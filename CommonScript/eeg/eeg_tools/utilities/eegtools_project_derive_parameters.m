@@ -19,16 +19,16 @@ function project = eegtools_project_derive_parameters(project)
     project.ersp.postprocess.frequency_bands_names = {project.ersp.postprocess.frequency_bands.name};
 
     % ERP
-    project.erp.study.tmin_analysis.ms                  = project.erp.study.tmin_analysis.s*1000;
-    project.erp.study.tmax_analysis.ms                  = project.erp.study.tmax_analysis.s*1000;
-    project.erp.study.ts_analysis.ms                    = project.erp.study.ts_analysis.s*1000;
-    project.erp.study.timeout_analysis_interval.ms      = project.erp.study.timeout_analysis_interval.s*1000;
+    project.erp.study_params.tmin_analysis.ms                  = project.erp.study_params.tmin_analysis.s*1000;
+    project.erp.study_params.tmax_analysis.ms                  = project.erp.study_params.tmax_analysis.s*1000;
+    project.erp.study_params.ts_analysis.ms                    = project.erp.study_params.ts_analysis.s*1000;
+    project.erp.study_params.timeout_analysis_interval.ms      = project.erp.study_params.timeout_analysis_interval.s*1000;
 
     % ERSP
-    project.ersp.study.tmin_analysis.ms                 = project.ersp.study.tmin_analysis.s*1000;
-    project.ersp.study.tmax_analysis.ms                 = project.ersp.study.tmax_analysis.s*1000;
-    project.ersp.study.ts_analysis.ms                   = project.ersp.study.ts_analysis.s*1000;
-    project.ersp.study.timeout_analysis_interval.ms     = project.ersp.study.timeout_analysis_interval.s*1000;
+    project.ersp.study_params.tmin_analysis.ms                 = project.ersp.study_params.tmin_analysis.s*1000;
+    project.ersp.study_params.tmax_analysis.ms                 = project.ersp.study_params.tmax_analysis.s*1000;
+    project.ersp.study_params.ts_analysis.ms                   = project.ersp.study_params.ts_analysis.s*1000;
+    project.ersp.study_params.timeout_analysis_interval.ms     = project.ersp.study_params.timeout_analysis_interval.s*1000;
 
     % ======================================================================================================
     % RESULTS DISPLAY
