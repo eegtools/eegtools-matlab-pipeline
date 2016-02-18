@@ -47,7 +47,7 @@ if project.operations.do_auto_pauses_removal
             eeglab_subject_remove_pauses(file_name, project.task.events.pause_trigger_value, project.task.events.resume_trigger_value);
         else
             disp('====>> errors in pause/resume trigger sequence');
-            pause_resume_errors
+            pause_resume_errors;
         end
     end
 end
@@ -61,6 +61,12 @@ if project.operations.do_uniform_montage
     % uniform montages between different polygraphs
     EEG = proj_eeglab_subject_uniform_montage(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
 end
+%==================================================================================
+if project.operations.do_reref
+    % rereferencing 
+    EEG = proj_eeglab_subject_reref(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
+end
+
 %==================================================================================
 if project.operations.do_mark_trial
     % mark trial begin and end

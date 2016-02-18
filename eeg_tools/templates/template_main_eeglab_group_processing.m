@@ -34,7 +34,7 @@ project.conf_file_name      = 'project_structure_observation';         ... proje
 %  PROJECT STRUCTURE AND FILE SYSTEM INITIALIZATION
 %=====================================================================================================================================================================
 project.paths.script.common_scripts     = fullfile(project.paths.svn_scripts_root, 'CommonScript', '');                                                     addpath(project.paths.script.common_scripts);      ... to get genpath2
-project.paths.script.eeg_tools          = fullfile(project.paths.script.common_scripts, 'eeg','eeg_tools', '');                                             addpath(project.paths.script.eeg_tools);           ... to get define_project_paths
+project.paths.script.eeg_tools          = fullfile(project.paths.script.common_scripts, 'eeg','eeg_tools', '');                                             addpath(genpath2(project.paths.script.eeg_tools)); %addpath(project.paths.script.eeg_tools);           ... to get define_project_paths
 project.paths.script.project            = fullfile(project.paths.svn_scripts_root, project.research_group, project.research_subgroup , project.name, '');   addpath(genpath2(project.paths.script.project));   ... in general u don't need to import the others' projects svn folders
 
 eval(project.conf_file_name);                                               ... project structure
