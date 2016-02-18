@@ -20,7 +20,7 @@ function EEG = proj_eeglab_subject_ica(project, varargin)
                     'get_filename_step',    ... 
                     'custom_input_folder',  ...
                     'custom_suffix' ...
-                    }
+                    };
 
                 if isempty(varargin{par+1})
                     continue;
@@ -31,7 +31,9 @@ function EEG = proj_eeglab_subject_ica(project, varargin)
     end
 
     if not(iscell(list_select_subjects)), list_select_subjects = {list_select_subjects}; end
+    
     numsubj = length(list_select_subjects);
+    
     % -------------------------------------------------------------------------------------------------------------------------------------
 
     for subj=1:numsubj
