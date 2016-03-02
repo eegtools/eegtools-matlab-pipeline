@@ -186,8 +186,12 @@ if do_sources_time_reduction
 
     sample_length.ms            = 1000/project.eegdata.fs;
     sample_length.s             = 1/project.eegdata.fs;
-    group_time_windows_names    = arrange_structure(project.postprocess.erp.design, 'group_time_windows_names');
-    list_windows_names          = group_time_windows_names{1}; ... {'P100', '', '', ...etc}
+    
+    if isempty(list_windows_names)
+        group_time_windows_names    = arrange_structure(project.postprocess.erp.design, 'group_time_windows_names');
+        list_windows_names          = group_time_windows_names{1}; ... {'P100', '', '', ...etc}
+    end
+
     condition_names             = project.epoching.condition_names;    cond_length = length(condition_names);
     list_subjects               = project.subjects.list;
     
@@ -209,9 +213,9 @@ if do_sources_time_reduction
                      window_limits{tw}      = [subj_latencies(cond, tw, s) - window_samples_halfwidth*sample_length.s subj_latencies(cond, tw, s) + window_samples_halfwidth*sample_length.s];
                 end               
                 result_file = fullfile(project.paths.project, project.brainstorm.db_name, 'data', cond_files{s});
-                brainstorm_subject_results_tw_reduction(result_file, window_limits, 'average',      ['_' num2str(window_samples_halfwidth*2+1) '_samples']);
-                ...brainstorm_subject_results_tw_reduction(result_file, window_limits, 'average_abs',  ['_' num2str(window_samples_halfwidth*2+1) '_samples']);
-                brainstorm_subject_results_tw_reduction(result_file, window_limits, 'all',          ['_' num2str(window_samples_halfwidth*2+1) '_samples']);
+                brainstorm_subject_results_tw_reduction(result_file, window_limits, 'average',      ['_' num2str(window_samples_halfwidth*2+1) time_red_output_postfix_name ]);
+                ...brainstorm_subject_results_tw_reduction(result_file, window_limits, 'average_abs',  ['_' num2str(window_samples_halfwidth*2+1) temp_red_output_postfix_name]);
+                brainstorm_subject_results_tw_reduction(result_file, window_limits, 'all',          ['_' num2str(window_samples_halfwidth*2+1) time_red_output_postfix_name]);
            end
         end
     end
@@ -266,7 +270,7 @@ if do_results_zscore
            cond_files = brainstorm_results_get_from_subjectslist_by_tag(list_subjects, condition_names{cond}, input_file, tag);
            for s=1:length(cond_files)
                 result_file = fullfile(project.paths.project, project.brainstorm.db_name, 'data', cond_files{s});
-                brainstorm_result_zscore(project.brainstorm.db_name, result_file, baseline);
+                brainstorm_result_zscore(project.brainstorm.db_name, result_file, baseline, 'source_abs', source_abs);
            end
         end
     end    
@@ -382,6 +386,7 @@ if do_process_stats_paired_2samples_ttest_sources
         results{pwc} = brainstorm_group_stats_2cond_pairedttest(project.brainstorm.db_name, ...
                                                                 pairwise_comparisons{pwc}{1}, ...
                                                                 pairwise_comparisons{pwc}{2}, ...
+                                                                group_comparison_data_type, ...
                                                                 group_comparison_analysis_type, ...
                                                                 1, project.subjects.list, ...
                                                                 'comment', group_comparison_comment ...

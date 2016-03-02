@@ -5,7 +5,6 @@
 % SUBSAMPLING
 % CHANNELS TRANSFORMATION
 % INTERPOLATION
-% RE-REFERENCE
 % EVENT FILTERING
 % SPECIFIC FILTERING
 %
@@ -144,33 +143,6 @@ function EEG = proj_eeglab_subject_preprocessing(project, varargin)
         end
 
         %===============================================================================================
-        % RE-REFERENCE
-        %===============================================================================================
-        ... if left blank => do nothing, if project.import.reference_channels{1} = 'CAR' => apply CAR, else ...
-        if not(isempty(project.import.reference_channels))
-            reference=[];
-            if not(strcmp(project.import.reference_channels{1}, 'CAR'))
-
-                tchanref        = length(project.import.reference_channels);
-                channels_list   = {EEG.chanlocs.labels};
-                for nchref=1:tchanref;
-                    ll                  = length(project.import.reference_channels{nchref});
-                    match_ref(nchref,:) = strncmp(channels_list, project.import.reference_channels(nchref), ll);
-                end
-                refvec      = find(sum(match_ref,1)>0);
-                reference   = refvec;
-            end
-
-            if isempty(project.eegdata.no_eeg_channels_list)
-                EEG = pop_reref(EEG, [reference], 'keepref', 'on');
-            else
-                EEG = pop_reref(EEG, [reference], 'exclude', project.eegdata.no_eeg_channels_list, 'keepref', 'on');
-            end
-
-            EEG = eeg_checkset( EEG );
-        end
-
-        %===============================================================================================
         % EVENTS FILTERING
         %===============================================================================================
         if not(isempty(project.import.valid_marker))
@@ -221,6 +193,10 @@ end
 % CHANGE LOG
 % ====================================================================================================
 % ====================================================================================================
+% 01/03/2016 
+% removed the re-referencing from the standard preprocessing step. user
+% must do it after first ICA. after re-referencing ICA should be re-done
+%
 % 04/06/2015
 % corrected polygraphic channels transformation, you can now name new channels as previous ones
 %

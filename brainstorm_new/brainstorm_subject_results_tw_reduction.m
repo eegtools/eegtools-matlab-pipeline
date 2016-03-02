@@ -103,7 +103,7 @@ function brainstorm_subject_results_tw_reduction(input_data_file, sec_tw_limits,
     % get full path of original data_file (e.g.  /data/proj/X/bst_db/data/subj/cond)
     [indatafullpath, indatafullname, indatafullext] = fileparts(file_fullpath(input_result.DataFile));
     output_data_fullpath                            = fullfile(indatafullpath, [indatafullname '_tw_' write_mode output_data_postfix indatafullext]);
-     save(output_data_fullpath, '-struct', 'data_file');
+    save(output_data_fullpath, '-struct', 'data_file');
     
     % get brainstorm path of original data_file (e.g.  subj/cond)
     [indatapath, indataname, indataext] = fileparts(input_result.DataFile);

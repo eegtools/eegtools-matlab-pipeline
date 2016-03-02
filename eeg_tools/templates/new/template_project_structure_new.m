@@ -31,12 +31,19 @@
 ...project.name                                     % A3: set in main : must correspond to 'project.paths.local_projects_data' subfolder name
 ...conf_file_name
 project.study_suffix                                = '';                   % A4: sub name used to create a different STUDY name (fianl file will be called: [project.name project.study_suffix '.study'])
-project.analysis_name                               = 'raw_observation';    % A5: epoching output folder name, subfolder containing the condition files of the current analysis type
+...project.analysis_name                               = 'raw_observation';    % A5: epoching output folder name, subfolder containing the condition files of the current analysis type
 
 project.operations.do_source_analysis               = 0;                    % A6:  
 project.operations.do_emg_analysis                  = 0;                    % A7:
 project.operations.do_cluster_analysis              = 0;                    % A8:
 
+
+project.current_analysis.condition_folder           = 'study_ae';
+project.current_analysis.list_subjects              = {'s1', 's3', 's4', 's5'};
+project.current_analysis.custom_suffix              = '';
+project.current_analysis.design_num_vec             = [1 3]; 
+project.current_analysis.stat_freq_bands_list       = [];
+project.current_analysis.mask_coef                  = [];
 %% ======================================================================================================
 % B:    PATHS  
 % ======================================================================================================
