@@ -1,7 +1,7 @@
 %% function sFiles = brainstorm_group_stats_2cond_pairedttest(protocol_name, cond1, cond2,  analysis_type, abs_type, subjects_list)
 %   analysis_type:   e.g. 'sloreta_fixed_surf'
 %
-function sFiles = brainstorm_group_stats_2cond_pairedttest(protocol_name, cond1, cond2,  analysis_type, abs_type, subjects_list, varargin)
+function sFiles = brainstorm_group_stats_2cond_pairedttest(protocol_name, cond1, cond2,  data_type, analysis_type, abs_type, subjects_list, varargin)
 
     iProtocol               = brainstorm_protocol_open(protocol_name);
     protocol                = bst_get('ProtocolInfo');
@@ -23,10 +23,10 @@ function sFiles = brainstorm_group_stats_2cond_pairedttest(protocol_name, cond1,
     FileNamesB              = cell(1, len_subj);
     
     for nsubj=1:len_subj
-        bst_path1    = fullfile(subjects_list{nsubj}, cond1, ['results_' cond1 '_' analysis_type '.mat']);
+        bst_path1    = fullfile(subjects_list{nsubj}, cond1, [data_type cond1 '_' analysis_type '.mat']);
         full_path1   = file_fullpath(bst_path1);
         
-        bst_path2    = fullfile(subjects_list{nsubj}, cond2, ['results_' cond2 '_' analysis_type '.mat']);
+        bst_path2    = fullfile(subjects_list{nsubj}, cond2, [data_type cond2 '_' analysis_type '.mat']);
         full_path2   = file_fullpath(bst_path2);
         
         if exist(full_path1,'file')
@@ -69,7 +69,7 @@ function sFiles = brainstorm_group_stats_2cond_pairedttest(protocol_name, cond1,
     sFiles={ResultFile};    
     
     % remove 'results' string from analysis_type
-    analysis_type   = strrep(analysis_type, 'results_', '');
+    analysis_type   = strrep(analysis_type, data_type, '');
     
     if not(isempty(comment))
         analysis_type = [analysis_type '_' comment];

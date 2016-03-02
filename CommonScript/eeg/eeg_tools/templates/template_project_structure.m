@@ -77,12 +77,11 @@ project.task.events.start_experiment_trigger_value  = 1;    % C1:   signal exper
 project.task.events.pause_trigger_value             = 2;    % C2:   start: pause, feedback and rest period
 project.task.events.resume_trigger_value            = 3;    % C3:   end: pause, feedback and rest period
 project.task.events.end_experiment_trigger_value    = 4;    % C4:   signal experiment end
-project.task.events.videoend_trigger_value          = 5;
-project.task.events.question_trigger_value          = 6;
-project.task.events.AOCS_audio_trigger_value        = 7;
-project.task.events.AOIS_audio_trigger_value        = 8;
-project.task.events.cross_trigger_value             = 9;
 
+project.task.events.baseline_start_trigger_value    = '9';
+project.task.events.baseline_end_trigger_value      = '10';
+project.task.events.trial_start_trigger_value       = project.task.events.baseline_start_trigger_value;
+project.task.events.trial_end_trigger_value         = '5';
 
 project.task.events.mrkcode_cond                    = { ...
                                                         {'11' '12' '13' '14' '15' '16'};...     % G15:  triggers defining conditions...even if only one trigger is used for each condition, a cell matrix is used
@@ -91,13 +90,9 @@ project.task.events.mrkcode_cond                    = { ...
                                                         {'41' '42' '43' '44' '45' '46'};...  
                                                      };
                                                  
-                                                 
-                                               
-                                                 
 project.task.events.valid_marker                    = [project.task.events.mrkcode_cond{1:length(project.task.events.mrkcode_cond)}];
 project.task.events.import_marker                   = [{'1' '2' '3' '4' '5' '6' '7' '8' '9' '10'} project.task.events.valid_marker];  
                                                  
-
 %% ======================================================================================================
 % D:    IMPORT
 % ======================================================================================================
@@ -854,10 +849,10 @@ project.stats.ersp.narrowband.which_realign_param   = {'cog_pos','cog_neg','cog_
 
 
 % **********CHECK*****************
-if lenght(project.stats.ersp.narrowband.which_realign_measure) ~= project.postprocess.ersp.nbands
+if length(project.stats.ersp.narrowband.which_realign_measure) ~= project.postprocess.ersp.nbands
     error(['number of which_realign_measure ' num2str(lenght(project.stats.ersp.narrowband.which_realign_measure)) ' is different than number of defined bands (' num2str(project.postprocess.ersp.nbands) ')']);
 end
-if lenght(project.stats.ersp.narrowband.which_realign_param) ~= project.postprocess.ersp.nbands
+if length(project.stats.ersp.narrowband.which_realign_param) ~= project.postprocess.ersp.nbands
     error(['number of which_realign_param ' num2str(lenght(project.stats.ersp.narrowband.which_realign_param)) ' is different than number of defined bands (' num2str(project.postprocess.ersp.nbands) ')']);
 end
 
@@ -896,7 +891,7 @@ project.postprocess.ersp.eog.roi_names                              = {'L','R','
 project.postprocess.ersp.eog.numroi                                 = length(project.postprocess.ersp.eog.roi_list);
 
 
-project.postprocess.erp.emg.roi_list = {  ...
+project.postprocess.ersp.emg.roi_list = {  ...
           {'EMG1','EMG2'};  ... 
           {'EMG3','EMG4'};  ... 
           {'EMG5','EMG6'};            ... 
@@ -1037,6 +1032,18 @@ project.postprocess.ersp.design(1).group_time_windows_continuous = {     .... de
                                         {}; ...
                                         {}...
                                     };                                  
+                                     {... roi
+                                        {};... frequency band
+                                        {};...
+                                        {}; ...
+                                        {}...
+                                    };  
+                                     {... roi
+                                        {};... frequency band
+                                        {};...
+                                        {}; ...
+                                        {}...
+                                    };                                      
 };
 
 % ****CHECK****
@@ -1090,28 +1097,81 @@ project.postprocess.ersp.design(1).which_extrema_curve_tw = {     .... design x 
                                         {'min';'min';'min';'min';'min'}; ... frequency band 3
                                         {'min';'min';'min';'min';'min'}  ... frequency band 4
                                     };
+                                    {... roi 1
+                                    ...  tw1    tw2   tw3   tw4   tw5                                 
+                                        {'max';'max';'max';'max';'max'}; ... frequency band 1
+                                        {'min';'min';'min';'min';'min'}; ... frequency band 2
+                                        {'min';'min';'min';'min';'min'}; ... frequency band 3
+                                        {'min';'min';'min';'min';'min'}  ... frequency band 4
+                                    };
+                                    {... roi 2
+                                        {'max';'max';'max';'max';'max'}; ... frequency band 1
+                                        {'min';'min';'min';'min';'min'}; ... frequency band 2
+                                        {'min';'min';'min';'min';'min'}; ... frequency band 3
+                                        {'min';'min';'min';'min';'min'}  ... frequency band 4
+                                    };
+                                    {... roi 3
+                                        {'max';'max';'max';'max';'max'}; ... frequency band 1
+                                        {'min';'min';'min';'min';'min'}; ... frequency band 2
+                                        {'min';'min';'min';'min';'min'}; ... frequency band 3
+                                        {'min';'min';'min';'min';'min'}  ... frequency band 4
+                                    };                                    
+                                    {... roi 3
+                                        {'max';'max';'max';'max';'max'}; ... frequency band 1
+                                        {'min';'min';'min';'min';'min'}; ... frequency band 2
+                                        {'min';'min';'min';'min';'min'}; ... frequency band 3
+                                        {'min';'min';'min';'min';'min'}  ... frequency band 4
+                                    };                                    
 };
 
 
 
 
 project.postprocess.ersp.eog.design(1).which_extrema_curve       = {  ... design x roi x time_windows
-                            ...   tw1   tw2  ...
-                                {'max';'min';'min';'min'}; ... roi 1
-                                {'max';'min';'min';'min'}; ... roi 2
-                                {'max';'min';'min';'min'}; ... roi 3
-                                {'max';'min';'min';'min'}; ...
-                                {'max';'min';'min';'min'}; ...
-                                {'max';'min';'min';'min'}; ...
-                                {'max';'min';'min';'min'}; ...
-                                {'max';'min';'min';'min'}; ...
-                                {'max';'min';'min';'min'}; ...
-                                {'max';'min';'min';'min'}; ...
-                                {'max';'min';'min';'min'}; ...
-                                {'max';'min';'min';'min'}; ...
-                                {'max';'min';'min';'min'}; ...
-                                {'max';'min';'min';'min'}; ...
-                                {'max';'min';'min';'min'}  ...112
+                                    {... roi 1
+                                    ...  tw1    tw2   tw3   tw4   tw5                                 
+                                        {'max';'max';'max';'max';'max'}; ... frequency band 1
+                                        {'min';'min';'min';'min';'min'}; ... frequency band 2
+                                        {'min';'min';'min';'min';'min'}; ... frequency band 3
+                                        {'min';'min';'min';'min';'min'}  ... frequency band 4
+                                    };
+                                    {... roi 2
+                                        {'max';'max';'max';'max';'max'}; ... frequency band 1
+                                        {'min';'min';'min';'min';'min'}; ... frequency band 2
+                                        {'min';'min';'min';'min';'min'}; ... frequency band 3
+                                        {'min';'min';'min';'min';'min'}  ... frequency band 4
+                                    };
+                                    {... roi 3
+                                        {'max';'max';'max';'max';'max'}; ... frequency band 1
+                                        {'min';'min';'min';'min';'min'}; ... frequency band 2
+                                        {'min';'min';'min';'min';'min'}; ... frequency band 3
+                                        {'min';'min';'min';'min';'min'}  ... frequency band 4
+                                    };
+                                    {... roi 1
+                                    ...  tw1    tw2   tw3   tw4   tw5                                 
+                                        {'max';'max';'max';'max';'max'}; ... frequency band 1
+                                        {'min';'min';'min';'min';'min'}; ... frequency band 2
+                                        {'min';'min';'min';'min';'min'}; ... frequency band 3
+                                        {'min';'min';'min';'min';'min'}  ... frequency band 4
+                                    };
+                                    {... roi 2
+                                        {'max';'max';'max';'max';'max'}; ... frequency band 1
+                                        {'min';'min';'min';'min';'min'}; ... frequency band 2
+                                        {'min';'min';'min';'min';'min'}; ... frequency band 3
+                                        {'min';'min';'min';'min';'min'}  ... frequency band 4
+                                    };
+                                    {... roi 3
+                                        {'max';'max';'max';'max';'max'}; ... frequency band 1
+                                        {'min';'min';'min';'min';'min'}; ... frequency band 2
+                                        {'min';'min';'min';'min';'min'}; ... frequency band 3
+                                        {'min';'min';'min';'min';'min'}  ... frequency band 4
+                                    };                                    
+                                    {... roi 3
+                                        {'max';'max';'max';'max';'max'}; ... frequency band 1
+                                        {'min';'min';'min';'min';'min'}; ... frequency band 2
+                                        {'min';'min';'min';'min';'min'}; ... frequency band 3
+                                        {'min';'min';'min';'min';'min'}  ... frequency band 4
+                                    };                                    
 };
 
 
@@ -1212,12 +1272,12 @@ for ds=2:length(project.design)
 end
 
 for ds=2:length(project.design)
-    project.postprocess.ersp.eog.design(ds) = project.postprocess.ersp.design(1);
+    project.postprocess.ersp.eog.design(ds) = project.postprocess.ersp.eog.design(1);
 end
 
 
 for ds=2:length(project.design)
-    project.postprocess.ersp.emg.design(ds) = project.postprocess.ersp.design(1);
+    project.postprocess.ersp.emg.design(ds) = project.postprocess.ersp.emg.design(1);
 end
 
 
