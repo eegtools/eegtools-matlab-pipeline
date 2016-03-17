@@ -25,7 +25,7 @@ if project.operations.do_preproc
     proj_eeglab_subject_preprocessing(project, 'list_select_subjects', list_select_subjects);
 end
 %==================================================================================
-if project.do_emg_analysis
+if project.operations.do_emg_analysis
     eeglab_subject_emgextraction_epoching(project, 'list_select_subjects', list_select_subjects);
 end
 %==================================================================================
