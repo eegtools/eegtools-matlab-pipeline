@@ -702,8 +702,13 @@ function [STUDY, EEG] = proj_eeglab_study_plot_roi_ersp_curve_fb(project, analys
         ersp_curve_roi_fb_stat.list_select_subjects = list_select_subjects;
         ersp_curve_roi_fb_stat.list_design_subjects = list_design_subjects;
         
+        ersp_curve_roi_fb_stat.study_ls             = study_ls;
+        ersp_curve_roi_fb_stat.num_permutations     = num_permutations;
+        ersp_curve_roi_fb_stat.correction           = correction;
+      
+        
         %% EXPORTING DATA AND RESULTS OF ANALYSIS
-        out_file_name=fullfile(plot_dir,'ersp_curve_roi_fb-stat')
+        out_file_name = fullfile(plot_dir,'ersp_curve_roi_fb-stat')
         save([out_file_name,'.mat'],'ersp_curve_roi_fb_stat','project');
 
         % if ~ ( strcmp(which_method_find_extrema,'group_noalign') || strcmp(which_method_find_extrema,'continuous') );
@@ -713,19 +718,21 @@ function [STUDY, EEG] = proj_eeglab_study_plot_roi_ersp_curve_fb(project, analys
 
         if not( strcmp(which_method_find_extrema,'group_noalign') || strcmp(which_method_find_extrema,'continuous') );
             [dataexpcols, dataexp]=text_export_ersp_struct([out_file_name,'.txt'],ersp_curve_roi_fb_stat);
+            text_export_ersp_resume_struct(ersp_curve_roi_fb_stat, [out_file_name '_resume']);
+            text_export_ersp_resume_struct(ersp_curve_roi_fb_stat, [out_file_name '_resume_signif'], 'p_thresh', ersp_curve_roi_fb_stat.study_ls);
+        
         end
 
         if  strcmp(which_method_find_extrema,'continuous') ;
             [dataexpcols, dataexp]=text_export_ersp_continuous_struct([out_file_name,'.txt'],ersp_curve_roi_fb_stat);
         end
 
-          if strcmp(time_resolution_mode,'tw')
-        [dataexpcols, dataexp] = text_export_ersp_onset_offset_sub_struct([out_file_name,'_sub_onset_offset.txt'],ersp_curve_roi_fb_stat);
-        [dataexpcols, dataexp] = text_export_ersp_onset_offset_avgsub_struct([out_file_name,'_avgsub_onset_offset.txt'],ersp_curve_roi_fb_stat);
+        if strcmp(time_resolution_mode,'tw')
+            [dataexpcols, dataexp] = text_export_ersp_onset_offset_sub_struct([out_file_name,'_sub_onset_offset.txt'],ersp_curve_roi_fb_stat);
+            [dataexpcols, dataexp] = text_export_ersp_onset_offset_avgsub_struct([out_file_name,'_avgsub_onset_offset.txt'],ersp_curve_roi_fb_stat);
 
-        [dataexpcols, dataexp] = text_export_ersp_onset_offset_sub_continuous_struct([out_file_name,'_sub_onset_offset_continuous.txt'],ersp_curve_roi_fb_stat);
-        [dataexpcols, dataexp] = text_export_ersp_onset_offset_avgsub_continuous_struct([out_file_name,'_avgsub_onset_offset_continuous.txt'],ersp_curve_roi_fb_stat);
-
+            [dataexpcols, dataexp] = text_export_ersp_onset_offset_sub_continuous_struct([out_file_name,'_sub_onset_offset_continuous.txt'],ersp_curve_roi_fb_stat);
+            [dataexpcols, dataexp] = text_export_ersp_onset_offset_avgsub_continuous_struct([out_file_name,'_avgsub_onset_offset_continuous.txt'],ersp_curve_roi_fb_stat);
         end
     end
 end
