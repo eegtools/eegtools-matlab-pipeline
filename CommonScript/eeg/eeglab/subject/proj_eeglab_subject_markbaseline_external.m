@@ -29,7 +29,7 @@ for neve = 1:length(list_eve_target)
         
     OUTEEG.event(n2)         =   eve_target_baseline(neve);
     OUTEEG.event(n2).latency =   lat2;
-    OUTEEG.event(n2).type    =   project.preproc.marker_type.begin_baseline;
+    OUTEEG.event(n2).type    =   project.preproc.marker_type.end_baseline;
     
 end
 
