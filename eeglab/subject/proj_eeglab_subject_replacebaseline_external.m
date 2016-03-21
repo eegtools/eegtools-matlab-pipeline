@@ -31,23 +31,32 @@ replace                        = project.epoching.baseline_replace.replace;
 
 data_path = EEG.filepath;
 
+
+% if the baseline file name is empty, then take the file with the whole
+% recording
 if isempty(baseline_file)
     
-    EEG_baseline =OUTEEG;
+    EEG_baseline = OUTEEG;
 else
-    
+    % if indicated a baseline file, use the indicated file
     EEG_baseline = pop_loadset(EEG.filepath,baseline_file);
 end
 
 
 [sort_lat sort_order] = sort([OUTEEG.event.latency]);
 
-OUTEEG.event = OUTEEG.event (sort_order);
+OUTEEG.event = OUTEEG.event(sort_order);
 
 OUTEEG = eeg_checkset(OUTEEG);
 
-begin_trial      = project.epoching.baseline_replace.trial_begin_marker;
-end_trial        = project.epoching.baseline_replace.trial_end_marker;
+% begin_trial      = project.epoching.baseline_replace.trial_begin_marker;
+% end_trial        = project.epoching.baseline_replace.trial_end_marker;
+
+
+begin_trial         = project.preproc.marker_type.begin_trial;
+end_trial           = project.preproc.marker_type.end_trial;
+begin_baseline      = project.preproc.marker_type.begin_baseline;
+end_baseline        = project.preproc.marker_type.end_baseline;
 final_baseline        = project.epoching.baseline_replace.baseline_finalposition;
 
 epoch_tw           = [project.epoching.epo_st.s project.epoching.epo_end.s];
@@ -83,10 +92,12 @@ for ntype = 1:length(type_list)
     out = find_next_vec(trial_noboudary, type_ind);
     type_noboudary = out.vec2_next;
     
-    
+    % epoch around experimental event (target file in which substitute
+    % baseline)
     OUTEEG_target   = pop_epoch( OUTEEG, {type},           epoch_tw,    'eventindices', type_noboudary);
     
-    OUTEEG_baseline = pop_epoch( OUTEEG, {begin_baseline}, baseline_tw);
+    % epoch baseline file obtaining epochs form 0 tolength of baseline
+    OUTEEG_baseline = pop_epoch( EEG_baseline, {begin_baseline}, baseline_tw);
     
     
     switch final_baseline
