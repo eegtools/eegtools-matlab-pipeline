@@ -68,7 +68,7 @@ function OUTEEG = proj_eeglab_subject_markbaseline(project, varargin)
                 target_events_file  = proj_eeglab_subject_get_filename(project, subj_name, get_filename_step, 'custom_suffix', custom_suffix, 'custom_input_folder', custom_input_folder);
                 baseline_file       = project.subjects(subj_index).data.baseline_file;
 
-                if isempty(project.subjects(subj_index).data.baseline_file)
+                if isempty(project.subjects.data(subj_index).baseline_file);
                     baseline_file   = target_events_file;
                 end
 
