@@ -13,6 +13,7 @@ baseline_file_interval_pts      =  floor(project.subjects.baseline_file_interval
 baseline_duration_pts           =  floor(project.epoching.baseline_duration.s * OUTEEG.srate);
 
 list_eve_target = {EEG_target.event.type};
+eve_target_baseline = EEG_target.event;
 
 for neve = 1:length(list_eve_target)
     
