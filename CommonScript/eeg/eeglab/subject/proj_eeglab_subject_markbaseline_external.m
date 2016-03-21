@@ -6,7 +6,7 @@ subj_list                       =  {project.subjects.data.name};
 subj_index                      =  ismember(subj_list, subj_name);
 
 if isempty(project.subjects.baseline_file_interval_s)
-    project.subjects.baseline_file_interval_s = OUTEEG.pnts/OUTEEG.srate;
+    project.subjects.baseline_file_interval_s = 1;
 end
 
 baseline_file_interval_pts      =  floor(project.subjects.baseline_file_interval_s * OUTEEG.srate);
