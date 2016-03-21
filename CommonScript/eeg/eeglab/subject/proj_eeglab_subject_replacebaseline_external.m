@@ -24,7 +24,7 @@ OUTEEG = EEG;
 
 subj_list                      = {project.subjects.data.name};
 subj_index                     = ismember(subj_list, subj_name);
-baseline_file                  = project.subjects(subj_index).data.baseline_file;
+baseline_file                  = project.subjects.data(subj_index).baseline_file;
 replace                        = project.epoching.baseline_replace.replace;
 
 
