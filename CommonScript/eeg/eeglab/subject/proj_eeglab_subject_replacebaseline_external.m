@@ -39,7 +39,7 @@ if isempty(baseline_file)
     EEG_baseline = OUTEEG;
 else
     % if indicated a baseline file, use the indicated file
-    EEG_baseline = pop_loadset(EEG.filepath,baseline_file);
+    EEG_baseline = pop_loadset(baseline_file);
 end
 
 
