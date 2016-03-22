@@ -128,7 +128,7 @@ for ntype = 1:length(type_list)
             case 'part'
                 data4replace = OUTEEG_target.data(:,sel_replace_baseline,:);
                 if strcmp(final_baseline,'before')
-                    data4replace(:,1:lbt,1:nepo) = OUTEEG_baseline.data(:,:,1:nepo);
+                    data4replace(:,1:lbt,1:nepo) = OUTEEG_baseline.data(:,:,1:nepo)*nan;
                     
                 elseif strcmp(final_baseline,'after')
                     data4replace(:,	dlt+1:ltt,1:nepo) = OUTEEG_baseline.data(:,:,1:nepo);
@@ -144,7 +144,7 @@ for ntype = 1:length(type_list)
     end
     
     
-    OUTEEG_target.data(:,sel_replace_baseline,:) = data4replace(:,:,1:nepo)*nan;
+    OUTEEG_target.data(:,sel_replace_baseline,:) = data4replace(:,:,1:nepo);
     
     ALLEEG2(ntype) = OUTEEG_target;
 end
