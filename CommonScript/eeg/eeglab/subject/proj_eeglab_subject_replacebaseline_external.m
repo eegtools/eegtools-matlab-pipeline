@@ -114,34 +114,34 @@ for ntype = 1:length(type_list)
     
     
     
-%     if ltt < lbt
-%         data4replace =  OUTEEG_baseline.data(:,1:ltt,1:nepo);
-%         
-%     elseif ltt > lbt
-%         dlt = ltt -lbt;
+    if ltt < lbt
+        data4replace =  OUTEEG_baseline.data(:,1:ltt,1:nepo);
         
-%         switch replace
+    elseif ltt > lbt
+        dlt = ltt -lbt;
+        
+        switch replace
             
-%             case 'all'
-%                 data4replace = cat(2, OUTEEG_baseline.data, OUTEEG_baseline.data(:,1:dlt,1:nepo));
+            case 'all'
+                data4replace = cat(2, OUTEEG_baseline.data, OUTEEG_baseline.data(:,1:dlt,1:nepo));
                 
-%             case 'part'
-%                 data4replace = OUTEEG_target.data(:,sel_replace_baseline,:);
-%                 if strcmp(final_baseline,'before')
-%                     data4replace(:,1:lbt,1:nepo) = OUTEEG_baseline.data(:,:,1:nepo);
-%                     
-%                 elseif strcmp(final_baseline,'after')
-%                     data4replace(:,	dlt+1:ltt,1:nepo) = OUTEEG_baseline.data(:,:,1:nepo);
-%                     
-%                 else
-%                     disp('select a valid project.epoching.baseline_replace.replace');
-%                     return
-%                 end
-%         end
+            case 'part'
+                data4replace = OUTEEG_target.data(:,sel_replace_baseline,:);
+                if strcmp(final_baseline,'before')
+                    data4replace(:,1:lbt,1:nepo) = OUTEEG_baseline.data(:,:,1:nepo);
+                    
+                elseif strcmp(final_baseline,'after')
+                    data4replace(:,	dlt+1:ltt,1:nepo) = OUTEEG_baseline.data(:,:,1:nepo);
+                    
+                else
+                    disp('select a valid project.epoching.baseline_replace.replace');
+                    return
+                end
+        end
         
-%     else
+    else
         data4replace =  OUTEEG_baseline.data;
-%     end
+    end
     
     
     OUTEEG_target.data(:,sel_replace_baseline,:) = data4replace(:,:,1:nepo);
