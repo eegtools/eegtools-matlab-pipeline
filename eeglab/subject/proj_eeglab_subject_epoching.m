@@ -63,6 +63,10 @@ function EEG = proj_eeglab_subject_epoching(project, varargin)
 
         if strcmp(project.epoching.baseline_replace.mode,'trial') || strcmp(project.epoching.baseline_replace.mode,'external')
             EEG = proj_eeglab_subject_replacebaseline(project, subj_name);
+            if strcmp(project.epoching.baseline_replace.mode,'external')
+                bc_type = 'global';
+                disp('replacing baseline using external file makes global baseline correction the only alternative!')
+            end
         end
         
         if isempty(EEG)
