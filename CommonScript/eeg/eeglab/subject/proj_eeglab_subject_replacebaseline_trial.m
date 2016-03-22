@@ -193,7 +193,7 @@ function OUTEEG =  proj_eeglab_subject_replacebaseline_trial(EEG, project,vararg
             end
 
 
-            OUTEEG_target.data(:,sel_replace_baseline,:) = data4replace;
+            OUTEEG_target.data(:,sel_replace_baseline,:) = data4replace*0;
 
             ALLEEG2(ntype) = OUTEEG_target;
         end
