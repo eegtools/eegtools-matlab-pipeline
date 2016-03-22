@@ -75,7 +75,7 @@ function OUTEEG =  proj_eeglab_subject_replacebaseline_trial(EEG, project,vararg
     sel_noboudary       = true(size(begin_trial_ind));
     sel_noboudary_eve   = true(size(all_eve_types));
 
-    try
+%     try
         for nn = 1:length(sel_noboudary)
             begin_t = begin_trial_ind(nn);
             end_t   = end_trial_ind(nn);
@@ -205,9 +205,9 @@ function OUTEEG =  proj_eeglab_subject_replacebaseline_trial(EEG, project,vararg
         end
         OUTEEG = eeg_checkset(OUTEEG);
 
-    catch err
-        err;
-    end
+%     catch err
+%         err;
+%     end
 
 end
 
