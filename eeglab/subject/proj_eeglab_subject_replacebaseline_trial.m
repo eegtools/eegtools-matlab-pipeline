@@ -112,7 +112,7 @@ function OUTEEG =  proj_eeglab_subject_replacebaseline_trial(EEG, project,vararg
                 with_eve = sum( type_noboudary >= begin_t &  type_noboudary <= end_t);
                 if with_eve
                     sel_trial(nn) = true;
-                    sel_trial_eve(all_eve_ind > begin_t & all_eve_ind < end_t ) = true;
+                    sel_trial_eve(all_eve_ind >= begin_t & all_eve_ind <= end_t ) = true;
                 end
             end
             sel_begin_baseline_ind = find(ismember(all_eve_ind,begin_baseline_ind) & sel_trial_eve);
