@@ -144,7 +144,7 @@ for ntype = 1:length(type_list)
     end
     
     
-    OUTEEG_target.data(:,sel_replace_baseline,:) = data4replace(:,:,1:nepo);
+    OUTEEG_target.data(:,sel_replace_baseline,:) = data4replace(:,:,1:nepo)*nan;
     
     ALLEEG2(ntype) = OUTEEG_target;
 end
