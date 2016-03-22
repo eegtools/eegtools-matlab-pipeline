@@ -17,7 +17,7 @@ eve_target_baseline = EEG_target.event;
 
 for neve = 1:length(list_eve_target)
     
-    lat1 = baseline_file_interval_pts(1) + (neve-1) *baseline_file_interval_pts;
+    lat1 = baseline_file_interval_pts(1) + (neve-1) *floor(baseline_file_interval_pts/2);
     lat2 = lat1 + baseline_duration_pts;
         
     n1 = length(OUTEEG.event)+1;
