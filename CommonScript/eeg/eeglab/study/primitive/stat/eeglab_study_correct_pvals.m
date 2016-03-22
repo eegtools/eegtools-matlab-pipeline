@@ -25,7 +25,16 @@ if correct_pinter
         pinter_corr_mat(:,:,(ind+length(pcond))) = pgroup_corr{ind};
     end;
     
-    pinter_corr{3}=min(pinter_corr_mat,[],3);
+    pinter_corr_m = mean(pinter_corr_mat,3);
+    pinter_corr_r = pinter_corr{3};
+    
+    p_m = pinter_corr_m < pinter_corr{3};
+    
+    pinter_corr_r(p_m) =  pinter_corr_m(p_m);
+     
+    
+    pinter_corr{3} = pinter_corr_r;
+    
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
