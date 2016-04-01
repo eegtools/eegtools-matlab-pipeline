@@ -1,10 +1,16 @@
 
-function proj_brainstorm_subject_importepochs_averaging(project, subj_name) ... settings_path, protocol_name, input_folder, subj_name, analysis_name, brainstorm_channels_file)
+function result = proj_brainstorm_subject_importepochs_averaging(project, subj_name) ... settings_path, protocol_name, input_folder, subj_name, analysis_name, brainstorm_channels_file)
 
     iProtocol                   = brainstorm_protocol_open(project.brainstorm.db_name);
     protocol                    = bst_get('ProtocolInfo');
     brainstorm_data_path        = protocol.STUDIES;
     
+    
+    if not(exist(project.brainstorm.channels_file_type, 'file'))
+        disp('channels_file_type file is missing...exiting');
+        result = 0;
+        ...return;        
+    end
     ... sample_lenght_in_seconds    = 1/project.eegdata.fs;   ... in seconds
     ... bs_bc_end = project.epoching.bc_end.s; ...- sample_lenght_in_seconds;
     ... bs_epoch_end = project.epoching.epo_end.s - sample_lenght_in_seconds;
@@ -17,6 +23,11 @@ function proj_brainstorm_subject_importepochs_averaging(project, subj_name) ... 
         cond_name=project.epoching.condition_names{cond};
         
         input_file=fullfile(project.paths.output_epochs, [project.import.original_data_prefix subj_name project.import.original_data_suffix project.import.output_suffix project.epoching.input_suffix '_' cond_name '.set']);
+        if not(exist(input_file, 'file'))
+            disp('epoch file is missing...exiting');
+            result = 0;
+            return;
+        end
         % Input files
         FileNamesA = [];
 
@@ -77,6 +88,6 @@ function proj_brainstorm_subject_importepochs_averaging(project, subj_name) ... 
     % Save and display report
     ReportFile = bst_report('Save', sFiles);
     bst_report('Open', ReportFile);
-
+    result = 1;
 end
 
