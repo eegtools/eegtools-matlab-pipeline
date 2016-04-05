@@ -614,7 +614,7 @@ function [output] = eeglab_study_plot_ersp_topo_tw_fb_compact(input)
             STUDY = pop_statparams(STUDY, 'groupstats','off','condstats','off');
 
             % calculate ersp in the channels corresponding to the selected roi
-            [STUDY ersp_topo_tw_fb times freqs]=std_erspplot(STUDY,ALLEEG,'channels',roi_channels,'noplot','on');
+            [STUDY, ersp_topo_tw_fb, times, freqs]=std_erspplot_corr(STUDY,ALLEEG,'channels',roi_channels,'noplot','on');
 
 
             %                     roi_mask =ones(1,length(locs_labels));

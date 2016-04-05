@@ -73,8 +73,8 @@
 
 function std_plotcurve_erp(input, varargin) 
 
-allx                                                                       = input.erp; 
-data                                                                       = input.data; 
+allx                                                                       = input.times; 
+data                                                                       = input.erp; 
 plot_dir                                                                   = input.plot_dir; 
 roi_name                                                                   = input.roi_name; 
 study_ls                                                                   = input.study_ls; 

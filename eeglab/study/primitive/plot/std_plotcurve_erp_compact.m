@@ -18,6 +18,7 @@ compact_display_stats                                                      = inp
 compact_display_xlim                                                       = input.compact_display_xlim; 
 compact_display_ylim                                                       = input.compact_display_ylim;
 
+close all
 
 set(0,'defaulttextinterpreter','none')
 % total levels of factor 1 (e.g conditions) and 2 (e.g groups)
@@ -142,7 +143,9 @@ plot(times, up_plot_mat(nlf,:),'col',list_col(nlf),'LineWidth',0.5,'LineStyle',l
     set(gca,'LineWidth',2, 'FontSize', 10)
     xlabel(['Time (ms)'])
     ylabel(['Amplitude (uV)'])
-    set(0,'defaulttextinterpreter','none') ;legend(levels_f,'box','off', 'FontSize', 10,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1],'Location','NorthEastOutside')
+    %set(0,'defaulttextinterpreter','none') ;legend(levels_f,'box','off', 'FontSize', 10,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1],'Location','NorthEastOutside')
+   set(0,'defaulttextinterpreter','none') ;legend(levels_f,'box','off', 'FontSize', 10,'EdgeColor',[1 1 1],'Location','NorthEastOutside')
+
     title(['ERP in ', roi_name,': ', 'within ',name_f], 'FontSize', 10);
     hold off
     

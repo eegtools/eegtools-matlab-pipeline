@@ -55,10 +55,10 @@ function [dataexpcols, dataexp] = text_export_nb_struct(out_file,output)
 
         fnb                 = [fnb; [output.results.nb.band(nband).sub.fnb]'];
         centroid_mean       = [centroid_mean; [output.results.nb.band(nband).sub.centroid_mean]'];
-        fcog_all            = [fcog_all; [output.results.nb.band(nband).sub.fcog_all]'];
-        fcog_pos            = [fcog_pos; [output.results.nb.band(nband).sub.fcog_pos]'];
-        fcog_neg            = [fcog_neg; [output.results.nb.band(nband).sub.fcog_neg]'];
-        fcog_polarity_index = [fcog_polarity_index; [output.results.nb.band(nband).sub.fcog_polarity_index]'];
+        fcog_all            = [fcog_all; [output.results.nb.band(nband).sub.fcog.all]'];
+        fcog_pos            = [fcog_pos; [output.results.nb.band(nband).sub.fcog.pos]'];
+        fcog_neg            = [fcog_neg; [output.results.nb.band(nband).sub.fcog.neg]'];
+        fcog_polarity_index = [fcog_polarity_index; [output.results.nb.band(nband).sub.fcog.polarity_index]'];
     end
 
     sub = repmat( {output.results.nb.band(1).sub.sub_name}, 1,tband)';

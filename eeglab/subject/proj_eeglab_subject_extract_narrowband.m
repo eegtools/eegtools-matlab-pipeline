@@ -74,10 +74,10 @@ function output = proj_eeglab_subject_extract_narrowband(project, analysis_name,
 
                     output.results.nb.band(nband).sub(nsub).fnb                 = nb_results.fnb;
                     output.results.nb.band(nband).sub(nsub).centroid_mean       = nb_results.centroid_mean;
-                    output.results.nb.band(nband).sub(nsub).fcog_all            = nb_results.fcog_all;
-                    output.results.nb.band(nband).sub(nsub).fcog_pos            = nb_results.fcog_pos;
-                    output.results.nb.band(nband).sub(nsub).fcog_neg            = nb_results.fcog_neg;
-                    output.results.nb.band(nband).sub(nsub).fcog_polarity_index = nb_results.polarity_index;
+                    output.results.nb.band(nband).sub(nsub).fcog.all            = nb_results.fcog.all;
+                    output.results.nb.band(nband).sub(nsub).fcog.pos            = nb_results.fcog.pos;
+                    output.results.nb.band(nband).sub(nsub).fcog.neg            = nb_results.fcog.neg;
+                    output.results.nb.band(nband).sub(nsub).fcog.polarity_index = nb_results.fcog.polarity_index;
 
                     output.results.nb.band(nband).sub(nsub).sub_name    = sub_name;
                 else
