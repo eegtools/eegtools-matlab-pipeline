@@ -1,1 +1,1 @@
-gs
+/usr/local/bin/gs

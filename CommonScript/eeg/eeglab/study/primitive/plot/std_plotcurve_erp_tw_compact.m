@@ -20,6 +20,7 @@ compact_display_xlim                                                       = inp
 compact_display_ylim                                                       = input.compact_display_ylim;
 time_windows_design_names                                                  = input.time_windows_design_names;
 
+close all
 
 % total levels of factor 1 (e.g conditions) and 2 (e.g groups)
 [tlf1 tlf2]=size(erp);
@@ -83,7 +84,7 @@ if tlf1 < 2 || tlf2 < 2
                 ns=1;
             end
         end
-        l=legend(levels_f,'box','off', 'FontSize', 15,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1],'Location','NorthEastOutside');
+        l=legend(levels_f,'box','off', 'FontSize', 15,'EdgeColor',[1 1 1],'Location','NorthEastOutside');%,'YColor',[1 1 1],'XColor',[1 1 1]
         
     end
     
@@ -99,7 +100,7 @@ if tlf1 < 2 || tlf2 < 2
             dx=dx+0.1;
             hold on
         end
-        l=legend(levels_f,'box','off', 'FontSize', 15,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1],'Location','NorthEastOutside');
+        l=legend(levels_f,'box','off', 'FontSize', 15,'EdgeColor',[1 1 1],'Location','NorthEastOutside');%'YColor',[1 1 1],'XColor',[1 1 1],
         dx=0;
         nm=1;
         for nlf=1:tlf
@@ -263,7 +264,7 @@ if tlf1 > 1 && tlf2 > 1
                     ns=1;
                 end
             end
-            l=legend(levels_f2,'box','off', 'FontSize', 15,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1],'Location','NorthEastOutside');
+            l=legend(levels_f2,'box','off', 'FontSize', 15,'EdgeColor',[1 1 1],'Location','NorthEastOutside');%,'YColor',[1 1 1],'XColor',[1 1 1]
             
         end
         
@@ -280,7 +281,7 @@ if tlf1 > 1 && tlf2 > 1
                 hold on
             end
             
-            l=legend(levels_f2,'box','off', 'FontSize', 15,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1],'Location','NorthEastOutside');
+            l=legend(levels_f2,'box','off', 'FontSize', 15,'EdgeColor',[1 1 1],'Location','NorthEastOutside');%,'YColor',[1 1 1],'XColor',[1 1 1]
             dx=0;
             nm=1;
             for nlf2=1:tlf2
@@ -439,7 +440,7 @@ if tlf1 > 1 && tlf2 > 1
                     ns=1;
                 end
             end
-            l=legend(levels_f1,'box','off', 'FontSize', 15,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1],'Location','NorthEastOutside');
+            l=legend(levels_f1,'box','off', 'FontSize', 15,'EdgeColor',[1 1 1],'Location','NorthEastOutside');%,'YColor',[1 1 1],'XColor',[1 1 1]
             
         end
         
@@ -456,7 +457,7 @@ if tlf1 > 1 && tlf2 > 1
                 hold on
             end
             
-            l=legend(levels_f1,'box','off', 'FontSize', 15,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1],'Location','NorthEastOutside');
+            l=legend(levels_f1,'box','off', 'FontSize', 15,'EdgeColor',[1 1 1],'Location','NorthEastOutside');%'YColor',[1 1 1],'XColor',[1 1 1],
             
             
             dx=0;

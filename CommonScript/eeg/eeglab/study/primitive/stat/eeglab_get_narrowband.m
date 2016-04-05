@@ -185,15 +185,18 @@ function [project, narrowband_output]=eeglab_get_narrowband(project,narrowband_i
         results.sub.fb.fcog.polarity_index      = 1000;
         
         if sum(sel_pos) == 0
-           results.sub.fb.fcog.pos              = NaN; 
+           results.sub.fb.fcog.pos              = sum(wide_freq.*ersp_mean')/ sum(ersp_mean);%NaN; 
            results.sub.fb.fcog.polarity_index   = -1;
+           disp('warning: empty frequency range, returning the centere of grafity of all frequencies in the band')
         else
             results.sub.fb.fcog.pos             = sum(wide_freq(sel_pos).*ersp_mean(sel_pos)')/ sum(ersp_mean(sel_pos)');
         end
         
         if sum(sel_neg) == 0
-           results.sub.fb.fcog.neg              = NaN; 
+           results.sub.fb.fcog.neg              = sum(wide_freq.*ersp_mean')/ sum(ersp_mean);%NaN; 
            results.sub.fb.fcog.polarity_index   = 1;
+           disp('warning: empty frequency range, returning the centere of grafity of all frequencies in the band')
+
         else
             results.sub.fb.fcog.neg             = sum(wide_freq(sel_neg).*ersp_mean(sel_neg)')/ sum(ersp_mean(sel_neg)');
         end

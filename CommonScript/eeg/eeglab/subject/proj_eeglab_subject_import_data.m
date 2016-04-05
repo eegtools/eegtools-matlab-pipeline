@@ -75,11 +75,69 @@ function EEG = proj_eeglab_subject_import_data(project, varargin)
                 error(['unrecognized device (' project.import.acquisition_system ')']);
         end
 
-%         if(not(strcmp(project.import.acquisition_system,'GEODESIC')))
-            EEG = pop_chanedit( EEG, 'lookup',eeglab_channels_file);    ...  considering using a same file, suitable for whichever electrodes configuration
-                EEG = eeg_checkset( EEG );
-%         end
+         %if(not(strcmp(project.import.acquisition_system,'GEODESIC')))
+%             EEG = pop_chanedit( EEG, 'lookup',eeglab_channels_file);    ...  considering using a same file, suitable for whichever electrodes configuration
+%                 EEG = eeg_checkset( EEG );
+         %end
 
+         EEG = pop_readegi(input_file_name, [],[],'auto');
+                EEG = eeg_checkset( EEG );
+
+
+                % split file path in folder, name, extension
+                [folder_loc,name_loc,ext_loc] = fileparts(eeglab_channels_file);
+                
+                % if the folder of the loc file is not that expected by eeglab
+                if not(strcmp(folder_loc,project.paths.eeglab))
+                    % copy the file into the expected folder
+                    %copyfile(project.paths.eeglab,fullfile(project.paths.eeglab,'sample_locs'));
+                    copyfile(eeglab_channels_file,fullfile(project.paths.eeglab,'sample_locs'));
+                end
+                
+                % read the file using the copied file for the locations
+                EEG = pop_readegi(input_file_name, [],[],[name_loc,ext_loc]);
+                
+                % if there is no Cz (Cz considered as non-EEG ref channel
+                % therefore in the non data channels (but we want to
+                % consider it using interpolation)
+                if not(sum(ismember({EEG.chanlocs.labels},'Cz')));
+%                   
+                   nch_cz = EEG.nbchan + 1;
+%                     
+%                     % create a fake Cz
+                   EEG.data (nch_cz,:) = EEG.data (EEG.nbchan,:);
+%                     
+%                     % replicate the last channel label
+                    EEG.chanlocs(nch_cz) = EEG.chanlocs(EEG.nbchan);
+%                     
+%                     % update channel number
+                EEG.nbchan = nch_cz;
+%                     
+                    EEG.chanlocs(nch_cz).labels = 'Cz';
+% 
+                     sel_cz = find(ismember({EEG.chanlocs.labels}, 'Cz'));
+% 
+%                     % remove the nodatchans (not eeg with the ref-Cz that we
+%                     % want to replace with a EEG Cz (obtained by interpolation) that we can evaluate 
+                     EEG.chaninfo = rmfield(EEG.chaninfo,'nodatchans');
+%                     
+%                     % update channel locations (now should work because
+%                     % there is no more duplicity between ref-Cz and EEG-Cz
+                     EEG=pop_chanedit(EEG, 'load',{eeglab_channels_file 'filetype' 'autodetect'});
+%                     
+%                     % now that the locations are correct we can interpolate
+                     EEG = pop_interp(EEG, sel_cz,'spherical');
+%                     
+%                     % check global consistency
+                    EEG = eeg_checkset( EEG );
+               end
+%          
+         
+         
+         
+         
+         
+         
         % global filtering
 
         EEG = proj_eeglab_subject_filter(EEG, project, 'global', 'bandstop');

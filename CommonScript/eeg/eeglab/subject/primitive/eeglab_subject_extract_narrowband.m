@@ -141,10 +141,10 @@ function results = eeglab_subject_extract_narrowband(input)
 
     results.fnb             = narrowband_output.results.sub.realign_freq;
     results.centroid_mean   = narrowband_output.results.sub.fb.centroid_mean; 
-    results.fcog_all        = narrowband_output.results.sub.fb.fcog.all; 
-    results.fcog_pos        = narrowband_output.results.sub.fb.fcog.pos; 
-    results.fcog_neg        = narrowband_output.results.sub.fb.fcog.neg; 
-    results.polarity_index  = narrowband_output.results.sub.fb.fcog.polarity_index; 
+    results.fcog.all        = narrowband_output.results.sub.fb.fcog.all; 
+    results.fcog.pos        = narrowband_output.results.sub.fb.fcog.pos; 
+    results.fcog.neg        = narrowband_output.results.sub.fb.fcog.neg; 
+    results.fcog.polarity_index  = narrowband_output.results.sub.fb.fcog.polarity_index; 
 
     % nota: extract narrowband restituirebbe molte più info, vedere
     % come capializzarle (possibile salvare / scrivere struttura su txt?)

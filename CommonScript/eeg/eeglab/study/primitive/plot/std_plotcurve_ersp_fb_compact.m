@@ -20,7 +20,7 @@ compact_display_xlim                                                       = inp
 compact_display_ylim                                                       = input.compact_display_ylim;
 ersp_measure                                                               = input.ersp_measure;
 
-
+close all
 
 % total levels of factor 1 (e.g conditions) and 2 (e.g groups)
 [tlf1 tlf2]=size(ersp_curve_fb);
@@ -147,7 +147,7 @@ plot(times, up_plot_mat(nlf,:),'col',list_col(nlf),'LineWidth',0.5,'LineStyle',l
         ylabel(['Power (dB)'])
     end
     
-    legend(levels_f,'box','off', 'FontSize', 13,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1],'Location','NorthEastOutside')
+    legend(levels_f,'box','off', 'FontSize', 13,'EdgeColor',[1 1 1],'Location','NorthEastOutside')%,'YColor',[1 1 1],'XColor',[1 1 1]
     title([frequency_band_name, ' ersp in ', roi_name,': ', 'within ',name_f], 'FontSize', 20);
     hold off
     
@@ -309,7 +309,7 @@ hold on
             ylabel(['Power (dB)'])
         end
         
-        legend(levels_f2,'box','off', 'FontSize', 13,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1],'Location','NorthEastOutside')
+        legend(levels_f2,'box','off', 'FontSize', 13,'EdgeColor',[1 1 1],'Location','NorthEastOutside')%,'YColor',[1 1 1],'XColor',[1 1 1]
         title([frequency_band_name, ' ersp in ', roi_name,': ', 'within ',levels_f1{nlf1}], 'FontSize', 20);
         hold off
         
@@ -467,7 +467,7 @@ plot(times, up_plot_mat(nlf1,:),'col',list_col(nlf1),'LineWidth',0.5,'LineStyle'
             ylabel(['Power (dB)'])
         end
         
-        legend(levels_f1,'box','off', 'FontSize', 13,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1],'Location','NorthEastOutside')
+        legend(levels_f1,'box','off', 'FontSize', 13,'EdgeColor',[1 1 1],'Location','NorthEastOutside')%,'YColor',[1 1 1],'XColor',[1 1 1]
         
         title([frequency_band_name, ' ersp in ', roi_name,': ','within ',levels_f2{nlf2}], 'FontSize', 20);
         hold off

@@ -68,7 +68,7 @@ for ntw = 1:length(deflection_tw_list)
     for ntt=1:ttt
         ind2test             = ind_deflection(ntt);
         point2test           = deflection(ntt);
-        [h,pval]             = ttest2(point2test, base,sig_th, tail);
+        [h,pval]             = ttest2_eeg(point2test, base,sig_th, tail);
         pvec_raw(ind2test)       = pval;
     end
     

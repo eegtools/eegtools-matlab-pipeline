@@ -87,7 +87,8 @@ end
         %% select the study design for the analyses
         STUDY = std_selectdesign(STUDY, ALLEEG, design_num);
         list_cell_design={STUDY.design(design_num).cell.filebase};
-        
+       parpool(4);
+       
         vec_sel_cell = [];
         if not(isempty(list_select_subjects))
             for s=1:length(list_select_subjects)
@@ -102,28 +103,30 @@ end
         if strcmp(do_erp, 'on')
             for ncell=vec_sel_cell
                 erp_param=[erp 'cell' ncell];
-                [STUDY ALLEEG] = std_precomp(STUDY, ALLEEG, {}, erp_param{:});
+                [STUDY ALLEEG] = std_precomp2(STUDY, ALLEEG, {}, erp_param{:});
             end
         end
         if strcmp(do_erpim, 'on')
             for ncell=vec_sel_cell
                 erpim_param=[erpim 'cell' ncell];
-                [STUDY ALLEEG] = std_precomp(STUDY, ALLEEG, {}, erpim_param{:});
+                [STUDY ALLEEG] = std_precomp2(STUDY, ALLEEG, {}, erpim_param{:});
             end
         end
         if strcmp(do_spec, 'on')
             for ncell=vec_sel_cell
                 spec_param=[spec 'cell' ncell];
-                [STUDY ALLEEG] = std_precomp(STUDY, ALLEEG, {}, spec_param{:});
+                [STUDY ALLEEG] = std_precomp2(STUDY, ALLEEG, {}, spec_param{:});
             end
         end
         if strcmp(do_ersp, 'on')
             for ncell=vec_sel_cell
                 ersp_param=[ersp 'cell' ncell];
-                [STUDY ALLEEG] = std_precomp(STUDY, ALLEEG, {}, ersp_param{:});             
+                [STUDY ALLEEG] = std_precomp2(STUDY, ALLEEG, {}, ersp_param{:});             
             end
         end
+        delete(gcp);
         [STUDY EEG] = pop_savestudy( STUDY, ALLEEG, 'savemode','resave');
+        
     end
     
     function array = override_param(param, value, array)

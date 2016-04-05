@@ -95,7 +95,7 @@ levels_f2                                                                  = inp
 pmaskcond                                                                  = input.pmaskcond; 
 pmaskgru                                                                   = input.pmaskgru; 
 pmaskinter                                                                 = input.pmaskinter; 
-ersp_mode                                                                  = input.ersp_mode; 
+ersp_mode                                                                  = input.ersp_measure; 
 display_pmode                                                              = input.display_pmode; 
 
 

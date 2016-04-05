@@ -29,7 +29,7 @@ suffix_plot  = input.suffix_plot;                                          % the
 
 fig_dir      = fullfile(plot_dir,'fig'); if(not(exist(fig_dir,'dir')));mkdir(fig_dir);end;
 eps_dir      = fullfile(plot_dir,'eps'); if(not(exist(eps_dir,'dir')));mkdir(eps_dir);end;
-svg_dir      = fullfile(plot_dir,'svg'); 
+svg_dir      = fullfile(plot_dir,'svg');
 tif_dir      = fullfile(plot_dir,'tif'); if(not(exist(tif_dir,'dir')));mkdir(tif_dir);end;
 
 name_plot    = [name_embed,'_',suffix_plot];                               % name of the plot without the path
@@ -56,11 +56,11 @@ printer         ='-depsc2';
 for par=1:2:length(varargin)
     switch varargin{par}
         case {'renderer'          , ...
-              'pdf_mode'          , ...
-              'exclude_format'    , ...
-              'res'               , ...
-              'printer'           , ...
-             }
+                'pdf_mode'          , ...
+                'exclude_format'    , ...
+                'res'               , ...
+                'printer'           , ...
+                }
             
             if isempty(varargin{par+1})
                 continue;
@@ -95,22 +95,46 @@ print(tif_path,'-dtiff',res);
 os = system_dependent('getos');
 
 % if windows windows, print append the current plot to a postscript file AND to a powerpoint file (for an overview of results)
-if ~ strncmp(os,'Linux',2)
+if strncmp(os,'PCWIN',2)
     print(fig, ps_path,'-append','-dwinc')
     saveppt2(ppt_path,'f',fig);
     
     % if linux, only append to the postscript
-else
+end
+
+
+if strncmp(os,'Linux',2)
     print(fig, ps_path,'-append',['-',renderer],res)
 end
 
+
+
+if strncmp(os,'Darwin',2)
+    %set(fig,'PaperOrientation','landscape');
+    pp = get(fig,'Position');
+    pp(3) = 0.5 * pp(3);
+    pp(4) = 0.5 * pp(4);
+    set(fig, 'Position', pp)% save eps file
+
+    %print(eps_path,printer,res);
+    %saveas(fig,eps_path,'epsc')
+        %print(fig, eps_path,'-depsc2',res)
+        hgexport(fig,eps_path)
+
+    print(fig, ps_path,'-append','-dpsc',res)
+    %print(fig, '-dpsc', '-append', ps_path)
+end
 % in any operating system, append the current figure to a global pdf file
 % for overview
-switch pdf_mode
-    case 'export_fig'
-        export_fig(fig, pdf_path, '-pdf', '-append',res);
-    case 'ps2pdf'
-        ps2pdf('psfile',  ps_path, 'pdffile', pdf_path, 'gspapersize', 'a4')
+
+if not(strncmp(os,'Darwin',2))
+    
+    switch pdf_mode
+        case 'export_fig'
+            export_fig(fig, pdf_path, '-pdf', '-append',res);
+        case 'ps2pdf'
+            ps2pdf('psfile',  ps_path, 'pdffile', pdf_path, 'gspapersize', 'a4')
+    end
 end
 close all
 
