@@ -16,26 +16,26 @@ if correct_pinter
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% CORREGGO BACO INTERAZIONE
 
-if correct_pinter
-    for ind = 1:length(pcond)
-        pinter_corr_mat(:,:,ind) =  pcond_corr{ind};
-    end;
-    
-    for ind = 1:length(pgroup)
-        pinter_corr_mat(:,:,(ind+length(pcond))) = pgroup_corr{ind};
-    end;
-    
-    pinter_corr_m = mean(pinter_corr_mat,3);
-    pinter_corr_r = pinter_corr{3};
-    
-    p_m = pinter_corr_m < pinter_corr{3};
-    
-    pinter_corr_r(p_m) =  pinter_corr_m(p_m);
-     
-    
-    pinter_corr{3} = pinter_corr_r;
-    
-end
+% if correct_pinter
+%     for ind = 1:length(pcond)
+%         pinter_corr_mat(:,:,ind) =  pcond_corr{ind};
+%     end;
+%     
+%     for ind = 1:length(pgroup)
+%         pinter_corr_mat(:,:,(ind+length(pcond))) = pgroup_corr{ind};
+%     end;
+%     
+%     pinter_corr_m = mean(pinter_corr_mat,3);
+%     pinter_corr_r = pinter_corr{3};
+%     
+%     p_m = pinter_corr_m < pinter_corr{3};
+%     
+%     pinter_corr_r(p_m) =  pinter_corr_m(p_m);
+%      
+%     
+%     pinter_corr{3} = pinter_corr_r;
+%     
+% end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
