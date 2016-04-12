@@ -17,7 +17,7 @@ mst_dif  = mst_dif_raw;
 mst_dif(mst_dif_raw >= 0)=nan;
 
 idx0 = min(abs(mst_dif(:,1:size(mst_dif,2))));
-[~,idx] = min(abs(mst_dif(:,1:size(mst_dif,2))));
+[a,idx] = min(abs(mst_dif(:,1:size(mst_dif,2))));
 
 vec2_previous = vec2(idx);
 
