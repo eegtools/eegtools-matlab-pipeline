@@ -6,7 +6,7 @@ function result = proj_brainstorm_subject_importepochs_averaging(project, subj_n
     brainstorm_data_path        = protocol.STUDIES;
     
     
-    if not(exist(project.brainstorm.channels_file_type, 'file'))
+    if not(exist(project.brainstorm.channels_file_path, 'file'))
         disp('channels_file_type file is missing...exiting');
         result = 0;
         ...return;        
