@@ -1,19 +1,37 @@
-%% function sFiles = brainstorm_group_stats_2cond_pairedttest(protocol_name, cond1, cond2,  analysis_type, abs_type, subjects_list)
+%% function sFiles = brainstorm_group_stats_2cond_pairedttest(protocol_name, cond1, cond2,  analysis_type, subjects_list)
 %   analysis_type:   e.g. 'sloreta_fixed_surf'
 %
-function sFiles = brainstorm_group_stats_2cond_pairedttest(protocol_name, cond1, cond2,  data_type, analysis_type, abs_type, subjects_list, varargin)
+function sFiles = brainstorm_group_stats_2cond_pairedttest(protocol_name, cond1, cond2,  data_type, analysis_type, subjects_list, varargin)
 
     iProtocol               = brainstorm_protocol_open(protocol_name);
     protocol                = bst_get('ProtocolInfo');
     brainstorm_data_path    = protocol.STUDIES;
     
+    abs_type                = 1;
+    avgtime                 = 0;
+    tail                    = 'two';  % two, one- , one+
+    comment                 = '';
+    scoutfunc               = 1;
+    scoutsel                = {};  % {'Uniform400', {'026', '062', '073', '076', '086'}}
+    timewindow              = [];
     
-    comment                 = [];
     options_num=size(varargin,2);
     for opt=1:2:options_num
         switch varargin{opt}
+            case 'abs_type'
+                abs_type = varargin{opt+1};
+            case 'tail'
+                tail = varargin{opt+1};   
             case 'comment'
-                comment = varargin{opt+1};                
+                comment = varargin{opt+1};   
+            case 'avgtime'
+                avgtime = varargin{opt+1};   
+            case 'scoutfunc'
+                scoutfunc = varargin{opt+1};   
+            case 'scoutsel'
+                scoutsel = varargin{opt+1};   
+            case 'timewindow'
+                timewindow = varargin{opt+1};   
         end
     end    
     
@@ -51,10 +69,31 @@ function sFiles = brainstorm_group_stats_2cond_pairedttest(protocol_name, cond1,
 
     % Process: paired t-test
     sFiles = bst_process(...
-        'CallProcess', 'process_ttest_paired', ...
+        'CallProcess', 'process_test_parametric2p', ...
         FileNamesA, FileNamesB, ...
-        'abs_type', abs_type);  % D = abs(A)-abs(B)   - Default
+        'timewindow', timewindow, ...
+        'scoutsel'  , scoutsel, ...
+        'scoutfunc' , scoutfunc, ...  % Mean
+        'isnorm'    , abs_type, ...
+        'avgtime'   , avgtime, ...
+        'Comment'   , comment, ...
+        'test_type' , 'ttest_paired', ...  % Paired Student's t-test t = mean(A-B) ./ std(A-B) .* sqrt(n)      df=n-1
+        'tail'      , tail);  % One-tailed (+)
 
+
+%     sFiles = bst_process(...
+%         'CallProcess', 'process_test_parametric2p', ...
+%         sFiles, sFiles2, ...
+%         'timewindow', [-0.30078125, 0.6953125], ...
+%         'scoutsel', {'Uniform400', {'022', '025', '058', '061'}}, ...
+%         'scoutfunc', 1, ...  % Mean
+%         'isnorm', 1, ...
+%         'avgtime', 1, ...
+%         'Comment', 'gigi', ...
+%         'test_type', 'ttest_paired', ...  % Paired Student's t-test t = mean(A-B) ./ std(A-B) .* sqrt(n)      df=n-1
+%         'tail', 'two');  % Two-tailed    
+%     
+    
     % Save report
     ReportFile      = bst_report('Save', sFiles);
     if isempty(sFiles)

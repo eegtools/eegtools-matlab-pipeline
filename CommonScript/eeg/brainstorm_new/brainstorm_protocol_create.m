@@ -1,4 +1,4 @@
-% Protocol name has to be a valid folder name (no spaces, no weird characters...)
+ % Protocol name has to be a valid folder name (no spaces, no weird characters...)
 
 function iProtocol = brainstorm_protocol_create(ProtocolName,folder_path,default_anatomy)
 
