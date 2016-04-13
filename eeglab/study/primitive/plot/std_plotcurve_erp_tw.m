@@ -234,26 +234,27 @@ end;
 % --------------------------
 if ~isempty(opt.interstats), pinter = opt.interstats{3};
     
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% CORREGGO BACO INTERAZIONE
-    pinter_corr=[];
-    for ind = 1:length(opt.condstats)
-        pinter_corr(:,:,ind)  = opt.condstats{ind};
-        pinter_nomask_corr(:,:,ind)  = pcond_nomask{ind};
-        
-    end;
     
-    for ind = 1:length(opt.groupstats)
-        pinter_corr(:,:,(ind+length(opt.condstats))) = opt.groupstats{ind};
-        pinter_nomask_corr(:,:,(ind+length(opt.condstats))) =  pgroup_nomask{ind};
-    end;
-    if isnan(opt.threshold)
-        pinter=min(pinter_corr,[],3);
-    else
-        pinter=max(pinter_corr,[],3);
-    end
-    pinter_nomask=min(pinter_nomask_corr,[],3);
-    
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% CORREGGO BACO INTERAZIONE
+%     pinter_corr=[];
+%     for ind = 1:length(opt.condstats)
+%         pinter_corr(:,:,ind)  = opt.condstats{ind};
+%         pinter_nomask_corr(:,:,ind)  = pcond_nomask{ind};
+%         
+%     end;
+%     
+%     for ind = 1:length(opt.groupstats)
+%         pinter_corr(:,:,(ind+length(opt.condstats))) = opt.groupstats{ind};
+%         pinter_nomask_corr(:,:,(ind+length(opt.condstats))) =  pgroup_nomask{ind};
+%     end;
+%     if isnan(opt.threshold)
+%         pinter=min(pinter_corr,[],3);
+%     else
+%         pinter=max(pinter_corr,[],3);
+%     end
+%     pinter_nomask=min(pinter_nomask_corr,[],3);
+%     
+%     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
 end;
 
@@ -638,7 +639,9 @@ if ~isempty(opt.groupstats) && ~isempty(opt.condstats) && ng > 1 && nc > 1
             
             xlabel(xlab); %ylabel('-log10(p)');
             
-            pvec=mean(pinter_nomask,2);
+                        pvec=mean(pinter,2);
+
+%             pvec=mean(pinter_nomask,2);
             
             %               for nss=1:length(pvec)
             %                     pstr= sprintf('%0.1e',pvec(nss));
