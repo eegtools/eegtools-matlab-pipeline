@@ -738,5 +738,7 @@ function [STUDY, EEG] = proj_eeglab_study_plot_roi_ersp_curve_fb(project, analys
 end
 
 % CHANGE LOG
+% 14/4/2016
+% added text_export_ersp_resume_struct to export singificant values to a text file 
 % 19/6/15
 % added the possibility to calculte narrowband analysis also on the NB COG, not the NB MAX.
