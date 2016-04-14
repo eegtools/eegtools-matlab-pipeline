@@ -209,19 +209,19 @@ if nc > 1 && ~isempty(opt.condstats  ), addr = 1; else addr = 0; end;
 % --------------------------
 if ~isempty(opt.interstats), pinter = opt.interstats{3}; 
 
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% CORREGGO BACO INTERAZIONE
-    pinter_corr=[];    
-    for ind = 1:length(opt.condstats)
-        pinter_corr(:,:,ind)  = opt.condstats{ind};
-    end;    
-    for ind = 1:length(opt.groupstats)
-        pinter_corr(:,:,(ind+length(opt.condstats))) = opt.groupstats{ind};         
-    end;    
-    if isnan(opt.threshold)
-        pinter=min(pinter_corr,[],3);
-    else
-       pinter=max(pinter_corr,[],3); 
-    end
+%     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% CORREGGO BACO INTERAZIONE
+%     pinter_corr=[];    
+%     for ind = 1:length(opt.condstats)
+%         pinter_corr(:,:,ind)  = opt.condstats{ind};
+%     end;    
+%     for ind = 1:length(opt.groupstats)
+%         pinter_corr(:,:,(ind+length(opt.condstats))) = opt.groupstats{ind};         
+%     end;    
+%     if isnan(opt.threshold)
+%         pinter=min(pinter_corr,[],3);
+%     else
+%        pinter=max(pinter_corr,[],3); 
+%     end
     
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
