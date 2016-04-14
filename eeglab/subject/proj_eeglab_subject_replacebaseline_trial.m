@@ -207,6 +207,8 @@ function OUTEEG =  proj_eeglab_subject_replacebaseline_trial(EEG, project,vararg
 
     catch err
         err;
+        keyboard
+        OUTEEG = [];
     end
 
 end

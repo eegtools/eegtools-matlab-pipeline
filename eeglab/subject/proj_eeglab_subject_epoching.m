@@ -70,6 +70,7 @@ function EEG = proj_eeglab_subject_epoching(project, varargin)
         end
         
         if isempty(EEG)
+            disp('ERROR.....exiting')
             return;
         end
         
@@ -100,7 +101,7 @@ function EEG = proj_eeglab_subject_epoching(project, varargin)
                         EEG2                = eeg_checkset(EEG2);
 
                         output_file_name    = proj_eeglab_subject_get_filename(project, subj_name, 'output_epoching', 'cond_name', mark_cond_names{cond},'custom_suffix', custom_suffix);
-                        [path, out, ~]      = fileparts(output_file_name);
+                        [path, out]         = fileparts(output_file_name);
                         EEG2                = pop_saveset(EEG2, 'filename', out, 'filepath', path);
                         clear EEG2
                     end
@@ -114,7 +115,7 @@ function EEG = proj_eeglab_subject_epoching(project, varargin)
                         EEG2                = eeg_checkset(EEG2);
 
                         output_file_name    = proj_eeglab_subject_get_filename(project, subj_name, 'output_epoching', 'cond_name', mark_cond_names{cond},'custom_suffix', custom_suffix);
-                        [path, out, ~]      = fileparts(output_file_name);
+                        [path, out]         = fileparts(output_file_name);
                         EEG2                = pop_saveset(EEG2, 'filename', out, 'filepath', path);
                         clear EEG2
                     end
@@ -142,7 +143,7 @@ function EEG = proj_eeglab_subject_epoching(project, varargin)
                         EEG2                = eeg_checkset(EEG2);
 
                         output_file_name    = proj_eeglab_subject_get_filename(project, subj_name, 'output_epoching', 'cond_name', mark_cond_names{cond},'custom_suffix', custom_suffix);
-                        [path, out, ~]      = fileparts(output_file_name);
+                        [path, out]         = fileparts(output_file_name);
                         EEG2                = pop_saveset(EEG2, 'filename', out, 'filepath', path);
                         clear EEG2
                     end
@@ -167,7 +168,7 @@ function EEG = proj_eeglab_subject_epoching(project, varargin)
                         EEG2                = eeg_checkset(EEG2);
 
                         output_file_name    = proj_eeglab_subject_get_filename(project, subj_name, 'output_epoching', 'cond_name', mark_cond_names{cond},'custom_suffix', custom_suffix);
-                        [path, out, ~]      = fileparts(output_file_name);
+                        [path, out]         = fileparts(output_file_name);
                         EEG2                = pop_saveset(EEG2, 'filename', out, 'filepath', path);
                         clear EEG2
                     end

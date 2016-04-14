@@ -113,6 +113,10 @@ function OUTEEG = proj_eeglab_subject_replacebaseline(project, list_select_subje
                 OUTEEG =  proj_eeglab_subject_replacebaseline_external(EEG, project, subj_name);
 
         end
+        if isempty(OUTEEG)
+            disp ('error in proj_eeglab_subject_replacebaseline');
+           return 
+        end
     end
 end
 
