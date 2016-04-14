@@ -640,8 +640,8 @@ if ~isempty(opt.groupstats) && ~isempty(opt.condstats) && ng > 1 && nc > 1
             set(gca,'xlim',xl,'ylim',[0 2]); set(gcf, 'Visible', 'off');
             
             xlabel(xlab); %ylabel('-log10(p)');
-             pvec=mean(pinter,2);
-%             pvec=mean(pinter_nomask,2);
+             %pvec=mean(pinter,2);
+            pvec=mean(pinter_nomask{3},2);
             
             %               for nss=1:length(pvec)
             %                     pstr= sprintf('%0.1e',pvec(nss));
