@@ -37,6 +37,22 @@ end
 
 if not(iscell(list_select_subjects)), list_select_subjects = {list_select_subjects}; end
 numsubj = length(list_select_subjects);
+
+
+eeglab_channels_file    = project.eegdata.eeglab_channels_file_path;
+% --------------------------------------------------------------------------------------------------------------------------------------------
+
+% split file path in folder, name, extension
+[folder_loc,name_loc,ext_loc] = fileparts(eeglab_channels_file);
+
+% if the folder of the loc file is not that expected by eeglab
+if not(strcmp(folder_loc,project.paths.eeglab))
+    % copy the file into the expected folder
+    %copyfile(project.paths.eeglab,fullfile(project.paths.eeglab,'sample_locs'));
+    copyfile(eeglab_channels_file,fullfile(project.paths.eeglab,'sample_locs'));
+end
+
+
 % -------------------------------------------------------------------------------------------------------------------------------------
 
 for subj=1:numsubj
@@ -45,18 +61,6 @@ for subj=1:numsubj
     input_file_name         = proj_eeglab_subject_get_filename(project, subj_name, get_filename_step, 'custom_suffix', custom_suffix, 'custom_input_folder', custom_input_folder);
     [path,name_noext,ext]   = fileparts(input_file_name);
     
-    eeglab_channels_file    = project.eegdata.eeglab_channels_file_path;
-    % --------------------------------------------------------------------------------------------------------------------------------------------
-    
-    % split file path in folder, name, extension
-    [folder_loc,name_loc,ext_loc] = fileparts(eeglab_channels_file);
-    
-    % if the folder of the loc file is not that expected by eeglab
-    if not(strcmp(folder_loc,project.paths.eeglab))
-        % copy the file into the expected folder
-        %copyfile(project.paths.eeglab,fullfile(project.paths.eeglab,'sample_locs'));
-        copyfile(eeglab_channels_file,fullfile(project.paths.eeglab,'sample_locs'));
-    end
     
     
     switch project.import.acquisition_system
