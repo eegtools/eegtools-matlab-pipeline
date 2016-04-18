@@ -16,7 +16,7 @@ function project = eegtools_project_derive_parameters(project)
     for fb=1:length(project.postprocess.ersp.frequency_bands)
         project.postprocess.ersp.frequency_bands_list{fb,1}=[project.postprocess.ersp.frequency_bands(fb).min,project.postprocess.ersp.frequency_bands(fb).max];
     end
-    project.ersp.postprocess.frequency_bands_names = {project.ersp.postprocess.frequency_bands.name};
+    project.postprocess.ersp.frequency_bands_names = {project.postprocess.ersp.frequency_bands.name};
 
     % ERP
     project.erp.study_params.tmin_analysis.ms                  = project.erp.study_params.tmin_analysis.s*1000;
