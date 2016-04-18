@@ -13,8 +13,8 @@ function project = eegtools_project_derive_parameters(project)
     % ======================================================================================================
     % POSTPROCESS
     % ======================================================================================================
-    for fb=1:length(project.ersp.postprocess.frequency_bands)
-        project.ersp.postprocess.frequency_bands_list{fb,1}=[project.ersp.postprocess.frequency_bands(fb).min,project.ersp.postprocess.frequency_bands(fb).max];
+    for fb=1:length(project.postprocess.ersp.frequency_bands)
+        project.postprocess.ersp.frequency_bands_list{fb,1}=[project.postprocess.ersp.frequency_bands(fb).min,project.postprocess.ersp.frequency_bands(fb).max];
     end
     project.ersp.postprocess.frequency_bands_names = {project.ersp.postprocess.frequency_bands.name};
 
