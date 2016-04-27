@@ -1,20 +1,20 @@
 
-function brainstorm_result_zscore(protocol_name, result_file, baseline, varargin)
+function brainstorm_result_zscore_deprecated(protocol_name, result_file, baseline, varargin)
 
     iProtocol               = brainstorm_protocol_open(protocol_name);
     protocol                = bst_get('ProtocolInfo');
     brainstorm_data_path    = protocol.STUDIES;
     
-    source_abs              = 0;
-    overwrite               = 0;
+    source_abs              = 1;
+    dynamic                 = 0;
     
     options_num=size(varargin,2);
     for opt=1:2:options_num
         switch varargin{opt}
             case 'source_abs'
                 source_abs  = varargin{opt+1}; 
-            case 'overwrite'
-                overwrite     = varargin{opt+1};
+            case 'dynamic'
+                dynamic     = varargin{opt+1};
         end
     end
     
@@ -27,14 +27,12 @@ function brainstorm_result_zscore(protocol_name, result_file, baseline, varargin
     bst_report('Start', FileNamesA);
 
     % Process: Z-score normalization: 
-    
     sFiles = bst_process( ...
-        'CallProcess', 'process_baseline_norm', ...
+        'CallProcess', 'process_zscore_dynamic', ...
         FileNamesA, [], ...
-        'baseline',   baseline, ...
+        'baseline', baseline, ...
         'source_abs', source_abs, ...
-        'method',     'zscore', ...  % Z-score transformation:    x_std = (x - &mu;) / &sigma;
-        'overwrite',  overwrite);
+        'dynamic', dynamic);
 
     % Check results
     if isempty(sFiles)
