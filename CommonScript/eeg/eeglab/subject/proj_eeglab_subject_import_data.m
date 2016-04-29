@@ -73,6 +73,8 @@ for subj=1:numsubj
             for ev=1:size(EEG.event,2)
                 EEG.event(ev).type = regexprep(EEG.event(ev).type,' ','');
             end
+
+            EEG=pop_chanedit(EEG, 'lookup',eeglab_channels_file);
             
         case 'BIOSEMI'
             EEG = pop_biosig(input_file_name, 'importannot','off');
@@ -81,6 +83,9 @@ for subj=1:numsubj
             for ev=1:size(EEG.event,2)
                 EEG.event(ev).type = num2str(EEG.event(ev).type);
             end
+            EEG=pop_chanedit(EEG, 'lookup',eeglab_channels_file);
+            
+            
         case 'GEODESIC'
             %             EEG = pop_readegi(input_file_name, [],[],'auto');
             %             EEG = eeg_checkset( EEG );
