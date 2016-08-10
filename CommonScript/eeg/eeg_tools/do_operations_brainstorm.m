@@ -240,6 +240,7 @@ if do_sources_spatial_reduction
 end
 %==================================================================================
 % spatial dimensionality reduction: downsampling to user-generated atlas composed by hundreds of scouts
+% uses : 'process_extract_scout'
 if do_sources_extract_scouts
     list_subjects               = project.subjects.list;
     condition_names             = project.epoching.condition_names;    cond_length = length(condition_names);
@@ -252,6 +253,25 @@ if do_sources_extract_scouts
            for s=1:length(cond_files)
                 result_file = fullfile(project.paths.project, project.brainstorm.db_name, 'data', cond_files{s});
                 brainstorm_result_extract_scouts(project.brainstorm.db_name, result_file, scouts_name, scout_time_limits);
+           end
+        end
+    end
+end
+%==================================================================================
+% this version accept one time windows and averages all the values contained
+% it grants just one controlled time value, uses : 'process_extract_values'
+if do_sources_extract_scouts_oneperiod_values
+    list_subjects               = project.subjects.list;
+    condition_names             = project.epoching.condition_names;    cond_length = length(condition_names);
+    for t=1:length(postprocess_sources_tag_list)
+        tag         = postprocess_sources_tag_list{t};
+        input_file  = [project.brainstorm.average_file_name '.mat'];   .... e.g. 'data_average.mat'        
+        
+        for cond=1:cond_length
+           cond_files = brainstorm_results_get_from_subjectslist_by_tag(list_subjects, condition_names{cond}, input_file, tag);
+           for s=1:length(cond_files)
+                result_file = fullfile(project.paths.project, project.brainstorm.db_name, 'data', cond_files{s});
+                brainstorm_result_extract_scouts_oneperiod_values(project.brainstorm.db_name, result_file, scouts_name, scout_time_limits);
            end
         end
     end

@@ -20,6 +20,7 @@ do_sources_unconstrained2flat                       = 0;
 do_sources_time_reduction                           = 0;
 do_sources_spatial_reduction                        = 0;
 do_sources_extract_scouts                           = 0;
+do_sources_extract_scouts_oneperiod_values          = 0;
 do_sources_export2spm8                              = 0;
 do_sources_export2spm8_subjects_peaks               = 0;
 do_results_zscore                                   = 0;

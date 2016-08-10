@@ -127,7 +127,7 @@ for ndes=1:length(design_num_vec)
             [STUDY ALLEEG] = std_precomp2(STUDY, ALLEEG, {}, ersp_param{:});
         end
     end
-    delete(gcp);
+    ...delete(gcp);
     [STUDY EEG] = pop_savestudy( STUDY, ALLEEG, 'savemode','resave');
     
 end

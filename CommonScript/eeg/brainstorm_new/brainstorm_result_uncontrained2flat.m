@@ -40,7 +40,7 @@ function brainstorm_result_uncontrained2flat(protocol_name, result_file, varargi
     [idir,iname, iext]  = fileparts(result_file);
     
     src                 = fullfile(brainstorm_data_path, output_file_name);
-    dest                = fullfile(brainstorm_data_path, idir, [iname '_norm' iext]);
+    dest                = fullfile(brainstorm_data_path, odir, [iname '_norm' iext]);
     movefile(src,dest);
     
     db_reload_studies(sFiles(1).iStudy);
