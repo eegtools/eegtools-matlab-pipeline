@@ -43,7 +43,7 @@ function fileID = brainstorm_subject_scouts_export(db_name, subjects_list, cond_
                 scn = scouts_names{sc};
                 for tw=1:length(time_names)
                     twn = time_names(tw);
-                    data_row = {subj_name, cond_name, scn, twn, values(sc, tw)*1000000000000000};
+                    data_row = {subj_name, cond_name, scn, twn, values(sc, tw)}; ...*1000000000000000};
                     fprintf(fileID, formatSpecData, data_row{:});
                 end
             end

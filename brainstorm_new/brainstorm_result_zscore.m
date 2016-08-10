@@ -45,7 +45,7 @@ function brainstorm_result_zscore(protocol_name, result_file, baseline, varargin
         keyboard 
     end     
     
-%     output_file_name=sFiles(1).FileName;
+%      output_file_name=sFiles(1).FileName;
 %     
 %     [idir,iname,iext]   = fileparts(result_file);
 %     [odir,oname,oext]   = fileparts(output_file_name);
