@@ -1519,6 +1519,17 @@ project.brainstorm.std_loose_value                  = 0.2;
 
 project.brainstorm.average_file_name                = 'data_average';
 project.brainstorm.stats.ttest_abstype              = 1;
+
+
+project.brainstorm.postprocess.group_time_windows(1)=struct('name', '211', 'min', 211.3, 'max', 211.3);
+
+project.brainstorm.postprocess.scout_list={
+                                  {'r_ACC'};    
+                                  {'r_MCC'};    
+                                  {'r_IFG'}
+};
+project.brainstorm.postprocess.scouts_names={'r_ACC','r_MCC','r_IFG'};
+project.brainstorm.postprocess.numscouts=length(project.brainstorm.postprocess.scout_list);
 % ======================================================================================================
 % ======================================================================================================
 % ======================================================================================================

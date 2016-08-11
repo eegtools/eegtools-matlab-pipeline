@@ -5,8 +5,10 @@ function brainstorm_result_extract_scouts(protocol_name, result_file, scouts_nam
     protocol                = bst_get('ProtocolInfo');
     brainstorm_data_path    = protocol.STUDIES;
     
-    
-    scouts_label            = [scouts_name{:}];
+    scouts_label            = '';
+    for x=1:length(scouts_name)
+        scouts_label = [scouts_label '_' scouts_name{x}];
+    end
         
     isflip                  = 1;
     isnorm                  = 1;
@@ -73,7 +75,7 @@ function brainstorm_result_extract_scouts(protocol_name, result_file, scouts_nam
     iname               = strrep(iname, 'results_', '');
     
     src                 = fullfile(brainstorm_data_path, output_file_name);
-    dest                = fullfile(brainstorm_data_path, odir, ['matrix_' iname '_scouts_' scouts_label oext]);
+    dest                = fullfile(brainstorm_data_path, odir, ['matrix_' iname '_scouts' scouts_label '_' time_limits(1) '_' time_limits(2) oext]);
     movefile(src,dest);
     
     db_reload_studies(sFiles(1).iStudy);
