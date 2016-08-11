@@ -1,22 +1,22 @@
 % time_limits in seconds
-function brainstorm_result_extract_scouts(protocol_name, result_file, scouts_name, time_limits, varargin)
+function brainstorm_result_extract_scouts_oneperiod_values(protocol_name, result_file, scouts_name, time_limits, time_label, varargin)
 
     iProtocol               = brainstorm_protocol_open(protocol_name);
     protocol                = bst_get('ProtocolInfo');
     brainstorm_data_path    = protocol.STUDIES;
     
-    
-    scouts_label            = [scouts_name{:}];
+    scouts_label            = '';
+    for x=1:length(scouts_name)
+        scouts_label = [scouts_label '_' scouts_name{x}];
+    end
         
-    isflip                  = 1;
     isnorm                  = 1;
     scoutfunc               = 1;
+    doavgtime               = 1;
     
     options_num=size(varargin,2);
     for opt=1:2:options_num
         switch varargin{opt}
-            case 'isflip'
-                isflip = varargin{opt+1}; 
             case 'isnorm'
                 isnorm = varargin{opt+1};
             case 'scoutfunc'
@@ -33,6 +33,8 @@ function brainstorm_result_extract_scouts(protocol_name, result_file, scouts_nam
                     case 'all'
                         scoutfunc = 5;
                 end 
+            case 'doavgtime'
+                doavgtime = varargin{opt+1};                
         end
     end
     
@@ -44,18 +46,16 @@ function brainstorm_result_extract_scouts(protocol_name, result_file, scouts_nam
     % Start a new report
     bst_report('Start', FileNamesA);
 
-    % Process: Scouts time series
-    sFiles = bst_process('CallProcess', 'process_extract_scout', FileNamesA, [], ...
+    
+    sFiles = bst_process('CallProcess', 'process_extract_values', FileNamesA, [], ...
         'timewindow', time_limits, ...
         'scouts', {'User scouts', scouts_name}, ...
         'scoutfunc', scoutfunc, ...  % Mean, Max, PCA, Std, All
-        'isflip', isflip, ...
-        'isnorm', isnorm, ...
-        'concatenate', 1, ...
-        'save', 1, ...
-        'addrowcomment', 1, ...
-        'addfilecomment', 1);
-
+        'isnorm',     isnorm, ...
+        'avgtime',    doavgtime, ...
+        'dim',        2, ...  % Concatenate time (dimension 2)
+        'Comment',    '');    
+    
     % Save report
     ReportFile      = bst_report('Save', sFiles);
     if isempty(sFiles)
@@ -73,7 +73,7 @@ function brainstorm_result_extract_scouts(protocol_name, result_file, scouts_nam
     iname               = strrep(iname, 'results_', '');
     
     src                 = fullfile(brainstorm_data_path, output_file_name);
-    dest                = fullfile(brainstorm_data_path, odir, ['matrix_' iname '_scouts_' scouts_label oext]);
+    dest                = fullfile(brainstorm_data_path, odir, ['matrix_' iname '_scouts' scouts_label '_' time_label oext]);
     movefile(src,dest);
     
     db_reload_studies(sFiles(1).iStudy);

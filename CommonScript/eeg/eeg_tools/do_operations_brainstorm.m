@@ -249,17 +249,19 @@ if do_sources_extract_scouts
         input_file  = [project.brainstorm.average_file_name '.mat'];   .... e.g. 'data_average.mat'        
         
         for cond=1:cond_length
-           cond_files = brainstorm_results_get_from_subjectslist_by_tag(list_subjects, condition_names{cond}, input_file, tag);
-           for s=1:length(cond_files)
+            cond_files = brainstorm_results_get_from_subjectslist_by_tag(list_subjects, condition_names{cond}, input_file, tag);
+            for s=1:length(cond_files)
                 result_file = fullfile(project.paths.project, project.brainstorm.db_name, 'data', cond_files{s});
-                brainstorm_result_extract_scouts(project.brainstorm.db_name, result_file, scouts_name, scout_time_limits);
-           end
+                for per=1:length(project.brainstorm.postprocess.group_time_windows)
+                    brainstorm_result_extract_scouts(project.brainstorm.db_name, result_file, project.brainstorm.postprocess.scouts_names, [project.brainstorm.postprocess.group_time_windows(per).min project.brainstorm.postprocess.group_time_windows(per).max]);
+                end
+            end
         end
     end
 end
 %==================================================================================
-% this version accept one time windows and averages all the values contained
-% it grants just one controlled time value, uses : 'process_extract_values'
+% this version accept a struct array of time windows and averages all the values contained within each struct array element
+% it grants just one controlled time value for each struct array element, uses : 'process_extract_values'
 if do_sources_extract_scouts_oneperiod_values
     list_subjects               = project.subjects.list;
     condition_names             = project.epoching.condition_names;    cond_length = length(condition_names);
@@ -271,7 +273,9 @@ if do_sources_extract_scouts_oneperiod_values
            cond_files = brainstorm_results_get_from_subjectslist_by_tag(list_subjects, condition_names{cond}, input_file, tag);
            for s=1:length(cond_files)
                 result_file = fullfile(project.paths.project, project.brainstorm.db_name, 'data', cond_files{s});
-                brainstorm_result_extract_scouts_oneperiod_values(project.brainstorm.db_name, result_file, scouts_name, scout_time_limits);
+                for per=1:length(project.brainstorm.postprocess.group_time_windows)
+                    brainstorm_result_extract_scouts_oneperiod_values(project.brainstorm.db_name, result_file, project.brainstorm.postprocess.scouts_names, [project.brainstorm.postprocess.group_time_windows(per).min project.brainstorm.postprocess.group_time_windows(per).max]);
+                end
            end
         end
     end
@@ -518,6 +522,16 @@ if do_export_scouts_to_file
     condition_names             = project.epoching.condition_names;    cond_length = length(condition_names);
     list_subjects               = project.subjects.list;    
     brainstorm_subject_scouts_export(project.brainstorm.db_name, list_subjects, condition_names, export_scout_name);
+end
+%==================================================================================
+if do_export_scouts_multiple_oneperiod_to_file
+    condition_names             = project.epoching.condition_names;    cond_length = length(condition_names);
+    list_subjects               = project.subjects.list;    
+
+    for per=1:length(project.brainstorm.postprocess.group_time_windows)
+        final_export_scout_name_inputfile = [export_scout_name_inputfile '_' project.brainstorm.postprocess.group_time_windows(per).name];
+        brainstorm_subject_scouts_export(project.brainstorm.db_name, list_subjects, condition_names, final_export_scout_name_inputfile, 'append', 1, 'output_file_name', ['scout_export_' export_scout_name_outputfile '.dat'], 'period_labels', {project.brainstorm.postprocess.group_time_windows(per).name});
+    end    
 end
 %==================================================================================
 if do_export_scouts_to_file_factors

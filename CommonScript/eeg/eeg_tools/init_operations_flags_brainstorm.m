@@ -39,4 +39,5 @@ do_group_results_averaging                          = 0;
 do_process_stats_sources                            = 0;            
 do_process_stats_scouts_tf                          = 0;            
 do_export_scouts_to_file                            = 0;
+do_export_scouts_multiple_oneperiod_to_file         = 0;
 do_export_scouts_to_file_factors                    = 0;
