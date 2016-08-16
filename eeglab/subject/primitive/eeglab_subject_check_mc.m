@@ -105,7 +105,7 @@ function results  =  eeglab_subject_check_mc(EEG, checks, varargin)
 
             % end_baseline_marker
             for bb=1:num_begin
-                if strcmp(EEG.event(begin_trial_ind(bb)+1).type, end_baseline_marker)
+                if strcmp(EEG.event(begin_baseline_ind(bb)+1).type, end_baseline_marker)
                     results.good_bb_eb(bb) = true;
                 else
                     errors{begin_trial_ind(bb)} = [errors{begin_trial_ind(bb)} 'begin_baseline::end_baseline '];
