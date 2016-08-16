@@ -4,6 +4,7 @@ function EEG  =  proj_eeglab_subject_check_mc(project, varargin)
     get_filename_step       = 'input_epoching';
     custom_suffix           = '';
     custom_input_folder     = '';
+    skip_errors             = 0;
     
     for par=1:2:length(varargin)
         switch varargin{par}
@@ -11,7 +12,8 @@ function EEG  =  proj_eeglab_subject_check_mc(project, varargin)
                     'list_select_subjects', ...
                     'get_filename_step',    ... 
                     'custom_input_folder',  ...
-                    'custom_suffix' ...
+                    'custom_suffix', ...
+                    'skip_errors' ...
                     }
 
                 if isempty(varargin{par+1})
@@ -24,6 +26,7 @@ function EEG  =  proj_eeglab_subject_check_mc(project, varargin)
 
     if not(iscell(list_select_subjects)), list_select_subjects = {list_select_subjects}; end
     numsubj = length(list_select_subjects);
+    
     % -------------------------------------------------------------------------------------------------------------------------------------
 
     checks.condition_triggers                           = project.task.events.valid_marker;
@@ -47,6 +50,12 @@ function EEG  =  proj_eeglab_subject_check_mc(project, varargin)
     
     checks.conditions_triggers                          = project.task.events.mrkcode_cond;
     
+    if skip_errors == 1
+        checks.begin_trial.switch                           = 'off';
+        checks.end_trial.switch                             = 'off';
+        checks.begin_baseline.switch                        = 'off';
+        checks.end_baseline.switch                          = 'off';        
+    end
 
     for subj=1:numsubj
 
