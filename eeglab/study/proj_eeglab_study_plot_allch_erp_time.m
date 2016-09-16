@@ -290,20 +290,20 @@ for design_num=design_num_vec
         erp_curve_allch_stat.project                                        = project;
         erp_curve_allch_stat.STUDY                                          = STUDY;
         erp_curve_allch_stat.design_num                                     = design_num;       
-        erp_curve_allch_stat.name_f1                                        = name_f1;
-        erp_curve_allch_stat.name_f2                                        = name_f2;
+%         erp_curve_allch_stat.name_f1                                        = name_f1;
+%         erp_curve_allch_stat.name_f2                                        = name_f2;
         erp_curve_allch_stat.levels_f1                                      = levels_f1;
         erp_curve_allch_stat.levels_f2                                      = levels_f2;
         erp_curve_allch_stat.erp_curve                                      = erp_curve_allch;
         erp_curve_allch_stat.times                                          = times;        
-        erp_curve_allch_stat.pcond                                          = pcond_corr;
-        erp_curve_allch_stat.pgroup                                         = pgroup_corr;
-        erp_curve_allch_stat.pinter                                         = pinter_corr;
+        erp_curve_allch_stat.pcond_corr                                          = pcond_corr;
+        erp_curve_allch_stat.pgroup_corr                                         = pgroup_corr;
+%         erp_curve_allch_stat.pinter                                         = pinter_corr;
         erp_curve_allch_stat.study_ls                                       = study_ls ;
         erp_curve_allch_stat.plot_dir                                       = plot_dir;       
-        erp_curve_allch_stat.display_compact_plots                          = display_compact_plots;        
-        erp_curve_allch_stat.compact_display_xlim                           = compact_display_xlim;
-        erp_curve_allch_stat.compact_display_ylim                           = compact_display_ylim;
+%         erp_curve_allch_stat.display_compact_plots                          = display_compact_plots;        
+%         erp_curve_allch_stat.compact_display_xlim                           = compact_display_xlim;
+%         erp_curve_allch_stat.compact_display_ylim                           = compact_display_ylim;
         
         
         
