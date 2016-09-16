@@ -231,6 +231,21 @@ project.operations.do_study_plot_erp_topo_compact_tw_individual_noalign         
 project.operations.do_study_plot_erp_topo_compact_tw_individual_align               = 0;
 
 
+%% ------------------------------------------------------------------------------------------
+% ALLCH_ERP_TIME, evaluate and represent ERP of all channels as a fucntion
+% of time and compare different conditions in a time x channels space (TANOVA)
+%--------------------------------------------------------------------------------------------
+% master-function:                                      proj_eeglab_study_plot_allch_erp_time
+project.proj_eeglab_study_plot_allch_erp_time                                              = 0;
+
+
+
+
+
+
+
+
+
 %% ******************************************************************************************************************************************
 %==========================================================================================================================================
 % E R S P  analysis (Time-frequency domain)
@@ -410,6 +425,9 @@ project.operations.do_study_plot_ersp_topo_tw_fb_individual_align_compact       
 
 
 project.operations.do_eeglab_study_export_ersp_tf_r                                 = 0;
+
+
+
 
 %% =====================================================================================================================================================================
 %=====================================================================================================================================================================
