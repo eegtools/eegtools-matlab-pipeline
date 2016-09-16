@@ -268,6 +268,13 @@ for design_num=design_num_vec
     erp_curve_allch_stat.correction           = correction;
     erp_curve_allch_stat.list_select_subjects = list_select_subjects;
     
+    [pcond, pgroup, pinter, statscond, statsgroup, statsinter] = std_stat_corr(erp_curve_roi, 2, 'groupstats','on','condstats','on','mcorrect','none',...
+                'threshold',NaN,'naccu',num_permutations,'method', stat_method,'paired',paired_list{design_num});
+            
+            for ind = 1:length(pcond),  pcond{ind}    =  abs(pcond{ind}) ; end;
+            for ind = 1:length(pgroup),  pgroup{ind}  =  abs(pgroup{ind}) ; end;
+            for ind = 1:length(pinter),  pinter{ind}  =  abs(pinter{ind}) ; end
+    
     [pcond_corr, pgroup_corr,  pinter_corr] = eeglab_study_correct_pvals(pcond, pgroup, pinter,correction);
     
     
