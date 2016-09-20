@@ -15,6 +15,7 @@ function [mean_spectrum, freqs] = eeglab_subject_psd_plot_onecondition(input_set
         chan_ids = [chan_ids find(strcmp(roi{ch},chanlist))];
         ch_label = [ch_label roi{ch}];
     end
+    % channel selection
     datas           = EEG.data(chan_ids,:,:);
     datas           = squeeze(mean(datas, 1));
     
@@ -28,6 +29,9 @@ function [mean_spectrum, freqs] = eeglab_subject_psd_plot_onecondition(input_set
     fig_output_path = '';
     freq_band       = [];
     cycles          = [3 0.5];
+    tpmin           = 1;
+    tpmax           = pnt;
+    skip_plot       = 0;
 
     options_num     = size(varargin,2);
     opt             = 1;
@@ -42,15 +46,20 @@ function [mean_spectrum, freqs] = eeglab_subject_psd_plot_onecondition(input_set
             case 'freq_band'
                 opt=opt+1;
                 freq_band=varargin{opt};                
-            case 'xmax'
+            case 'tw_exploration'
+                % time selection                
                 opt=opt+1;
-                xmax=varargin{opt}; 
-            case 'xmin'
-                opt=opt+1;
-                xmin=varargin{opt}; 
+                sec_start   = varargin{opt}(1); 
+                sec_end     = varargin{opt}(2); 
+                
+                tpmin       = 1 + (sec_start-xmin)*srate;
+                tpmax       = 1 + (sec_end-xmin)*srate;
             case 'cycles'
                 opt=opt+1;
-                cycles=varargin{opt};               
+                cycles=varargin{opt};  
+            case 'skip_plot'
+                opt=opt+1;
+                skip_plot=varargin{opt};                 
             otherwise
                 opt=opt+1;
                 disp('input parameter not recognized');
@@ -59,30 +68,30 @@ function [mean_spectrum, freqs] = eeglab_subject_psd_plot_onecondition(input_set
         options_num=options_num-2;
     end
     %-------------------------------------------------------------------------------------------------------
-    set(0,'DefaultTextInterpreter','none');    
-    figure
-    title_name=[name_noext '_in_' ch_label];    
+    % time extraction
+    datas           = datas(tpmin:tpmax,:);
     
+    
+    set(0,'DefaultTextInterpreter','none');    
+    %figure
+    title_name=[name_noext '_in_' ch_label];    
     
     if isempty(freq_band)
         [ersp,itc,powbase,times,freqs,erspboot,itcboot,tfdata] = newtimef(datas, pnt, [xmin xmax]*1000, srate, cycles, 'plotitc','off','plotersp', 'off'); 
     else
         [ersp,itc,powbase,times,freqs,erspboot,itcboot,tfdata] = newtimef(datas, pnt, [xmin xmax]*1000, srate, cycles, 'plotitc','off','plotersp', 'off', 'freqs', [4:0.5:25], 'padratio', 4); 
     end
-    
-    
     mean_spectrum = squeeze(mean(ersp, 2));
-    suptitle(title_name);    
-    plot(freqs, mean_spectrum);
     
-
+    if not(skip_plot)
+        suptitle(title_name);    
+        plot(freqs, mean_spectrum);
     
-    if save_fig
-        hfig=gcf();
-        output_file=fullfile(fig_output_path, [title_name '.jpg']);
-        saveas(hfig,output_file,'jpg');
-        close(hfig);
-    end    
-   
-
+        if save_fig
+            hfig=gcf();
+            output_file=fullfile(fig_output_path, [title_name '.jpg']);
+            saveas(hfig,output_file,'jpg');
+            close(hfig);
+        end    
+    end   
 end    
