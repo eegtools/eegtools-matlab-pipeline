@@ -149,6 +149,10 @@ project.operations.do_singlesubjects_band_comparison                            
 % extract narrowband for each subject and selected condition and save separately each condition in a mat file
 project.operations.do_extract_narrowband                                            = 0;
 
+%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+% placeholder flag to execute any custom script
+project.operations.do_custom_analysis                                               = 1;
+
 %=====================================================================================================================================================================
 % S T A R T    P R O C E S S I N G  
 %=====================================================================================================================================================================
