@@ -15,7 +15,8 @@ function fileID = brainstorm_subject_scouts_export(db_name, subjects_list, cond_
     append                  = 0;
     values_multiplier       = 1;
     period_labels           = [];
-    
+    subjects_data           = [];   % behavioural/demographic score arranged  scores x subject x condition 
+    nscores                 = 0; nsubj = 0; nc = 0;
     % optional values
     options_num=size(varargin,2);
     for opt=1:2:options_num
@@ -28,22 +29,54 @@ function fileID = brainstorm_subject_scouts_export(db_name, subjects_list, cond_
                 values_multiplier   = varargin{opt+1};                      
             case 'period_labels'
                 period_labels       = varargin{opt+1};
+            case 'subjects_data'
+                subjects_data       = varargin{opt+1};
+                nscores             = length(subjects_data);
+                nsubj               = size(subjects_data(1).data,1);
+                nc                  = size(subjects_data(1).data,2);
+                
+                if nsubj ~= len_subj
+                    disp(['Error in brainstorm_subject_scouts_export : you passed a subjects data array but the number of contained subjects (' num2str(nsubj) ') is incosistent with study one (' num2str(len_subj) ')' ]);
+                    return;
+                end
+                if nc ~= len_cond
+                    disp(['Error in brainstorm_subject_scouts_export : you passed a subjects data array but the number of contained conditions (' num2str(nc) ') is incosistent with study one (' num2str(len_cond) ')' ]);
+                    return;
+                end
         end
     end
-    if isempty(period_labels)    
-        formatSpecData          = ['%s\t%s\t%s\t%d\t%f\r\n'];
-    else
-        formatSpecData          = ['%s\t%s\t%s\t%s\t%f\r\n'];
-    end
     
-    if append
+    % write set columns data type (row > 1)
+    if isempty(period_labels)    
+        formatSpecData          = '%s\t%s\t%s\t%d\t%f';
+    else
+        formatSpecData          = '%s\t%s\t%s\t%s\t%f';
+    end
+    for sc=1:nscores
+        formatSpecData          = [formatSpecData '\t%f'];
+    end
+    formatSpecData              = [formatSpecData '\r\n'];
+
+    
+    
+    if exist(output_file_name, 'file') && append
         fileID                  = fopen(output_file_name,'a');
     else
-        dataexpcols             = {'subject', 'cond','scout','time','value'};
-        formatSpecCols          = [repmat('%s\t',1,4),'%s\r\n'];
+        % write first row's columns data type
+        dataexpcols             = {'subject', 'cond','scout','time','value'};    
+        formatSpecCols          = [repmat('%s\t',1,4),'%s'];
+        
+        for sc=1:nscores
+            dataexpcols         = [dataexpcols subjects_data(sc).name];
+            formatSpecCols      = [formatSpecCols '\t%s'];
+        end        
+        formatSpecCols          = [formatSpecCols '\r\n'];
+        
         fileID                  = fopen(output_file_name,'w');
         fprintf(fileID,formatSpecCols,dataexpcols{:});
-    end
+    end    
+    
+
     
     for nsubj=1:len_subj
         for ncond=1:len_cond
@@ -76,6 +109,11 @@ function fileID = brainstorm_subject_scouts_export(db_name, subjects_list, cond_
                 for tw=1:length(time_names)
                     twn = time_names{tw};
                     data_row = {subj_name, cond_name, scn, twn, values(sc, tw)*values_multiplier};
+                    
+                    for scr=1:nscores
+                        data_row = [data_row subjects_data(scr).data(nsubj,ncond)];
+                    end         
+                    
                     fprintf(fileID, formatSpecData, data_row{:});
                 end
             end

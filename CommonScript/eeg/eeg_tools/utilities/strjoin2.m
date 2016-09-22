@@ -1,5 +1,5 @@
 % emulate the strjoin function introduced in matlab 2013.
-% join a cell array of string, introducing a delimiter into a single string
+% join a cell array of string, introducing a delimiter, into a single string
 function outstring = strjoin2(cell, varargin)
 
     if not(nargin-1)
