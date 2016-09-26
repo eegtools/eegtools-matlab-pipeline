@@ -323,6 +323,20 @@ if project.operations.do_study_plot_erp_topo_compact_tw_individual_align
 end
 
 
+
+%% -------------------------------------------------------------------------------------------
+% ERP_ALLCHANNEL
+%--------------------------------------------------------------------------------------------
+% master-function:                                       proj_eeglab_study_plot_allch_erp_time
+% settings:
+if project.operations.do_study_plot_allch_erp_time
+    
+    mode.tw_stat_estimator = '';
+    mode.time_resolution_mode = '';
+    proj_eeglab_study_plot_allch_erp_time(project, stat_analysis_suffix, mode, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects); 
+end
+
+
 % %%  export to R
 % if project.operations.do_eeglab_study_export_erp_r
 %     for design_num=1:length(sel_designs)
