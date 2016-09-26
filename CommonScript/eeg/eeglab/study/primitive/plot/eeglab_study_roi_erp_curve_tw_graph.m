@@ -94,7 +94,7 @@ switch display_compact_plots
             
         else
             display('ERROR: Select at least 2 time windows!!!!')
-            return;
+            %return;
         end
 end
 

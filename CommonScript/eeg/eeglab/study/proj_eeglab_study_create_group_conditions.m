@@ -15,12 +15,12 @@ function EEG = proj_eeglab_study_create_group_conditions(project, varargin)
     for opt=1:2:options_num
         
         switch varargin{opt}
-            case 'cond_names'
-                cond_names=varargin{opt+1};
-            case 'groups_list'
-                groups_list=varargin{opt+1};
-            case 'groups_names'
-                groups_names=varargin{opt+1};
+        case {'cond_names', 'groups_list', 'groups_names'}
+            if isempty(varargin{opt+1})
+                continue;
+            else
+                assign(varargin{opt}, varargin{opt+1});
+            end            
         end
     end
 

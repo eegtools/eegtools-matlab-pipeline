@@ -81,7 +81,7 @@ if nargin < 4 || isempty(tail)
 elseif isnumeric(tail) && isscalar(tail) && ismember(tail,[-1 0 1])
     % OK, grandfathered
 else
-    [~,tail] = internal.stats.getParamVal(tail,{'left','both','right'},'TAIL'); tail = tail - 2;
+    [fake,tail] = internal.stats.getParamVal(tail,{'left','both','right'},'TAIL'); tail = tail - 2;
 end
 
 if nargin < 5 || isempty(vartype)
@@ -89,7 +89,7 @@ if nargin < 5 || isempty(vartype)
 elseif isnumeric(vartype) && isscalar(vartype) && ismember(vartype,[1 2])
     % OK, grandfathered
 else
-    [~,vartype] = internal.stats.getParamVal(vartype,{'equal','unequal'},'VARTYPE');
+    [fake,vartype] = internal.stats.getParamVal(vartype,{'equal','unequal'},'VARTYPE');
 end
 
 if nargin < 6 || isempty(dim)
