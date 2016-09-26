@@ -248,7 +248,7 @@ project.operations.do_eeglab_study_export_erp_r                                 
 % of time and compare different conditions in a time x channels space (TANOVA)
 %--------------------------------------------------------------------------------------------
 % master-function:                                      proj_eeglab_study_plot_allch_erp_time
-project.proj_eeglab_study_plot_allch_erp_time                                              = 0;
+project.operations.do_study_plot_allch_erp_time                              = 0;
 
 
 
