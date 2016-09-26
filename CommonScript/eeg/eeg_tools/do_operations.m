@@ -331,9 +331,11 @@ end
 % settings:
 if project.operations.do_study_plot_allch_erp_time
     
-    mode.tw_stat_estimator = '';
-    mode.time_resolution_mode = '';
-    proj_eeglab_study_plot_allch_erp_time(project, stat_analysis_suffix, mode, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects); 
+%     mode.tw_stat_estimator = '';
+%     mode.time_resolution_mode = '';
+%     proj_eeglab_study_plot_allch_erp_time(project, stat_analysis_suffix, mode, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects); 
+    proj_eeglab_study_plot_allch_erp_time(project, stat_analysis_suffix, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects); 
+
 end
 
 
@@ -345,6 +347,14 @@ end
 %     end
 % end
 
+
+
+
+% ALLCH_ERP_TIME, evaluate and represent ERP of all channels as a fucntion
+% of time and compare different conditions in a time x channels space (TANOVA)
+if project.proj_eeglab_study_plot_allch_erp_time
+    proj_eeglab_study_plot_allch_erp_time(project, stat_analysis_suffix, project.postprocess.erp.mode.tw_individual_align, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
+end
 
 
 

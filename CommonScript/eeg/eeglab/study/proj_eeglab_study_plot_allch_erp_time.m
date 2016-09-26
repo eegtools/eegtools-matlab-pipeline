@@ -1,4 +1,4 @@
-%% [STUDY, EEG] = proj_eeglab_study_plot_allch_erp_time(project, analysis_name, mode, varargin)
+%% [STUDY, EEG] = proj_eeglab_study_plot_allch_erp_time(project, analysis_name, varargin)
 %
 % calculate and display erp time series for groups of scalp channels consdered as regions of interests (allch) in
 % an EEGLAB STUDY with statistical comparisons based on the factors in the selected design.
@@ -6,82 +6,9 @@
 % ====================================================================================================
 % REQUIRED INPUT:
 %
-% ----------------------------------------------------------------------------------------------------
-% project; a structure with the following MANDATORY fields:
-%
-% * project.study.filename; the filename of the study
-% * project.paths.output_epochs; the path where the study file will be
-%   placed (default: the same foleder of the epoched datasets)
-% * project.paths.results; the path were the results will be saved
-% * project.design; the experimental design:
-%   project.design(design_number) = struct(
-%                                         'name', design_name,
-%                                         'factor1_name',  factor1_name,
-%                                         'factor1_levels', factor1_levels ,
-%                                         'factor1_pairing', 'on',
-%                                         'factor2_name',  factor2_name,
-%                                         'factor2_levels', factor2_levels ,
-%                                         'factor2_pairing', 'on'
-%                                         )
-% * project.postprocess.erp.allch_list;
-% * project.postprocess.erp.allch_names;
-% * project.stats.erp.pvalue;
-% * project.stats.erp.num_permutations;
-% * project.stats.eeglab.erp.correction;
-% * project.stats.eeglab.erp.method;
-% * project.results_display.erp.time_smoothing;
-% * project.results_display.erp.masked_times_max;
-% * project.results_display.erp.display_only_significant_curve;
-% * project.results_display.erp.compact_plots;
-% * project.results_display.erp.compact_h0;
-% * project.results_display.erp.compact_v0;
-% * project.results_display.erp.compact_sem;
-% * project.results_display.erp.compact_stats;
-% * project.results_display.erp.single_subjects;
-% * project.results_display.erp.compact_display_xlim;
-% * project.results_display.erp.compact_display_ylim;
-% * project.postprocess.erp.design
-%
-% ----------------------------------------------------------------------------------------------------
-% analysis_name
-%
-%
-% ----------------------------------------------------------------------------------------------------
-% mode
-%
-%
-%
-% ====================================================================================================
-% OPTIONAL INPUT:
-%
-% design_num_vec
-% analysis_name
-% allch_list
-% allch_names
-% study_ls
-% num_permutations
-% correction
-% stat_method
-% filter
-% masked_times_max
-% display_only_significant
-% display_compact_plots
-% compact_display_h0
-% compact_display_v0
-% compact_display_sem
-% compact_display_stats
-% display_single_subjects
-% compact_display_xlim
-% compact_display_ylim
-% group_time_windows_list
-% subject_time_windows_list
-% group_time_windows_names
-% sel_extrema
-% list_select_subjects
-% do_plots
 % ====================================================================================================
 
-function [STUDY, EEG] = proj_eeglab_study_plot_allch_erp_time(project, analysis_name, mode, varargin)
+function [STUDY, EEG] = proj_eeglab_study_plot_allch_erp_time(project, analysis_name,  varargin)
 
 if nargin < 1
     help proj_eeglab_study_plot_allch_erp_curve;
@@ -100,7 +27,7 @@ end
 list_select_subjects        = {};
 design_num_vec              = [1:length(project.design)];
 
-allch_list                    = project.postprocess.erp.allch_list;
+% allch_list                    = project.postprocess.erp.allch_list;
 allch_names                   = project.postprocess.erp.allch_names;
 
 study_ls                    = project.stats.erp.pvalue;
@@ -108,41 +35,10 @@ num_permutations            = project.stats.erp.num_permutations;
 correction                  = project.stats.eeglab.erp.correction;
 stat_method                 = project.stats.eeglab.erp.method;
 
-filter                      = project.results_display.erp.time_smoothing;
-masked_times_max            = project.results_display.erp.masked_times_max;
-display_only_significant    = project.results_display.erp.display_only_significant_curve;
-display_compact_plots       = project.results_display.erp.compact_plots;
-compact_display_h0          = project.results_display.erp.compact_h0;
-compact_display_v0          = project.results_display.erp.compact_v0;
-compact_display_sem         = project.results_display.erp.compact_sem;
-compact_display_stats       = project.results_display.erp.compact_stats;
-display_single_subjects     = project.results_display.erp.single_subjects;
-compact_display_xlim        = project.results_display.erp.compact_display_xlim;
-compact_display_ylim        = project.results_display.erp.compact_display_ylim;
 
-
-group_time_windows_list     = arrange_structure(project.postprocess.erp.design, 'group_time_windows');
-subject_time_windows_list   = arrange_structure(project.postprocess.erp.design, 'subject_time_windows');
-group_time_windows_names    = arrange_structure(project.postprocess.erp.design, 'group_time_windows_names');
 
 do_plots                    = project.results_display.erp.do_plots;
 
-% ANALYSIS MODALITIES
-if strcmp(mode.peak_type, 'group') && strcmp(mode.align, 'off')
-    which_method_find_extrema = 'group_noalign';
-elseif strcmp(mode.peak_type, 'group') && strcmp(mode.align, 'on')
-    which_method_find_extrema = 'group_align';
-elseif strcmp(mode.peak_type, 'individual') && strcmp(mode.align, 'off')
-    which_method_find_extrema = 'individual_noalign';
-elseif strcmp(mode.peak_type, 'individual') && strcmp(mode.align, 'on')
-    which_method_find_extrema = 'individual_align';
-elseif strcmp(mode.peak_type, 'off')
-    which_method_find_extrema = 'continuous';
-end
-
-tw_stat_estimator           = mode.tw_stat_estimator;
-time_resolution_mode        = mode.time_resolution_mode;
-sel_extrema                 = project.postprocess.erp.sel_extrema;
 
 for par=1:2:length(varargin)
     switch varargin{par}
@@ -287,25 +183,26 @@ for design_num=design_num_vec
         % plot da zero senza dover far girare tutta la funzione ma solo
         % caricando i parametri dalla struttura esportata
         
-        erp_curve_allch_stat.project                                        = project;
-        erp_curve_allch_stat.STUDY                                          = STUDY;
-        erp_curve_allch_stat.design_num                                     = design_num;       
-%         erp_curve_allch_stat.name_f1                                        = name_f1;
-%         erp_curve_allch_stat.name_f2                                        = name_f2;
+
+        erp_curve_allch_stat.erp_curve                                      = erp_curve_allch;
+        erp_curve_allch_stat.pvalue                                         = study_ls ;
+        % allch lo prende sopra        
+        erp_curve_allch_stat.project                                        = project; % da cui estraggo ylim_plot che diventa amplim
+        erp_curve_allch_stat.times                                          = times;  
         erp_curve_allch_stat.levels_f1                                      = levels_f1;
         erp_curve_allch_stat.levels_f2                                      = levels_f2;
-        erp_curve_allch_stat.erp_curve                                      = erp_curve_allch;
-        erp_curve_allch_stat.times                                          = times;        
-        erp_curve_allch_stat.pcond_corr                                          = pcond_corr;
-        erp_curve_allch_stat.pgroup_corr                                         = pgroup_corr;
-%         erp_curve_allch_stat.pinter                                         = pinter_corr;
-        erp_curve_allch_stat.study_ls                                       = study_ls ;
-        erp_curve_allch_stat.plot_dir                                       = plot_dir;       
-%         erp_curve_allch_stat.display_compact_plots                          = display_compact_plots;        
-%         erp_curve_allch_stat.compact_display_xlim                           = compact_display_xlim;
-%         erp_curve_allch_stat.compact_display_ylim                           = compact_display_ylim;
+        erp_curve_allch_stat.pcond_corr                                     = pcond_corr;
+        erp_curve_allch_stat.pgroup_corr                                    = pgroup_corr;
+        erp_curve_allch_stat.plot_dir                                       = plot_dir;
         
-        
+%       erp_curve_allch_stat.display_compact_plots                          = display_compact_plots;
+%       erp_curve_allch_stat.compact_display_xlim                           = compact_display_xlim;
+%       erp_curve_allch_stat.compact_display_ylim                           = compact_display_ylim;
+%       erp_curve_allch_stat.design_num                                     = design_num;
+%       erp_curve_allch_stat.name_f1                                        = name_f1;
+%       erp_curve_allch_stat.name_f2                                        = name_f2;
+%       erp_curve_allch_stat.pinter                                         = pinter_corr;        
+%       erp_curve_allch_stat.STUDY                                          = STUDY;
         
         eeglab_study_allch_erp_time_graph(erp_curve_allch_stat);
     end
