@@ -124,7 +124,7 @@ for ns2 = 1:s2 % per ciascun livello del primo fattore
     set(gca,'YTick',1:tch,'YTicklabel',allch,'FontSize', 8)
     
     if s1==2
-        cbar;title('uV');
+        cbar;title(['uV (P<',pvalue_str,')']);
     end
     
     suptitle(levels_f1{ns2})
