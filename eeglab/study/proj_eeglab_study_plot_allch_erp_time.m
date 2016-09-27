@@ -28,7 +28,7 @@ list_select_subjects        = {};
 design_num_vec              = [1:length(project.design)];
 
 % allch_list                    = project.postprocess.erp.allch_list;
-allch_names                   = project.postprocess.erp.allch_names;
+% allch_names                   = project.postprocess.erp.allch_names;
 
 study_ls                    = project.stats.erp.pvalue;
 num_permutations            = project.stats.erp.num_permutations;
@@ -108,7 +108,7 @@ for design_num=design_num_vec
     
     erp_curve_allch_stat.study_des       = STUDY.design(design_num);
     erp_curve_allch_stat.study_des.num   = design_num;
-    erp_curve_allch_stat.allch_names       = allch_names;
+%     erp_curve_allch_stat.allch_names       = allch_names;
     
     name_f1                            = STUDY.design(design_num).variable(1).label;
     name_f2                            = STUDY.design(design_num).variable(2).label;
@@ -131,7 +131,7 @@ for design_num=design_num_vec
     
     [STUDY, erp_curve_allch, times]=std_erpplot(STUDY,ALLEEG,'channels',allch,'noplot','on');
     
-    
+    erp_curve_allch_stat.erp_curve_allch = erp_curve_allch;
     
     for nf1=1:length(levels_f1)
         for nf2=1:length(levels_f2)
@@ -141,7 +141,7 @@ for design_num=design_num_vec
                     disp('Error: the selected subjects are not represented in the selected design')
                     return;
                 end
-                erp_curve_allch{nf1,nf2}=erp_curve_allch_stat.erp_curve_allch{nf1,nf2}(:,vec_select_subjects);
+                erp_curve_allch{nf1,nf2}=erp_curve_allch_stat.erp_curve_allch{nf1,nf2}(:,:,vec_select_subjects);
                 list_design_subjects{nf1,nf2}=list_design_subjects{nf1,nf2}(vec_select_subjects);
             end
         end
