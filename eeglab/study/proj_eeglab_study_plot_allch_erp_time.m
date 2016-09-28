@@ -131,6 +131,13 @@ for design_num=design_num_vec
     
     [STUDY, erp_curve_allch, times]=std_erpplot(STUDY,ALLEEG,'channels',allch,'noplot','on');
     
+    seltimes = true(1,times);
+    
+    if not(isempty(project.results_display.erp.compact_display_xlim))
+        seltimes = times >= project.results_display.erp.compact_display_xlim(1) & times <= project.results_display.erp.compact_display_xlim(1);        
+        times = times(seltimes);
+    end
+    
     erp_curve_allch_stat.erp_curve_allch = erp_curve_allch;
     
     for nf1=1:length(levels_f1)
@@ -141,7 +148,7 @@ for design_num=design_num_vec
                     disp('Error: the selected subjects are not represented in the selected design')
                     return;
                 end
-                erp_curve_allch{nf1,nf2}=erp_curve_allch_stat.erp_curve_allch{nf1,nf2}(:,:,vec_select_subjects);
+                erp_curve_allch{nf1,nf2}=erp_curve_allch_stat.erp_curve_allch{nf1,nf2}(seltimes,:,vec_select_subjects);
                 list_design_subjects{nf1,nf2}=list_design_subjects{nf1,nf2}(vec_select_subjects);
             end
         end
@@ -155,7 +162,7 @@ for design_num=design_num_vec
     % for each allch in the list
     
     
-    erp_curve_allch_stat.times= times;
+    erp_curve_allch_stat.times = times;
     
     
     
