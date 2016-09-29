@@ -337,21 +337,6 @@ if project.operations.do_study_plot_allch_erp_time
 end
 
 
-% %%  export to R
-% if project.operations.do_eeglab_study_export_erp_r
-%     for design_num=1:length(sel_designs)
-%         sel_des=vec_sel_design(sel_designs(design_num));
-%         text_export_erp_file_rm(project_settings, fullfile(epochs_path, [protocol_name, '.study']), sel_des, export_r_bands, tf_path);
-%     end
-% end
-
-
-
-
-% ALLCH_ERP_TIME, 
-
-
-
 
 %% ******************************************************************************************************************************************
 %==========================================================================================================================================
