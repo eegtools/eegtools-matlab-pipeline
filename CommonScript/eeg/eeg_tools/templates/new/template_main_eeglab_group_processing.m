@@ -62,10 +62,13 @@ analysis.epr.stats.pvalue = 0.05;
 startProcess(analysis, 'do_study_plot_roi_erp_curve_tw_individual_align');
 
 % --------------------------------------------------------------------------------------
-analysis.epr.stats.pvalue = 0.01;
+analysis.name ='ERP_tw_align_mesial_none001'
+analysis.epr.stats.pvalue = 0.001;
+analysis.epr.stats.correction = 'none';
 startProcess(analysis, 'do_study_plot_roi_erp_curve_tw_individual_align');
 
 % --------------------------------------------------------------------------------------
+analysis.name ='ERP_tw_align_mesial_fdr05'
 analysis.epr.stats.pvalue = 0.05;
 analysis.epr.stats.correction = 'fdr';
 startProcess(analysis, 'do_study_plot_roi_erp_curve_tw_individual_align');
