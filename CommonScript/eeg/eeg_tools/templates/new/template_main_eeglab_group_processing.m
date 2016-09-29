@@ -19,9 +19,9 @@ end
 %==================================================================================
 project.research_group      = 'MNI';
 project.research_subgroup   = '';
-project.name                = 'perception_action_musicians';                 ... must correspond to 'project.paths.local_projects_data' subfolder name
-project.conf_file_name      = 'project_structure_brainstorm';         ... project_structure file name, located in : project.paths.eegtools_svn_local / project.research_group_svn_folder / project.name
-project.analysis_file_name  = 'analysis_structure_brainstorm';         ... project_structure file name, located in : project.paths.eegtools_svn_local / project.research_group_svn_folder / project.name
+project.name                = 'perception_action_musicians';                 
+project.conf_file_name      = 'project_structure_brainstorm';         
+project.analysis_file_name  = 'analysis_structure_brainstorm';         ... analysis_structure file name...initialize default analysis parameters
 %% =====================================================================================================================================================================
 %  DESIGN SPECIFICATION
 %==================================================================================
@@ -34,9 +34,9 @@ project.paths.script.common_scripts     = fullfile(project.paths.svn_scripts_roo
 project.paths.script.eeg_tools          = fullfile(project.paths.script.common_scripts, 'eeg','eeg_tools', '');                                             addpath(project.paths.script.eeg_tools);           ... to get define_project_paths
 project.paths.script.project            = fullfile(project.paths.svn_scripts_root, project.research_group, project.research_subgroup , project.name, '');   addpath(genpath2(project.paths.script.project));   ... in general u don't need to import the others' projects svn folders
 
-eval(project.conf_file_name);                                               ... project structure
-project                                 = define_project_paths(project);    ... global and project paths definition. If 2nd param is 0, is faster, as it does not call eeglab
-analysis                                = initAnalysisStructure(project);    ... global and project paths definition. If 2nd param is 0, is faster, as it does not call eeglab
+eval(project.conf_file_name);                                               ... load project structure
+project                                 = define_project_paths(project);    ... set path
+analysis                                = initAnalysisStructure(project);   ... load analysis structure, possibly retrieving some project parameters useful for analysis
 %% =====================================================================================================================================================================
 %  ===================================================================================================================================================================
 %  OPERATIONS LIST 
@@ -54,11 +54,21 @@ analysis.erp.roi_list={ {'Pz'};{'CPz'};{'Cz'};{'FCz'};{'Fz'}};
 analysis.erp.roi_names={'Pz','CPz', 'Cz', 'FCz', 'Fz'};
 
 
-
 startProcess(analysis, 'do_study_plot_roi_erp_curve_tw_individual_noalign');
-startProcess(analysis, 'do_study_plot_roi_erp_curve_tw_individual_noalign');
+startProcess(analysis, 'do_study_plot_roi_erp_curve_tw_individual_align');
 
+% --------------------------------------------------------------------------------------
+analysis.epr.stats.pvalue = 0.05;
+startProcess(analysis, 'do_study_plot_roi_erp_curve_tw_individual_align');
 
+% --------------------------------------------------------------------------------------
+analysis.epr.stats.pvalue = 0.01;
+startProcess(analysis, 'do_study_plot_roi_erp_curve_tw_individual_align');
+
+% --------------------------------------------------------------------------------------
+analysis.epr.stats.pvalue = 0.05;
+analysis.epr.stats.correction = 'fdr';
+startProcess(analysis, 'do_study_plot_roi_erp_curve_tw_individual_align');
 
 
 
