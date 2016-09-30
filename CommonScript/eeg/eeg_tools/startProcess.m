@@ -136,15 +136,15 @@ function result = startProcess(project, action_name, stat_analysis_suffix, desig
 
             case 'study_plot_roi_erp_curve_tw_group_align'
             % analyzes and plots of erp curve for time windows of the selected design
-                proj_eeglab_study_plot_roi_erp_curve(project, stat_analysis_suffix, project.postprocess.erp.mode.tw_group_align, 'design_num_vec', analysis.design_num_vec, 'list_select_subjects', list_selected_subjects);
+                proj_eeglab_study_plot_roi_erp_curve(project, stat_analysis_suffix, project.postprocess.erp.mode.tw_group_align, 'design_num_vec', design_num_vec, 'list_select_subjects', list_selected_subjects);
 
             case 'study_plot_roi_erp_curve_tw_individual_noalign'
             % analyzes and plots of erp curve for time windows of the selected design
-                proj_eeglab_study_plot_roi_erp_curve(project, stat_analysis_suffix, project.postprocess.erp.mode.tw_individual_noalign, 'design_num_vec', analysis.design_num_vec, 'list_select_subjects', list_selected_subjects);
+                proj_eeglab_study_plot_roi_erp_curve(project, stat_analysis_suffix, project.postprocess.erp.mode.tw_individual_noalign, 'design_num_vec', design_num_vec, 'list_select_subjects', list_selected_subjects);
 
             case 'study_plot_roi_erp_curve_tw_individual_align'
             % analyzes and plots of erp curve for time windows of the selected design
-                proj_eeglab_study_plot_roi_erp_curve(project, stat_analysis_suffix, project.postprocess.erp.mode.tw_individual_align, 'design_num_vec', analysis.design_num_vec, 'list_select_subjects', list_selected_subjects);
+                proj_eeglab_study_plot_roi_erp_curve(project, stat_analysis_suffix, project.postprocess.erp.mode.tw_individual_align, 'design_num_vec', design_num_vec, 'list_select_subjects', list_selected_subjects);
 
             %% -------------------------------------------------------------------------------------------
             % FOR ERP, EOG CURVE_standard, standard curve erp modality: evaluate and represent standard EEGLab statistics on the curve of ERP, plot together levels of design factors
