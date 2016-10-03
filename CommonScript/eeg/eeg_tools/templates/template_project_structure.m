@@ -1,4 +1,5 @@
  %% project
+% from 3/10/16 previous complex structures are cleared by a specific function 
 %           A: start
 %           B: paths
 
@@ -8,7 +9,6 @@
 %           E: eegdata    
 %           F: preproc
 %           G: epoching
-
 %           H: subjects
 
 %           GROUP PROCESSING
