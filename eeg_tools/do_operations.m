@@ -102,7 +102,7 @@ end
 % end
 %==================================================================================
 if project.operations.do_extract_narrowband
-    EEG = proj_eeglab_subject_extract_narrowband(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
+    EEG = proj_eeglab_subject_extract_narrowband(project, analysis_name ,'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
 end
 %==================================================================================
 
