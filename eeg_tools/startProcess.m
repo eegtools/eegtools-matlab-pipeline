@@ -1,12 +1,14 @@
 % it will contain as much CASE branches as the available processes
-
-function result = startProcess(project, action_name, stat_analysis_suffix, design_num_vec, list_selected_subjects, varargin)
+% result is an EEG structure in case of subject processing 
+% otherwise is
+function result = startProcess(project, action_name, stat_analysis_suffix, design_num_vec, list_select_subjects, varargin)
 
     strpath = path;
     if ~strfind(strpath, project.paths.shadowing_functions)
         addpath(project.paths.shadowing_functions);      % eeglab shadows the fminsearch function => I add its path in case I previously removed it
     end
 
+    result = [];
 %     try
         
         switch action_name
@@ -15,17 +17,17 @@ function result = startProcess(project, action_name, stat_analysis_suffix, desig
             % S U B J E C T    P R O C E S S I N G
             %=====================================================================================================================================================================
             case 'do_import'
-                proj_eeglab_subject_import_data(project, 'list_select_subjects', list_selected_subjects);
+                proj_eeglab_subject_import_data(project, 'list_select_subjects', list_select_subjects);
 
             case 'do_testart'
                 % allow testing some semi-automatic aritfact removal algorhithms
-                EEG = proj_eeglab_subject_testart(project, 'list_select_subjects', list_selected_subjects, 'custom_suffix', custom_suffix);
+                result = proj_eeglab_subject_testart(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
 
             case 'do_preproc'
-                proj_eeglab_subject_preprocessing(project, 'list_select_subjects', list_selected_subjects);
+                proj_eeglab_subject_preprocessing(project, 'list_select_subjects', list_select_subjects);
 
             case 'do_emg_analysis'
-                eeglab_subject_emgextraction_epoching(project, 'list_select_subjects', list_selected_subjects);
+                eeglab_subject_emgextraction_epoching(project, 'list_select_subjects', list_select_subjects);
 
             case 'do_auto_pauses_removal'
 
@@ -52,44 +54,44 @@ function result = startProcess(project, action_name, stat_analysis_suffix, desig
 
             case 'do_ica'
                 % do preprocessing up to epochs: avgref, epochs, rmbase: create one trails dataset for each condition
-                EEG = proj_eeglab_subject_ica(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
+                result = proj_eeglab_subject_ica(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
 
             case 'do_uniform_montage'
                 % uniform montages between different polygraphs
-                EEG = proj_eeglab_subject_uniform_montage(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
+                result = proj_eeglab_subject_uniform_montage(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
 
             case 'do_reref'
                 % rereferencing 
-                EEG = proj_eeglab_subject_reref(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
+                result = proj_eeglab_subject_reref(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
 
             case 'do_mark_trial'
                 % mark trial begin and end
-                EEG = proj_eeglab_subject_marktrial(project, 'list_select_subjects', list_selected_subjects);
+                result = proj_eeglab_subject_marktrial(project, 'list_select_subjects', list_select_subjects);
 
             case 'do_mark_baseline'
                 % mark baseline begin and end
-                EEG = proj_eeglab_subject_markbaseline(project, 'list_select_subjects', list_selected_subjects);
+                result = proj_eeglab_subject_markbaseline(project, 'list_select_subjects', list_select_subjects);
 
             case 'check_mc'
                 % mark baseline begin and end
-                EEG = proj_eeglab_subject_check_mc(project, 'list_select_subjects', list_selected_subjects);
+                result = proj_eeglab_subject_check_mc(project, 'list_select_subjects', list_select_subjects);
 
             case 'epochs'
                 % do preprocessing up to epochs: avgref, epochs, rmbase: create one trails dataset for each condition
-                EEG = proj_eeglab_subject_epoching(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
+                result = proj_eeglab_subject_epoching(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
 
             case 'handedness_epochs'
                 % swap data according to handedness and to epoching 
-                EEG = proj_eeglab_subject_handedness_epoching(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
+                result = proj_eeglab_subject_handedness_epoching(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
 
             case 'factors'
-                EEG = proj_eeglab_subject_add_factor(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
+                result = proj_eeglab_subject_add_factor(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
 
             case 'singlesubjects_band_comparison'
                 disp('to be implemented');
 
             case 'extract_narrowband'
-                EEG = proj_eeglab_subject_extract_narrowband(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
+                result = proj_eeglab_subject_extract_narrowband(project, stat_analysis_suffix, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
 
             %% ===================================================================================================================================================================
             % STUDY CREATION & DESIGN
@@ -104,7 +106,7 @@ function result = startProcess(project, action_name, stat_analysis_suffix, desig
                 proj_eeglab_study_define_design(project);
 
             case 'study_compute_channels_measures'
-                proj_eeglab_study_compute_channels_measures(project, 'recompute', project.study.precompute.recompute, 'erp', project.study.precompute.erp, 'ersp', project.study.precompute.ersp, 'erpim', project.study.precompute.erpim, 'spec', project.study.precompute.spec, 'design_num_vec', design_num_vec, 'list_select_subjects', list_selected_subjects); 
+                proj_eeglab_study_compute_channels_measures(project, 'recompute', project.study.precompute.recompute, 'erp', project.study.precompute.erp, 'ersp', project.study.precompute.ersp, 'erpim', project.study.precompute.erpim, 'spec', project.study.precompute.spec, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects); 
 
             %=====================================================================================================================================================================
             % DO ANALYSIS
@@ -127,24 +129,24 @@ function result = startProcess(project, action_name, stat_analysis_suffix, desig
             % CONTINUOUS: analyzes and plots of erp curve for all time points
 
             case 'study_plot_roi_erp_curve_continous'
-                proj_eeglab_study_plot_roi_erp_curve(project, stat_analysis_suffix, project.postprocess.erp.mode.continous, 'design_num_vec', design_num_vec, 'list_select_subjects', list_selected_subjects);
+                proj_eeglab_study_plot_roi_erp_curve(project, stat_analysis_suffix, project.postprocess.erp.mode.continous, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
 
             % TIMEWINDOW: perform (and save) statistics based time windows
             case 'study_plot_roi_erp_curve_tw_group_noalign'
                 % analyzes and plots of erp curve for time windows of the selected design
-                proj_eeglab_study_plot_roi_erp_curve(project, stat_analysis_suffix, project.postprocess.erp.mode.tw_group_noalign, 'design_num_vec', design_num_vec, 'list_select_subjects', list_selected_subjects);
+                proj_eeglab_study_plot_roi_erp_curve(project, stat_analysis_suffix, project.postprocess.erp.mode.tw_group_noalign, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
 
             case 'study_plot_roi_erp_curve_tw_group_align'
             % analyzes and plots of erp curve for time windows of the selected design
-                proj_eeglab_study_plot_roi_erp_curve(project, stat_analysis_suffix, project.postprocess.erp.mode.tw_group_align, 'design_num_vec', design_num_vec, 'list_select_subjects', list_selected_subjects);
+                proj_eeglab_study_plot_roi_erp_curve(project, stat_analysis_suffix, project.postprocess.erp.mode.tw_group_align, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
 
             case 'study_plot_roi_erp_curve_tw_individual_noalign'
             % analyzes and plots of erp curve for time windows of the selected design
-                proj_eeglab_study_plot_roi_erp_curve(project, stat_analysis_suffix, project.postprocess.erp.mode.tw_individual_noalign, 'design_num_vec', design_num_vec, 'list_select_subjects', list_selected_subjects);
+                proj_eeglab_study_plot_roi_erp_curve(project, stat_analysis_suffix, project.postprocess.erp.mode.tw_individual_noalign, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
 
             case 'study_plot_roi_erp_curve_tw_individual_align'
             % analyzes and plots of erp curve for time windows of the selected design
-                proj_eeglab_study_plot_roi_erp_curve(project, stat_analysis_suffix, project.postprocess.erp.mode.tw_individual_align, 'design_num_vec', design_num_vec, 'list_select_subjects', list_selected_subjects);
+                proj_eeglab_study_plot_roi_erp_curve(project, stat_analysis_suffix, project.postprocess.erp.mode.tw_individual_align, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
 
             %% -------------------------------------------------------------------------------------------
             % FOR ERP, EOG CURVE_standard, standard curve erp modality: evaluate and represent standard EEGLab statistics on the curve of ERP, plot together levels of design factors
@@ -153,24 +155,24 @@ function result = startProcess(project, action_name, stat_analysis_suffix, desig
 
             case 'study_plot_roi_erpeog_curve_continous'
             % CONTINUOUS: analyzes and plots of erp curve for all time points
-                proj_eeglab_study_plot_roi_erpeog_curve(project, stat_analysis_suffix, project.postprocess.erp.mode.continous, 'design_num_vec', design_num_vec, 'list_select_subjects', list_selected_subjects);
+                proj_eeglab_study_plot_roi_erpeog_curve(project, stat_analysis_suffix, project.postprocess.erp.mode.continous, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
 
             % TIMEWINDOW: perform (and save) statistics based time windows
             case 'study_plot_roi_erpeog_curve_tw_group_noalign'
                 % analyzes and plots of erp curve for time windows of the selected design
-                proj_eeglab_study_plot_roi_erpeog_curve(project, stat_analysis_suffix, project.postprocess.erp.mode.tw_group_noalign, 'design_num_vec', design_num_vec, 'list_select_subjects', list_selected_subjects);
+                proj_eeglab_study_plot_roi_erpeog_curve(project, stat_analysis_suffix, project.postprocess.erp.mode.tw_group_noalign, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
 
             case 'study_plot_roi_erpeog_curve_tw_group_align'
                 % analyzes and plots of erp curve for time windows of the selected design
-                proj_eeglab_study_plot_roi_erpeog_curve(project, stat_analysis_suffix, project.postprocess.erp.mode.tw_group_align, 'design_num_vec', design_num_vec, 'list_select_subjects', list_selected_subjects);
+                proj_eeglab_study_plot_roi_erpeog_curve(project, stat_analysis_suffix, project.postprocess.erp.mode.tw_group_align, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
 
             case 'study_plot_roi_erpeog_curve_tw_individual_noalign'
                 % analyzes and plots of erp curve for time windows of the selected design
-                proj_eeglab_study_plot_roi_erpeog_curve(project, stat_analysis_suffix, project.postprocess.erp.mode.tw_individual_noalign, 'design_num_vec', design_num_vec, 'list_select_subjects', list_selected_subjects);
+                proj_eeglab_study_plot_roi_erpeog_curve(project, stat_analysis_suffix, project.postprocess.erp.mode.tw_individual_noalign, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
 
             case 'study_plot_roi_erpeog_curve_tw_individual_align'
                 % analyzes and plots of erp curve for time windows of the selected design
-                proj_eeglab_study_plot_roi_erpeog_curve(project, stat_analysis_suffix, project.postprocess.erp.mode.tw_individual_align, 'design_num_vec', design_num_vec, 'list_select_subjects', list_selected_subjects);
+                proj_eeglab_study_plot_roi_erpeog_curve(project, stat_analysis_suffix, project.postprocess.erp.mode.tw_individual_align, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
 
             %% -------------------------------------------------------------------------------------------
             % FOR ERP, emg CURVE_standard, standard curve erp modality: evaluate and represent standard EEGLab statistics on the curve of ERP, plot together levels of design factors
@@ -179,24 +181,24 @@ function result = startProcess(project, action_name, stat_analysis_suffix, desig
 
             case 'study_plot_roi_erpemg_curve_continous'
                 % CONTINUOUS: analyzes and plots of erp curve for all time points
-                proj_eeglab_study_plot_roi_erpemg_curve(project, stat_analysis_suffix, project.postprocess.erp.mode.continous, 'design_num_vec', design_num_vec, 'list_select_subjects', list_selected_subjects);
+                proj_eeglab_study_plot_roi_erpemg_curve(project, stat_analysis_suffix, project.postprocess.erp.mode.continous, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
 
             % TIMEWINDOW: perform (and save) statistics based time windows
             case 'study_plot_roi_erpemg_curve_tw_group_noalign'
             % analyzes and plots of erp curve for time windows of the selected design
-                proj_eeglab_study_plot_roi_erpemg_curve(project, stat_analysis_suffix, project.postprocess.erp.mode.tw_group_noalign, 'design_num_vec', design_num_vec, 'list_select_subjects', list_selected_subjects);
+                proj_eeglab_study_plot_roi_erpemg_curve(project, stat_analysis_suffix, project.postprocess.erp.mode.tw_group_noalign, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
 
             case 'study_plot_roi_erpemg_curve_tw_group_align'
                 % analyzes and plots of erp curve for time windows of the selected design
-                proj_eeglab_study_plot_roi_erpemg_curve(project, stat_analysis_suffix, project.postprocess.erp.mode.tw_group_align, 'design_num_vec', design_num_vec, 'list_select_subjects', list_selected_subjects);
+                proj_eeglab_study_plot_roi_erpemg_curve(project, stat_analysis_suffix, project.postprocess.erp.mode.tw_group_align, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
 
             case 'study_plot_roi_erpemg_curve_tw_individual_noalign'
                 % analyzes and plots of erp curve for time windows of the selected design
-                proj_eeglab_study_plot_roi_erpemg_curve(project, stat_analysis_suffix, project.postprocess.erp.mode.tw_individual_noalign, 'design_num_vec', design_num_vec, 'list_select_subjects', list_selected_subjects);
+                proj_eeglab_study_plot_roi_erpemg_curve(project, stat_analysis_suffix, project.postprocess.erp.mode.tw_individual_noalign, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
 
             case 'study_plot_roi_erpemg_curve_tw_individual_align'
                 % analyzes and plots of erp curve for time windows of the selected design
-                proj_eeglab_study_plot_roi_erpemg_curve(project, stat_analysis_suffix, project.postprocess.erp.mode.tw_individual_align, 'design_num_vec', design_num_vec, 'list_select_subjects', list_selected_subjects);
+                proj_eeglab_study_plot_roi_erpemg_curve(project, stat_analysis_suffix, project.postprocess.erp.mode.tw_individual_align, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
 
 
             %% -------------------------------------------------------------------------------------------
@@ -257,7 +259,7 @@ function result = startProcess(project, action_name, stat_analysis_suffix, desig
             % compare different conditions in a time x channels space (TANOVA)
 
             case 'study_plot_allch_erp_time'
-                proj_eeglab_study_plot_allch_erp_time(project, stat_analysis_suffix, 'design_num_vec', design_num_vec, 'list_select_subjects', list_selected_subjects);
+                proj_eeglab_study_plot_allch_erp_time(project, stat_analysis_suffix, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
 
 
             %% ******************************************************************************************************************************************
@@ -296,7 +298,7 @@ function result = startProcess(project, action_name, stat_analysis_suffix, desig
 
             case 'study_plot_roi_ersp_tf_tw_fb'
                 % time-frequency distribution freely binned in the frequency and/or in the time domain
-                proj_eeglab_study_plot_roi_ersp_tf(project, stat_analysis_suffix,'ersp_tf_resolution_mode','tw_fb' , 'design_num_vec', design_num_vec, 'list_select_subjects', list_selected_subjects);
+                proj_eeglab_study_plot_roi_ersp_tf(project, stat_analysis_suffix,'ersp_tf_resolution_mode','tw_fb' , 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
 
             %% ------------------------------------------------------------------------------------------
             % ERSP_CURVE, evaluate and represent standard EEGLab statistics on the curve of ERSP in a selected frequency, plot together levels of design factors
@@ -361,25 +363,25 @@ function result = startProcess(project, action_name, stat_analysis_suffix, desig
             % CONTINUOUS: analyzes and plots of ersp curve for all time points
 
             case 'study_plot_roi_erspeog_curve_continous'        
-                proj_eeglab_study_plot_roi_erspeog_curve(project, stat_analysis_suffix, project.postprocess.ersp.mode.continous, 'design_num_vec', design_num_vec, 'list_select_subjects', list_selected_subjects);
+                proj_eeglab_study_plot_roi_erspeog_curve(project, stat_analysis_suffix, project.postprocess.ersp.mode.continous, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
 
             % TIMEWINDOW: perform (and save) statistics based time windows
 
             case 'study_plot_roi_erspeog_curve_tw_group_noalign'
                 % analyzes and plots of ersp curve for time windows of the selected design
-                proj_eeglab_study_plot_roi_erspeog_curve(project, stat_analysis_suffix, project.postprocess.ersp.mode.tw_group_noalign, 'design_num_vec', design_num_vec, 'list_select_subjects', list_selected_subjects);
+                proj_eeglab_study_plot_roi_erspeog_curve(project, stat_analysis_suffix, project.postprocess.ersp.mode.tw_group_noalign, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
 
             case 'study_plot_roi_erspeog_curve_tw_group_align'
                 % analyzes and plots of ersp curve for time windows of the selected design
-                proj_eeglab_study_plot_roi_erspeog_curve(project, stat_analysis_suffix, project.postprocess.ersp.mode.tw_group_align, 'design_num_vec', design_num_vec, 'list_select_subjects', list_selected_subjects);
+                proj_eeglab_study_plot_roi_erspeog_curve(project, stat_analysis_suffix, project.postprocess.ersp.mode.tw_group_align, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
 
             case 'study_plot_roi_erspeog_curve_tw_individual_noalign'
                 % analyzes and plots of ersp curve for time windows of the selected design
-                proj_eeglab_study_plot_roi_erspeog_curve(project, stat_analysis_suffix, project.postprocess.ersp.mode.tw_individual_noalign, 'design_num_vec', design_num_vec, 'list_select_subjects', list_selected_subjects);
+                proj_eeglab_study_plot_roi_erspeog_curve(project, stat_analysis_suffix, project.postprocess.ersp.mode.tw_individual_noalign, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
 
             case 'study_plot_roi_erspeog_curve_tw_individual_align'
                 % analyzes and plots of ersp curve for time windows of the selected design
-                proj_eeglab_study_plot_roi_erspeog_curve(project, stat_analysis_suffix, project.postprocess.ersp.mode.tw_individual_align, 'design_num_vec', design_num_vec, 'list_select_subjects', list_selected_subjects);
+                proj_eeglab_study_plot_roi_erspeog_curve(project, stat_analysis_suffix, project.postprocess.ersp.mode.tw_individual_align, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
 
             %% -------------------------------------------------------------------------------------------
             % FOR ersp, emg CURVE_standard, standard curve ersp modality: evaluate and represent standard EEGLab statistics on the curve of ersp, plot together levels of design factors
@@ -389,25 +391,25 @@ function result = startProcess(project, action_name, stat_analysis_suffix, desig
             % CONTINUOUS: analyzes and plots of ersp curve for all time points
 
             case 'study_plot_roi_erspemg_curve_continous'        
-                proj_eeglab_study_plot_roi_erspemg_curve(project, stat_analysis_suffix, project.postprocess.ersp.mode.continous, 'design_num_vec', design_num_vec, 'list_select_subjects', list_selected_subjects);
+                proj_eeglab_study_plot_roi_erspemg_curve(project, stat_analysis_suffix, project.postprocess.ersp.mode.continous, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
 
             % TIMEWINDOW: perform (and save) statistics based time windows
 
             case 'study_plot_roi_erspemg_curve_tw_group_noalign'
                 % analyzes and plots of ersp curve for time windows of the selected design
-                proj_eeglab_study_plot_roi_erspemg_curve(project, stat_analysis_suffix, project.postprocess.ersp.mode.tw_group_noalign, 'design_num_vec', design_num_vec, 'list_select_subjects', list_selected_subjects);
+                proj_eeglab_study_plot_roi_erspemg_curve(project, stat_analysis_suffix, project.postprocess.ersp.mode.tw_group_noalign, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
 
             case 'study_plot_roi_erspemg_curve_tw_group_align'
                 % analyzes and plots of ersp curve for time windows of the selected design
-                proj_eeglab_study_plot_roi_erspemg_curve(project, stat_analysis_suffix, project.postprocess.ersp.mode.tw_group_align, 'design_num_vec', design_num_vec, 'list_select_subjects', list_selected_subjects);
+                proj_eeglab_study_plot_roi_erspemg_curve(project, stat_analysis_suffix, project.postprocess.ersp.mode.tw_group_align, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
 
             case 'study_plot_roi_erspemg_curve_tw_individual_noalign'
                 % analyzes and plots of ersp curve for time windows of the selected design
-                proj_eeglab_study_plot_roi_erspemg_curve(project, stat_analysis_suffix, project.postprocess.ersp.mode.tw_individual_noalign, 'design_num_vec', design_num_vec, 'list_select_subjects', list_selected_subjects);
+                proj_eeglab_study_plot_roi_erspemg_curve(project, stat_analysis_suffix, project.postprocess.ersp.mode.tw_individual_noalign, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
 
             case 'study_plot_roi_erspemg_curve_tw_individual_align'
                 % analyzes and plots of ersp curve for time windows of the selected design
-                proj_eeglab_study_plot_roi_erspemg_curve(project, stat_analysis_suffix, project.postprocess.ersp.mode.tw_individual_align, 'design_num_vec', design_num_vec, 'list_select_subjects', list_selected_subjects);
+                proj_eeglab_study_plot_roi_erspemg_curve(project, stat_analysis_suffix, project.postprocess.ersp.mode.tw_individual_align, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
 
             %% ------------------------------------------------------------------------------------------
             % ERSP_TOPO_TW_FB, evaluate and represent standard EEGLab statistics on the curve of ERSP in a selected frequency, plot together levels of design factors
