@@ -1,6 +1,11 @@
+%% function result = startProcess(project, action_name, stat_analysis_suffix, design_num_vec, list_select_subjects, varargin)
+%
+%
 % it will contain as much CASE branches as the available processes
 % result is an EEG structure in case of subject processing 
-% otherwise is
+%
+% list_select_subject & design_num_vec could go as varargin
+%
 function result = startProcess(project, action_name, stat_analysis_suffix, design_num_vec, list_select_subjects, varargin)
 
     strpath = path;
@@ -8,6 +13,32 @@ function result = startProcess(project, action_name, stat_analysis_suffix, desig
         addpath(project.paths.shadowing_functions);      % eeglab shadows the fminsearch function => I add its path in case I previously removed it
     end
 
+    
+    % defaults
+%     list_select_subjects        = project.subjects.list;
+%     design_num_vec              = [];
+    custom_suffix               = '';
+    custom_input_folder         = '';
+
+    for par=1:2:length(varargin)
+        switch varargin{par}
+            case {  ...
+%                     'list_select_subjects'  , ...
+%                     'design_num_vec'  , ...
+                    'custom_input_folder'   , ...
+                    'custom_suffix'         , ...
+                    }
+
+                if isempty(varargin{par+1})
+                    continue;
+                else
+                    assign(varargin{par}, varargin{par+1});
+                end
+        end
+    end    
+    
+    
+    
     result = [];
 %     try
         
@@ -91,7 +122,7 @@ function result = startProcess(project, action_name, stat_analysis_suffix, desig
                 disp('to be implemented');
 
             case 'extract_narrowband'
-                result = proj_eeglab_subject_extract_narrowband(project, stat_analysis_suffix, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
+                result = proj_eeglab_subject_extract_narrowband(project, stat_analysis_suffix, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix, 'custom_input_folder', custom_input_folder);
 
             %% ===================================================================================================================================================================
             % STUDY CREATION & DESIGN
@@ -456,8 +487,6 @@ function result = startProcess(project, action_name, stat_analysis_suffix, desig
                 proj_eeglab_study_plot_ersp_topo_tw_fb(project, stat_analysis_suffix, project.postprocess.ersp.mode.tw_individual_align, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects,'display_compact_topo','on' );
 
         end
-        
-        result = [];
 %     catch err
 %         % This "catch" section executes in case of an error in the "try" section
 %         err

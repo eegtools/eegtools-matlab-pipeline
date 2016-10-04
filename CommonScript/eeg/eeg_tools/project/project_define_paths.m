@@ -10,6 +10,7 @@
 
 ...*    project.paths.script.common_scripts         ... e.g. '/data/behavior_lab_svn/behaviourPlatform/CommonScript'
 ...*    project.paths.script.eeg_tools              ... e.g. '/data/behavior_lab_svn/behaviourPlatform/CommonScript/eeg_tools'
+...*    project.paths.script.eeg_tools_project      ... e.g. '/data/behavior_lab_svn/behaviourPlatform/CommonScript/eeg_tools/project'
 
 % PROJECT RELATED
 ...*    project.paths.script.project
@@ -91,22 +92,32 @@ function project = project_define_paths(project, varargin)
 
     % global script path
 
-    project.paths.script.eeg            = fullfile(project.paths.script.common_scripts,'eeg');
+    project.paths.script.common_scripts     = fullfile(project.paths.svn_scripts_root, 'CommonScript', '');                                                     
+    project.paths.script.eeg                = fullfile(project.paths.script.common_scripts,'eeg');
 
-    project.paths.script.brainstorm     = fullfile(project.paths.script.eeg,'brainstorm_new');
-    project.paths.script.eeglab         = fullfile(project.paths.script.eeg,'eeglab');
-    project.paths.script.fieldtrip      = fullfile(project.paths.script.eeg,'fieldtrip');
-    project.paths.script.spm            = fullfile(project.paths.script.eeg,'spm');
+    project.paths.script.eeg_tools          = fullfile(project.paths.script.eeg,'eeg_tools');
+    %project.paths.script.eeg_tools_project = fullfile(project.paths.svn_scripts_root, 'CommonScript','eeg','eeg_tools', 'project', '');   ... ALREADY DEFINED IN EACH MAIN
+    project.paths.script.utilities          = fullfile(project.paths.script.eeg_tools, 'utilities', '');   
+    project.paths.script.brainstorm         = fullfile(project.paths.script.eeg,'brainstorm_new');
+    project.paths.script.eeglab             = fullfile(project.paths.script.eeg,'eeglab');
+    project.paths.script.fieldtrip          = fullfile(project.paths.script.eeg,'fieldtrip');
+    project.paths.script.spm                = fullfile(project.paths.script.eeg,'spm');
 
-    project.paths.script.eeg_tools      = fullfile(project.paths.script.eeg,'eeg_tools');
-    project.paths.script.utilities      = fullfile(project.paths.script.eeg_tools,'utilities');
-
+    addpath(project.paths.script.common_scripts);   ... to get genpath2
+    addpath(project.paths.script.eeg);              
+    addpath(project.paths.script.eeg_tools);        
+        
     addpath(genpath2(project.paths.script.brainstorm));
     addpath(genpath2(project.paths.script.eeglab));
     addpath(genpath2(project.paths.script.fieldtrip));
     addpath(genpath2(project.paths.script.spm));
     addpath(genpath2(project.paths.script.utilities));
 
+    
+    % project script path    
+    project.paths.script.project            = fullfile(project.paths.svn_scripts_root, project.research_group, project.research_subgroup , project.name, '');   
+    addpath(genpath2(project.paths.script.project));   ... in general u don't need to import the others' projects svn folders    
+    
     % other files
     project.paths.templates.spm                 = fullfile(project.paths.script.spm,'templates');
     project.clustering.channels_file_path       = fullfile(project.paths.script.eeg_tools, project.clustering.channels_file_name);
