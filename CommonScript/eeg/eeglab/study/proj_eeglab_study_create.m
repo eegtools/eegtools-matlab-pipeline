@@ -53,12 +53,18 @@ for grp=1:length(group_list)
             
             if exist(fullsetname,'file')
                 
-                EEG = pop_loadset(fullsetname);
-                if EEG.trials>1
+%                 EEG = pop_loadset(fullsetname);
+%                 if EEG.trials>1 && not(isempty(EEG.epoch)) controllo
+%                 integrità, rimosso perchè imposto che vengano epocati e
+%                 salvati solo file con almenno 2 epoche (altrimenti per
+%                 eeglab quando costruisce lo studio sembrano dataset non
+%                 epocati ma continui, per cui impedisce di estrarre info
+%                 dagli eventi che bloccano la possibilità di creare design
+%                 definiti dall'add factor
                     cmd={'index' nset 'load' fullsetname 'subject' group_list{grp}{subj} 'session' 1 'condition' condition_names{cond} 'group' group_names{grp}};
                     commands=[commands, cmd];
                     nset=nset+1;
-                end
+%                 end
             end
         end
     end
