@@ -32,26 +32,26 @@ function results = eeglab_subject_extract_narrowband(input)
 
     %% calcolo ersp: bisogna calcolarla per ogni canale della roi e poi mediare per ottenere l'ersp media della roi
     % carico il dataset di EEGLab
-    EEG = pop_loadset(input_file_name);
+    EEG                 = pop_loadset(input_file_name);
 
     % estraggo la label dei canali nel dataset
-    all_ch_lab = {EEG.chanlocs.labels};
+    all_ch_lab          = {EEG.chanlocs.labels};
 
     if(not(iscell(ref_roi_list)))
-        ref_roi_list={ref_roi_list};
+        ref_roi_list    = {ref_roi_list};
     end
 
     % considero i canali della roi selezionata
-    roi_chans = ref_roi_list;
+    roi_chans           = ref_roi_list;
 
     % vettore con gli indici dei canali della roi tra quelli del dataset
-    num_chan_vec=find(ismember(all_ch_lab, roi_chans));
+    num_chan_vec        = find(ismember(all_ch_lab, roi_chans));
 
     % totale dei canali nelle roi di riferimento
-    tch_roi =length(roi_chans);
+    tch_roi             = length(roi_chans);
 
     % cell array con tante celle quanti sono i canali nella roi di riferimento
-    ersp_cell_roi = cell(tch_roi);
+    ersp_cell_roi       = cell(tch_roi);
 
 
     % for each channel of the selected roi
@@ -99,20 +99,18 @@ function results = eeglab_subject_extract_narrowband(input)
 
     % re-formatting the cell array in a matrix to average alla channels in
     % the roi
-    dim = ndims(ersp_cell_roi{1});              % Get the number of dimensions for your arrays
-    M = cat(dim+1,ersp_cell_roi{:});            % Convert to a (dim+1)-dimensional matrix
-    mean_ersp_roi = mean(M,dim+1);  % Get the mean across arrays
+    dim             = ndims(ersp_cell_roi{1});              % Get the number of dimensions for your arrays
+    M               = cat(dim+1,ersp_cell_roi{:});            % Convert to a (dim+1)-dimensional matrix
+    mean_ersp_roi   = mean(M,dim+1);  % Get the mean across arrays
 
 
 
     % select the time window
-    tw = ref_tw_list;
-
+    tw              = ref_tw_list;
     % tw lowest time
-    group_tmin = min(tw);
-
+    group_tmin      = min(tw);
     % tw highest time
-    group_tmax = max(tw);
+    group_tmax      = max(tw);
 
     if isempty(group_tmin)
         group_tmin = min(times);
@@ -139,12 +137,12 @@ function results = eeglab_subject_extract_narrowband(input)
 
     [project, narrowband_output]            = eeglab_get_narrowband(project,narrowband_input);
 
-    results.fnb             = narrowband_output.results.sub.realign_freq;
-    results.centroid_mean   = narrowband_output.results.sub.fb.centroid_mean; 
-    results.fcog.all        = narrowband_output.results.sub.fb.fcog.all; 
-    results.fcog.pos        = narrowband_output.results.sub.fb.fcog.pos; 
-    results.fcog.neg        = narrowband_output.results.sub.fb.fcog.neg; 
-    results.fcog.polarity_index  = narrowband_output.results.sub.fb.fcog.polarity_index; 
+    results.fnb                             = narrowband_output.results.sub.realign_freq;
+    results.centroid_mean                   = narrowband_output.results.sub.fb.centroid_mean; 
+    results.fcog.all                        = narrowband_output.results.sub.fb.fcog.all; 
+    results.fcog.pos                        = narrowband_output.results.sub.fb.fcog.pos; 
+    results.fcog.neg                        = narrowband_output.results.sub.fb.fcog.neg; 
+    results.fcog.polarity_index             = narrowband_output.results.sub.fb.fcog.polarity_index; 
 
     % nota: extract narrowband restituirebbe molte più info, vedere
     % come capializzarle (possibile salvare / scrivere struttura su txt?)
