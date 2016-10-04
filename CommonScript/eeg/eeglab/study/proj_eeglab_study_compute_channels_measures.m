@@ -40,7 +40,10 @@ erpim                   = project.study.precompute.erpim;
 
 design_num_vec          = [1:length(project.design)];
 list_select_subjects    = [];
-do_erp=0; do_erpim=0; do_spec=0; do_ersp=0;
+do_erp                  = project.study.precompute.do_erp; 
+do_erpim                = project.study.precompute.do_erpim; 
+do_spec                 = project.study.precompute.do_spec; 
+do_ersp                 = project.study.precompute.do_ersp;
 
 for par=1:2:length(varargin)
     switch varargin{par}
