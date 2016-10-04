@@ -7,7 +7,7 @@ function result = startProcess(project, action_name, stat_analysis_suffix, desig
         addpath(project.paths.shadowing_functions);      % eeglab shadows the fminsearch function => I add its path in case I previously removed it
     end
 
-    try
+%     try
         
         switch action_name
 
@@ -456,13 +456,14 @@ function result = startProcess(project, action_name, stat_analysis_suffix, desig
         end
         
         result = [];
-    catch err
-        % This "catch" section executes in case of an error in the "try" section
-        err
-        err.message
-        err.stack(1)
-        result = err;
-    end
+%     catch err
+%         % This "catch" section executes in case of an error in the "try" section
+%         err
+%         err.message
+%         err.stack(1)
+%         result = err;
+%         throw(err);
+%     end
         
 end
 
