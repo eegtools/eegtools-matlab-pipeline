@@ -33,10 +33,9 @@ project.conf_file_name      = 'project_structure_brainstorm';         ... projec
 %% =====================================================================================================================================================================
 %  PROJECT STRUCTURE AND FILE SYSTEM INITIALIZATION
 %=====================================================================================================================================================================
-project.paths.script.common_scripts     = fullfile(project.paths.svn_scripts_root, 'CommonScript', '');                                                     addpath(project.paths.script.common_scripts);      ... to get genpath2
-project.paths.script.eeg_tools          = fullfile(project.paths.script.common_scripts, 'eeg','eeg_tools', '');                                             addpath(project.paths.script.eeg_tools);           ... to get define_project_paths
-project.paths.script.project            = fullfile(project.paths.svn_scripts_root, project.research_group, project.research_subgroup , project.name, '');   addpath(genpath2(project.paths.script.project));   ... in general u don't need to import the others' projects svn folders
-project                                 = project_init(project);             ... project structure
+% to get project_init
+project.paths.script.eeg_tools_project = fullfile(project.paths.svn_scripts_root, 'CommonScript', 'eeg','eeg_tools', 'project', ''); addpath(project.paths.script.eeg_tools_project); 
+project                                = project_init(project);             ... project structure
 %% =====================================================================================================================================================================
 %  OVERRIDE
 %=====================================================================================================================================================================
