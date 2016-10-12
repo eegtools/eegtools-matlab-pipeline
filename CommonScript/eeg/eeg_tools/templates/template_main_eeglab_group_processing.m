@@ -239,6 +239,15 @@ project.operations.do_study_plot_erp_topo_compact_tw_individual_align           
 project.proj_eeglab_study_plot_allch_erp_time                                              = 0;
 
 
+%% -------------------------------------------------------------------------------------------
+% ALLCH_ERP_CC_TIME
+%--------------------------------------------------------------------------------------------
+% master-function:                                       proj_eeglab_study_plot_allch_erp_cc_time
+% settings:
+% evaluate and represent cross correlation of ERP of all channels between levels of one factor as a function of time and
+% compare different levels of the other factor in a time x channels space (TANOVA)
+project.operations.do_study_plot_allch_erp_cc_time                                              = 0;
+
 
 
 
