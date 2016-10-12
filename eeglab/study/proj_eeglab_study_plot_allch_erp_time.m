@@ -181,20 +181,11 @@ for design_num=design_num_vec
     [pcond_corr, pgroup_corr,  pinter_corr] = eeglab_study_correct_pvals(pcond, pgroup, pinter,correction);
     
     
-    if (strcmp(do_plots,'on'))
-        
-        % possibilità di passare direttamente l'output statistico ma per il
-        % plot mi servono comunque dei parametri aggiuntivi? o li posso
-        % comunque mettere nella struttura di output dei risultati? forse
-        % sì perchè fanno parte dei parametri necessari x riprodurre il
-        % plot da zero senza dover far girare tutta la funzione ma solo
-        % caricando i parametri dalla struttura esportata
-        
-
         erp_curve_allch_stat.erp_curve                                      = erp_curve_allch;
         erp_curve_allch_stat.pvalue                                         = study_ls ;
         % allch lo prende sopra        
-        erp_curve_allch_stat.project                                        = project; % da cui estraggo ylim_plot che diventa amplim
+%         erp_curve_allch_stat.project                                        = project; % da cui estraggo ylim_plot che diventa amplim
+        erp_curve_allch_stat.amplim                                         = project.results_display.erp.compact_display_ylim;
         erp_curve_allch_stat.times                                          = times;  
         erp_curve_allch_stat.levels_f1                                      = levels_f1;
         erp_curve_allch_stat.levels_f2                                      = levels_f2;
@@ -211,6 +202,17 @@ for design_num=design_num_vec
 %       erp_curve_allch_stat.pinter                                         = pinter_corr;        
 %       erp_curve_allch_stat.STUDY                                          = STUDY;
         
+    if (strcmp(do_plots,'on'))
+        
+        % possibilità di passare direttamente l'output statistico ma per il
+        % plot mi servono comunque dei parametri aggiuntivi? o li posso
+        % comunque mettere nella struttura di output dei risultati? forse
+        % sì perchè fanno parte dei parametri necessari x riprodurre il
+        % plot da zero senza dover far girare tutta la funzione ma solo
+        % caricando i parametri dalla struttura esportata
+        
+
+ 
         eeglab_study_allch_erp_time_graph(erp_curve_allch_stat);
     end
     

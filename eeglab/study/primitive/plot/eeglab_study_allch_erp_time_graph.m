@@ -2,9 +2,11 @@ function [] = eeglab_study_allch_erp_time_graph(input)
 
 
 erp_curve                                                                  = input.erp_curve;
-pvalue                                                                     = input.project.stats.erp.pvalue;
+% pvalue                                                                     = input.project.stats.erp.pvalue;
+pvalue                                                                     = input.study_ls;
 allch                                                                      = input.allch;
-amplim                                                                     = input.project.results_display.erp.compact_display_ylim;
+% amplim                                                                     = input.project.results_display.erp.compact_display_ylim;
+amplim                                                                     = input.amplim;
 times                                                                      = input.times;
 levels_f1                                                                  = input.levels_f1;
 levels_f2                                                                  = input.levels_f2;

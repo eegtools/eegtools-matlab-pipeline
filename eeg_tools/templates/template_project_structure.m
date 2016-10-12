@@ -1392,6 +1392,9 @@ project.results_display.erp.display_compact_topo_mode           = 'errorbar';   
 project.results_display.erp.display_compact_show_head           = 'off';        % 'on'|'off'
 project.results_display.erp.z_transform                        = 'on';         % 'on'|'off' z-transform data data for each roi, and tw to allow to plot all figures on the same scale
 
+% ERP CC
+project.results_display.cclim_plot                               = [];           %y limits for the representation of cross correlation
+
 
 % ERSP
 project.results_display.ersp.time_range.s                       = [project.study.ersp.tmin_analysis.s project.study.ersp.tmax_analysis.s];     % time range for erp representation
