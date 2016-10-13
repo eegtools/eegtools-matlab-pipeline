@@ -251,10 +251,11 @@ project.operations.do_eeglab_study_export_erp_r                                 
 % settings:
 % evaluate and represent cross correlation of ERP of all channels between levels of one factor as a function of time and
 % compare different levels of the other factor in a time x channels space (TANOVA)
+project.operations.do_study_plot_allch_erp_time                                 = 0;
+
+
+
 project.operations.do_study_plot_allch_erp_cc_time                              = 0;
-
-
-
 
 
 
