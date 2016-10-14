@@ -163,50 +163,50 @@ try
 
     %==================================================================================
 
-if do_patch_triggers
-    for subj=1:project.subjects.numsubj
-        subj_name=project.subjects.list{subj}; 
-        file_name=fullfile(project.paths.input_epochs, [subj_name pre_epoching_input_file_name '.set']);
-
-        %   0) rename triggers
-        ...eeglab_subject_events_rename(file_name, {'50','60','70'},{'6','7','8'});
-        
-        %   1) START & END triggers missing
-        ...eeglab_subject_events_add_event_around_first_event(file_name, '1', -2);
-        ...eeglab_subject_events_add_event_around_last_event(file_name, '4', 4);
-        
-        %   2) I WANT TO ANTICIPATE the pause-end trigger
-        ...eeglab_subject_events_move_second_event_in_a_sequence(file_name, {project.task.events.pause_trigger_value}, {project.task.events.resume_trigger_value}, -1.5);        
-
-        %   3) WHEN EXIST ONLY QUESTION TRIGGER : 
-        %      add: - a pause trigger value at the same latency of a question_trigger_value 
-        %           - a resume trigger 1sec before the event following the question trigger
-        ...eeglab_subject_events_add_event_at_code_and_around_next(file_name, project.task.events.question_trigger_value, project.task.events.pause_trigger_value, project.task.events.resume_trigger_value, (project.epoching.epo_st.s - 0.1) );
-
-        %   4) WHEN EXIST QUESTION TRIGGER AND RESUME TRIGGER : 
-        %      add a pause trigger value at the same latency of a question_trigger_value
-        ...eeglab_subject_events_add_event_around_another_event(file_name, project.task.events.question_trigger_value, project.task.events.pause_trigger_value, 0.01);
-        %eeglab_subject_events_add_eve1_pre_eve2(file_name,{project.task.events.question_trigger_value},{project.task.events.resume_trigger_value},10000000000,project.task.events.pause_trigger_value); same function as above
-    
-    
-        %   5) mark baseline start and end
-        ...eeglab_subject_events_add_event_around_other_events(file_name, [project.epoching.mrkcode_cond{1:length(project.epoching.mrkcode_cond)}], project.task.events.baseline_start_trigger_value, project.epoching.bc_st.s);
-        ...eeglab_subject_events_add_event_around_other_events(file_name, [project.epoching.mrkcode_cond{1:length(project.epoching.mrkcode_cond)}], project.task.events.baseline_end_trigger_value, project.epoching.bc_end.s);
-
-        %   6) WHEN DOES NOT EXIST END TRIAL TRIGGERS
-        eeglab_subject_events_add_event_around_other_events(file_name, [project.epoching.mrkcode_cond{1:length(project.epoching.mrkcode_cond)}], project.task.events.videoend_trigger_value, 3.4);
-        
-        
-        %   7)  CALCULATE DISTANCE BETWEEN TRIGGERS ....need to create the following vars: means1 = zeros(project.subjects.numsubj,1);   means2 = zeros(project.subjects.numsubj,1);
-        ...subjects_data{subj} = eeglab_subject_events_distances_three_triggers_classes(file_name, [project.epoching.mrkcode_cond{3:length(project.epoching.mrkcode_cond)}], {'7','8'}, {'5'});
-        ...means1(subj)         = mean([subjects_data{subj}{:,2}]);
-        ...if size(subjects_data{subj}, 2) > 2
-        ...    means2(subj)         = mean([subjects_data{subj}{:,3}]);
-        ...else
-        ...    means2(subj)         = 0;
-        ...end        
-    end
-end
+% if do_patch_triggers
+%     for subj=1:project.subjects.numsubj
+%         subj_name=project.subjects.list{subj}; 
+%         file_name=fullfile(project.paths.input_epochs, [subj_name pre_epoching_input_file_name '.set']);
+% 
+%         %   0) rename triggers
+%         ...eeglab_subject_events_rename(file_name, {'50','60','70'},{'6','7','8'});
+%         
+%         %   1) START & END triggers missing
+%         ...eeglab_subject_events_add_event_around_first_event(file_name, '1', -2);
+%         ...eeglab_subject_events_add_event_around_last_event(file_name, '4', 4);
+%         
+%         %   2) I WANT TO ANTICIPATE the pause-end trigger
+%         ...eeglab_subject_events_move_second_event_in_a_sequence(file_name, {project.task.events.pause_trigger_value}, {project.task.events.resume_trigger_value}, -1.5);        
+% 
+%         %   3) WHEN EXIST ONLY QUESTION TRIGGER : 
+%         %      add: - a pause trigger value at the same latency of a question_trigger_value 
+%         %           - a resume trigger 1sec before the event following the question trigger
+%         ...eeglab_subject_events_add_event_at_code_and_around_next(file_name, project.task.events.question_trigger_value, project.task.events.pause_trigger_value, project.task.events.resume_trigger_value, (project.epoching.epo_st.s - 0.1) );
+% 
+%         %   4) WHEN EXIST QUESTION TRIGGER AND RESUME TRIGGER : 
+%         %      add a pause trigger value at the same latency of a question_trigger_value
+%         ...eeglab_subject_events_add_event_around_another_event(file_name, project.task.events.question_trigger_value, project.task.events.pause_trigger_value, 0.01);
+%         %eeglab_subject_events_add_eve1_pre_eve2(file_name,{project.task.events.question_trigger_value},{project.task.events.resume_trigger_value},10000000000,project.task.events.pause_trigger_value); same function as above
+%     
+%     
+%         %   5) mark baseline start and end
+%         ...eeglab_subject_events_add_event_around_other_events(file_name, [project.epoching.mrkcode_cond{1:length(project.epoching.mrkcode_cond)}], project.task.events.baseline_start_trigger_value, project.epoching.bc_st.s);
+%         ...eeglab_subject_events_add_event_around_other_events(file_name, [project.epoching.mrkcode_cond{1:length(project.epoching.mrkcode_cond)}], project.task.events.baseline_end_trigger_value, project.epoching.bc_end.s);
+% 
+%         %   6) WHEN DOES NOT EXIST END TRIAL TRIGGERS
+%         eeglab_subject_events_add_event_around_other_events(file_name, [project.epoching.mrkcode_cond{1:length(project.epoching.mrkcode_cond)}], project.task.events.videoend_trigger_value, 3.4);
+%         
+%         
+%         %   7)  CALCULATE DISTANCE BETWEEN TRIGGERS ....need to create the following vars: means1 = zeros(project.subjects.numsubj,1);   means2 = zeros(project.subjects.numsubj,1);
+%         ...subjects_data{subj} = eeglab_subject_events_distances_three_triggers_classes(file_name, [project.epoching.mrkcode_cond{3:length(project.epoching.mrkcode_cond)}], {'7','8'}, {'5'});
+%         ...means1(subj)         = mean([subjects_data{subj}{:,2}]);
+%         ...if size(subjects_data{subj}, 2) > 2
+%         ...    means2(subj)         = mean([subjects_data{subj}{:,3}]);
+%         ...else
+%         ...    means2(subj)         = 0;
+%         ...end        
+%     end
+% end
 
 
     %==================================================================================
