@@ -337,6 +337,17 @@ if project.operations.do_study_plot_allch_erp_time
 end
 
 
+%% -------------------------------------------------------------------------------------------
+% ALLCH_ERP_CC_TIME
+%--------------------------------------------------------------------------------------------
+% master-function:                                       proj_eeglab_study_plot_allch_erp_cc_time
+% settings:
+% evaluate and represent cross correlation of ERP of all channels between levels of one factor as a function of time and
+% compare different levels of the other factor in a time x channels space (TANOVA)
+
+if project.operations.do_study_plot_allch_erp_cc_time
+    proj_eeglab_study_plot_allch_erp_cc_time(project, stat_analysis_suffix, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
+end
 
 %% ******************************************************************************************************************************************
 %==========================================================================================================================================
