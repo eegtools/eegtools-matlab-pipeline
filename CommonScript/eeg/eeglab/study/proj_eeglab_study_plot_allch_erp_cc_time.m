@@ -35,7 +35,8 @@ num_permutations            = project.stats.erp.num_permutations;
 correction                  = project.stats.eeglab.erp.correction;
 stat_method                 = project.stats.eeglab.erp.method;
 dt_ms                       = (1/project.eegdata.fs)*1000;
-cclim                      = project.results_display.cclim_plot;
+cclim                       = project.results_display.cclim_plot;
+xlim                        = project.results_display.xlim_plot;                     
 
 
 do_plots                    = project.results_display.erp.do_plots;
@@ -197,6 +198,11 @@ for design_num=design_num_vec
                     v2 = zt(erp_curve_allch{nf1,2}(:,nch,nsub));
                     % calcolo la cc e gli sfasamenti corrispondenti
                     [vcor, vlag] =  xcorr(v1, v2,'unbiased');
+                    if not(isempty(xlim))
+                        sel_lag = vlag >= xlim(1) & vlag <= xlim(2);
+                        vlag = vlag(sel_lag);
+                        vcor = vcor(sel_lag);
+                    end
                     mat_cor(:,nch,nsub)  = vcor;
 %                     mat_lag(:,nch,nsub)  = vlag;
                 end
@@ -229,6 +235,11 @@ for design_num=design_num_vec
                     v2 = zt(erp_curve_allch{2,nf1}(:,nch,nsub));
                     % calcolo la cc e gli sfasamenti corrispondenti
                     [vcor, vlag] =  xcorr(v1, v2,'unbiased');
+                    if not(isempty(xlim))
+                        sel_lag = vlag >= xlim(1) & vlag <= xlim(2);
+                        vlag = vlag(sel_lag);
+                        vcor = vcor(sel_lag);
+                    end
                     mat_cor(:,nch,nsub)  = vcor;
 %                     mat_lag(:,nch,nsub)  = vlag;
                 end
