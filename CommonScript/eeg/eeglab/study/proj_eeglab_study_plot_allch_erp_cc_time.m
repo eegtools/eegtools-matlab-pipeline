@@ -36,7 +36,7 @@ correction                  = project.stats.eeglab.erp.correction;
 stat_method                 = project.stats.eeglab.erp.method;
 dt_ms                       = (1/project.eegdata.fs)*1000;
 cclim                       = project.results_display.cclim_plot;
-xlim                        = project.results_display.xlim_plot;                     
+xlim                        = project.results_display.xlim_plot*project.eegdata.fs/1000;                     
 
 
 do_plots                    = project.results_display.erp.do_plots;
