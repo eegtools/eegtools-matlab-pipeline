@@ -37,7 +37,7 @@ function OUTEEG = proj_eeglab_subject_mark_trial_end(EEG, project,  varargin)
 OUTEEG = EEG;
 
 
-for ntarg = 1: length(project.preproc.insert_begin_trial.target_event_types)
+for ntarg = 1: length(project.preproc.insert_end_trial.target_event_types)
     
     target = project.preproc.insert_end_trial.target_event_types(ntarg);
     delay  = project.preproc.insert_end_trial.delay.s;
