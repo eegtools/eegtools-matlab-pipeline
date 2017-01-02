@@ -40,9 +40,9 @@ erpim                   = project.study.precompute.erpim;
 
 design_num_vec          = [1:length(project.design)];
 list_select_subjects    = [];
-do_erp                  = project.study.precompute.do_erp; 
-do_erpim                = project.study.precompute.do_erpim; 
-do_spec                 = project.study.precompute.do_spec; 
+do_erp                  = project.study.precompute.do_erp;
+do_erpim                = project.study.precompute.do_erpim;
+do_spec                 = project.study.precompute.do_spec;
 do_ersp                 = project.study.precompute.do_ersp;
 
 for par=1:2:length(varargin)
@@ -107,31 +107,36 @@ for ndes=1:length(design_num_vec)
     end
     
     if strcmp(do_erp, 'on')
-        for ncell=vec_sel_cell
-            erp_param=[erp 'cell' ncell];
-            [STUDY ALLEEG] = std_precomp2(STUDY, ALLEEG, {}, erp_param{:});
-        end
+        %         for ncell=vec_sel_cell
+        %             erp_param=[erp 'cell' ncell];
+        %             [STUDY ALLEEG] = std_precomp2(STUDY, ALLEEG, {}, erp_param{:});
+        %         end
+        [STUDY ALLEEG] = std_precomp2(STUDY, ALLEEG, {}, erp{:});
     end
     if strcmp(do_erpim, 'on')
-        for ncell=vec_sel_cell
-            erpim_param=[erpim 'cell' ncell];
-            [STUDY ALLEEG] = std_precomp2(STUDY, ALLEEG, {}, erpim_param{:});
-        end
+        %         for ncell=vec_sel_cell
+        %             erpim_param=[erpim 'cell' ncell];
+        %             [STUDY ALLEEG] = std_precomp2(STUDY, ALLEEG, {}, erpim_param{:});
+        %         end
+        [STUDY ALLEEG] = std_precomp2(STUDY, ALLEEG, {}, erpim{:});
     end
     if strcmp(do_spec, 'on')
-        for ncell=vec_sel_cell
-            spec_param=[spec 'cell' ncell];
-            [STUDY ALLEEG] = std_precomp2(STUDY, ALLEEG, {}, spec_param{:});
-        end
+        %         for ncell=vec_sel_cell
+        %             spec_param=[spec 'cell' ncell];
+        %             [STUDY ALLEEG] = std_precomp2(STUDY, ALLEEG, {}, spec_param{:});
+        %         end
+        [STUDY ALLEEG] = std_precomp2(STUDY, ALLEEG, {}, spec{:});
     end
     if strcmp(do_ersp, 'on')
-        for ncell=vec_sel_cell
-            ersp_param=[ersp 'cell' ncell];
-            [STUDY ALLEEG] = std_precomp2(STUDY, ALLEEG, {}, ersp_param{:});
-        end
+        %         for ncell=vec_sel_cell
+        %             ersp_param=[ersp 'cell' ncell];
+        %             [STUDY ALLEEG] = std_precomp2(STUDY, ALLEEG, {}, ersp_param{:});
+        %         end
+        [STUDY ALLEEG] = std_precomp2(STUDY, ALLEEG, {}, ersp{:});
     end
+    eeglab redraw
     ...delete(gcp);
-    [STUDY EEG] = pop_savestudy( STUDY, ALLEEG, 'savemode','resave');
+        [STUDY EEG] = pop_savestudy( STUDY, ALLEEG, 'savemode','resave');
     
 end
 
