@@ -129,7 +129,7 @@
 
 
 
-function [ STUDY, ALLEEG customRes ] = std_precomp_parallel(STUDY, ALLEEG, chanlist, varargin)
+function [ STUDY, ALLEEG customRes ] = std_precomp2(STUDY, ALLEEG, chanlist, varargin)
     
     if nargin < 2
         help std_precomp;
