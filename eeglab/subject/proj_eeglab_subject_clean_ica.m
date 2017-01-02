@@ -1,11 +1,12 @@
-%% EEG = proj_eeglab_subject_ica(project, varargin)
-%
+%% EEG = proj_eeglab_subject_clean_ica(project, varargin)
+%  funzione per testare/usare come supporto toolbox eeglab che eliminano
+% artefatti usando ica (a differenza della pca come nell'algoritmo di ASR)
 % typically custom_suffix is
 % 1) ''    : it makes ICA over pre-processed data
 % 2) '_sr' : it makes ICA over data after segments removal
 %
 %%
-function EEG = proj_eeglab_subject_ica(project, varargin)
+function EEG = proj_eeglab_subject_clean_ica(project, varargin)
 
 
     list_select_subjects    = project.subjects.list;
@@ -42,22 +43,22 @@ function EEG = proj_eeglab_subject_ica(project, varargin)
     
     % -------------------------------------------------------------------------------------------------------------------------------------
 
-    names = {};
-    durations = {};
-    ranks = {};
-    ica_types ={};
+%     names = {};
+%     durations = {};
+%     ranks = {};
+%     ica_types ={};
     
     for subj=1:numsubj
         
         subj_name   = list_select_subjects{subj}; 
         inputfile   = proj_eeglab_subject_get_filename(project, subj_name, get_filename_step, 'custom_suffix', custom_suffix, 'custom_input_folder', custom_input_folder);
                      
-        [names{subj},ranks{subj},ica_types{subj},durations{subj}, EEG]         = eeglab_subject_ica(inputfile, project.paths.output_preprocessing, project.eegdata.eeg_channels_list, project.import.reference_channels, ica_type);    
+        [fname, EEG]         = eeglab_subject_clean_ica(inputfile, project.paths.output_preprocessing);    
    
     end
     
-    summary = [names; ranks; ica_types; durations]';
-    disp(summary);
+%     summary = [names; ranks; ica_types; durations]';
+%     disp(summary);
 end
 % ====================================================================================================
 % ====================================================================================================
