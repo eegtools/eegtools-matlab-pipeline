@@ -29,7 +29,9 @@ project.operations.do_testart                                                   
 %---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 % perform ICA
 project.operations.do_ica                                                           = 0; 
-
+%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+% use/test semi automatic toolboxes based on ICA to identify bad components
+project.operations.do_clean_ica                                                     = 0; 
 %---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 % uniform montages between different polygraphs
 project.operations.do_uniform_montage                                               = 0;
@@ -347,6 +349,18 @@ project.operations.do_study_plot_roi_ersp_curve_tw_individual_noalign_compact   
 
 % perform (and save) statistics based on individual subjects within time windows, adjusting the group time windows to time windws which are re-aligned to the latencies of time window extrema
 project.operations.do_study_plot_roi_ersp_curve_tw_individual_align_compact         = 0;
+
+
+
+%% -------------------------------------------------------------------------------------------
+% ALLCH_ERSP_TIME
+%--------------------------------------------------------------------------------------------
+% master-function:                                       proj_eeglab_study_plot_allch_ersp_time
+% settings:
+% evaluate and represent ERP of all channels as a function of time and
+% compare different conditions in a time x channels space (TANOVA)
+
+project.operations.do_study_plot_allch_ersp_curve_fb_time                           = 0;
 
 
 

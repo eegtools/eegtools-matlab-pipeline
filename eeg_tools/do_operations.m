@@ -53,8 +53,25 @@ if project.operations.do_auto_pauses_removal
 end
 %==================================================================================
 if project.operations.do_ica
-    % do preprocessing up to epochs: avgref, epochs, rmbase: create one trails dataset for each condition
+    % do preprocessing ica
     EEG = proj_eeglab_subject_ica(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
+end
+
+if project.operations.do_clean_ica
+   % use/test semi automatic toolboxes based on ICA to identify bad components
+    EEG = proj_eeglab_subject_clean_ica(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
+end
+
+
+%==================================================================================
+if project.operations.do_mark_trial
+    % mark trial begin and end
+    EEG = proj_eeglab_subject_marktrial(project, 'list_select_subjects', list_select_subjects);
+end
+%==================================================================================
+if project.operations.do_mark_baseline
+    % mark baseline begin and end
+    EEG = proj_eeglab_subject_markbaseline(project, 'list_select_subjects', list_select_subjects);
 end
 %==================================================================================
 if project.operations.do_uniform_montage
@@ -67,16 +84,7 @@ if project.operations.do_reref
     EEG = proj_eeglab_subject_reref(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
 end
 
-%==================================================================================
-if project.operations.do_mark_trial
-    % mark trial begin and end
-    EEG = proj_eeglab_subject_marktrial(project, 'list_select_subjects', list_select_subjects);
-end
-%==================================================================================
-if project.operations.do_mark_baseline
-    % mark baseline begin and end
-    EEG = proj_eeglab_subject_markbaseline(project, 'list_select_subjects', list_select_subjects);
-end
+
 %==================================================================================
 if project.operations.do_check_mc
     % mark baseline begin and end
@@ -394,6 +402,20 @@ end
 if project.operations.do_study_plot_roi_ersp_tf_tw_fb
     proj_eeglab_study_plot_roi_ersp_tf(project, stat_analysis_suffix,'ersp_tf_resolution_mode','tw_fb' , 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
 end
+
+
+%% -------------------------------------------------------------------------------------------
+% ALLCH_ERSP_TIME
+%--------------------------------------------------------------------------------------------
+% master-function:                                       proj_eeglab_study_plot_allch_ersp_time
+% settings:
+% evaluate and represent ERP of all channels as a function of time and
+% compare different conditions in a time x channels space (TANOVA)
+
+if project.operations.do_study_plot_allch_ersp_curve_fb_time
+    proj_eeglab_study_plot_allch_ersp_curve_fb_time(project, stat_analysis_suffix, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
+end
+
 
 %% ------------------------------------------------------------------------------------------
 % ERSP_CURVE, evaluate and represent standard EEGLab statistics on the curve of ERSP in a selected frequency, plot together levels of design factors
