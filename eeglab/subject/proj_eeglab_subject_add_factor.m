@@ -58,6 +58,13 @@ function EEG = proj_eeglab_subject_add_factor(project, varargin)
                             % display(str)
                             eval(str);
                         end
+                        
+                         for nepo=1:length(EEG.epoch)
+                                str=['EEG.epoch(', num2str(nepo), ').', ['event' names_factors{nf}], ' = ',  '''','nolevels','''' ,';'];
+                                eval(str);
+                            
+                         end
+                        
                     end
                     % aggiungere un ciclo di for all'interno della lista, nb che dobbiamo avere un and: tutte le stringhe devono essere presenti
                     for nl=1:length(add_factor_list)
