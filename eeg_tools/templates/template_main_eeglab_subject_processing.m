@@ -103,7 +103,11 @@ project.operations.do_testart                                                   
 
 %---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 % perform ICA
-project.operations.do_ica                                                           = 0; 
+project.operations.do_ica                                                           = 0;
+
+%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+% use/test semi automatic toolboxes based on ICA to identify bad components
+project.operations.do_clean_ica                                                     = 0; 
 
 %---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 % uniform montages between different polygraphs
@@ -111,7 +115,7 @@ project.operations.do_uniform_montage                                           
 
 %---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 % reref
-project.operations.do_reref                                                        = 0;
+project.operations.do_reref                                                         = 0;
 
 %---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 % insert trial triggers into the data
@@ -151,7 +155,7 @@ project.operations.do_extract_narrowband                                        
 
 %---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 % placeholder flag to execute any custom script
-project.operations.do_custom_analysis                                               = 1;
+project.operations.do_custom_analysis                                               = 0;
 
 %=====================================================================================================================================================================
 % S T A R T    P R O C E S S I N G  
@@ -209,57 +213,57 @@ try
 % end
 
 
-    %==================================================================================
-    if project.operations.do_custom_epochs
-        % do preprocessing up to epochs: avgref, epochs, rmbase: create one trails dataset for each condition
-         for subj=1:project.subjects.numsubj
-            subj_name=project.subjects.list{subj};
-
-            %@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-            % SPECIAL CASE OF SWAPPING ACCORDING TO HANDEDNESS
-            for ns=1:length(project.subjects.data)
-                if (strcmp(project.subjects.data(ns).name, subj_name))
-                    handedness=project.subjects.data(ns).handedness;
-                end
-            end
-            if strcmp(handedness, 'l')
-                input_file_name    = fullfile(project.paths.input_epochs, [project.import.original_data_prefix subj_name project.import.original_data_suffix project.import.output_suffix project.epoching.input_suffix '.set']);
-                swapped_file_name  = fullfile(project.paths.input_epochs, [project.import.original_data_prefix subj_name project.import.original_data_suffix project.import.output_suffix project.epoching.input_suffix '_sw' '.set']);
-
-                if ~exist(swapped_file_name, 'file')
-                    eeglab_subject_swap_electrodes(input_file_name, swapped_file_name);
-                end
-                proj_eeglab_subject_epoching(project, subj_name, 'custom_suffix', '_sw');
-            else
-                proj_eeglab_subject_epoching(project, subj_name);
-            end
-            %@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-         end
-    end
+%     %==================================================================================
+%     if project.operations.do_custom_epochs
+%         % do preprocessing up to epochs: avgref, epochs, rmbase: create one trails dataset for each condition
+%          for subj=1:project.subjects.numsubj
+%             subj_name=project.subjects.list{subj};
+% 
+%             %@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+%             % SPECIAL CASE OF SWAPPING ACCORDING TO HANDEDNESS
+%             for ns=1:length(project.subjects.data)
+%                 if (strcmp(project.subjects.data(ns).name, subj_name))
+%                     handedness=project.subjects.data(ns).handedness;
+%                 end
+%             end
+%             if strcmp(handedness, 'l')
+%                 input_file_name    = fullfile(project.paths.input_epochs, [project.import.original_data_prefix subj_name project.import.original_data_suffix project.import.output_suffix project.epoching.input_suffix '.set']);
+%                 swapped_file_name  = fullfile(project.paths.input_epochs, [project.import.original_data_prefix subj_name project.import.original_data_suffix project.import.output_suffix project.epoching.input_suffix '_sw' '.set']);
+% 
+%                 if ~exist(swapped_file_name, 'file')
+%                     eeglab_subject_swap_electrodes(input_file_name, swapped_file_name);
+%                 end
+%                 proj_eeglab_subject_epoching(project, subj_name, 'custom_suffix', '_sw');
+%             else
+%                 proj_eeglab_subject_epoching(project, subj_name);
+%             end
+%             %@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+%          end
+%     end
     
-    %==================================================================================
-    if project.operations.do_singlesubjects_band_comparison
-        for subj=1:project.subjects.numsubj
-            subj_name=project.subjects.list{subj};        
-            cond_files=cell(1,project.epoching.numcond);
-            for nc=1:project.epoching.numcond
-                cond_files{nc} = fullfile(project.paths.output_epochs, [project.import.original_data_prefix subj_name project.import.original_data_suffix project.import.output_suffix project.epoching.input_suffix '_' project.epoching.condition_names{nc} '.set']);
-            end
-             eeglab_subject_tf_plot_onecondition_vs_baseline(cond_files{1}, electrode2inspect, 'cycles', cycles, 'pvalue', stat_threshold, 'correct', 'none', 'baseline', [project.epoching.bc_st.ms project.epoching.bc_end.ms], 'save_fig', save_figure, 'fig_output_path', fullfile(project.paths.results, fig_output_path), 'freq_bands', {project.postprocess.ersp.frequency_bands_list{2}});
-             eeglab_subject_tf_plot_onecondition_vs_baseline(cond_files{2}, electrode2inspect, 'cycles', cycles, 'pvalue', stat_threshold, 'correct', 'none', 'baseline', [project.epoching.bc_st.ms project.epoching.bc_end.ms], 'save_fig', save_figure, 'fig_output_path', fullfile(project.paths.results, fig_output_path), 'freq_bands', {project.postprocess.ersp.frequency_bands_list{2}});
-    %         eeglab_subject_tf_plot_onecondition_vs_baseline(cond_files{3}, electrode2inspect, 'cycles', cycles, 'pvalue', stat_threshold, 'correct', 'none', 'baseline', [project.epoching.bc_st.ms project.epoching.bc_end.ms], 'save_fig', save_figure, 'fig_output_path', fullfile(project.paths.results, fig_output_path), 'freq_bands', {project.postprocess.ersp.frequency_bands_list{2}});
-    %         eeglab_subject_tf_plot_onecondition_vs_baseline(cond_files{4}, electrode2inspect, 'cycles', cycles, 'pvalue', stat_threshold, 'correct', 'none', 'baseline', [project.epoching.bc_st.ms project.epoching.bc_end.ms], 'save_fig', save_figure, 'fig_output_path', fullfile(project.paths.results, fig_output_path), 'freq_bands', {project.postprocess.ersp.frequency_bands_list{2}});
-
-    %         eeglab_subject_tf_plot_2conditions(cond_files{2}, cond_files{1}, electrode2inspect, 'pvalue', stat_threshold, 'save_fig', save_figure, 'fig_output_path', fullfile(project.paths.results, fig_output_path));
-    %         eeglab_subject_tf_plot_2conditions(cond_files{3}, cond_files{2}, electrode2inspect, 'pvalue', stat_threshold, 'save_fig', save_figure, 'fig_output_path', fullfile(project.paths.results, fig_output_path));
-    %         eeglab_subject_tf_plot_2conditions(cond_files{3}, cond_files{1}, electrode2inspect, 'pvalue', stat_threshold, 'save_fig', save_figure, 'fig_output_path', fullfile(project.paths.results, fig_output_path));
-    %         eeglab_subject_tf_plot_2conditions(cond_files{3}, cond_files{4}, electrode2inspect, 'pvalue', stat_threshold, 'save_fig', save_figure, 'fig_output_path', fullfile(project.paths.results, fig_output_path));
-    
-            eeglab_subject_components_tf_plot_onecondition_vs_baseline(cond_files{1}, electrode2inspect, 'cycles', cycles, 'pvalue', stat_threshold, 'correct', 'none', 'baseline', [project.epoching.bc_st.ms project.epoching.bc_end.ms], 'save_fig', save_figure, 'fig_output_path', fullfile(project.paths.results, fig_output_path), 'freq_bands', {project.postprocess.ersp.frequency_bands_list{2}});
-            eeglab_subject_components_tf_plot_onecondition_vs_baseline(cond_files{2}, electrode2inspect, 'cycles', cycles, 'pvalue', stat_threshold, 'correct', 'none', 'baseline', [project.epoching.bc_st.ms project.epoching.bc_end.ms], 'save_fig', save_figure, 'fig_output_path', fullfile(project.paths.results, fig_output_path), 'freq_bands', {project.postprocess.ersp.frequency_bands_list{2}});
-    
-        end
-    end
+%     %==================================================================================
+%     if project.operations.do_singlesubjects_band_comparison
+%         for subj=1:project.subjects.numsubj
+%             subj_name=project.subjects.list{subj};        
+%             cond_files=cell(1,project.epoching.numcond);
+%             for nc=1:project.epoching.numcond
+%                 cond_files{nc} = fullfile(project.paths.output_epochs, [project.import.original_data_prefix subj_name project.import.original_data_suffix project.import.output_suffix project.epoching.input_suffix '_' project.epoching.condition_names{nc} '.set']);
+%             end
+%              eeglab_subject_tf_plot_onecondition_vs_baseline(cond_files{1}, electrode2inspect, 'cycles', cycles, 'pvalue', stat_threshold, 'correct', 'none', 'baseline', [project.epoching.bc_st.ms project.epoching.bc_end.ms], 'save_fig', save_figure, 'fig_output_path', fullfile(project.paths.results, fig_output_path), 'freq_bands', {project.postprocess.ersp.frequency_bands_list{2}});
+%              eeglab_subject_tf_plot_onecondition_vs_baseline(cond_files{2}, electrode2inspect, 'cycles', cycles, 'pvalue', stat_threshold, 'correct', 'none', 'baseline', [project.epoching.bc_st.ms project.epoching.bc_end.ms], 'save_fig', save_figure, 'fig_output_path', fullfile(project.paths.results, fig_output_path), 'freq_bands', {project.postprocess.ersp.frequency_bands_list{2}});
+%     %         eeglab_subject_tf_plot_onecondition_vs_baseline(cond_files{3}, electrode2inspect, 'cycles', cycles, 'pvalue', stat_threshold, 'correct', 'none', 'baseline', [project.epoching.bc_st.ms project.epoching.bc_end.ms], 'save_fig', save_figure, 'fig_output_path', fullfile(project.paths.results, fig_output_path), 'freq_bands', {project.postprocess.ersp.frequency_bands_list{2}});
+%     %         eeglab_subject_tf_plot_onecondition_vs_baseline(cond_files{4}, electrode2inspect, 'cycles', cycles, 'pvalue', stat_threshold, 'correct', 'none', 'baseline', [project.epoching.bc_st.ms project.epoching.bc_end.ms], 'save_fig', save_figure, 'fig_output_path', fullfile(project.paths.results, fig_output_path), 'freq_bands', {project.postprocess.ersp.frequency_bands_list{2}});
+% 
+%     %         eeglab_subject_tf_plot_2conditions(cond_files{2}, cond_files{1}, electrode2inspect, 'pvalue', stat_threshold, 'save_fig', save_figure, 'fig_output_path', fullfile(project.paths.results, fig_output_path));
+%     %         eeglab_subject_tf_plot_2conditions(cond_files{3}, cond_files{2}, electrode2inspect, 'pvalue', stat_threshold, 'save_fig', save_figure, 'fig_output_path', fullfile(project.paths.results, fig_output_path));
+%     %         eeglab_subject_tf_plot_2conditions(cond_files{3}, cond_files{1}, electrode2inspect, 'pvalue', stat_threshold, 'save_fig', save_figure, 'fig_output_path', fullfile(project.paths.results, fig_output_path));
+%     %         eeglab_subject_tf_plot_2conditions(cond_files{3}, cond_files{4}, electrode2inspect, 'pvalue', stat_threshold, 'save_fig', save_figure, 'fig_output_path', fullfile(project.paths.results, fig_output_path));
+%     
+%             eeglab_subject_components_tf_plot_onecondition_vs_baseline(cond_files{1}, electrode2inspect, 'cycles', cycles, 'pvalue', stat_threshold, 'correct', 'none', 'baseline', [project.epoching.bc_st.ms project.epoching.bc_end.ms], 'save_fig', save_figure, 'fig_output_path', fullfile(project.paths.results, fig_output_path), 'freq_bands', {project.postprocess.ersp.frequency_bands_list{2}});
+%             eeglab_subject_components_tf_plot_onecondition_vs_baseline(cond_files{2}, electrode2inspect, 'cycles', cycles, 'pvalue', stat_threshold, 'correct', 'none', 'baseline', [project.epoching.bc_st.ms project.epoching.bc_end.ms], 'save_fig', save_figure, 'fig_output_path', fullfile(project.paths.results, fig_output_path), 'freq_bands', {project.postprocess.ersp.frequency_bands_list{2}});
+%     
+%         end
+%     end
     %==================================================================================
 
     
