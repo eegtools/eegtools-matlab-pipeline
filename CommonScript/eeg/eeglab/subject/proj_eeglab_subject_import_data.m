@@ -158,6 +158,7 @@ for subj=1:numsubj
     output_file_name        = proj_eeglab_subject_get_filename(project, subj_name, 'output_import_data');
     [path,name_noext,ext]   = fileparts(output_file_name);
     EEG                     = pop_saveset( EEG, 'filename', name_noext, 'filepath', path);
+    EEG                     = pop_saveset( EEG, 'filename', [name_noext,'_raw'], 'filepath', path);
 end
 end
 

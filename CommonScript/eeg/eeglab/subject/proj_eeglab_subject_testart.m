@@ -4,7 +4,7 @@
 function EEG = proj_eeglab_subject_testart(project, varargin) 
 
     list_select_subjects    = project.subjects.list;
-    get_filename_step       = 'custom_pre_epochs';
+    get_filename_step       = 'output_import_data';
     custom_suffix           = '';
     custom_input_folder     = '';
     

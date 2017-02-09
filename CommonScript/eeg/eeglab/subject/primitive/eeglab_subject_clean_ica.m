@@ -168,7 +168,7 @@ try
     %     disp(EEG.filename)
     %     EEG = pop_saveset( EEG, 'filename',out_file_name,'filepath',output_path);
     %
-    %
+    EEG.dipfit=[];
     EEG = pop_ICMARC_interface(EEG, 'established_features', 1);
     disp(EEG.filename)
     EEG = pop_saveset( EEG, 'filename',out_file_name,'filepath',output_path);
