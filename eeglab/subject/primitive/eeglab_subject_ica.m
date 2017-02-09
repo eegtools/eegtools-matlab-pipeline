@@ -50,9 +50,11 @@ try
     sel_ch_ref = true(1,ll);
     
     if not(isempty(ch_ref))
-        if not(strcmp(ch_ref{1}, 'CAR'))
-            sel_ch_ref  = ismember({EEG.chanlocs(1:ll).labels}, ch_ref);
-            eeg_ch_list = eeg_ch_list(not(sel_ch_ref));
+        if not(length(ch_ref)>1 )
+            if not(strcmp(ch_ref{1}, 'CAR'))
+                sel_ch_ref  = ismember({EEG.chanlocs(1:ll).labels}, ch_ref);
+                eeg_ch_list = eeg_ch_list(not(sel_ch_ref));
+            end
         end
     end
     
@@ -104,7 +106,7 @@ try
         EEG.icaact = EEG.icaweights*EEG.icasphere*EEG.data(eeg_ch_list, :);
     end
     disp(EEG.filename)
-    EEG = pop_saveset( EEG, 'filename',['pippo',out_file_name],'filepath',output_path);
+    EEG = pop_saveset( EEG, 'filename',[out_file_name],'filepath',output_path);
     
     
 %     EEG = pop_ICMARC_interface(EEG, 'established_features', 1);
