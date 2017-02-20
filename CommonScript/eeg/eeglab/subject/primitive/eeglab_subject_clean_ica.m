@@ -9,7 +9,7 @@ function [name_noext, EEG] = eeglab_subject_clean_ica(input_file_name, output_pa
 out_file_name=name_noext;
 
 cfg.MARA.enable = 1;
-cfg.ADJUST.enable      = 1;
+cfg.ADJUST.enable      = 0;
 
 
 cfg.FASTER.enable = 0;
@@ -75,7 +75,7 @@ try
     
     if sum(ismember({EEG.chanlocs.labels},'vEOG')     )
         
-       
+       cfg.ADJUST.enable      = 1;
         cfg.FASTER.enable = 1;
         
         cfg.EOGcorr.enable = 1;
@@ -89,6 +89,7 @@ try
     
     
     if sum(ismember({EEG.chanlocs.labels},'hEOG')     )
+        cfg.ADJUST.enable      = 1;
         
         cfg.chancorr.enable = 1;
         cfg.chancorr.channames = [cfg.chancorr.channames,'hEOG'];        
@@ -169,6 +170,7 @@ try
     %     EEG = pop_saveset( EEG, 'filename',out_file_name,'filepath',output_path);
     %
     EEG.dipfit=[];
+    EEG.dipfit =[];
     EEG = pop_ICMARC_interface(EEG, 'established_features', 1);
     disp(EEG.filename)
     EEG = pop_saveset( EEG, 'filename',out_file_name,'filepath',output_path);
