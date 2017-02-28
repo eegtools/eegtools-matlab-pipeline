@@ -88,6 +88,18 @@ function OUTEEG = proj_eeglab_subject_replacebaseline(project, list_select_subje
     
         input_file_name         = proj_eeglab_subject_get_filename(project, subj_name, get_filename_step, 'custom_suffix' , custom_suffix, 'custom_input_folder', custom_input_folder);
         EEG                     = pop_loadset(input_file_name);
+        
+     
+        EEG.icaact_unfiltered=[];
+        EEG.icaact_filtered_resampled=[];
+        EEG.dipfit=[];
+        EEG.icaact=[];
+        EEG.etc =[];
+        EEG.reject=[];
+        EEG.stats=[];
+        EEG.virtual_topography=[];
+        EEG.virtual_chanlocs=[];
+        EEG.virtual_nbchan=[];
 
         bck.dir                 = fullfile(EEG.filepath, 'hist_pre_replacebaseline');
         bck.prefix              = [];
