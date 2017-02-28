@@ -58,19 +58,7 @@ numsubj = length(list_select_subjects);
 for subj=1:numsubj
     
     subj_name                   = list_select_subjects{subj};
-    input_file_name             = proj_eeglab_subject_get_filename(project, subj_name, get_filename_step, 'custom_suffix', custom_suffix, 'custom_input_folder', custom_input_folder);
-    EEG                         = pop_loadset(input_file_name);
     
-    EEG.icaact_unfiltered=[];
-    EEG.icaact_filtered_resampled=[];
-    EEG.dipfit=[];
-    EEG.icaact=[];
-    EEG.etc =[];
-    EEG.reject=[];
-    EEG.stats=[];
-    EEG.virtual_topography=[];
-    EEG.virtual_chanlocs=[];
-    EEG.virtual_nbchan=[];
     
     
     if strcmp(project.epoching.baseline_replace.mode,'trial') || strcmp(project.epoching.baseline_replace.mode,'external')
@@ -82,6 +70,22 @@ for subj=1:numsubj
             bc_type = 'global';
             disp('replacing baseline using external file makes global baseline correction the only alternative!')
         end
+    else
+        input_file_name             = proj_eeglab_subject_get_filename(project, subj_name, get_filename_step, 'custom_suffix', custom_suffix, 'custom_input_folder', custom_input_folder);
+        EEG                         = pop_loadset(input_file_name);
+        
+        EEG.icaact_unfiltered=[];
+        EEG.icaact_filtered_resampled=[];
+        EEG.dipfit=[];
+        EEG.icaact=[];
+        EEG.etc =[];
+        EEG.reject=[];
+        EEG.stats=[];
+        EEG.virtual_topography=[];
+        EEG.virtual_chanlocs=[];
+        EEG.virtual_nbchan=[];
+       
+
     end
     
     if isempty(EEG)
