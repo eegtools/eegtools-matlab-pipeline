@@ -1394,7 +1394,7 @@ project.results_display.erp.z_transform                        = 'on';         %
 
 % ERP CC
 project.results_display.cclim_plot                               = [];           %y limits for the representation of cross correlation
-roject.results_display.xlim_plot                                = [];           % time (lag) limits in ms for the representation of cross correlation
+project.results_display.xlim_plot                                = [];           % time (lag) limits in ms for the representation of cross correlation
 
 
 % ERSP

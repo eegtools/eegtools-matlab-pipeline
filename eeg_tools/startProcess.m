@@ -4,7 +4,7 @@
 % it will contain as much CASE branches as the available processes
 % result is an EEG structure in case of subject processing 
 %
-% list_select_subject & design_num_vec could go as varargin
+% list_select_subject & design_num_vec could in the future go as varargin
 %
 function result = startProcess(project, action_name, stat_analysis_suffix, design_num_vec, list_select_subjects, varargin)
 
