@@ -33,7 +33,7 @@
 project.study_suffix                                = '';                   % A4: sub name used to create a different STUDY name (fianl file will be called: [project.name project.study_suffix '.study'])
 project.analysis_name                               = 'raw_observation';    % A5: epoching output folder name, subfolder containing the condition files of the current analysis type
 
-project.operations.do_source_analysis               = 0;                    % A6:  
+project.operations.do_source_analysis               = 1;                    % A6:  
 project.operations.do_emg_analysis                  = 0;                    % A7:
 project.operations.do_cluster_analysis              = 0;                    % A8:
 

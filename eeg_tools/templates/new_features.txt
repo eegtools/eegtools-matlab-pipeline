@@ -1,21 +1,5 @@
-This file contains all the new features introduced in the EEG_TOOLS framework starting from 11/11/2014. (please append new entries to the top of the list)
+This file contains all the changes introduced in the EEG_TOOLS framework starting from 05/04/2017.
+Changes will possibly make your old script stop working correctly.
+In this cases, look in this file if a recently introduced modification is responsible for such failure.
 
--------------------> 3/12/2014:
-started complete migration to do_operations function,
-
-added init_operations_flags.m file, which initialize (set to 0) all the operations flags, which now are subfield of project (e.g. project.operations.do_study)
-init_operations_flags.m is called by both main_eeglab_group_processing and main_eeglab_subject_processing after project_structure call and before actual flag selection
-
-
--------------------> 2/12/2014
-added 
-
-project.study.precompute.recompute              = 'on';
-project.study.precompute.do_erp                 = 'on';
-project.study.precompute.do_ersp                = 'on';
-project.study.precompute.do_erpim               = 'on';
-project.study.precompute.do_spec                = 'on';
-
-to project_structure
-
-
+05/04/2017: START OF THIS FILE

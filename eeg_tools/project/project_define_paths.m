@@ -4,16 +4,16 @@
 % REQUIREMENTS:
 % it requires the following variables:
 % GLOBALS
-...*    project.paths.projects_data_root            ... e.g. '/data/projects'
-...*    project.paths.svn_scripts_root              ... e.g. '/data/behavior_lab_svn/behaviourPlatform'
-...*    project.paths.plugins_root                  ... e.g. '/data/matlab_toolbox'
+...*    project.paths.projects_data_root            ... e.g. '/data/projects'    they contain PAP, MNI, UVIP etc...
+...*    project.paths.projects_scripts_root         ... e.g. '/data/projects'  or  /data/behavior_lab_svn/behaviourPlatform...they contain PAP, MNI, UVIP etc...
+...*    project.paths.global_scripts_root           ... e.g. '/media/dados/EEG/eegtools/matlab-pipeline'
+...*    project.paths.plugins_root                  ... e.g. '/data/matlab_toolbox' .. contains eeglab, brainstorm, fieldtrip, spm
+...*    project.paths.script.eeg_tools_project      ... e.g. '/media/dados/EEG/eegtools/matlab-pipeline/eeg_tools/project'
 
-...*    project.paths.script.common_scripts         ... e.g. '/data/behavior_lab_svn/behaviourPlatform/CommonScript'
-...*    project.paths.script.eeg_tools              ... e.g. '/data/behavior_lab_svn/behaviourPlatform/CommonScript/eeg_tools'
-...*    project.paths.script.eeg_tools_project      ... e.g. '/data/behavior_lab_svn/behaviourPlatform/CommonScript/eeg_tools/project'
+
+...*    project.paths.script.eeg_tools              ... e.g. '/media/dados/EEG/eegtools/matlab-pipeline/eeg_tools'
 
 % PROJECT RELATED
-...*    project.paths.script.project
 ...*    project.research_group
 ...*    project.research_subgroup    
 ...*    project.name
@@ -29,8 +29,24 @@
 ...*  defined in main
 ...** defined in project structure
 
+%% GLOBAL PATHS HERE DEFINED
+...     project.paths.eeglab
+...     project.paths.shadowing_functions
+...     project.paths.brainstorm
+...     project.paths.plugin.fieldtrip
 
-%% PATHS DEFINED
+%% PIPELINE PATHS HERE DEFINED
+...     project.paths.script.pipeline_root
+...     project.paths.script.eeg_tools
+...     project.paths.script.utilities
+...     project.paths.script.brainstorm
+...     project.paths.script.eeglab
+...     project.paths.script.fieldtrip
+...     project.paths.script.spm
+
+%% PROJECT PATHS HERE DEFINED
+...     project.paths.script.project
+...     project.paths.project
 ...     project.paths.original_data         :           (project.paths.project,'original_data', project.import.original_data_folder)
 ...     project.paths.output_import         :           (project.paths.project,'epochs', project.import.output_folder)
 ...     project.paths.output_preprocessing  :           (project.paths.project,'epochs', project.import.output_folder)
@@ -55,6 +71,37 @@ function project = project_define_paths(project, varargin)
     %================================================================================================================
     strpath = path;
 
+    %%  ------ PIPELINE SCRIPTS PATH
+
+    % global script path
+    project.paths.script.eeg_tools          = fullfile(project.paths.global_scripts_root, 'eeg_tools');
+    project.paths.script.utilities          = fullfile(project.paths.script.eeg_tools, 'utilities', '');   
+    project.paths.script.brainstorm         = fullfile(project.paths.global_scripts_root,'brainstorm');
+    project.paths.script.eeglab             = fullfile(project.paths.global_scripts_root,'eeglab');
+    project.paths.script.fieldtrip          = fullfile(project.paths.global_scripts_root,'fieldtrip');
+    project.paths.script.spm                = fullfile(project.paths.global_scripts_root,'spm');
+
+    addpath(project.paths.global_scripts_root);   ... to get genpath2
+    addpath(project.paths.script.eeg_tools);        
+        
+    addpath(genpath2(project.paths.script.utilities));
+    addpath(genpath2(project.paths.script.brainstorm));
+    addpath(genpath2(project.paths.script.eeglab));
+    addpath(genpath2(project.paths.script.fieldtrip));
+    addpath(genpath2(project.paths.script.spm));
+
+    
+    % project script path    
+    project.paths.script.project            = fullfile(project.paths.projects_scripts_root, project.research_group, project.research_subgroup , project.name, '');   
+    addpath(genpath2(project.paths.script.project));   ... in general u don't need to import the others' projects svn folders    
+    
+    % other files
+    project.paths.templates.spm                 = fullfile(project.paths.script.spm,'templates');
+    project.clustering.channels_file_path       = fullfile(project.paths.script.eeg_tools, 'resources', project.clustering.channels_file_name);
+    project.eegdata.eeglab_channels_file_path   = fullfile(project.paths.script.eeg_tools, 'resources', project.eegdata.eeglab_channels_file_name);
+    
+    
+    
     %%  ------ PLUGIN PATH
 
     % eeglab
@@ -83,45 +130,10 @@ function project = project_define_paths(project, varargin)
 %     end
 
     % fieldtrip
-    project.paths.plugin.fieldtrip                     = fullfile(project.paths.plugins_root, 'fieldtrip-20130423', '');
+    project.paths.plugin.fieldtrip                     = fullfile(project.paths.plugins_root, 'fieldtrip', '');
     if isempty(strfind(strpath, project.paths.plugin.fieldtrip)) && exist(project.paths.plugin.fieldtrip, 'dir')
         addpath(genpath2(project.paths.plugin.fieldtrip));      
     end
-
-    %%  ------ COMMON SCRIPTS PATH
-
-    % global script path
-
-    project.paths.script.common_scripts     = fullfile(project.paths.svn_scripts_root, 'CommonScript', '');                                                     
-    project.paths.script.eeg                = fullfile(project.paths.script.common_scripts,'eeg');
-
-    project.paths.script.eeg_tools          = fullfile(project.paths.script.eeg,'eeg_tools');
-    %project.paths.script.eeg_tools_project = fullfile(project.paths.svn_scripts_root, 'CommonScript','eeg','eeg_tools', 'project', '');   ... ALREADY DEFINED IN EACH MAIN
-    project.paths.script.utilities          = fullfile(project.paths.script.eeg_tools, 'utilities', '');   
-    project.paths.script.brainstorm         = fullfile(project.paths.script.eeg,'brainstorm_new');
-    project.paths.script.eeglab             = fullfile(project.paths.script.eeg,'eeglab');
-    project.paths.script.fieldtrip          = fullfile(project.paths.script.eeg,'fieldtrip');
-    project.paths.script.spm                = fullfile(project.paths.script.eeg,'spm');
-
-    addpath(project.paths.script.common_scripts);   ... to get genpath2
-    addpath(project.paths.script.eeg);              
-    addpath(project.paths.script.eeg_tools);        
-        
-    addpath(genpath2(project.paths.script.brainstorm));
-    addpath(genpath2(project.paths.script.eeglab));
-    addpath(genpath2(project.paths.script.fieldtrip));
-    addpath(genpath2(project.paths.script.spm));
-    addpath(genpath2(project.paths.script.utilities));
-
-    
-    % project script path    
-    project.paths.script.project            = fullfile(project.paths.svn_scripts_root, project.research_group, project.research_subgroup , project.name, '');   
-    addpath(genpath2(project.paths.script.project));   ... in general u don't need to import the others' projects svn folders    
-    
-    % other files
-    project.paths.templates.spm                 = fullfile(project.paths.script.spm,'templates');
-    project.clustering.channels_file_path       = fullfile(project.paths.script.eeg_tools, project.clustering.channels_file_name);
-    project.eegdata.eeglab_channels_file_path   = fullfile(project.paths.script.eeg_tools, project.eegdata.eeglab_channels_file_name);
 
     %%  ------ PROJECT PATHS 
 
@@ -165,7 +177,7 @@ function project = project_define_paths(project, varargin)
     end
 
     %%
-    if project.do_emg_analysis
+    if project.operations.do_emg_analysis
 
         % exported eeglab EMG epochs files 
         project.paths.emg_epochs                = fullfile(project.paths.project, 'epochs_emg', project.analysis_name, '');
@@ -182,7 +194,7 @@ function project = project_define_paths(project, varargin)
 
 
     %%
-    if project.do_cluster_analysis
+    if project.operations.do_cluster_analysis
         % exported cluster erp projection on the scalp be processed in Brainstorm
         project.paths.cluster_projection_erp    = fullfile(project.paths.project,'cluster_projection_erp',project.analysis_name, '');
         if ~exist(project.paths.cluster_projection_erp, 'dir')
@@ -192,10 +204,10 @@ function project = project_define_paths(project, varargin)
 
 
     %%
-    if project.do_source_analysis
+    if project.operations.do_source_analysis
 
         % batches files path
-        project.paths.batches                   = fullfile(project.paths.scripts,'batches', '');
+        project.paths.batches                   = fullfile(project.paths.project,'batches', '');
         if ~exist(project.paths.batches, 'dir')
             mkdir(project.paths.batches);
         end

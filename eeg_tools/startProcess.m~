@@ -4,20 +4,21 @@
 % it will contain as much CASE branches as the available processes
 % result is an EEG structure in case of subject processing 
 %
+% list_select_subject & design_num_vec could in the future go as varargin
 %
-function result = startProcess(project, action_name, varargin)
+function result = startProcess(project, action_name, list_select_subjects, varargin)
 
     strpath = path;
     if ~strfind(strpath, project.paths.shadowing_functions)
         addpath(project.paths.shadowing_functions);      % eeglab shadows the fminsearch function => I add its path in case I previously removed it
     end
+
     
     % defaults
     list_select_subjects        = project.subjects.list;
     design_num_vec              = [];
     custom_suffix               = '';
     custom_input_folder         = '';
-    stat_analysis_suffix        = '';
 
     for par=1:2:length(varargin)
         switch varargin{par}
@@ -26,7 +27,6 @@ function result = startProcess(project, action_name, varargin)
                     'design_num_vec'        , ...
                     'custom_input_folder'   , ...
                     'custom_suffix'         , ...
-                    'stat_analysis_suffix'  , ...                    
                     }
 
                 if isempty(varargin{par+1})
@@ -36,6 +36,8 @@ function result = startProcess(project, action_name, varargin)
                 end
         end
     end    
+    
+    
     
     result = [];
 %     try
