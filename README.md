@@ -45,17 +45,19 @@ Moreover, it eases the integration between EEGLab and Brainstorm and allows call
   * Stats (2-samples paired t-test, scouts stats, TF stats)
   * Results export
   
-## One-time Installation
+## First-time Installation
 
+These steps are required only the first time you setup this pipeline
 * Download and install both EEGLab (https://sccn.ucsd.edu/eeglab/downloadtoolbox.php) and Brainstorm (http://neuroimage.usc.edu/bst/download.php) software. Rename them to eeglab and brainstorm3 respectively.
-* GLOBAL_SCRIPT_ROOT : Copy the present repositories everywhere in your file system. 
-* PROJECTS_DATA_ROOT : Create a root folder where you will put all the data (eeg raw files, eeglab set/fdt files and your brainstorm database) of your EEG projects.
-* PROJECTS_SCRIPTS_ROOT : Create a root folder where you will put all the matlab script of your EEG projects
+* 1: Copy the present repositories anywhere in your file system (referred as GLOBAL_SCRIPT_ROOT) 
+* 2: Create a root folder where you will put the data (eeg raw files, eeglab set/fdt files and your brainstorm database) of your EEG projects (referred as PROJECTS_DATA_ROOT).
+* 3: Create a root folder where you will put all the matlab script of your EEG projects (referred as PROJECTS_SCRIPTS_ROOT)
 
 Add to Matlab path the GLOBAL_SCRIPT_ROOT path. All the other paths will be added by the pipeline scripts.  
 
-## Project setup
+## How to setup a new project
 
+These steps are required each time you want to setup a new EEG project
 * Create the project data folder   :  PROJECTS_DATA_ROOT/PROJ_NAME
 * Create the project script folder :  PROJECTS_SCRIPTS_ROOT/PROJ_NAME
 * Copy the following three files from GLOBAL_SCRIPT_ROOT/eeg_tools/templates => PROJECTS_SCRIPTS_ROOT/PROJ_NAME
