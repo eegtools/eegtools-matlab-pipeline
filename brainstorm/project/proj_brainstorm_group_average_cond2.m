@@ -1,5 +1,5 @@
 
-function sFiles = proj_brainstorm_group_average_cond(project, varargin) ... subjects_list, cond_list, input_file_name
+function sFiles = proj_brainstorm_group_average_cond2(project, varargin) ... subjects_list, cond_list, input_file_name
 
     protocol_name = project.brainstorm.db_name;
     
@@ -28,11 +28,18 @@ function sFiles = proj_brainstorm_group_average_cond(project, varargin) ... subj
     len_subj                = length(list_select_subjects);
     len_cond                = length(cond_list);
     
-    FileNamesA              = cell(1,len_subj);
+    FileNamesA              = {};cell(1,len_subj);
+    
     
     for ncond=1:len_cond
-        for nsubj=1:len_subj
-            FileNamesA{nsubj}=fullfile(list_select_subjects{nsubj}, cond_list{ncond}, [input_file_name '.mat']);
+        nn=1;
+        for nsubj=1:len_subj            
+            ff1=fullfile(protocol.STUDIES,list_select_subjects{nsubj}, cond_list{ncond}, [input_file_name '.mat']);
+            ff2=fullfile(list_select_subjects{nsubj}, cond_list{ncond}, [input_file_name '.mat']);
+            if exist(ff1)
+                FileNamesA{nn}=ff2;
+                nn=nn+1;
+            end
         end
         
         % Start a new report
