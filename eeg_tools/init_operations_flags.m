@@ -245,7 +245,7 @@ project.operations.do_study_plot_erp_topo_compact_tw_individual_align           
 
 %% HEADPLOT (TOPO PLOT 3D)
 
- project.operations.do_project.proj_eeglab_study_plot_erp_headplot_tw              = 0;
+ project.operations.do_study_plot_erp_headplot_tw                                   = 0;
    
 
 

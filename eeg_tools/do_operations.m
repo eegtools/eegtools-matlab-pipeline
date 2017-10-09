@@ -357,7 +357,7 @@ end
 %% HEADPLOT (TOPO PLOT 3D)
 % perform (and save) additional statistics based on individual subjects within time windows,
 % adjusting the group time windows to time windws which are re-aligned to the latencies of time window extrema
-if project.operations.do_project.proj_eeglab_study_plot_erp_headplot_tw
+if project.operations.do_study_plot_erp_headplot_tw
     proj_eeglab_study_plot_erp_headplot_tw(project, stat_analysis_suffix,  'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects,'display_compact_topo','on' );
 end
 

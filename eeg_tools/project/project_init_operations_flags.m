@@ -244,6 +244,14 @@ function project = project_init_operations_flags(project)
 
 
 
+    
+
+    %% HEADPLOT (TOPO PLOT 3D)
+
+    project.operations.do_study_plot_erp_headplot_tw                                   = 0;
+ 
+ 
+    
     project.operations.do_eeglab_study_export_erp_r                                     = 0;
 
 
