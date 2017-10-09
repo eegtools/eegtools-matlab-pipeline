@@ -22,6 +22,8 @@ tw_name              = params.tw_name;
 factor_name          = params.factor_name;
 mode                 = params.mode;
 
+% strfname = char([ name_f1, '_', name_f2]);
+
 
 if strcmp(mode,'roi_rows')
     

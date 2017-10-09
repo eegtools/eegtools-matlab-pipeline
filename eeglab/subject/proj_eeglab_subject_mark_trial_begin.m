@@ -36,6 +36,11 @@ function OUTEEG = proj_eeglab_subject_mark_trial_begin(EEG, project,  varargin)
 
 
 OUTEEG = EEG;
+alleve_lat = [EEG.event.latency];
+alleve_lab = {EEG.event.type};
+
+sel_boundary = ismember(alleve_lab, 'boundary');
+lat_boundary = alleve_lat(sel_boundary);
 
 for ntarg = 1: length(project.preproc.insert_begin_trial.target_event_types)
     
@@ -49,10 +54,24 @@ for ntarg = 1: length(project.preproc.insert_begin_trial.target_event_types)
     eve_target_begin = EEG.event(sel_target_begin);
     
     for neve = 1:length(eve_target_begin)
-        n1 = length(OUTEEG.event)+1;
-        OUTEEG.event(n1)         =   eve_target_begin(neve);
-        OUTEEG.event(n1).latency =   OUTEEG.event(n1).latency + delay_pts-1;
-        OUTEEG.event(n1).type    =   project.preproc.marker_type.begin_trial;
+        
+        target_candidate = eve_target_begin(neve);
+        
+        lat_target_candidate = target_candidate.latency;
+        lat_current_t1_candidate= lat_target_candidate + delay_pts-1;
+        
+        boundary_between_t1_target = lat_boundary >= lat_current_t1_candidate  & lat_boundary <= lat_target_candidate ;
+        
+       
+        
+        
+        
+        if sum(boundary_between_t1_target) == 0 
+            n1 = length(OUTEEG.event)+1;
+            OUTEEG.event(n1)         =   eve_target_begin(neve);
+            OUTEEG.event(n1).latency =   OUTEEG.event(n1).latency + delay_pts-1;
+            OUTEEG.event(n1).type    =   project.preproc.marker_type.begin_trial;
+        end
     end
     
 end
@@ -61,7 +80,7 @@ sorted_event      = OUTEEG.event;
 [xx sort_vec]     = sort([OUTEEG.event.latency]);
 sorted_event      = sorted_event(sort_vec);
 OUTEEG.event      = sorted_event;
-
+OUTEEG.event      = OUTEEG.event([OUTEEG.event.latency]>=0);
 
 OUTEEG = eeg_checkset(OUTEEG);
 

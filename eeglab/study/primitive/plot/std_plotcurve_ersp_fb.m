@@ -84,6 +84,10 @@ name_f2                                                                    = inp
 levels_f1                                                                  = input.levels_f1; 
 levels_f2                                                                  = input.levels_f2; 
 ersp_mode                                                                  = input.ersp_mode; 
+
+
+strfname = char([ name_f1, '_', name_f2]);
+
                                                                    
 
 pgroup = [];
@@ -662,7 +666,7 @@ end
 
 input_save_fig.plot_dir               = plot_dir;
 input_save_fig.fig                    = fig;
-input_save_fig.name_embed             = 'ersp_curve';
+input_save_fig.name_embed             = [strfname,'_','ersp_curve'];
 input_save_fig.suffix_plot            = [char(roi_name),'_',char(frequency_band_name)];
 
 save_figures( input_save_fig )

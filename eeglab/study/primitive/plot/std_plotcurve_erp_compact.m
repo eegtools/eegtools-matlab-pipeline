@@ -18,6 +18,10 @@ compact_display_stats                                                      = inp
 compact_display_xlim                                                       = input.compact_display_xlim; 
 compact_display_ylim                                                       = input.compact_display_ylim;
 
+
+strfname = char([ name_f1, '_', name_f2]);
+
+
 close all
 
 set(0,'defaulttextinterpreter','none')
@@ -158,7 +162,7 @@ plot(times, up_plot_mat(nlf,:),'col',list_col(nlf),'LineWidth',0.5,'LineStyle',l
     
     input_save_fig.plot_dir               = plot_dir;
     input_save_fig.fig                    = fig;
-    input_save_fig.name_embed             = 'erp_curve';
+    input_save_fig.name_embed             = [strfname,'_','erp_curve'];
     input_save_fig.suffix_plot            = [char(roi_name),'_',char(name_f)];
     
     if strcmp(compact_display_sem,'on')
@@ -268,7 +272,7 @@ hold on
         
         input_save_fig.plot_dir               = plot_dir;
         input_save_fig.fig                    = fig;
-        input_save_fig.name_embed             = 'erp_curve';
+        input_save_fig.name_embed             = [strfname,'_','erp_curve'];
         input_save_fig.suffix_plot            = [char(roi_name),'_',char(levels_f1{nlf1})];
         
         if strcmp(compact_display_sem,'on')
@@ -378,7 +382,7 @@ plot(times, up_plot_mat(nlf1,:),'col',list_col(nlf1),'LineWidth',0.5,'LineStyle'
         
         input_save_fig.plot_dir               = plot_dir;
         input_save_fig.fig                    = fig;
-        input_save_fig.name_embed             = 'erp_curve';
+        input_save_fig.name_embed             = [strfname,'_','erp_curve'];
         input_save_fig.suffix_plot            = [char(roi_name),'_',char(levels_f2{nlf2})];
         
         if strcmp(compact_display_sem,'on')

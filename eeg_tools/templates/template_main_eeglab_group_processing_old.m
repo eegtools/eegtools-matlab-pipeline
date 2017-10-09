@@ -1,94 +1,84 @@
+clear project
+%% ==================================================================================
+% LOCAL PATHS
+%==================================================================================
+% to be edited according to calling PC local file system
+os = system_dependent('getos');
+if  strncmp(os,'Linux',2)
+    
+    project.paths.projects_data_root    = '/data/projects';
+    project.paths.svn_scripts_root      = '/data/behavior_lab_svn/behaviourPlatform';
+    project.paths.plugins_root          = '/data/matlab_toolbox';
+else
+    project.paths.projects_data_root    = 'C:\Users\Pippo\Documents\EEG_projects';
+    project.paths.svn_scripts_root      = 'C:\Users\Pippo\Documents\MATLAB\svn_beviour_lab\EEG_Tools';
+    project.paths.plugins_root          = 'C:\Users\Pippo\Documents\MATLAB\toolboxes';
+end
+
+%% ==================================================================================
+%  PROJECT DATA 
+%==================================================================================
+project.research_group      = 'PAP';
+project.research_subgroup   = 'laura';
+project.name                = 'cp_action_observation';                 ... must correspond to 'project.paths.local_projects_data' subfolder name
+project.conf_file_name      = 'project_structure_observation';         ... project_structure file name, located in : project.paths.eegtools_svn_local / project.research_group_svn_folder / project.name
+
+%% =====================================================================================================================================================================
+%  DESIGN SPECIFICATION
+%==================================================================================
+...
+...
+...
+...
+%% =====================================================================================================================================================================
+%  PROJECT STRUCTURE AND FILE SYSTEM INITIALIZATION
 %=====================================================================================================================================================================
-% OPERATIONS LIST 
+project.paths.script.common_scripts     = fullfile(project.paths.svn_scripts_root, 'CommonScript', '');                                                     addpath(project.paths.script.common_scripts);      ... to get genpath2
+project.paths.script.eeg_tools          = fullfile(project.paths.script.common_scripts, 'eeg','eeg_tools', '');                                             addpath(genpath2(project.paths.script.eeg_tools)); %addpath(project.paths.script.eeg_tools);           ... to get define_project_paths
+project.paths.script.project            = fullfile(project.paths.svn_scripts_root, project.research_group, project.research_subgroup , project.name, '');   addpath(genpath2(project.paths.script.project));   ... in general u don't need to import the others' projects svn folders
+
+eval(project.conf_file_name);                                               ... project structure
+project                                 = define_project_paths(project);    ... global and project paths definition. If 2nd param is 0, is faster, as it does not call eeglab
+init_operations_flags
+%% =====================================================================================================================================================================
+%  OVERRIDE
 %=====================================================================================================================================================================
 
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-% import raw data and write set/fdt file into epochs subfolder, perform: import, event to string, channel lookup, global filtering
-project.operations.do_import                                                        = 0;
+stat_analysis_suffix='aocs_ao_C4_subject_similar_presound-TF_tw_fb';
+stat_analysis_suffix=[stat_analysis_suffix,'-',datestr(now, 'dd-mmm-yyyy-HH-MM-SS')];
 
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-% preprocessing of the imported file: SUBSAMPLING, CHANNELS TRANSFORMATION, INTERPOLATION, RE-REFERENCE, SPECIFIC FILTERING
-project.operations.do_preproc                                                       = 0;
+design_num_vec          = [8:12 2:7];
 
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-% analysis of emg data
-project.operations.do_emg_analysis                                                  = 0; 
+% select number of subjects to be processed: can be  1) commented 2) set
+% to [] 3( set to a cell array of strings 4) set to project.subjects.list
+list_select_subjects    = project.subjects.list;% {'CC_01_vittoria', 'CC_02_fabio', 'CC_03_anna', 'CC_04_giacomo', 'CC_05_stefano', 'CC_06_giovanni', 'CC_07_davide', 'CC_08_jonathan', 'CC_09_antonella', 'CC_10_chiara', 'CP_01_riccardo', 'CP_02_ester', 'CP_03_sara', 'CP_04_matteo', 'CP_05_gregorio', 'CP_06_fernando', 'CP_07_roberta', 'CP_08_mattia', 'CP_09_alessia', 'CP_10_livia'}; ...project.subjects.list;
 
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-% do custom modification to event triggers
-project.operations.do_patch_triggers                                                = 0;
+% if a list is not set, or is empty, all subjects in the project are
+% processed 
+if not(exist('list_select_subjects','var'))
+    list_select_subjects    = project.subjects.list;
+else
+    if isempty(list_select_subjects) 
+        list_select_subjects    = project.subjects.list;
+    end
+end
+numsubj                         = length(list_select_subjects);
+project.subjects.curr_list      = list_select_subjects;
 
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-% remove pauses and undesidered time interval marked by specific markers
-project.operations.do_auto_pauses_removal                                           = 0;
+% select a specific bannd to focus statistics in ersp tf (experimental)
+mask_coef                       = [];
+stat_freq_bands_list            = [];
 
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-% allow testing some semi-automatic aritfact removal algorhithms
-project.operations.do_testart                                                       = 0;
+% if the parameters are not set, they are assumed to be empty (i.e. no band
+% selection)
+if not(exist( 'mask_coef','var')) || not(exist( 'stat_freq_bands_list','var'))
+    mask_coef=[];
+    stat_freq_bands_list=[];
+end
 
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-% perform ICA
-project.operations.do_ica                                                           = 0; 
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-% use/test semi automatic toolboxes based on ICA to identify bad components
-project.operations.do_clean_ica                                                     = 0; 
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-% uniform montages between different polygraphs
-project.operations.do_uniform_montage                                               = 0;
-
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-% do reref
-project.operations.do_reref                                                         = 0;
-
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-% mark trial begin and end
-project.operations.do_mark_trial                                                    = 0;
-
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-% mark baseline begin and end
-project.operations.do_mark_baseline                                                 = 0;
-   
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-% check mc file status: triggers, num epochs, errors
-project.operations.do_check_mc                                                      = 0;
-
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-% epoching
-project.operations.do_epochs                                                        = 0;
-
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-% custom epoching
-project.operations.do_custom_epochs                                                 = 0;
-
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-% custom epoching that swap electrodes according to handedness
-project.operations.do_handedness_epochs                                             = 0;
-
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-% add experimental factors information to the data
-project.operations.do_factors                                                       = 0;
-
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-% perform basic single-subject plotting and analysis, basically 1 condition spectral graphs, single epochs desynch, or 2 conditions comparisons
-project.operations.do_singlesubjects_band_comparison                                = 0;
-
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-% extract narrowband for each subject and selected condition and save separately each condition in a mat file
-project.operations.do_extract_narrowband                                            = 0;
-
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-% placeholder flag to execute any custom script
-project.operations.do_custom_analysis                                               = 0;
-
-
-
-%==============================================================================================================================================
-%==============================================================================================================================================
-%==============================================================================================================================================
-% GROUP ANALYSIS
-%==============================================================================================================================================
-%==============================================================================================================================================
-%==============================================================================================================================================
+%% =====================================================================================================================================================================
+%  OPERATIONS LIST 
+%=====================================================================================================================================================================
 
 % create a study from preprocessed datasets
 project.operations.do_study                                                         = 0;
@@ -146,7 +136,6 @@ project.operations.do_study_plot_roi_erp_curve_tw_individual_noalign            
 project.operations.do_study_plot_roi_erp_curve_tw_individual_align                  = 0;
 
 
-
 %% -------------------------------------------------------------------------------------------
 % FOR ERP, eog CURVE_standard, standard curve erp modality: evaluate and represent standard EEGLab statistics on the curve of ERP, plot together levels of design factors
 %--------------------------------------------------------------------------------------------
@@ -196,6 +185,7 @@ project.operations.do_study_plot_roi_erpemg_curve_tw_individual_noalign         
 project.operations.do_study_plot_roi_erpemg_curve_tw_individual_align                  = 0;
 
 
+
 %% -------------------------------------------------------------------------------------------
 % ERP_TOPO_TW
 %--------------------------------------------------------------------------------------------
@@ -241,35 +231,23 @@ project.operations.do_study_plot_erp_topo_compact_tw_individual_noalign         
 project.operations.do_study_plot_erp_topo_compact_tw_individual_align               = 0;
 
 
-
-
-%% HEADPLOT (TOPO PLOT 3D)
-
- project.operations.do_project.proj_eeglab_study_plot_erp_headplot_tw              = 0;
-   
-
-
-
-
-
-
-
-project.operations.do_eeglab_study_export_erp_r                                     = 0;
-
-
 %% ------------------------------------------------------------------------------------------
 % ALLCH_ERP_TIME, evaluate and represent ERP of all channels as a fucntion
 % of time and compare different conditions in a time x channels space (TANOVA)
+%--------------------------------------------------------------------------------------------
+% master-function:                                      proj_eeglab_study_plot_allch_erp_time
+project.proj_eeglab_study_plot_allch_erp_time                                              = 0;
+
+
+%% -------------------------------------------------------------------------------------------
+% ALLCH_ERP_CC_TIME
 %--------------------------------------------------------------------------------------------
 % master-function:                                       proj_eeglab_study_plot_allch_erp_cc_time
 % settings:
 % evaluate and represent cross correlation of ERP of all channels between levels of one factor as a function of time and
 % compare different levels of the other factor in a time x channels space (TANOVA)
-project.operations.do_study_plot_allch_erp_time                                 = 0;
+project.operations.do_study_plot_allch_erp_cc_time                                              = 0;
 
-
-
-project.operations.do_study_plot_allch_erp_cc_time                              = 0;
 
 
 
@@ -363,20 +341,6 @@ project.operations.do_study_plot_roi_ersp_curve_tw_individual_noalign_compact   
 project.operations.do_study_plot_roi_ersp_curve_tw_individual_align_compact         = 0;
 
 
-
-%% -------------------------------------------------------------------------------------------
-% ALLCH_ERSP_TIME
-%--------------------------------------------------------------------------------------------
-% master-function:                                       proj_eeglab_study_plot_allch_ersp_time
-% settings:
-% evaluate and represent ERP of all channels as a function of time and
-% compare different conditions in a time x channels space (TANOVA)
-
-project.operations.do_study_plot_allch_ersp_curve_fb_time                           = 0;
-
-
-
-
 %% -------------------------------------------------------------------------------------------
 % FOR ersp, eog CURVE_standard, standard curve ersp modality: evaluate and represent standard EEGLab statistics on the curve of ersp, plot together levels of design factors
 %--------------------------------------------------------------------------------------------
@@ -426,7 +390,6 @@ project.operations.do_study_plot_roi_erspemg_curve_tw_individual_noalign        
 project.operations.do_study_plot_roi_erspemg_curve_tw_individual_align                  = 0;
 
 
-
 %% ------------------------------------------------------------------------------------------
 % ERSP_TOPO_TW_FB, evaluate and represent standard EEGLab statistics on the curve of ERSP in a selected frequency, plot together levels of design factors 
 %--------------------------------------------------------------------------------------------
@@ -471,3 +434,28 @@ project.operations.do_study_plot_ersp_topo_tw_fb_individual_align_compact       
 
 
 project.operations.do_eeglab_study_export_ersp_tf_r                                 = 0;
+
+
+
+
+%% =====================================================================================================================================================================
+%=====================================================================================================================================================================
+%=====================================================================================================================================================================
+%=====================================================================================================================================================================
+%  S T A R T    P R O C E S S I N G  
+%=====================================================================================================================================================================
+%=====================================================================================================================================================================
+%=====================================================================================================================================================================
+%=====================================================================================================================================================================
+
+try
+    
+   do_operations
+   
+   
+catch err
+    % This "catch" section executes in case of an error in the "try" section
+    err
+    err.message
+    err.stack(1)    
+end

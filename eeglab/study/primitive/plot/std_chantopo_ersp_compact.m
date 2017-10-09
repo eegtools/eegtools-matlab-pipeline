@@ -19,7 +19,8 @@ function std_chantopo_ersp_compact(ersp_topo_tw_fb_sub_avg, ersp_topo_tw_fb_roi_
 
 
 
-                               
+             strfname = char([ name_f1, '_', name_f2]);
+                  
     switch ersp_measure     
      case 'dB'
          ersp_meaure='dB';
@@ -211,7 +212,7 @@ function std_chantopo_ersp_compact(ersp_topo_tw_fb_sub_avg, ersp_topo_tw_fb_roi_
 
 input_save_fig.plot_dir               = plot_dir;
 input_save_fig.fig                    = fig;
-input_save_fig.name_embed             = 'ersp_topo_tw_fb';
+input_save_fig.name_embed             = [strfname,'_','ersp_topo_tw_fb'];
 input_save_fig.suffix_plot            = [char(roi_name),'_',char(name_f),'_',char(time_window_name),'_',char(frequency_band_name)];
 
 save_figures( input_save_fig )
@@ -341,7 +342,7 @@ save_figures( input_save_fig )
 
 input_save_fig.plot_dir               = plot_dir;
 input_save_fig.fig                    = fig;
-input_save_fig.name_embed             = 'ersp_topo_tw_fb';
+input_save_fig.name_embed             = [strfname,'_','ersp_topo_tw_fb'];
 input_save_fig.suffix_plot            = [char(roi_name),'_',char(name_f),'_',char(name_ff),'_',char(time_window_name),'_',char(frequency_band_name)];
 
 save_figures( input_save_fig )
@@ -471,7 +472,7 @@ save_figures( input_save_fig )
          
 input_save_fig.plot_dir               = plot_dir;
 input_save_fig.fig                    = fig;
-input_save_fig.name_embed             = 'ersp_topo_tw_fb';
+input_save_fig.name_embed             = [strfname,'_','ersp_topo_tw_fb'];
 input_save_fig.suffix_plot            = [char(roi_name),'_',char(name_f),'_',char(name_ff),'_',char(time_window_name),'_',char(frequency_band_name)];
 
 save_figures( input_save_fig )        

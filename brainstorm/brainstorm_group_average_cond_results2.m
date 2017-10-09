@@ -1,4 +1,7 @@
-function sFiles = brainstorm_group_average_cond_results(db_name, subjects_list, cond_list, input_file_tags)
+function sFiles = brainstorm_group_average_cond_results2(db_name, group_name,subjects_list, cond_list, input_file_tags)
+% questa funzione verrà riscritta facendo 2 importanti modifiche: 1) il
+% gruppo e la condizione verranno messi sullo stesso piano; 2) verrà
+% agganciata ai disegni definiti nel project structure
 
     iProtocol               = brainstorm_protocol_open(db_name);
     protocol                = bst_get('ProtocolInfo');
@@ -32,11 +35,11 @@ function sFiles = brainstorm_group_average_cond_results(db_name, subjects_list, 
         sFiles = bst_process(...
         'CallProcess', 'process_add_tag', ...
         sFiles, [], ...
-        'tag', input_file_tags, ...
+        'tag', [input_file_tags '_' group_name], ...
         'output', 1);  % Add to comment        
         
         src_filename  = fullfile(brainstorm_data_path, sFiles(1).FileName);
-        dest_filename = fullfile(brainstorm_data_path, 'Group_analysis', cond_name, ['results_average_' cond_name '_' input_file_tags '.mat']);
+        dest_filename = fullfile(brainstorm_data_path, 'Group_analysis', cond_name, ['results_average_' group_name '_' cond_name '_' input_file_tags '.mat']);
         movefile(src_filename, dest_filename, 'f');    
    
     end

@@ -16,19 +16,48 @@ if project.operations.do_import
     proj_eeglab_subject_import_data(project, 'list_select_subjects', list_select_subjects);
 end
 %==================================================================================
+if project.operations.do_preproc
+    proj_eeglab_subject_preprocessing(project, 'list_select_subjects', list_select_subjects);
+end
+
+%==================================================================================
 if project.operations.do_testart
     % allow testing some semi-automatic aritfact removal algorhithms
     EEG = proj_eeglab_subject_testart(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
-end
-%==================================================================================
-if project.operations.do_preproc
-    proj_eeglab_subject_preprocessing(project, 'list_select_subjects', list_select_subjects);
 end
 %==================================================================================
 if project.operations.do_emg_analysis
     eeglab_subject_emgextraction_epoching(project, 'list_select_subjects', list_select_subjects);
 end
 %==================================================================================
+% if project.operations.do_auto_pauses_removal
+%     if isempty(list_select_subjects)
+%         list_select_subjects = project.subjects.list;
+%     end
+%     numsubj = length(list_select_subjects);
+%     for subj=1:numsubj
+%         subj_name   = list_select_subjects{subj};
+%         file_name   = proj_eeglab_subject_get_filename(project, subj_name, 'custom_pre_epochs', 'custom_suffix', custom_suffix);
+%         
+%         eeglab_subject_events_remove_upto_triggercode(file_name, project.task.events.start_experiment_trigger_value); ... return if find a boundary as first event
+%         eeglab_subject_events_remove_after_triggercode(file_name, project.task.events.end_experiment_trigger_value); ... return if find a boundary as first event
+%         pause_resume_errors = eeglab_subject_events_check_2triggers_orders(file_name, project.task.events.pause_trigger_value, project.task.events.resume_trigger_value);
+%         
+%         if isempty(pause_resume_errors)
+%             disp('====>> pause/remove triggers sequence ok....move to pause removal');
+%             eeglab_subject_remove_pauses(file_name, project.task.events.pause_trigger_value, project.task.events.resume_trigger_value);
+%         else
+%             disp('====>> errors in pause/resume trigger sequence');
+%             pause_resume_errors;
+%         end
+%     end
+% end
+% 
+
+
+
+
+
 if project.operations.do_auto_pauses_removal
     if isempty(list_select_subjects)
         list_select_subjects = project.subjects.list;
@@ -38,17 +67,10 @@ if project.operations.do_auto_pauses_removal
         subj_name   = list_select_subjects{subj};
         file_name   = proj_eeglab_subject_get_filename(project, subj_name, 'custom_pre_epochs', 'custom_suffix', custom_suffix);
         
-        eeglab_subject_events_remove_upto_triggercode(file_name, project.task.events.start_experiment_trigger_value); ... return if find a boundary as first event
-        eeglab_subject_events_remove_after_triggercode(file_name, project.task.events.end_experiment_trigger_value); ... return if find a boundary as first event
-        pause_resume_errors = eeglab_subject_events_check_2triggers_orders(file_name, project.task.events.pause_trigger_value, project.task.events.resume_trigger_value);
-        
-        if isempty(pause_resume_errors)
-            disp('====>> pause/remove triggers sequence ok....move to pause removal');
+      
+           
             eeglab_subject_remove_pauses(file_name, project.task.events.pause_trigger_value, project.task.events.resume_trigger_value);
-        else
-            disp('====>> errors in pause/resume trigger sequence');
-            pause_resume_errors;
-        end
+        
     end
 end
 %==================================================================================
@@ -329,6 +351,16 @@ end
 if project.operations.do_study_plot_erp_topo_compact_tw_individual_align
     proj_eeglab_study_plot_erp_topo_tw(project, stat_analysis_suffix, project.postprocess.erp.mode.tw_individual_align, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects,'display_compact_topo','on' );
 end
+
+
+
+%% HEADPLOT (TOPO PLOT 3D)
+% perform (and save) additional statistics based on individual subjects within time windows,
+% adjusting the group time windows to time windws which are re-aligned to the latencies of time window extrema
+if project.operations.do_project.proj_eeglab_study_plot_erp_headplot_tw
+    proj_eeglab_study_plot_erp_headplot_tw(project, stat_analysis_suffix,  'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects,'display_compact_topo','on' );
+end
+
 
 
 

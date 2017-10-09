@@ -59,10 +59,30 @@ for subj=1:numsubj
     
     subj_name                   = list_select_subjects{subj};
     
+    input_file_name             = proj_eeglab_subject_get_filename(project, subj_name, get_filename_step, 'custom_suffix', custom_suffix, 'custom_input_folder', custom_input_folder);
+    EEG                         = pop_loadset(input_file_name);
+    
+    
+%      aal_eve = ({EEG.event.type});
+%      ssel_eve = ismember(aal_eve, [mark_cond_code{1:length(mark_cond_code)}]);
+%      eve_old = EEG.event;
+%      EEG.event=EEG.event(ssel_eve);
+    
+    EEG.icaact_unfiltered=[];
+    EEG.icaact_filtered_resampled=[];
+    EEG.dipfit=[];
+    EEG.icaact=[];
+    EEG.etc =[];
+    EEG.reject=[];
+    EEG.stats=[];
+    EEG.virtual_topography=[];
+    EEG.virtual_chanlocs=[];
+    EEG.virtual_nbchan=[];
+    EEG.urevent = [];
     
     
     if strcmp(project.epoching.baseline_replace.mode,'trial') || strcmp(project.epoching.baseline_replace.mode,'external')
-        EEG = proj_eeglab_subject_replacebaseline(project, subj_name);
+        EEG = proj_eeglab_subject_replacebaseline(project, EEG, subj_name);
         if isempty(EEG)
             return
         end
@@ -70,22 +90,9 @@ for subj=1:numsubj
             bc_type = 'global';
             disp('replacing baseline using external file makes global baseline correction the only alternative!')
         end
-    else
-        input_file_name             = proj_eeglab_subject_get_filename(project, subj_name, get_filename_step, 'custom_suffix', custom_suffix, 'custom_input_folder', custom_input_folder);
-        EEG                         = pop_loadset(input_file_name);
         
-        EEG.icaact_unfiltered=[];
-        EEG.icaact_filtered_resampled=[];
-        EEG.dipfit=[];
-        EEG.icaact=[];
-        EEG.etc =[];
-        EEG.reject=[];
-        EEG.stats=[];
-        EEG.virtual_topography=[];
-        EEG.virtual_chanlocs=[];
-        EEG.virtual_nbchan=[];
-       
-
+        
+        
     end
     
     if isempty(EEG)
@@ -117,6 +124,9 @@ for subj=1:numsubj
             for cond=1:length(mark_cond_code)
                 if sum(ismember({EEG.event.type},mark_cond_code{cond}))>0
                     EEG2                = pop_epoch(EEG, [mark_cond_code{cond}], [epoch_start         epoch_end], 'newname', mark_cond_names{cond}, 'epochinfo', 'yes');
+                    
+                    sel_eve             = ismember({EEG2.event.type},[mark_cond_code{cond}]);
+                    EEG2.event          = EEG2.event(sel_eve);
                     EEG2                = eeg_checkset(EEG2);
                     
                     output_file_name    = proj_eeglab_subject_get_filename(project, subj_name, 'output_epoching', 'cond_name', mark_cond_names{cond},'custom_suffix', custom_suffix);
@@ -131,6 +141,10 @@ for subj=1:numsubj
                 if sum(ismember({EEG.event.type},mark_cond_code{cond}))>0
                     EEG2                = pop_epoch(EEG, [mark_cond_code{cond}], [epoch_start         epoch_end], 'newname', mark_cond_names{cond}, 'epochinfo', 'yes');
                     EEG2                = pop_rmbase(EEG2, [baseline_corr_start baseline_corr_end]);
+                    
+                    sel_eve             = ismember({EEG2.event.type},[mark_cond_code{cond}]);
+                    EEG2.event          = EEG2.event(sel_eve);
+                    
                     EEG2                = eeg_checkset(EEG2);
                     
                     output_file_name    = proj_eeglab_subject_get_filename(project, subj_name, 'output_epoching', 'cond_name', mark_cond_names{cond},'custom_suffix', custom_suffix);
@@ -140,33 +154,82 @@ for subj=1:numsubj
                 end
             end
             
-        case 'trial'
-            EEG                 = pop_epoch(EEG, [mark_cond_code{1:length(mark_cond_code)}], [epoch_start         epoch_end], 'newname', 'all_conditions', 'epochinfo', 'yes');
+%         case 'trial'
+%             EEG                 = pop_epoch(EEG, [mark_cond_code{1:length(mark_cond_code)}], [epoch_start         epoch_end], 'newname', 'all_conditions', 'epochinfo', 'yes');
+%             
+%             srate               = EEG.srate;
+%             pnt                 = EEG.pnts;
+%             xmin                = EEG.xmin;  ... in seconds
+%                 xmax                = EEG.xmax;
+%             
+%             baseline_point      = [round(abs(xmin-baseline_corr_start/1000)*srate) round(abs(xmin-baseline_corr_end/1000)*srate)];
+%             baseline_point(1)   = max(baseline_point(1), 1);
+%             
+%             
+%             mbs                 = mean(EEG.data(:, baseline_point(1):1:baseline_point(2),:),2); %       mbs:        channel, 1,   epochs
+%             baseline            = repmat(mbs,1,pnt);                                            %       baseline:   channel, pnt, epochs
+%             EEG.data            = EEG.data-baseline;
+%             
+%             for cond=1:length(mark_cond_code)
+%                 if sum(ismember({EEG.event.type},mark_cond_code{cond}))>0
+%                     EEG2                = pop_epoch(EEG, [mark_cond_code{cond}], [epoch_start         epoch_end], 'newname', mark_cond_names{cond}, 'epochinfo', 'yes');
+%                     
+%                     sel_eve             = ismember({EEG2.event.type},[mark_cond_code{cond}]);
+%                     EEG2.event          = EEG2.event(sel_eve);
+%                     
+%                     EEG2                = eeg_checkset(EEG2);
+%                     
+%                     output_file_name    = proj_eeglab_subject_get_filename(project, subj_name, 'output_epoching', 'cond_name', mark_cond_names{cond},'custom_suffix', custom_suffix);
+%                     [path, out]         = fileparts(output_file_name);
+%                     EEG2                = pop_saveset(EEG2, 'filename', out, 'filepath', path);
+%                     clear EEG2
+%                 end
+%             end
+
+case 'trial'
+%             EEG                 = pop_epoch(EEG, [mark_cond_code{1:length(mark_cond_code)}], [epoch_start         epoch_end], 'newname', 'all_conditions', 'epochinfo', 'yes');
             
-            srate               = EEG.srate;
-            pnt                 = EEG.pnts;
-            xmin                = EEG.xmin;  ... in seconds
-                xmax                = EEG.xmax;
+           
+
+for cond=1:length(mark_cond_code)
+    if sum(ismember({EEG.event.type},mark_cond_code{cond}))>0
+        EEG2                = pop_epoch(EEG, [mark_cond_code{cond}], [epoch_start         epoch_end], 'newname', mark_cond_names{cond}, 'epochinfo', 'yes');
+        
+        sel_eve             = ismember({EEG2.event.type},[mark_cond_code{cond}]);
+        EEG2.event          = EEG2.event(sel_eve);
+        
+        
+        srate               = EEG2.srate;
+        pnt                 = EEG2.pnts;
+        xmin                = epoch_start;  ... in seconds
+        xmax                = epoch_end;
+        
+        baseline_point      = [round(abs(xmin-baseline_corr_start/1000)*srate) round(abs(xmin-baseline_corr_end/1000)*srate)];
+        baseline_point(1)   = max(baseline_point(1), 1);
             
-            baseline_point      = [round(abs(xmin-baseline_corr_start/1000)*srate) round(abs(xmin-baseline_corr_end/1000)*srate)];
-            baseline_point(1)   = max(baseline_point(1), 1);
             
-            
-            mbs                 = mean(EEG.data(:, baseline_point(1):1:baseline_point(2),:),2); %       mbs:        channel, 1,   epochs
-            baseline            = repmat(mbs,1,pnt);                                            %       baseline:   channel, pnt, epochs
-            EEG.data            = EEG.data-baseline;
-            
-            for cond=1:length(mark_cond_code)
-                if sum(ismember({EEG.event.type},mark_cond_code{cond}))>0
-                    EEG2                = pop_epoch(EEG, [mark_cond_code{cond}], [epoch_start         epoch_end], 'newname', mark_cond_names{cond}, 'epochinfo', 'yes');
-                    EEG2                = eeg_checkset(EEG2);
-                    
-                    output_file_name    = proj_eeglab_subject_get_filename(project, subj_name, 'output_epoching', 'cond_name', mark_cond_names{cond},'custom_suffix', custom_suffix);
-                    [path, out]         = fileparts(output_file_name);
-                    EEG2                = pop_saveset(EEG2, 'filename', out, 'filepath', path);
-                    clear EEG2
-                end
-            end
+        mbs                 = mean(EEG.data(:, baseline_point(1):1:baseline_point(2),:),2); %       mbs:        channel, 1,   epochs
+        baseline            = repmat(mbs,1,pnt);                                            %       baseline:   channel, pnt, epochs
+        EEG.data            = EEG.data-baseline;
+                
+        
+        EEG2                = eeg_checkset(EEG2);
+        
+        output_file_name    = proj_eeglab_subject_get_filename(project, subj_name, 'output_epoching', 'cond_name', mark_cond_names{cond},'custom_suffix', custom_suffix);
+        [path, out]         = fileparts(output_file_name);
+        EEG2                = pop_saveset(EEG2, 'filename', out, 'filepath', path);
+        clear EEG2
+    end
+end
+
+
+
+
+
+
+
+
+
         case 'none'
             EEG = pop_epoch(EEG, [mark_cond_code{1:length(mark_cond_code)}], [epoch_start         epoch_end], 'newname', 'all_conditions', 'epochinfo', 'yes');
             EEG = eeg_checkset(EEG);

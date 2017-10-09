@@ -142,6 +142,15 @@ for subj=1:numsubj
         EEG             = eeg_checkset( EEG );
     end
     
+    % create a spline file only once for possible headplots with the right
+    % montage
+    
+    if subj == 1
+        spline_file_path = fullfile(EEG.filepath,'spline_file_montage.spl');
+        headplot('setup', EEG.chanlocs, spline_file_path);
+    end
+    
+    
     %===============================================================================================
     % EVENTS FILTERING
     %===============================================================================================

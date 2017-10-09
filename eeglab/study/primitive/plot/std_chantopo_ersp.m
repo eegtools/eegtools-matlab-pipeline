@@ -61,6 +61,10 @@ pmaskinter                                                                 = inp
 ersp_measure                                                               = input.ersp_measure;
 study_ls                                                                   = input.study_ls;
 
+
+strfname = char([ name_f1, '_', name_f2]);
+
+
 pgroup = [];
 pcond  = [];
 pinter = [];
@@ -408,7 +412,7 @@ end;
 
 input_save_fig.plot_dir               = plot_dir;
 input_save_fig.fig                    = fig;
-input_save_fig.name_embed             = 'esrp_topo';
+input_save_fig.name_embed             = [strfname,'_','esrp_topo'];
 input_save_fig.suffix_plot            = [time_window_name,'_',char(frequency_band_name)];
 
 save_figures( input_save_fig ,'exclude_format',{'svg'})

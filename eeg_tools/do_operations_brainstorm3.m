@@ -10,7 +10,7 @@ else
     iProtocol = brainstorm_protocol_open(project.brainstorm.db_name);
 end
 
-
+%  db_reload_database(iProtocol);
 chan_eeglab2brainstorm
 
 
@@ -367,44 +367,6 @@ if do_results_zscore
     end
     end
 end
-%======================================================================================
-% project unconstrained 3oriented sources to a scalar value
-if do_sources_unconstrained2flat
-    list_subjects               = list_select_subjects;
-    condition_names             = project.epoching.condition_names;    cond_length = length(condition_names);
-    for t=1:length(postprocess_sources_tag_list)
-        tag         = postprocess_sources_tag_list{t};
-        input_file  = [project.brainstorm.average_file_name '.mat'];   .... e.g. 'data_average.mat'
-            
-    for cond=1:project.epoching.numcond
-        cond_files = brainstorm_results_get_from_subjectslist_by_tag(list_subjects, condition_names{cond}, input_file, tag);
-        for s=1:length(cond_files)
-            result_file = fullfile(project.paths.project, project.brainstorm.db_name, 'data', cond_files{s});
-            brainstorm_result_uncontrained2flat(project.brainstorm.db_name, result_file, source_flatting_method);
-        end
-    end
-    end
-end
-
-
-% project unconstrained 3oriented sources to a scalar value
-if do_sources_unconstrained2flat_factors
-    list_subjects               = list_select_subjects;
-    condition_names             = {project.study.factors.level};    cond_length = length(condition_names);
-    for t=1:length(postprocess_sources_tag_list)
-        tag         = postprocess_sources_tag_list{t};
-        input_file  = [project.brainstorm.average_file_name '.mat'];   .... e.g. 'data_average.mat'
-            
-    for cond=1:cond_length
-        cond_files = brainstorm_results_get_from_subjectslist_by_tag(list_subjects, condition_names{cond}, input_file, tag);
-        for s=1:length(cond_files)
-            result_file = fullfile(project.paths.project, project.brainstorm.db_name, 'data', cond_files{s});
-            brainstorm_result_uncontrained2flat(project.brainstorm.db_name, result_file, source_flatting_method);
-        end
-    end
-    end
-end
-
 %==================================================================================
 % % % % % % % time dimensionality reduction: averaging samples within a number of timewindows
 % % % % % % if do_sources_time_reduction
@@ -450,101 +412,100 @@ end
 % time dimensionality reduction: averaging samples within a number of timewindows
 if do_sources_time_reduction
     
-    sample_length.ms            = 1000/project.eegdata.fs;
-    sample_length.s             = 1/project.eegdata.fs;
-    
-    %     if isempty(list_windows_names)
-    %         group_time_windows_names    = arrange_structure(project.postprocess.erp.design(1), 'group_time_windows_names');
-    %         list_windows_names          = group_time_windows_names{1}; ... {'P100', '', '', ...etc}
-    
-    nd = 1;
-    
-    tws_d = project.postprocess.erp.design(nd).group_time_windows;
-    
-    ntwd = 1;
-    
-    tw_name{ntwd} = tws_d(ntwd).name;
-    tw_lim_s{ntwd}  = [tws_d(ntwd).min tws_d(ntwd).max]/1000;
-    
-    
-    
-    %     end
-    
+   list_subjects               = list_select_subjects;
     condition_names             = project.epoching.condition_names;
-    cond_length = length(condition_names);
-    list_subjects               = list_select_subjects;
+%     cond_length = length(condition_names);
+
+
+   
     
-    % window_samples_halfwidth    = project.brainstorm.sources.window_samples_halfwidth;
-    
-    %     subj_latencies              = proj_get_erp_peak_info(project, erp_results_file, 'list_subjects', list_subjects, 'condition_names', condition_names, 'list_windows_names', list_windows_names);
-    % subj_latencies              = (round(subj_latencies/sample_length.ms)*sample_length.ms)/1000;
-    
-    %     window_limits               = cell(1, length(list_windows_names));
-    
-    for t=1:length(postprocess_sources_tag_list)
+    for nd  = 1:length(project.postprocess.erp.design)
         
-        tag         = postprocess_sources_tag_list{t};
-        input_file  = [project.brainstorm.average_file_name '.mat'];   % e.g. 'data_average.mat'
+        %     nd = 1;
         
-        for cond  =1 :project.epoching.numcond
+        tws_d = project.postprocess.erp.design(nd).group_time_windows;
+        
+        %         ntwd = 1;
+        for ntwd = 1:length(tws_d)
             
+            tw_name{ntwd} = tws_d(ntwd).name;
+            tw_lim_s{ntwd}  = [tws_d(ntwd).min tws_d(ntwd).max]/1000;
+            
+            
+          
+            
+            
+            for t=1:length(time_reduction_tag_list)
+                
+                tag         = time_reduction_tag_list{t};
+                input_file  = [project.brainstorm.average_file_name '.mat'];   % e.g. 'data_average.mat'
+                
+                
+                
+                for cond  =1:project.epoching.numcond
+                    
             cond_files = brainstorm_results_get_from_subjectslist_by_tag(list_subjects, condition_names{cond}, input_file, tag);
-            
-            for s=1:length(cond_files)
-                
-                %                 for tw=1:length(list_windows_names)
-                %                     window_limits{tw}      = [subj_latencies(cond, tw, s) - window_samples_halfwidth*sample_length.s subj_latencies(cond, tw, s) + window_samples_halfwidth*sample_length.s];
-                %                 end
-                
-                result_file = fullfile(project.paths.project, project.brainstorm.db_name, 'data', cond_files{s});
-                
-                brainstorm_subject_results_tw_reduction(result_file, tw_lim_s, 'average',      ['_', tw_name{ntwd}]);
-                
-                %             brainstorm_subject_results_tw_reduction(result_file, window_limits, 'all',          ['_' num2str(window_samples_halfwidth*2+1) time_red_output_postfix_name]);
+                    
+                    for s=1:length(cond_files)
+                        
+                        
+                        result_file = fullfile(project.paths.project, project.brainstorm.db_name, 'data', cond_files{s});
+                        
+                        brainstorm_subject_results_tw_reduction(result_file,  tw_lim_s(ntwd), 'average',      ['_', tw_name{ntwd}]);
+                        
+                        
+                    end
+                end
             end
+            
         end
     end
     
-    
-    
-    
-    
-    
-    for t=1:length(postprocess_sources_tag_list)
-        
-        tag         = postprocess_sources_tag_list{t};
-        
-        tag2 = [tag, ' | tw_average_',tw_name{ntwd}];
-        
-        
-        input_file  = [project.brainstorm.average_file_name '.mat'];   % e.g. 'data_average.mat'
-        
-        for cond  =1 :project.epoching.numcond
-            
-            cond_files = brainstorm_results_get_from_subjectslist_by_tag(list_subjects, condition_names{cond}, input_file, tag);
-            cond_files2 = brainstorm_results_get_from_subjectslist_by_tag(list_subjects, condition_names{cond}, input_file, tag2);
-            
-            
-            for s=1:length(cond_files2)
-                
-                
-                %                 result_file = fullfile(project.paths.project, project.brainstorm.db_name, 'data', cond_files2{s});
-                
-                %                 brainstorm_subject_results_tw_reduction(result_file, tw_lim_s, 'average',      ['_', tw_name{ntwd}]);
-                
-                result_file = fullfile(project.paths.project, project.brainstorm.db_name, 'data', cond_files2{s});
-                brainstorm_result_uncontrained2flat(project.brainstorm.db_name, result_file, source_flatting_method);
-                
-                
-            end
-        end
-    end
-    
-    
+%     for nd  = 1:length(project.postprocess.erp.design)
+%         
+%         %     nd = 1;
+%         
+%         tws_d = project.postprocess.erp.design(nd).group_time_windows;
+%         
+%         %         ntwd = 1;
+%         for ntwd = 1:length(tws_d)
+%             
+%             tw_name{ntwd} = tws_d(ntwd).name;
+%             tw_lim_s{ntwd}  = [tws_d(ntwd).min tws_d(ntwd).max]/1000;
+%             for t=1:length(postprocess_sources_tag_list)
+%                 
+%                 tag         = postprocess_sources_tag_list{t};
+%                 
+%                 tag2 = [tag, ' | tw_average_',tw_name{ntwd}];
+%                 
+%                 
+%                 input_file  = [project.brainstorm.average_file_name '.mat'];   % e.g. 'data_average.mat'
+%                 
+%                 for cond  =1 :project.epoching.numcond
+%                     
+%                     cond_files = brainstorm_results_get_from_subjectslist_by_tag(list_subjects, condition_names{cond}, input_file, tag);
+%                     cond_files2 = brainstorm_results_get_from_subjectslist_by_tag(list_subjects, condition_names{cond}, input_file, tag2);
+%                     
+%                     
+%                     for s=1:length(cond_files)
+%                         
+%                         
+%                         %                 result_file = fullfile(project.paths.project, project.brainstorm.db_name, 'data', cond_files2{s});
+%                         
+%                         %                 brainstorm_subject_results_tw_reduction(result_file, tw_lim_s, 'average',      ['_', tw_name{ntwd}]);
+%                         
+%                         result_file = fullfile(project.paths.project, project.brainstorm.db_name, 'data', cond_files2{s});
+%                         brainstorm_result_uncontrained2flat(project.brainstorm.db_name, result_file, source_flatting_method);
+%                         
+%                         
+%                     end
+%                 end
+%             end
+%             
+%         end
+%     end
     
 end
-
-
 
 
 %==================================================================================
@@ -555,79 +516,98 @@ end
 if do_sources_time_reduction_factors
     
     
-    nd = 1;
+      list_subjects               = list_select_subjects;
+      
+ 
     
-    tws_d = project.postprocess.erp.design(nd).group_time_windows;
-    
-    ntwd = 1;
-    
-    tw_name{ntwd} = tws_d(ntwd).name;
-    tw_lim_s{ntwd}  = [tws_d(ntwd).min tws_d(ntwd).max]/1000;
-    
-    
-    list_subjects               = list_select_subjects;
-    
-    
-    for t=1:length(postprocess_sources_tag_list)
+    for nd  = 1:length(project.postprocess.erp.design)
         
-        tag         = postprocess_sources_tag_list{t};
-        input_file  = [project.brainstorm.average_file_name '.mat'];   % e.g. 'data_average.mat'
+        %     nd = 1;
         
-        for cond  =1 :length(project.study.factors)
+        tws_d = project.postprocess.erp.design(nd).group_time_windows;
+        
+        %         ntwd = 1;
+        for ntwd = 1:length(tws_d)
             
-            cond_files = brainstorm_results_get_from_subjectslist_by_tag(list_subjects, project.study.factors(cond).level, input_file, tag);
+            tw_name{ntwd} = tws_d(ntwd).name;
+            tw_lim_s{ntwd}  = [tws_d(ntwd).min tws_d(ntwd).max]/1000;
             
-            for s=1:length(cond_files)
+            
+          
+            
+            
+            for t=1:length(time_reduction_tag_list)
                 
+                tag         = time_reduction_tag_list{t};
+                input_file  = [project.brainstorm.average_file_name '.mat'];   % e.g. 'data_average.mat'
                 
-                result_file = fullfile(project.paths.project, project.brainstorm.db_name, 'data', cond_files{s});
-                
-                brainstorm_subject_results_tw_reduction(result_file, tw_lim_s, 'average',      ['_', tw_name{ntwd}]);
-                
-                
+                for cond  =1:length(project.study.factors)
+                    
+                    cond_files = brainstorm_results_get_from_subjectslist_by_tag(list_subjects, project.study.factors(cond).level, input_file, tag);
+                    
+                    for s=1:length(cond_files)
+                        
+                        
+                        result_file = fullfile(project.paths.project, project.brainstorm.db_name, 'data', cond_files{s});
+                        
+                        brainstorm_subject_results_tw_reduction(result_file,  tw_lim_s(ntwd), 'average',      ['_', tw_name{ntwd}]);
+                        
+                        
+                    end
+                end
             end
+            
         end
     end
     
-    
-    
-    
-    
-    for t=1:length(postprocess_sources_tag_list)
-        
-        tag         = postprocess_sources_tag_list{t};
-        
-        tag2 = [tag, ' | tw_average_',tw_name{ntwd}];
-        
-        
-        input_file  = [project.brainstorm.average_file_name '.mat'];   % e.g. 'data_average.mat'
-        
-        for cond  =1 :length(project.study.factors)
-            
-            cond_files = brainstorm_results_get_from_subjectslist_by_tag(list_subjects, project.study.factors(cond).level, input_file, tag);
-            cond_files2 = brainstorm_results_get_from_subjectslist_by_tag(list_subjects, project.study.factors(cond).level, input_file, tag2);
-            
-            
-            for s=1:length(cond_files)
-                
-                
-                %                 result_file = fullfile(project.paths.project, project.brainstorm.db_name, 'data', cond_files2{s});
-                
-                %                 brainstorm_subject_results_tw_reduction(result_file, tw_lim_s, 'average',      ['_', tw_name{ntwd}]);
-                
-                result_file = fullfile(project.paths.project, project.brainstorm.db_name, 'data', cond_files2{s});
-                brainstorm_result_uncontrained2flat(project.brainstorm.db_name, result_file, source_flatting_method);
-                
-                
-            end
-        end
-    end
-    
-    
-    
-    
-    
-    
+%     for nd  = 1:length(project.postprocess.erp.design)
+%         
+%         %     nd = 1;
+%         
+%         tws_d = project.postprocess.erp.design(nd).group_time_windows;
+%         
+%         %         ntwd = 1;
+%         for ntwd = 1:length(tws_d)
+%             
+%             tw_name{ntwd} = tws_d(ntwd).name;
+%             tw_lim_s{ntwd}  = [tws_d(ntwd).min tws_d(ntwd).max]/1000;
+%             for t=1:length(postprocess_sources_tag_list)
+%                 
+%                 tag         = postprocess_sources_tag_list{t};
+%                 
+%                 tag2 = [tag, ' | tw_average_',tw_name{ntwd}];
+%                 
+%                 
+%                 input_file  = [project.brainstorm.average_file_name '.mat'];   % e.g. 'data_average.mat'
+%                 
+%                 for cond  =1 :length(project.study.factors)
+%                     
+%                     cond_files = brainstorm_results_get_from_subjectslist_by_tag(list_subjects, project.study.factors(cond).level, input_file, tag);
+%                     cond_files2 = brainstorm_results_get_from_subjectslist_by_tag(list_subjects, project.study.factors(cond).level, input_file, tag2);
+%                     
+%                     
+%                     for s=1:length(cond_files)
+%                         
+%                         
+%                         %                 result_file = fullfile(project.paths.project, project.brainstorm.db_name, 'data', cond_files2{s});
+%                         
+%                         %                 brainstorm_subject_results_tw_reduction(result_file, tw_lim_s, 'average',      ['_', tw_name{ntwd}]);
+%                         
+%                         result_file = fullfile(project.paths.project, project.brainstorm.db_name, 'data', cond_files2{s});
+%                         brainstorm_result_uncontrained2flat(project.brainstorm.db_name, result_file, source_flatting_method);
+%                         
+%                         
+%                     end
+%                 end
+%             end
+%             
+%         end
+%     end
+%     
+%     
+%     
+%     
+%     
 end
 
 
@@ -673,6 +653,7 @@ if do_sources_extract_scouts
     end
     end
 end
+
 %==================================================================================
 % this version accept a struct array of time windows and averages all the values contained within each struct array element
 % it grants just one controlled time value for each struct array element, uses : 'process_extract_values'
@@ -694,6 +675,47 @@ if do_sources_extract_scouts_oneperiod_values
     end
     end
 end
+
+%======================================================================================
+% project unconstrained 3oriented sources to a scalar value
+if do_sources_unconstrained2flat
+    list_subjects               = list_select_subjects;
+    condition_names             = project.epoching.condition_names;    cond_length = length(condition_names);
+    for t=1:length(postprocess_sources_tag_list)
+        tag         = postprocess_sources_tag_list{t};
+        input_file  = [project.brainstorm.average_file_name '.mat'];   .... e.g. 'data_average.mat'
+            
+    for cond=1:project.epoching.numcond
+        cond_files = brainstorm_results_get_from_subjectslist_by_tag(list_subjects, condition_names{cond}, input_file, tag);
+        for s=1:length(cond_files)
+            result_file = fullfile(project.paths.project, project.brainstorm.db_name, 'data', cond_files{s});
+            brainstorm_result_uncontrained2flat(project.brainstorm.db_name, result_file, source_flatting_method);
+        end
+    end
+    end
+end
+
+
+% project unconstrained 3oriented sources to a scalar value
+if do_sources_unconstrained2flat_factors
+    list_subjects               = list_select_subjects;
+    condition_names             = {project.study.factors.level};    cond_length = length(condition_names);
+    for t=1:length(postprocess_sources_tag_list)
+        tag         = postprocess_sources_tag_list{t};
+        input_file  = [project.brainstorm.average_file_name '.mat'];   .... e.g. 'data_average.mat'
+            
+    for cond=1:cond_length
+        cond_files = brainstorm_results_get_from_subjectslist_by_tag(list_subjects, condition_names{cond}, input_file, tag);
+        for s=1:length(cond_files)
+            result_file = fullfile(project.paths.project, project.brainstorm.db_name, 'data', cond_files{s});
+            brainstorm_result_uncontrained2flat(project.brainstorm.db_name, result_file, source_flatting_method);
+        end
+    end
+    end
+end
+
+
+
 
 %==================================================================================
 if do_sources_export2spm8
@@ -796,6 +818,129 @@ end
 %======================================================================================================================================================================================================================================================
 %======================================================================================================================================================================================================================================================
 %==================================================================================
+
+% average sources results
+if do_group_results_averaging
+    
+     
+    for nt = 1:length(group_comparison_analysis_type_list)
+    db_reload_database(iProtocol);
+        group_comparison_analysis_type = group_comparison_analysis_type_list{nt};
+        brainstorm_group_average_cond_results(project.brainstorm.db_name, list_select_subjects, project.epoching.condition_names, group_comparison_analysis_type);
+         
+    end
+   
+end
+
+% average sources results by group and condition
+if do_group_results_averaging2
+    
+     
+    for nt = 1:length(group_comparison_analysis_type_list)
+       
+        group_comparison_analysis_type = group_comparison_analysis_type_list{nt};
+        
+        for ngroup = vec_select_groups
+            group_name = project.subjects.group_names{ngroup};
+            sel_sub_gru = ismember(project.subjects.groups{ngroup},list_select_subjects);
+             list_select_subjects_group = project.subjects.groups{ngroup}(sel_sub_gru);
+    db_reload_database(iProtocol);
+            brainstorm_group_average_cond_results2(project.brainstorm.db_name, group_name, list_select_subjects_group, project.epoching.condition_names, group_comparison_analysis_type);
+%              db_reload_database(1, 1);
+        end
+    end
+   
+end
+
+
+
+
+
+% average sources results
+if do_group_results_averaging_factors
+    for nt = 1:length(group_comparison_analysis_type_list)
+    db_reload_database(iProtocol);
+    group_comparison_analysis_type = group_comparison_analysis_type_list{nt};
+    brainstorm_group_average_cond_results(project.brainstorm.db_name, list_select_subjects, {project.study.factors.level}, group_comparison_analysis_type);
+    end
+end
+
+
+% average sources results
+if do_group_results_averaging_factors2
+    for nt = 1:length(group_comparison_analysis_type_list)        
+        group_comparison_analysis_type = group_comparison_analysis_type_list{nt};
+        
+        
+        
+        for ngroup = vec_select_groups
+            group_name = project.subjects.group_names{ngroup};
+            sel_sub_gru = ismember(project.subjects.groups{ngroup},list_select_subjects);
+             list_select_subjects_group = project.subjects.groups{ngroup}(sel_sub_gru);
+    db_reload_database(iProtocol);
+            brainstorm_group_average_cond_results2(project.brainstorm.db_name, group_name, list_select_subjects_group, {project.study.factors.level}, group_comparison_analysis_type);
+%              db_reload_database(1, 1);
+        end     
+    end
+end
+
+
+
+
+
+
+
+
+% average sources results
+if do_group_results_averaging_continuous
+    
+     
+    for nt = 1:length(group_results_averaging_continuous_list)
+    db_reload_database(iProtocol);
+        group_comparison_analysis_type = group_results_averaging_continuous_list{nt};
+        brainstorm_group_average_cond_results(project.brainstorm.db_name, list_select_subjects, project.epoching.condition_names, group_comparison_analysis_type);
+         
+    end
+   
+end
+% average sources results
+if do_group_results_averaging_continuous_factors
+    for nt = 1:length(group_results_averaging_continuous_list)
+    db_reload_database(iProtocol);
+    group_comparison_analysis_type = group_results_averaging_continuous_list{nt};
+    brainstorm_group_average_cond_results(project.brainstorm.db_name, list_select_subjects, {project.study.factors.level}, group_comparison_analysis_type);
+    end
+end
+
+
+
+
+% average sources results
+if do_group_results_averaging_tw
+   
+    
+    for nt = 1:length(group_results_averaging_tw_list)
+    db_reload_database(iProtocol);
+        group_comparison_analysis_type = group_results_averaging_tw_list{nt};
+        brainstorm_group_average_cond_results(project.brainstorm.db_name, list_select_subjects, project.epoching.condition_names, group_comparison_analysis_type);
+         
+    end
+
+end
+% average sources results
+if do_group_results_averaging_tw_factors
+    for nt = 1:length(group_results_averaging_tw_list)
+    db_reload_database(iProtocol);
+    group_comparison_analysis_type = group_results_averaging_tw_list{nt};
+    brainstorm_group_average_cond_results(project.brainstorm.db_name, list_select_subjects, {project.study.factors.level}, group_comparison_analysis_type);
+    end
+end
+
+
+
+
+
+
 % STATS
 %==================================================================================
 %==================================================================================
@@ -816,19 +961,54 @@ if do_process_stats_paired_2samples_ttest_old_sources
 end
 
 % paired 2samples ttest NEW
-results=cell(1,tot_num_contrasts);
 if do_process_stats_paired_2samples_ttest_sources
-    for pwc=1:length(pairwise_comparisons)
-        results{pwc} = brainstorm_group_stats_2cond_pairedttest(project.brainstorm.db_name, ...
-            pairwise_comparisons{pwc}{1}, ...
-            pairwise_comparisons{pwc}{2}, ...
-            group_comparison_data_type, ...
-            group_comparison_analysis_type, ...
-            list_select_subjects, ...
-            'comment', group_comparison_comment , 'abs_type', group_comparison_abs_type, 'timewindow', group_comparison_interval ...
-            );
+    for nt = 1:length(group_comparison_analysis_type_list)
+        group_comparison_analysis_type = group_comparison_analysis_type_list{nt};
+        
+        results=cell(1,tot_num_contrasts);
+        
+        for pwc=1:length(pairwise_comparisons)
+            results{pwc} = brainstorm_group_stats_2cond_pairedttest(project.brainstorm.db_name, ...
+                pairwise_comparisons{pwc}{1}, ...
+                pairwise_comparisons{pwc}{2}, ...
+                group_comparison_data_type, ...
+                group_comparison_analysis_type, ...
+                list_select_subjects, ...
+                'comment', group_comparison_comment , 'abs_type', group_comparison_abs_type, 'timewindow', group_comparison_interval ...
+                );
+        end
     end
 end
+
+
+% %  2samples ttest NEW pairwise comparison by group and by condition
+if do_brainstorm_group_stats_cond_group_ttest
+    project.group_comparison_analysis_type_list = group_comparison_analysis_type_list;
+    project.pairwise_comparisons                = pairwise_comparisons;
+    project.group_comparison_comment            = group_comparison_comment;
+    project.group_comparison_abs_type           = group_comparison_abs_type;
+    project.group_comparison_interval           = group_comparison_interval;
+    project.group_comparison_data_type          = group_comparison_data_type;
+    project.compare_conds_within_group          = 1;
+    project.compare_groups_within_cond          = 1;
+    
+    
+    proj_brainstorm_group_stats_cond_group_ttest(project,'list_select_subjects',list_select_subjects,'vec_select_groups',vec_select_groups)
+    
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 % paired 2samples ttest process_ft_sourcestatistics
 results=cell(1,tot_num_contrasts);
@@ -882,15 +1062,6 @@ end
 %================================================================================================================================================================================
 %================================================================================================================================================================================
 %================================================================================================================================================================================
-% average sources results
-if do_group_results_averaging
-    brainstorm_group_average_cond_results(project.brainstorm.db_name, list_select_subjects, project.epoching.condition_names, group_comparison_analysis_type);
-end
-
-% average sources results
-if do_group_results_averaging_factors
-    brainstorm_group_average_cond_results(project.brainstorm.db_name, list_select_subjects, {project.study.factors.level}, group_comparison_analysis_type);
-end
 
 %================================================================================================================================================================================
 % parse sources results
@@ -905,6 +1076,23 @@ if do_process_stats_sources
         end
     end
 end
+
+
+
+% parse sources results
+if do_process_stats_sources2
+    all_group_results   = bst_get('Study', -2); ... bst_get('Study', '@inter/brainstormstudy.mat');
+        num_stats           = length(all_group_results.Stat);
+    for res=1:num_stats
+        filename         = all_group_results.Stat(res).FileName;
+        if strfind(filename, process_result_string)
+            disp(['@@@@@@@@@@@@@@@@' filename]);
+            brainstorm_process_stats_sources2(project.brainstorm.db_name, filename, StatThreshOptions);
+        end
+    end
+end
+
+
 %==================================================================================
 % parse scouts TF results
 if do_process_stats_scouts_tf
@@ -963,3 +1151,6 @@ if do_export_scouts_multiple_oneperiod_to_file_factors
     end
 end
 %==================================================================================
+
+
+    db_reload_database(iProtocol);

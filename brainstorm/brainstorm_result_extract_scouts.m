@@ -75,7 +75,7 @@ function brainstorm_result_extract_scouts(protocol_name, result_file, scouts_nam
     iname               = strrep(iname, 'results_', '');
     
     src                 = fullfile(brainstorm_data_path, output_file_name);
-    dest                = fullfile(brainstorm_data_path, odir, ['matrix_' iname '_scouts' scouts_label '_' time_limits(1) '_' time_limits(2) oext]);
+    dest                = fullfile(brainstorm_data_path, odir, ['matrix_' iname '_scouts' scouts_label '_' num2str(time_limits(1)*1000) '_' num2str(time_limits(2)*1000) oext]);
     movefile(src,dest);
     
     db_reload_studies(sFiles(1).iStudy);

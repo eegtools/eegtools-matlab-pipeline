@@ -41,6 +41,7 @@ show_text                                                                  = inp
 z_transform                                                                = input.z_transform;
 which_error_measure                                                        = input.which_error_measure;
 
+strfname = char([ name_f1, '_', name_f2]);
 
 
 % total levels of factor 1 (e.g conditions) and 2 (e.g groups)
@@ -300,7 +301,7 @@ if tlf1 < 2 || tlf2 < 2
 
 input_save_fig.plot_dir               = plot_dir;
 input_save_fig.fig                    = fig;
-input_save_fig.name_embed             = 'ersp_topo_tw_fb';
+input_save_fig.name_embed             = [strfname,'_','ersp_topo_tw_fb'];
 input_save_fig.suffix_plot            = [ char(roi_name),'_',char(name_f),'_',char(time_window_name),'_',char(frequency_band_name)];
 
 save_figures( input_save_fig )
@@ -466,7 +467,7 @@ cell_error_bar = cell(tlf_between,1);
         
 input_save_fig.plot_dir               = plot_dir;
 input_save_fig.fig                    = fig;
-input_save_fig.name_embed             = 'ersp_topo_tw_fb';
+input_save_fig.name_embed             = [strfname,'_','ersp_topo_tw_fb'];
 input_save_fig.suffix_plot            = [ char(roi_name),'_',char(name_f),'_',char(name_ff),'_',char(time_window_name),'_',char(frequency_band_name)];
 
 save_figures( input_save_fig )
@@ -652,7 +653,7 @@ cell_error_bar = cell(tlf_between,1);
         
 input_save_fig.plot_dir               = plot_dir;
 input_save_fig.fig                    = fig;
-input_save_fig.name_embed             = 'ersp_topo_tw_fb';
+input_save_fig.name_embed             = [strfname,'_','ersp_topo_tw_fb'];
 input_save_fig.suffix_plot            = [ char(roi_name),'_',char(name_f),'_',char(name_ff),'_',char(time_window_name),'_',char(frequency_band_name)];
 
 save_figures( input_save_fig )

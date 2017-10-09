@@ -180,7 +180,7 @@ try
     
     
     
-    EEG = eeg_SASICA(EEG,cfg);
+%     EEG = eeg_SASICA(EEG,cfg);
     
     %     [EEG, com]= SASICA(EEG,'MARA_enable',1,'FASTER_enable',0,'FASTER_blinkchanname','hEOG',...
     %         'ADJUST_enable',1,'chancorr_enable',0,'chancorr_channames','hEOG','chancorr_corthresh',0.6,...
