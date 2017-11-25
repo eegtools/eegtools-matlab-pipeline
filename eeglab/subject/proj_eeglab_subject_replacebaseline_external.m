@@ -1,4 +1,4 @@
-% %% function OUTEEG =  proj_eeglab_subject_replacebaseline_external(EEG, project, subj_name,varargin)
+% %% function OUTEEG =  proj_eeglab_subject_replacebaseline_external(project, EEG,  subj_name,varargin)
 % %
 % % adjust baseline by replacing before / after target events in each trial baseline segments taken outside the same trial and originally placed before / after the target events
 % %
@@ -18,7 +18,19 @@
 % %
 % % NOTE: trials with boundary events are discharged from epoching
 % %
-function OUTEEG =  proj_eeglab_subject_replacebaseline_external(EEG, project, subj_name,varargin)
+function OUTEEG =  proj_eeglab_subject_replacebaseline_external(project, EEG,  subj_name,varargin)
+
+EEG.icaact_unfiltered=[];
+EEG.icaact_filtered_resampled=[];
+EEG.dipfit=[];
+EEG.icaact=[];
+EEG.etc =[];
+EEG.reject=[];
+EEG.stats=[];
+EEG.virtual_topography=[];
+EEG.virtual_chanlocs=[];
+EEG.virtual_nbchan=[];
+
 
 OUTEEG = EEG;
 
@@ -40,12 +52,19 @@ if isempty(baseline_file)
 else
     % if indicated a baseline file, use the indicated file
     EEG_baseline = pop_loadset(baseline_file);
+    
+    %     aeve = {EEG_baseline.event.type};
+    %     sel_nb = not(ismember(aeve,'boundary'));
+    %
+    %     EEG_baseline.event = EEG_baseline.event(sel_nb);
 end
 
 
 [sort_lat sort_order] = sort([OUTEEG.event.latency]);
 
 OUTEEG.event = OUTEEG.event(sort_order);
+
+
 
 OUTEEG = eeg_checkset(OUTEEG);
 
@@ -71,6 +90,21 @@ all_eve_types = {OUTEEG.event.type};
 tot_eve       = length(OUTEEG.event);
 all_eve_ind   = 1:tot_eve;
 
+
+evenum = [];
+list_eve_num = unique(all_eve_types);
+for ne = 1:length(list_eve_num)
+    evenum(ne) = sum(ismember(all_eve_types, list_eve_num(ne)));
+end
+
+maxnum = max(evenum);
+
+
+% epoch baseline file obtaining epochs form 0 tolength of baseline
+OUTEEG_baseline = pop_epoch( EEG_baseline, {begin_baseline}, baseline_tw,'eventindices',1:(maxnum+100));
+lbt= OUTEEG_baseline.pnts;
+
+
 boudary_ind   = find(   ismember(all_eve_types, 'boundary')  );
 
 begin_trial_ind = find(   ismember(all_eve_types, begin_trial)  ); % se ho aggiunto una baseline prima del primo evento, il trigger di inizio trial è il nuovo inizio baseline
@@ -80,9 +114,11 @@ end_trial_ind   = find(   ismember(all_eve_types, end_trial)    );
 % trovare più vicini boudary successivi a ogni inizio trial
 out = find_next_vec(begin_trial_ind, boudary_ind);
 boundary_trial_ind = out.vec2_next;
-
-trial_noboudary =  begin_trial_ind(  (boundary_trial_ind < begin_trial_ind ) | (boundary_trial_ind > end_trial_ind )  );
-
+if isempty(boudary_ind) || sum(isnan(boundary_trial_ind))
+    trial_noboudary = begin_trial_ind;
+else
+    trial_noboudary =  begin_trial_ind(  (boundary_trial_ind < begin_trial_ind ) | (boundary_trial_ind > end_trial_ind )  );
+end
 % for each type of target event
 for ntype = 1:length(type_list)
     
@@ -96,8 +132,6 @@ for ntype = 1:length(type_list)
     % baseline)
     OUTEEG_target   = pop_epoch( OUTEEG, {type},           epoch_tw,    'eventindices', type_noboudary);
     
-    % epoch baseline file obtaining epochs form 0 tolength of baseline
-    OUTEEG_baseline = pop_epoch( EEG_baseline, {begin_baseline}, baseline_tw);
     
     
     switch final_baseline
@@ -110,7 +144,7 @@ for ntype = 1:length(type_list)
     
     nepo = OUTEEG_target.trials;
     ltt = sum(sel_replace_baseline);
-    lbt= OUTEEG_baseline.pnts;
+    
     
     
     

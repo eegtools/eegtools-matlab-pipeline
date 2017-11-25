@@ -374,7 +374,9 @@ switch lower(g.icatype)
     case 'runica' 
         try, if ismatlab, g.options = {  g.options{:}, 'interupt', 'on' }; end; catch, end; 
         if tmprank == size(tmpdata,1) | pca_opt
-            [EEG.icaweights,EEG.icasphere] = runica( tmpdata, 'lrate', 0.001,  g.options{:} );
+            % NOTE VERSION OF RUNICA WITH FIXED SEED WHICH MAKE IT REPRODUCIBLE
+% 22-6-2017 CLAUDIO CAMPUS & DAVIDE QUARONA
+            [EEG.icaweights,EEG.icasphere] = runica_fixed_seed( tmpdata, 'lrate', 0.001,  g.options{:} );
         else 
             if nargin < 2
                 uilist = { { 'style' 'text' 'string' [ 'EEGLAB has detected that the rank of your data matrix' 10 ...
@@ -394,7 +396,10 @@ switch lower(g.icatype)
                 g.options = [g.options  {'pca' tmprank }]; % automatic for STUDY (batch processing)
             end;
             disp(['Data rank (' int2str(tmprank) ') is smaller than the number of channels (' int2str(size(tmpdata,1)) ').']);
-            [EEG.icaweights,EEG.icasphere] = runica( tmpdata, 'lrate', 0.001, g.options{:} );
+           
+            % NOTE VERSION OF RUNICA WITH FIXED SEED WHICH MAKE IT REPRODUCIBLE
+% 22-6-2017 CLAUDIO CAMPUS & DAVIDE QUARONA
+            [EEG.icaweights,EEG.icasphere] = runica_fixed_seed( tmpdata, 'lrate', 0.001, g.options{:} );
         end;
      case 'binica'
         icadefs;

@@ -4,7 +4,7 @@ function sFiles = proj_brainstorm_group_average_cond(project, varargin) ... subj
     protocol_name = project.brainstorm.db_name;
     
     % default
-    subjects_list   = project.subjects.list;
+    list_select_subjects   = project.subjects.list;
     cond_list       = project.epoching.condition_names;
     input_file_name = project.brainstorm.average_file_name;
     
@@ -15,8 +15,8 @@ function sFiles = proj_brainstorm_group_average_cond(project, varargin) ... subj
                    input_file_name = varargin{v+1};
                case 'cond_list'
                    cond_list = varargin{v+1};
-               case 'subjects_list'
-                   subjects_list = varargin{v+1};
+               case 'list_select_subjects'
+                   list_select_subjects = varargin{v+1};
            end
        end
     end
@@ -25,14 +25,14 @@ function sFiles = proj_brainstorm_group_average_cond(project, varargin) ... subj
     protocol                = bst_get('ProtocolInfo');
     brainstorm_data_path    = protocol.STUDIES;
     
-    len_subj                = length(subjects_list);
+    len_subj                = length(list_select_subjects);
     len_cond                = length(cond_list);
     
     FileNamesA              = cell(1,len_subj);
     
     for ncond=1:len_cond
         for nsubj=1:len_subj
-            FileNamesA{nsubj}=fullfile(subjects_list{nsubj}, cond_list{ncond}, [input_file_name '.mat']);
+            FileNamesA{nsubj}=fullfile(list_select_subjects{nsubj}, cond_list{ncond}, [input_file_name '.mat']);
         end
         
         % Start a new report

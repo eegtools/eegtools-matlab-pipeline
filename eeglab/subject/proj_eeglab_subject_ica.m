@@ -7,17 +7,35 @@
 %%
 function EEG = proj_eeglab_subject_ica(project, varargin)
 
+		if isfield(project,'ica')
+			if isfield(project.ica,'do_pca')
+				do_pca = project.ica.do_pca;
+			else
+				do_pca = 1;
+			end
+
+			if isfield(project.ica,'ica_sr')
+				ica_sr = project.ica.ica_sr;
+			else
+				ica_sr = 128;
+			end
+
+			if isfield(project.ica,'ica_type')
+				ica_type = project.ica.ica_type;
+			else
+				ica_type = 'cudaica';
+			end
+
+		else
+				do_pca = 1;
+				ica_sr = 128;
+        ica_type = 'cudaica';
+		end
 
     list_select_subjects    = project.subjects.list;
     get_filename_step       = 'custom_pre_epochs';
     custom_suffix           = '';
     custom_input_folder     = '';
-    
-    if isfield(project,'ica_type')
-        ica_type = project.ica_type;
-    else
-        ica_type = 'cudaica';
-    end
     
     for par=1:2:length(varargin)
         switch varargin{par}
@@ -52,7 +70,7 @@ function EEG = proj_eeglab_subject_ica(project, varargin)
         subj_name   = list_select_subjects{subj}; 
         inputfile   = proj_eeglab_subject_get_filename(project, subj_name, get_filename_step, 'custom_suffix', custom_suffix, 'custom_input_folder', custom_input_folder);
                      
-        [names{subj},ranks{subj},ica_types{subj},durations{subj}, EEG]         = eeglab_subject_ica(inputfile, project.paths.output_preprocessing, project.eegdata.eeg_channels_list, project.import.reference_channels, ica_type);    
+        [names{subj},ranks{subj},ica_types{subj},durations{subj}, EEG]         = eeglab_subject_ica(inputfile, project.paths.output_preprocessing, project.eegdata.eeg_channels_list, project.import.reference_channels, ica_type,do_pca,ica_sr);    
    
     end
     

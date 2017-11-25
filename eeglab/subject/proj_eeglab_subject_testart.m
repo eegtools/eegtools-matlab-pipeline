@@ -4,6 +4,8 @@
 function EEG = proj_eeglab_subject_testart(project, varargin) 
 
     list_select_subjects    = project.subjects.list;
+    nch_eeg                 = project.eegdata.nch_eeg;
+    
     get_filename_step       = 'output_import_data';
     custom_suffix           = '';
     custom_input_folder     = '';
@@ -13,7 +15,7 @@ function EEG = proj_eeglab_subject_testart(project, varargin)
             case {  ...
                     'list_select_subjects', ...
                     'get_filename_step',    ... 
-                    'custom_input_folder',  ...
+                    'custom_input_folder',  ... 
                     'custom_suffix' ...
                     }
 
@@ -35,7 +37,7 @@ function EEG = proj_eeglab_subject_testart(project, varargin)
         subj_name   = list_select_subjects{subj};        
         inputfile   = proj_eeglab_subject_get_filename(project, subj_name, get_filename_step, 'custom_suffix', custom_suffix, 'custom_input_folder', custom_input_folder);
         outputfile  = proj_eeglab_subject_get_filename(project, subj_name, 'input_epoching' , 'custom_suffix', custom_suffix, 'custom_input_folder', custom_input_folder);
-        EEG         = eeglab_subject_testart(inputfile, outputfile);
+        EEG         = eeglab_subject_testart(inputfile, outputfile,nch_eeg);
     
     end 
 end    

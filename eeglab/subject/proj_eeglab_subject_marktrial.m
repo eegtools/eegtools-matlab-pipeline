@@ -81,6 +81,12 @@ function OUTEEG = proj_eeglab_subject_marktrial( project, varargin)
         input_file  = proj_eeglab_subject_get_filename(project, subj_name, get_filename_step, 'custom_suffix', custom_suffix, 'custom_input_folder', custom_input_folder);
 
         EEG         = pop_loadset(input_file);
+        
+        aeve = {EEG.event.type};
+        sel_nb = not(ismember(aeve,{project.preproc.marker_type.begin_trial,project.preproc.marker_type.end_trial}));
+        EEG.event = EEG.event(sel_nb);
+
+        
         OUTEEG      = EEG;
 
         c1          = sum(not(cellfun(@isempty,(project.preproc.insert_begin_trial.target_event_types))));
@@ -97,6 +103,31 @@ function OUTEEG = proj_eeglab_subject_marktrial( project, varargin)
             OUTEEG = proj_eeglab_subject_mark_trial_end(OUTEEG, project);
         end
 
+        
+        
+%         % accoppio t1 e t2, t1 condiderati stabili
+%         
+%         alleve_type = {OUTEEG.event.type};
+%         alleve_latency = [OUTEEG.event.latency];
+%         
+%         t1 = project.preproc.marker_type.begin_trial;
+%         sel_t1 = find(ismember(alleve_type,t1));
+%         lat_t1 = alleve_latency(sel_t1);
+%         
+%         t2 = project.preproc.marker_type.end_trial;
+%         sel_t2 = find(ismember(alleve_type,t2));
+%         lat_t2 = alleve_latency(sel_t2);
+%         
+%         bad_t2 = lat_t2 < lat_t1(1);
+%         
+%         
+%         for nt1 = 1:length(sel_t1)
+%             
+%             sel_current_t2 = lat_t2 > lat_t1(nt1) & lat_t2 < lat_t1(nt1+1);
+%             current_t2 = 
+%         
+%         end
+        
         OUTEEG = eeg_checkset(OUTEEG);
         OUTEEG = pop_saveset(OUTEEG, 'filename',OUTEEG.filename, 'filepath', OUTEEG.filepath);
     end

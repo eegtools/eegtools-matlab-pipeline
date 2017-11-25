@@ -42,4 +42,5 @@ function sFiles = brainstorm_group_average_cond_results(db_name, subjects_list, 
     end
      
     db_reload_studies(sFiles(1).iStudy);
+   
 end

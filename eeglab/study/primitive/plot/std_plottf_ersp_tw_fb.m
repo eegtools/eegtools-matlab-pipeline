@@ -99,6 +99,10 @@ ersp_mode                                                                  = inp
 display_pmode                                                              = input.display_pmode; 
 
 
+strfname = char([ name_f1, '_', name_f2]);
+
+
+
 pgroup = [];
 pcond  = [];
 pinter = [];
@@ -527,7 +531,7 @@ end
 
 input_save_fig.plot_dir               = plot_dir;
 input_save_fig.fig                    = fig;
-input_save_fig.name_embed             = 'ersp_tf';
+input_save_fig.name_embed             = [strfname,'_','ersp_tf'];
 input_save_fig.suffix_plot            = [char(roi_name)];
 
 save_figures( input_save_fig )

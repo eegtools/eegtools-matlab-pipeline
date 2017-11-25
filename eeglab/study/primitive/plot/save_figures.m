@@ -50,16 +50,21 @@ exclude_format  = [];
 renderer        = 'painter';
 pdf_mode        = 'export_fig';
 printer         ='-depsc2';
+do_pdf = 1;
+do_ps  = 1;
 
 %% check optional arguments
 
 for par=1:2:length(varargin)
     switch varargin{par}
-        case {'renderer'          , ...
+        case {  'renderer'          , ...
                 'pdf_mode'          , ...
                 'exclude_format'    , ...
                 'res'               , ...
                 'printer'           , ...
+                'do_ps'             , ...
+                'do_pdf'             ...
+                
                 }
             
             if isempty(varargin{par+1})
@@ -104,7 +109,9 @@ end
 
 
 if strncmp(os,'Linux',2)
-    print(fig, ps_path,'-append',['-',renderer],res)
+    if do_ps
+        print(fig, ps_path,'-append',['-',renderer],res)
+    end
 end
 
 
@@ -115,25 +122,29 @@ if strncmp(os,'Darwin',2)
     pp(3) = 0.5 * pp(3);
     pp(4) = 0.5 * pp(4);
     set(fig, 'Position', pp)% save eps file
-
+    
     %print(eps_path,printer,res);
     %saveas(fig,eps_path,'epsc')
-        %print(fig, eps_path,'-depsc2',res)
-        hgexport(fig,eps_path)
-
-    print(fig, ps_path,'-append','-dpsc',res)
+    %print(fig, eps_path,'-depsc2',res)
+    hgexport(fig,eps_path)
+    if do_ps
+        print(fig, ps_path,'-append','-depsc2',res) %'-dpsc'
+    end
     %print(fig, '-dpsc', '-append', ps_path)
 end
 % in any operating system, append the current figure to a global pdf file
 % for overview
 
 if not(strncmp(os,'Darwin',2))
-    
-    switch pdf_mode
-        case 'export_fig'
-            export_fig(fig, pdf_path, '-pdf', '-append',res);
-        case 'ps2pdf'
-            ps2pdf('psfile',  ps_path, 'pdffile', pdf_path, 'gspapersize', 'a4')
+    if do_pdf
+        switch pdf_mode
+            case 'export_fig'
+                export_fig(fig, pdf_path, '-pdf', '-append',res);
+            case 'ps2pdf'
+                if do_ps
+                    ps2pdf('psfile',  ps_path, 'pdffile', pdf_path, 'gspapersize', 'a4')
+                end
+        end
     end
 end
 close all

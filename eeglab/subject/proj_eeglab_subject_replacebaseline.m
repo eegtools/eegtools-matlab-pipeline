@@ -1,4 +1,4 @@
-%% function OUTEEG = proj_eeglab_subject_replacebaseline(project, subj_name,varargin)% mode: 'trial', 'external', 'none'
+%% function OUTEEG = proj_eeglab_subject_replacebaseline(project, EEG, subj_name,varargin)% mode: 'trial', 'external', 'none'
 %
 % si suppone che siano già stati creati eventi b1 e b2
 % l'utente deve dire se riallineare le baseline a b1 o a b2
@@ -55,80 +55,81 @@
 % NOTE: trials with boundary events are discharged from epoching
 
 
-function OUTEEG = proj_eeglab_subject_replacebaseline(project, list_select_subjects, varargin)
+function OUTEEG = proj_eeglab_subject_replacebaseline(project, EEG, subj_name)
 
 
-    get_filename_step       = 'input_epoching';
-    custom_suffix           = '';
-    custom_input_folder     = '';
-    
-    for par=1:2:length(varargin)
-        switch varargin{par}
-            case {  ...
-                    'get_filename_step',    ... 
-                    'custom_input_folder',  ...
-                    'custom_suffix' ...
-                    }
+get_filename_step       = 'input_epoching';
+custom_suffix           = '';
+custom_input_folder     = '';
 
-                if isempty(varargin{par+1})
-                    continue;
-                else
-                    assign(varargin{par}, varargin{par+1});
-                end
-        end
-    end
+% for par=1:2:length(varargin)
+%     switch varargin{par}
+%         case {  ...
+%                 'get_filename_step',    ...
+%                 'custom_input_folder',  ...
+%                 'custom_suffix' ...
+%                 }
+%             
+%             if isempty(varargin{par+1})
+%                 continue;
+%             else
+%                 assign(varargin{par}, varargin{par+1});
+%             end
+%     end
+% end
 
-    if not(iscell(list_select_subjects)), list_select_subjects = {list_select_subjects}; end
-    numsubj = length(list_select_subjects);
-    % -------------------------------------------------------------------------------------------------------------------------------------
-    
-    for subj=1:numsubj
+%     if not(iscell(list_select_subjects)), list_select_subjects = {list_select_subjects}; end
+%     numsubj = length(list_select_subjects);
+% -------------------------------------------------------------------------------------------------------------------------------------
 
-        subj_name               = list_select_subjects{subj};
-    
-        input_file_name         = proj_eeglab_subject_get_filename(project, subj_name, get_filename_step, 'custom_suffix' , custom_suffix, 'custom_input_folder', custom_input_folder);
-        EEG                     = pop_loadset(input_file_name);
+%     for subj=1:numsubj
+%
+%         subj_name               = list_select_subjects{subj};
+%
+%         input_file_name         = proj_eeglab_subject_get_filename(project, subj_name, get_filename_step, 'custom_suffix' , custom_suffix, 'custom_input_folder', custom_input_folder);
+%         EEG                     = pop_loadset(input_file_name);
+
+
+EEG.icaact_unfiltered=[];
+EEG.icaact_filtered_resampled=[];
+EEG.dipfit=[];
+EEG.icaact=[];
+EEG.etc =[];
+EEG.reject=[];
+EEG.stats=[];
+EEG.virtual_topography=[];
+EEG.virtual_chanlocs=[];
+EEG.virtual_nbchan=[];
+
+bck.dir                 = fullfile(EEG.filepath, 'hist_pre_replacebaseline');
+bck.prefix              = [];
+EEG                     = eeglab_subject_bck_eeghist(EEG,bck);
+
+% if strcmp(project.epoching.baseline_replace.create_backup,'on')
+%
+%     bck.dir = fullfile(EEG.filepath,'bck_pre_replacebaseline');
+%     bck.prefix = [];
+%     EEG = eeglab_subject_bck_eeg(EEG,bck);
+%
+% end
+
+
+switch project.epoching.baseline_replace.mode
+    case 'none'
+        OUTEEG = EEG;
+        return
         
-     
-        EEG.icaact_unfiltered=[];
-        EEG.icaact_filtered_resampled=[];
-        EEG.dipfit=[];
-        EEG.icaact=[];
-        EEG.etc =[];
-        EEG.reject=[];
-        EEG.stats=[];
-        EEG.virtual_topography=[];
-        EEG.virtual_chanlocs=[];
-        EEG.virtual_nbchan=[];
-
-        bck.dir                 = fullfile(EEG.filepath, 'hist_pre_replacebaseline');
-        bck.prefix              = [];
-        EEG                     = eeglab_subject_bck_eeghist(EEG,bck);
-
-        % if strcmp(project.epoching.baseline_replace.create_backup,'on')
-        %     
-        %     bck.dir = fullfile(EEG.filepath,'bck_pre_replacebaseline');
-        %     bck.prefix = [];   
-        %     EEG = eeglab_subject_bck_eeg(EEG,bck);    
-        %        
-        % end
-
-
-        switch project.epoching.baseline_replace.mode
-            case 'none'
-                return
-
-            case 'trial'
-                OUTEEG =  proj_eeglab_subject_replacebaseline_trial(EEG, project);
-
-            case 'external'
-                OUTEEG =  proj_eeglab_subject_replacebaseline_external(EEG, project, subj_name);
-
-        end
-        if isempty(OUTEEG)
-            disp ('error in proj_eeglab_subject_replacebaseline');
-           return 
-        end
-    end
+    case 'trial'
+        OUTEEG =  proj_eeglab_subject_replacebaseline_trial(project, EEG);
+        
+    case 'external'
+        OUTEEG =  proj_eeglab_subject_replacebaseline_external(project, EEG, subj_name);
+        
 end
+if isempty(OUTEEG)
+    disp ('error in proj_eeglab_subject_replacebaseline');
+    return
+end
+end
+% end
 

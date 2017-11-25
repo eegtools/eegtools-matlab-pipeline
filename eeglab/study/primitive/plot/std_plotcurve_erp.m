@@ -84,6 +84,9 @@ levels_f1                                                                  = inp
 levels_f2                                                                  = input.levels_f2; 
 % display_single_subjects                                                    = input.display_single_subjects; 
 
+strfname = char([ name_f1, '_', name_f2]);
+
+
 
 pgroup = [];
 pcond  = [];
@@ -669,7 +672,7 @@ if tlf1 > 1 && tlf2 <= 1
 
 input_save_fig.plot_dir               = plot_dir;
 input_save_fig.fig                    = fig;
-input_save_fig.name_embed             = 'erp_curve';
+input_save_fig.name_embed             = [strfname,'_','erp_curve'];
 input_save_fig.suffix_plot            = [char(roi_name),'_',char(roi_name)];
 
 save_figures( input_save_fig )

@@ -18,6 +18,8 @@ function result = startProcess(project, action_name, varargin)
     custom_suffix               = '';
     custom_input_folder         = '';
     stat_analysis_suffix        = '';
+    mask_coef                   = '';
+    stat_freq_bands_list        = '';
 
     for par=1:2:length(varargin)
         switch varargin{par}
@@ -27,6 +29,8 @@ function result = startProcess(project, action_name, varargin)
                     'custom_input_folder'   , ...
                     'custom_suffix'         , ...
                     'stat_analysis_suffix'  , ...                    
+                    'mask_coef'  , ...    
+                    'stat_freq_bands_list'
                     }
 
                 if isempty(varargin{par+1})

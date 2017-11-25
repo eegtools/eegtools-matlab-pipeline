@@ -1,7 +1,8 @@
-function [name_noext, rr2,ica_type,duration, EEG] = eeglab_subject_ica(input_file_name, output_path, eeg_ch_list, ch_ref, ica_type, varargin)
+function [name_noext, rr2,ica_type,duration, EEG] = eeglab_subject_ica(input_file_name, output_path, eeg_ch_list, ch_ref, ica_type, do_pca, ica_sr, varargin)
 %
 %    function EEG = eeglab_subject_ica(input_file_name, settings_path,  output_path, ica_type)%
-%    computes ica decompositions and saves the data with the decomposition in the same file
+%    computes ica decompositions and saves the data with the decomposition
+%    in the same filei
 %    input_file_name is the full path of the input file (.set EEGLab format)
 %    output_path is the folder where files with the ica decomposition will be placed
 %    eeg_ch_list is the list of EEG channels id
@@ -63,16 +64,22 @@ try
     
     drr = rr1-rr2; % differenza
     
-    
-    if ( not(exist('cudaica'))  ||  drr>2)  % se non c'è cudaica o se il rango è deficiente (cosa che non viene gestita da cudaica)
-        str = computer; % verifica so
-        if strcmp(str,'GLNXA64') % se linux puoi usare binica un po' più veloce
-            ica_type = 'binica';
-        else % sennò usa runica standard
-            ica_type = 'runica';
+    if not(strcmp(ica_type,'runica'))
+        if ( not(exist('cudaica'))  ||  drr>2)  % se non c'è cudaica o se il rango è deficiente (cosa che non viene gestita da cudaica)
+            str = computer; % verifica so
+            if strcmp(str,'GLNXA64') % se linux puoi usare binica un po' più veloce
+                ica_type = 'binica';
+            else % sennò usa runica standard
+                ica_type = 'runica';
+            end
         end
     end
     fprintf('#EEG channels:%d actual rank:%d difference:%d uso: %s\n',rr1,rr2,drr,ica_type)
+    if do_pca
+         disp('use actual rank (preliminary pca)');
+    else
+        disp('use theoretical rank (NO preliminary pca, let ICA function adjust)');
+    end
     pause(3)
     
     tic
@@ -81,9 +88,18 @@ try
     if strcmp(ica_type,'cudaica')
         EEG = pop_runica_octave_matlab(EEG, 'icatype',ica_type,'chanind',eeg_ch_list,'options',{'extended' 1 'd' gpu_id });
         %         end
-    else % se ho rango deficitario o non posso usare cudaica, allora uso binica con sottocampionamento (pare che ica funzioni meglio), poi copio i pesi della scomposizione nei dati originali.
-        EEG2 = pop_resample( EEG, 128);
-        EEG2 = pop_runica_octave_matlab(EEG2, 'icatype',ica_type,'chanind',eeg_ch_list,'options',{'extended' 1 'pca' (rr2-1)});
+    else % se ho rango deficitario o non posso usare cudaica, allora uso binica/runica con sottocampionamento (pare che ica funzioni meglio), poi copio i pesi della scomposizione nei dati originali.
+        
+        EEG2 = pop_eegfiltnew( EEG,0, floor(ica_sr/2), [], 0, [], 0);
+        EEG2 = pop_resample( EEG2, ica_sr);
+        
+        
+        if do_pca
+            EEG2 = pop_runica_octave_matlab(EEG2, 'icatype',ica_type,'chanind',eeg_ch_list,'options',{'extended' 1 'pca' (rr2-1)});
+        else
+            EEG2 = pop_runica_octave_matlab(EEG2, 'icatype',ica_type,'chanind',eeg_ch_list,'options',{'extended' 1 });
+
+        end
         
         EEG.icaweights = EEG2.icaweights;
         EEG.icasphere  = EEG2.icasphere;

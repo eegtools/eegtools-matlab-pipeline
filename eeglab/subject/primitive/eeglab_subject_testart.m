@@ -1,11 +1,11 @@
-function EEG = eeglab_subject_testart(input_file_name, output_file_name)
+function EEG = eeglab_subject_testart(input_file_name, output_file_name,nch_eeg)
 
 [path,name_noext,ext] = fileparts(input_file_name);
 [path2,name_noext2,ext] = fileparts(output_file_name);
 
 
 EEG     = pop_loadset(input_file_name);
-EEG2    = pop_select(EEG,'channel',1:64);
+EEG2    = pop_select(EEG,'channel',1:nch_eeg);
 % EEG     = pop_eegfiltnew( EEG,1, 45, [], 0, [], 0);
 
 try
@@ -40,7 +40,7 @@ try
     % ora rimuovo le tw ma mettendo dei boundary per tracciarli (la funzione
     % non li mette)
     
-    mask_remove = not(rej_tw); % 1 ciò che va tolto
+    mask_remove = not(rej_tw); % 1 ciò che va tolto 
     dd = diff(mask_remove);
     
 %     diff_mask_remove0 = [mask_remove(1), dd(1:end-1),   mask_remove(end)];
@@ -56,13 +56,13 @@ try
     EEG2 = eeg_checkset( EEG2 );
     
     
-    EEG2 = pop_interp(EEG2, EEG.chanlocs(1:64), 'spherical');
+    EEG2 = pop_interp(EEG2, EEG.chanlocs(1:nch_eeg), 'spherical');
     
     ss = size(EEG.data,1);
     
-    if ss > 64
+    if ss > nch_eeg
         EEG4 = eeg_eegrej( EEG, rej_tw_lim_mat);
-        EEG2.data(65:ss,:) = EEG4.data(65:end, :);
+        EEG2.data((nch_eeg+1):ss,:) = EEG4.data((nch_eeg+1):end, :);
         EEG2.chanlocs = EEG.chanlocs;
           EEG2 = eeg_checkset( EEG2 );
     end
