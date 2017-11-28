@@ -1016,12 +1016,12 @@ project.postprocess.ersp.design(1).which_extrema_curve_continuous = {     .... d
 
 % semi-automatic (simplified) input mode: set values for the first roi/design and
 % other values will be automatically generated
-% group_time_windows_continuous_roi = {{};{};{};{}};
-%     group_time_windows_continuous_design = cell(project.postprocess.ersp.numroi,1);
-%     for nr =1:project.postprocess.ersp.numroi
-%         group_time_windows_continuous_design{nr} = group_time_windows_continuous_roi;
-%     end
-%     project.postprocess.ersp.design(1).which_extrema_curve_continuous = group_time_windows_continuous_design;
+group_time_windows_continuous_roi = {{};{};{};{}};
+    group_time_windows_continuous_design = cell(project.postprocess.ersp.numroi,1);
+    for nr =1:project.postprocess.ersp.numroi
+        group_time_windows_continuous_design{nr} = group_time_windows_continuous_roi;
+    end
+    project.postprocess.ersp.design(1).which_extrema_curve_continuous = group_time_windows_continuous_design;
 
 
 % time interval for searching extreme in the continuous curve ( NON time-window mode)
