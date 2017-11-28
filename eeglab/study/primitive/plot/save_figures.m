@@ -47,7 +47,7 @@ pdf_path  =  fullfile(plot_dir,[name_embed,'.pdf']);
 
 res             = '-r300'; % resolution
 exclude_format  = [];
-renderer        = 'painter';
+renderer        = 'painters';
 pdf_mode        = 'export_fig';
 printer         ='-depsc2';
 do_pdf = 1;
@@ -108,11 +108,11 @@ if strncmp(os,'PCWIN',2)
 end
 
 
-if strncmp(os,'Linux',2)
-    if do_ps
-        print(fig, ps_path,'-append',['-',renderer],res)
-    end
-end
+% if strncmp(os,'Linux',2)
+%     if do_ps
+%         print(fig, ps_path,'-append',['-',renderer],res)
+%     end
+% end
 
 
 
@@ -135,18 +135,18 @@ end
 % in any operating system, append the current figure to a global pdf file
 % for overview
 
-if not(strncmp(os,'Darwin',2))
-    if do_pdf
-        switch pdf_mode
-            case 'export_fig'
-                export_fig(fig, pdf_path, '-pdf', '-append',res);
-            case 'ps2pdf'
-                if do_ps
-                    ps2pdf('psfile',  ps_path, 'pdffile', pdf_path, 'gspapersize', 'a4')
-                end
-        end
-    end
-end
+% if not(strncmp(os,'Darwin',2))
+%     if do_pdf
+%         switch pdf_mode
+%             case 'export_fig'
+%                 export_fig(fig, pdf_path, '-pdf', '-append',res);
+%             case 'ps2pdf'
+%                 if do_ps
+%                     ps2pdf('psfile',  ps_path, 'pdffile', pdf_path, 'gspapersize', 'a4')
+%                 end
+%         end
+%     end
+% end
 close all
 
 end

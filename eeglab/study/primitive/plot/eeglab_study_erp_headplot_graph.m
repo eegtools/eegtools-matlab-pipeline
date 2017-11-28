@@ -12,6 +12,7 @@ erp_headplot_tw                                                            = inp
 z_transform                                                                = input.z_transform;
 file_spline                                                                = input.file_spline; % '/home/campus/behaviourPlatform/VisuoHaptic/ABBI_EEG/ABBI_EEG_st/af_AS_mc_s-s1-1sc-1tc.spl'
 view_list                                                                       = input.view_list; %[0 45]
+% chlocs                                                                     = input.chlocs;
 
 
 
@@ -27,6 +28,7 @@ input_plot.clim                                                = set_caxis;
 input_plot.z_transform                                         = z_transform;
 input_plot.file_spline                                         = file_spline;
 input_plot.view_list                                           = view_list;
+% input_plot.chlocs                                              = chlocs;
 
 
 

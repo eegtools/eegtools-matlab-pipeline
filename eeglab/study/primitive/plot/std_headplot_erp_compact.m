@@ -58,7 +58,8 @@ erp_headplot_tw                                                            = inp
 clim                                                                       = input.clim;
 z_transform                                                                = input.z_transform;
 file_spline                                                                = input.file_spline; % '/home/campus/behaviourPlatform/VisuoHaptic/ABBI_EEG/ABBI_EEG_st/af_AS_mc_s-s1-1sc-1tc.spl'
-view_list                                                                       = input.view_list; %[0 45]
+view_list                                                                  = input.view_list; %[0 45]
+% chlocs                                                                     = input.chlocs;      
 
 totviews = size(view_list,1);
 

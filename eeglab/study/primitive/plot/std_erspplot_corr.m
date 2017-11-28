@@ -97,7 +97,7 @@
 % along with this program; if not, write to the Free Software
 % Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-function [STUDY, allersp, alltimes, allfreqs, pgroup, pcond, pinter events] = std_erspplot(STUDY, ALLEEG, varargin)
+function [STUDY, allersp, alltimes, allfreqs, pgroup, pcond, pinter events] = std_erspplot_corr(STUDY, ALLEEG, varargin)
 
 if nargin < 2
     help std_erspstatplot;
@@ -227,7 +227,7 @@ plottfopt = { ...
 % ---------------------
 if ~isempty(opt.channels)
 
-    [STUDY allersp alltimes allfreqs tmp events unitPower] = std_readersp(STUDY, ALLEEG, 'channels', opt.channels, 'infotype', opt.datatype, 'subject', opt.subject, ...
+    [STUDY allersp alltimes allfreqs tmp events ] = std_readersp(STUDY, ALLEEG, 'channels', opt.channels, 'infotype', opt.datatype, 'subject', opt.subject, ...
         'singletrials', stats.singletrials, 'subbaseline', params.subbaseline, 'timerange', params.timerange, 'freqrange', params.freqrange, 'design', opt.design, 'concatenate', params.concatenate);
     
     % select specific time and freq
@@ -291,7 +291,7 @@ if ~isempty(opt.channels)
                                          'subject', opt.subject, 'datatype', upper(opt.datatype), 'plotmode', opt.plotmode);
                 std_plottf(alltimes, allfreqs, tmpersp, 'datatype', opt.datatype, 'titles', alltitles, ...
                                            'groupstats', pgroup, 'condstats', pcond, 'interstats', pinter, 'plotmode', ...
-                                           opt.plotmode, 'unitcolor', unitPower, 'chanlocs', ALLEEG(1).chanlocs, 'events', events, plottfopt{:});
+                                           opt.plotmode, 'chanlocs', ALLEEG(1).chanlocs, 'events', events, plottfopt{:});
             end;
         end;
     end;

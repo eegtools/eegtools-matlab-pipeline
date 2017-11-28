@@ -3,6 +3,11 @@
 %%
 function EEG = proj_eeglab_subject_add_factor(project, varargin)
 
+ if sum(ismember({project.study.factors.factor},'condition'))
+    disp('the factor name condition is reserved by eeglab: please change name e.g. to cond')
+    return
+ end
+
     list_select_subjects    = project.subjects.list;
     get_filename_step       = 'add_factor';
     custom_suffix           = '';
@@ -44,6 +49,13 @@ function EEG = proj_eeglab_subject_add_factor(project, varargin)
                 if exist(input_file_name, 'file')
 
                     EEG             = pop_loadset(input_file_name);
+                    
+                    
+                    % remove factor condition which is reserved
+                    if isfield(EEG.event,'condition')
+                        EEG.event = rmfield(EEG.event,'condition');
+                    end
+                    
                     tot_eve         = length(EEG.event);
 
                     for nl=1:length(add_factor_list)

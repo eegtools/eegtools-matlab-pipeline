@@ -171,6 +171,7 @@ for design_num=design_num_vec
             
             input_graph.file_spline                                    =  file_spline;%'/home/campus/behaviourPlatform/VisuoHaptic/ABBI_EEG/ABBI_EEG_st/af_AS_mc_s-s1-1sc-1tc.spl';
             input_graph.view_list                                      =  view_list;
+%             input_graph.chlocs                                         = locs;
             
             eeglab_study_erp_headplot_graph(input_graph);
             

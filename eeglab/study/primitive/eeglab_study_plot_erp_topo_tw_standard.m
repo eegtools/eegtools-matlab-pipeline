@@ -80,13 +80,17 @@ STUDY = []; CURRENTSTUDY = 0; ALLEEG = []; EEG=[]; CURRENTSET=[];
 % channels locations
 chanlocs = eeg_mergelocs(ALLEEG.chanlocs);
 
-r1         = unique([roi_list{:}]);
+% r1         = unique([roi_list{:}]);
 r2         = {chanlocs.labels};
 % roi_list   = [roi_list;{r1};{r2}];
 % roi_names  = [roi_names, 'all_rois','all_chan'];
 
-roi_list = [{r1};{r2}];
-roi_names  = {'all_rois','all_chan'};
+% roi_list = [{r1};{r2}];
+% roi_names  = {'all_rois','all_chan'};
+
+
+roi_list = {r2};
+roi_names  = {'all_chan'};
 
 
 
