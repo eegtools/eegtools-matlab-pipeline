@@ -11,7 +11,7 @@ else
 end
 %==================================================================================
 % import EEGLAB epochs into BRAINSTORM and do averaging
-if do_sensors_import_averaging
+if project.operations.do_sensors_import_averaging
     % for each epochs set file (subject and condition) perform: import, averaging, channelset, 
     for subj=1:project.subjects.numsubj 
         subj_name = project.subjects.list{subj};    
@@ -21,7 +21,7 @@ if do_sensors_import_averaging
 end
 %==================================================================================
 % do averaging of main effects...average n-conditions epochs and create a new condition
-if do_sensors_averaging_main_effects
+if project.operations.do_sensors_averaging_main_effects
     for subj=1:project.subjects.numsubj 
         subj_name = project.subjects.list{subj};  
         for f=1:length(project.study.factors)
@@ -31,7 +31,7 @@ if do_sensors_averaging_main_effects
 end    
 %==================================================================================
 % create subjects differences between two experimental conditions
-if do_sensors_conditions_differences
+if project.operations.do_sensors_conditions_differences
     for subj=1:project.subjects.numsubj 
         subj_name = project.subjects.list{subj};     
         for pwc=1:length(pairwise_comparisons)
@@ -41,12 +41,12 @@ if do_sensors_conditions_differences
 end
 %==================================================================================
 % create group averages of erp experimental conditions
-if do_sensors_group_erp_averaging
+if project.operations.do_sensors_group_erp_averaging
     proj_brainstorm_group_average_cond(project);
 end
 %==================================================================================
 % common noise estimation, calculated with the basic conditions recordings and then copied to the other ones (main effects).
-if do_sensors_common_noise_estimation
+if project.operations.do_sensors_common_noise_estimation
     for subj=1:project.subjects.numsubj 
         subj_name=project.subjects.list{subj};  
         proj_brainstorm_subject_noise_estimation(project, subj_name);
@@ -54,7 +54,7 @@ if do_sensors_common_noise_estimation
 end
 %==================================================================================
 % common data estimation, calculated with the basic conditions recordings and then copied to the other ones (main effects).
-if do_sensors_common_data_estimation
+if project.operations.do_sensors_common_data_estimation
     for subj=1:project.subjects.numsubj 
         subj_name=project.subjects.list{subj};  
         proj_brainstorm_subject_data_estimation(project, subj_name);
@@ -62,7 +62,7 @@ if do_sensors_common_data_estimation
 end
 %==================================================================================
 % BEM calculation over first subject (and first condition) and copy to all subjects (assuming all the subjects used the same montage)
-if do_bem
+if project.operations.do_bem
     ProtocolSubjects    = bst_get('ProtocolSubjects');
     subj1_name          = ProtocolSubjects.Subject(1).Name;
     
@@ -70,7 +70,7 @@ if do_bem
 end
 %==================================================================================
 % check if all subjects have BEM file. if not, copy it from first subject to remaining ones
-if do_check_bem
+if project.operations.do_check_bem
     ProtocolSubjects    = bst_get('ProtocolSubjects');
     subj1_name          = ProtocolSubjects.Subject(1).Name;
     src_file            = fullfile(project.paths.brainstorm_data, subj1_name,'@default_study', project.brainstorm.conductorvolume.bem_file_name);
@@ -91,7 +91,7 @@ end
 %================================================================================================================================================================================
 %================================================================================================================================================================================
 % sources calculation over full Vertices (usually 15000) surface
-if do_sources_calculation
+if project.operations.do_sources_calculation
     % perform sources processing over subject/condition/data_average.mat
     sources_results = cell(project.subjects.numsubj, tot_num_contrasts);
     
@@ -108,7 +108,7 @@ end
 %==================================================================================
 % sources time-frequency calculation: four freq bands, temporary over-ride
 % output : [timefreq_morlet_' source_norm band_desc '_zscore.mat']
-if do_sources_tf_calculation
+if project.operations.do_sources_tf_calculation
     
     sources_norm=[sources_norm '_s3000'];    
         
@@ -133,7 +133,7 @@ end
 %==================================================================================
 % scouts time-frequency calculation: four freq bands, temporary over-ride
 % output: [timefreq_morlet_' source_norm band_desc '_69scouts_zscore.mat']
-if do_sources_scouts_tf_calculation
+if project.operations.do_sources_scouts_tf_calculation
     name_cond={'cwalker','cscrambled'};
     name_maineffects={};
     % sources_norm=[sources_norm '_s500'];
@@ -164,7 +164,7 @@ end
 %================================================================================================================================================================================
 %==================================================================================
 % project unconstrained 3oriented sources to a scalar value
-if do_sources_unconstrained2flat
+if project.operations.do_sources_unconstrained2flat
     list_subjects               = project.subjects.list;
     condition_names             = project.epoching.condition_names;    cond_length = length(condition_names);    
     for t=1:length(postprocess_sources_tag_list)
@@ -182,7 +182,7 @@ if do_sources_unconstrained2flat
 end
 %==================================================================================
 % time dimensionality reduction: averaging samples within a number of timewindows
-if do_sources_time_reduction
+if project.operations.do_sources_time_reduction
 
     sample_length.ms            = 1000/project.eegdata.fs;
     sample_length.s             = 1/project.eegdata.fs;
@@ -222,7 +222,7 @@ if do_sources_time_reduction
 end
 %==================================================================================
 % spatial dimensionality reduction: downsampling to user-generated atlas composed by hundreds of scouts
-if do_sources_spatial_reduction
+if project.operations.do_sources_spatial_reduction
     list_subjects               = project.subjects.list;
     condition_names             = project.epoching.condition_names;    cond_length = length(condition_names);    
     for t=1:length(postprocess_sources_tag_list)
@@ -241,7 +241,7 @@ end
 %==================================================================================
 % spatial dimensionality reduction: downsampling to user-generated atlas composed by hundreds of scouts
 % uses : 'process_extract_scout'
-if do_sources_extract_scouts
+if project.operations.do_sources_extract_scouts
     list_subjects               = project.subjects.list;
     condition_names             = project.epoching.condition_names;    cond_length = length(condition_names);
     for t=1:length(postprocess_sources_tag_list)
@@ -262,7 +262,7 @@ end
 %==================================================================================
 % this version accept a struct array of time windows and averages all the values contained within each struct array element
 % it grants just one controlled time value for each struct array element, uses : 'process_extract_values'
-if do_sources_extract_scouts_oneperiod_values
+if project.operations.do_sources_extract_scouts_oneperiod_values
     list_subjects               = project.subjects.list;
     condition_names             = project.epoching.condition_names;    cond_length = length(condition_names);
     for t=1:length(postprocess_sources_tag_list)
@@ -282,7 +282,7 @@ if do_sources_extract_scouts_oneperiod_values
 end
 %======================================================================================
 % zscore normalization on sources results-300.8
-if do_results_zscore
+if project.operations.do_results_zscore
     
     list_subjects               = project.subjects.list;
     condition_names             = project.epoching.condition_names;    cond_length = length(condition_names);
@@ -300,7 +300,7 @@ if do_results_zscore
     end    
 end
 %==================================================================================
-if do_sources_export2spm8
+if project.operations.do_sources_export2spm8
     % export sources results over subject/condition
 
     postprocess_sources_tag_list={'wmne | fixed | surf', 'wmne | free | vol', 'wmne | loose | 0.2 | surf', 'sloreta | fixed | surf', 'sloreta | free | vol', 'sloreta | loose | 0.2 | surf'};
@@ -355,7 +355,7 @@ if do_sources_export2spm8
     end
 end
 %==================================================================================
-if do_sources_export2spm8_subjects_peaks
+if project.operations.do_sources_export2spm8_subjects_peaks
     % export sources results over subject/condition
 
     peak_subfolder  = 'peak_20ms';
@@ -405,7 +405,7 @@ end
 %==================================================================================
 % paired 2samples ttest DEPRECATED
 results=cell(1,tot_num_contrasts);
-if do_process_stats_paired_2samples_ttest_old_sources
+if project.operations.do_process_stats_paired_2samples_ttest_old_sources
     for pwc=1:length(pairwise_comparisons)
         results{pwc} = brainstorm_group_stats_2cond_pairedttest_deprecated(project.brainstorm.db_name, ...
                                                                 pairwise_comparisons{pwc}{1}, ...
@@ -421,7 +421,7 @@ end
 
 % paired 2samples ttest NEW
 results=cell(1,tot_num_contrasts);
-if do_process_stats_paired_2samples_ttest_sources
+if project.operations.do_process_stats_paired_2samples_ttest_sources
     for pwc=1:length(pairwise_comparisons)
         results{pwc} = brainstorm_group_stats_2cond_pairedttest(project.brainstorm.db_name, ...
                                                                 pairwise_comparisons{pwc}{1}, ...
@@ -436,7 +436,7 @@ end
 
 % paired 2samples ttest process_ft_sourcestatistics
 results=cell(1,tot_num_contrasts);
-if do_process_stats_paired_2samples_ttest_ft_sources
+if project.operations.do_process_stats_paired_2samples_ttest_ft_sources
     for pwc=1:length(pairwise_comparisons)
         results{pwc} = brainstorm_group_stats_2cond_pairedttest(project.brainstorm.db_name, ...
                                                                 pairwise_comparisons{pwc}{1}, ...
@@ -452,7 +452,7 @@ end
 %==================================================================================
 % baseline ttest
 results=cell(1,tot_num_contrasts);
-if do_process_stats_baseline_ttest_sources
+if project.operations.do_process_stats_baseline_ttest_sources
     for bc=1:length(baseline_comparisons)                ...protocol_name, cond,  analysis_type, prestim, poststim, avg_func, subjects_list, varargin
         results{bc} = brainstorm_group_stats_baseline_ttest(project.brainstorm.db_name, ...
                                                             baseline_comparisons{bc}, ...
@@ -466,7 +466,7 @@ end
 %==================================================================================
 % TF all sources
 results_scouts_tf=cell(1,tot_num_contrasts);
-if do_group_analysis_tf
+if project.operations.do_group_analysis_tf
     file_input='timefreq_morlet_wmne_s3000_teta_mu_beta1_beta2_zscore';
     for pwc=1:length(pairwise_comparisons)
      results{pwc} = brainstorm_group_stats_2cond_pairedttest(project.brainstorm.db_name, pairwise_comparisons{pwc}{1}, pairwise_comparisons{pwc}{2}, group_comparison_analysis_type, 1, project.subjects.list);
@@ -475,7 +475,7 @@ end
 %==================================================================================
 % TF 69 scouts
 results_scouts_tf=cell(1,tot_num_contrasts);
-if do_group_analysis_scouts_tf
+if project.operations.do_group_analysis_scouts_tf
     file_input='timefreq_morlet_wmne_teta_mu_beta1_beta2_69scouts_zscore';
     results_scouts_tf{1} = brainstorm_group_stats_2cond_pairedttest(project.brainstorm.db_name, 'cwalker','cscrambled', file_input ,1,project.subjects.list);
 end
@@ -487,12 +487,12 @@ end
 %================================================================================================================================================================================
 %================================================================================================================================================================================
 % average sources results
-if do_group_results_averaging
+if project.operations.do_group_results_averaging
     brainstorm_group_average_cond_results(project.brainstorm.db_name, project.subjects.list, project.epoching.condition_names, group_comparison_analysis_type); 
 end
 %================================================================================================================================================================================
 % parse sources results
-if do_process_stats_sources
+if project.operations.do_process_stats_sources
     all_group_results   = bst_get('Study', -2); ... bst_get('Study', '@inter/brainstormstudy.mat');
     num_stats           = length(all_group_results.Stat);
     for res=1:num_stats
@@ -505,7 +505,7 @@ if do_process_stats_sources
 end
 %==================================================================================
 % parse scouts TF results
-if do_process_stats_scouts_tf
+if project.operations.do_process_stats_scouts_tf
     process_result_string='130614';
     all_group_results = bst_get('Study', -2); ... bst_get('Study', '@inter/brainstormstudy.mat');
     num_stats=length(all_group_results.Stat);
@@ -518,14 +518,14 @@ if do_process_stats_scouts_tf
     end
 end
 %==================================================================================
-if do_export_scouts_to_file
+if project.operations.do_export_scouts_to_file
     condition_names             = project.epoching.condition_names;    cond_length = length(condition_names);
     list_subjects               = project.subjects.list;    
     
     brainstorm_subject_scouts_export(project.brainstorm.db_name, list_subjects, condition_names, export_scout_name);
 end
 %==================================================================================
-if do_export_scouts_multiple_oneperiod_to_file
+if project.operations.do_export_scouts_multiple_oneperiod_to_file
     condition_names             = project.epoching.condition_names;    cond_length = length(condition_names);
     list_subjects               = project.subjects.list;    
 
@@ -539,7 +539,7 @@ if do_export_scouts_multiple_oneperiod_to_file
     end    
 end
 %==================================================================================
-if do_export_scouts_to_file_factors
+if project.operations.do_export_scouts_to_file_factors
     condition_names             = project.epoching.condition_names;    cond_length = length(condition_names);
     associated_factors          = project.study.associated_factors;
     list_subjects               = project.subjects.list;    
@@ -547,7 +547,7 @@ if do_export_scouts_to_file_factors
     brainstorm_subject_scouts_export_2factors(project.brainstorm.db_name, list_subjects, condition_names, associated_factors, factors_names, final_export_scout_name_inputfile);
 end
 %================================================================================================================================================================================
-if do_export_scouts_multiple_oneperiod_to_file_factors
+if project.operations.do_export_scouts_multiple_oneperiod_to_file_factors
     condition_names             = project.epoching.condition_names;    cond_length = length(condition_names);
     associated_factors          = project.study.associated_factors;
     list_subjects               = project.subjects.list;    
