@@ -1,7 +1,9 @@
 
-function sFiles = proj_brainstorm_group_average_cond2(project, varargin) ... subjects_list, cond_list, input_file_name
+function sFiles = proj_brainstorm_group_average_cond_new(project, varargin) ... subjects_list, cond_list, input_file_name
 
-    protocol_name = project.brainstorm.db_name;
+    iProtocol               = brainstorm_protocol_open(protocol_name);
+    protocol                = bst_get('ProtocolInfo');
+    brainstorm_data_path    = protocol.STUDIES;
     
     % default
     list_select_subjects   = project.subjects.list;
@@ -21,9 +23,7 @@ function sFiles = proj_brainstorm_group_average_cond2(project, varargin) ... sub
        end
     end
 
-    iProtocol               = brainstorm_protocol_open(protocol_name);
-    protocol                = bst_get('ProtocolInfo');
-    brainstorm_data_path    = protocol.STUDIES;
+  
     
     len_subj                = length(list_select_subjects);
     len_cond                = length(cond_list);

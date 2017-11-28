@@ -1,4 +1,4 @@
-function sFiles = brainstorm_conditions_differences(db_name, subj_name, cond1, cond2)
+function sFiles = brainstorm_subject_conditions_differences(db_name, subj_name, cond1, cond2)
 
     iProtocol               = brainstorm_protocol_open(db_name);
     protocol                = bst_get('ProtocolInfo');

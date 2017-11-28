@@ -1,8 +1,8 @@
 % to do: per ora usare codice nel do_operations2
 
-function dir_bck = brainstorm_bck_bem(subjects_list)
+function dir_bck = brainstorm_bck_bem(list_select_subjects)
 
-   if do_check_bem
+if do_check_bem
     ProtocolSubjects    = bst_get('ProtocolSubjects');
     %     subj1_name          = ProtocolSubjects.Subject(1).Name;
     
@@ -26,6 +26,6 @@ function dir_bck = brainstorm_bck_bem(subjects_list)
     end
     db_reload_database(iProtocol);
 end
-   
+
 end
 
