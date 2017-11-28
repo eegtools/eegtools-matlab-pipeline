@@ -1,0 +1,22 @@
+split between 
+
+- postprocess measures (dimensionality reduction within rois, time windows and frequency bands)
+- statistical calculation
+- results plotting.
+
+so after
+proj_eeglab_study_compute_channels_measures
+there will be a 
+
+proj_eeglab_study_reduce_data
+proj_eeglab_study_compute_statistics
+proj_eeglab_plot_data
+
+
+added operations to plot data without any statistical operation/thresholding
+project.operations.do_study_plot_data
+
+
+
+invert project.postprocessing.erp => project.erp.postprocessing
+and so on.

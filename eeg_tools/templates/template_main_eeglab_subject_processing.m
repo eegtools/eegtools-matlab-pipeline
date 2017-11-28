@@ -6,18 +6,15 @@ clear project
 os = system_dependent('getos');
 if  strncmp(os,'Linux',2)
     
-    project.paths.projects_data_root    = '/media/dados/EEG/projects';
-    project.paths.projects_scripts_root = '/media/dados/EEG/projects';
-    project.paths.global_scripts_root   = '/media/dados/EEG/eegtools/matlab-pipeline';
-    project.paths.plugins_root          = '/media/data/matlab/common/extensions';
-%     project.paths.projects_data_root    = '/data/projects';
-%     project.paths.svn_scripts_root      = '/data/behavior_lab_svn/behaviourPlatform';
-%     project.paths.plugins_root          = '/data/matlab_toolbox';
+    project.paths.projects_data_root    = '/data/projects';
+    project.paths.projects_scripts_root = '/data/behavior_lab_svn/behaviourPlatform';
+    project.paths.plugins_root          = '/data/matlab_toolbox';
+    project.paths.global_scripts_root   = '/data/matlab_toolbox/eegtools-matlab-pipeline';
 else
-    project.paths.projects_data_root    = 'C:\Users\Pippo\Documents\EEG_projects';
-    project.paths.projects_scripts_root = 'C:\Users\Pippo\Documents\MATLAB\svn_beviour_lab\EEG_Tools';
-    project.paths.global_scripts_root   = 'C:\Users\Pippo\Documents\MATLAB\svn_beviour_lab\matlab-pipeline';
-    project.paths.plugins_root          = 'C:\Users\Pippo\Documents\MATLAB\toolboxes';
+    project.paths.projects_data_root    = 'd:\\data\projects';
+    project.paths.projects_scripts_root = 'd:\\data\behavior_lab_svn\behaviourPlatform';
+    project.paths.plugins_root          = 'd:\\data\matlab_toolbox';
+    project.paths.global_scripts_root   = 'd:\\data\matlab_toolbox\eegtools-matlab-pipeline';
 end
 
 %% ==================================================================================
@@ -35,7 +32,6 @@ project.conf_file_name      = 'project_structure';         ... project_structure
 %% =====================================================================================================================================================================
 %  PROJECT STRUCTURE AND FILE SYSTEM INITIALIZATION
 %=====================================================================================================================================================================
-% to get project_init
 project.paths.script.eeg_tools_project = fullfile(project.paths.global_scripts_root, 'eeg_tools', 'project', ''); addpath(project.paths.script.eeg_tools_project); 
 project                                = project_init(project);             ... project structure
 %% =====================================================================================================================================================================

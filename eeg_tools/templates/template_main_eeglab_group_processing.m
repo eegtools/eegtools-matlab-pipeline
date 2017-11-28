@@ -32,8 +32,7 @@ project.conf_file_name      = 'project_structure';              ... project_stru
 %% =====================================================================================================================================================================
 %  PROJECT STRUCTURE AND FILE SYSTEM INITIALIZATION
 %=====================================================================================================================================================================
-% to get project_init
-project.paths.script.eeg_tools_project = fullfile(project.paths.svn_scripts_root, 'CommonScript', 'eeg','eeg_tools', 'project', ''); addpath(project.paths.script.eeg_tools_project); 
+project.paths.script.eeg_tools_project = fullfile(project.paths.global_scripts_root, 'eeg_tools', 'project', ''); addpath(project.paths.script.eeg_tools_project); 
 project                                = project_init(project);             ... project structure
 %% =====================================================================================================================================================================
 %  OVERRIDE

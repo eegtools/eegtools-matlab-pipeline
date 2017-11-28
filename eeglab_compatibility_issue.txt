@@ -1,4 +1,0 @@
-
-eeglab/study/primitive/plot/save_figures.m 
-
-renderer        = 'painter';        =>  renderer        = 'painters';

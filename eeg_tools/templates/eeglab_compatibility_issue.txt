@@ -1,0 +1,7 @@
+Issues moving the framework from Matlab 2013b => Matlab 2014a 
+
+eeglab/study/primitive/plot/save_figures.m 
+
+renderer        = 'painter';        =>  renderer        = 'painters';
+
+legend:  'Unknown property: YColor.

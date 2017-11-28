@@ -3,3 +3,7 @@ Changes will possibly make your old script stop working correctly.
 In this cases, look in this file if a recently introduced modification is responsible for such failure.
 
 05/04/2017: START OF THIS FILE
+
+
+
+26/11  added cluster-based permutation test according to fieldtrip

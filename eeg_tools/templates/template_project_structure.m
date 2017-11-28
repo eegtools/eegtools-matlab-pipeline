@@ -162,13 +162,13 @@ project.eegdata.no_eeg_channels_list = [project.eegdata.emg_channels_list projec
 % output file name = [original_data_prefix subj_name original_data_suffix project.import.output_suffix . set]
 
 % during import
-project.preproc.output_folder   = project.import.output_folder;     % F1:   string appended to fullfile(project.paths.project,'epochs', ...) , determining where to write imported file
+project.preproc.output_folder   = project.import.output_folder;   % F1:   string appended to fullfile(project.paths.project,'epochs', ...) , determining where to write imported file
 
 % FILTER ALGORITHM (FOR ALL FILTERS IN THE PROJECT)
 % the _12 suffix indicate filetrs of EEGLab 12; the _13 suffix indicate filetrs of EEGLab 13
 project.preproc.filter_algorithm = 'pop_eegfiltnew_12';     % F2:   
     % * 'pop_eegfiltnew_12'                     = pop_eegfiltnew without the causal/non-causal option. is the default filter of EEGLab, 
-    %                                             allows to set the band also for notch, so it's more flexible than pop_basicfilter of erplab 
+    %                                             allows to set the band also for notch, so it is more flexible than pop_basicfilter of erplab 
     % * 'pop_basicfilter'                       = erplab filters (version erplab_1.0.0.33: more recent presented many bugs)  
     % * 'causal_pop_iirfilt_12'                 = causal version of iirfilt
     % * 'noncausal_pop_iirfilt_12'              = noncausal version of iirfilt
@@ -299,7 +299,7 @@ project.preproc.insert_end_baseline.delay.s                 = [0];              
 % problem: when epoching, generally there is the need to do a baseline correction. however sometimes no part of the extracted epoch can be assumed as a good baseline.
 % The standard STUDY pipeline does NOT allow to consider smoothly external baselines.
 % Here is the possibility, for each trial, to replace part of the extracted epoch around each experimental event in the trial, by a segment (in the same trial or outside), 
-% that it's known to be a 'good' baseline.
+% that it is known to be a good baseline.
 % The procedure has some requirements:
 % 
 % 1. have already marked in the recording events denoting begin/end of trial

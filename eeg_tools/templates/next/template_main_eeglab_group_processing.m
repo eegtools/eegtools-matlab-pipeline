@@ -7,79 +7,118 @@ os = system_dependent('getos');
 if  strncmp(os,'Linux',2)
     
     project.paths.projects_data_root    = '/data/projects';
-    project.paths.svn_scripts_root      = '/data/behavior_lab_svn/behaviourPlatform';
+    project.paths.projects_scripts_root = '/data/behavior_lab_svn/behaviourPlatform';
     project.paths.plugins_root          = '/data/matlab_toolbox';
+    project.paths.global_scripts_root   = '/data/matlab_toolbox/eegtools-matlab-pipeline';
 else
-    project.paths.projects_data_root    = 'C:\Users\Pippo\Documents\EEG_projects';
-    project.paths.svn_scripts_root      = 'C:\Users\Pippo\Documents\MATLAB\svn_beviour_lab\EEG_Tools';
-    project.paths.plugins_root          = 'C:\Users\Pippo\Documents\MATLAB\toolboxes';
+    project.paths.projects_data_root    = 'd:\\data\projects';
+    project.paths.projects_scripts_root = 'd:\\data\behavior_lab_svn\behaviourPlatform';
+    project.paths.plugins_root          = 'd:\\data\matlab_toolbox';
+    project.paths.global_scripts_root   = 'd:\\data\matlab_toolbox\eegtools-matlab-pipeline';
 end
 
 %% ==================================================================================
 %  PROJECT DATA 
 %==================================================================================
-project.research_group      = 'PAP';
-project.research_subgroup   = 'laura';
-project.name                = 'cp_action_observation';                 ... must correspond to 'project.paths.local_projects_data' subfolder name
-project.conf_file_name      = 'project_structure_observation';         ... project_structure file name, located in : project.paths.eegtools_svn_local / project.research_group_svn_folder / project.name
-
+project.research_group      = 'MNI';
+project.research_subgroup   = '';
+project.name                = 'perception_action_musicians';    ... must correspond to 'project.paths.local_projects_data' subfolder name
+project.conf_file_name      = 'project_structure';              ... project_structure file name, located in : project.paths.eegtools_svn_local / project.research_group_svn_folder / project.name
 %% =====================================================================================================================================================================
 %  DESIGN SPECIFICATION
 %==================================================================================
-...
-...
-...
-...
+
+
 %% =====================================================================================================================================================================
 %  PROJECT STRUCTURE AND FILE SYSTEM INITIALIZATION
 %=====================================================================================================================================================================
-project.paths.script.common_scripts     = fullfile(project.paths.svn_scripts_root, 'CommonScript', '');                                                     addpath(project.paths.script.common_scripts);      ... to get genpath2
-project.paths.script.eeg_tools          = fullfile(project.paths.script.common_scripts, 'eeg','eeg_tools', '');                                             addpath(genpath2(project.paths.script.eeg_tools)); %addpath(project.paths.script.eeg_tools);           ... to get define_project_paths
-project.paths.script.project            = fullfile(project.paths.svn_scripts_root, project.research_group, project.research_subgroup , project.name, '');   addpath(genpath2(project.paths.script.project));   ... in general u don't need to import the others' projects svn folders
-
-eval(project.conf_file_name);                                               ... project structure
-project                                 = define_project_paths(project);    ... global and project paths definition. If 2nd param is 0, is faster, as it does not call eeglab
-init_operations_flags
+project.paths.script.eeg_tools_project = fullfile(project.paths.global_scripts_root, 'eeg_tools', 'project', ''); addpath(project.paths.script.eeg_tools_project); 
+project                                = project_init(project);             ... project structure
+analysis                               = initAnalysisStructure(project);   ... load analysis structure, possibly retrieving some project parameters useful for analysis
 %% =====================================================================================================================================================================
-%  OVERRIDE
-%=====================================================================================================================================================================
-
-stat_analysis_suffix='aocs_ao_C4_subject_similar_presound-TF_tw_fb';
-stat_analysis_suffix=[stat_analysis_suffix,'-',datestr(now, 'dd-mmm-yyyy-HH-MM-SS')];
-
-design_num_vec          = [8:12 2:7];
-
-% select number of subjects to be processed: can be  1) commented 2) set
-% to [] 3( set to a cell array of strings 4) set to project.subjects.list
-list_select_subjects    = project.subjects.list;% {'CC_01_vittoria', 'CC_02_fabio', 'CC_03_anna', 'CC_04_giacomo', 'CC_05_stefano', 'CC_06_giovanni', 'CC_07_davide', 'CC_08_jonathan', 'CC_09_antonella', 'CC_10_chiara', 'CP_01_riccardo', 'CP_02_ester', 'CP_03_sara', 'CP_04_matteo', 'CP_05_gregorio', 'CP_06_fernando', 'CP_07_roberta', 'CP_08_mattia', 'CP_09_alessia', 'CP_10_livia'}; ...project.subjects.list;
-
-% if a list is not set, or is empty, all subjects in the project are
-% processed 
-if not(exist('list_select_subjects','var'))
-    list_select_subjects    = project.subjects.list;
-else
-    if isempty(list_select_subjects) 
-        list_select_subjects    = project.subjects.list;
-    end
-end
-numsubj                         = length(list_select_subjects);
-project.subjects.curr_list      = list_select_subjects;
-
-% select a specific bannd to focus statistics in ersp tf (experimental)
-mask_coef                       = [];
-stat_freq_bands_list            = [];
-
-% if the parameters are not set, they are assumed to be empty (i.e. no band
-% selection)
-if not(exist( 'mask_coef','var')) || not(exist( 'stat_freq_bands_list','var'))
-    mask_coef=[];
-    stat_freq_bands_list=[];
-end
-
-%% =====================================================================================================================================================================
+%  ===================================================================================================================================================================
 %  OPERATIONS LIST 
 %=====================================================================================================================================================================
 
+% datelabel = ['-' datestr(now,30);
+datelabel = '';
+
+analysis.name = ['ERP_tw_noalign_mesial' datelabel];
+analysis.design_num_vec          = [4]; ...[2,3];
+analysis.list_select_subjects    = [];
+
+
+analysis.erp.roi_list={ {'Pz'};{'CPz'};{'Cz'};{'FCz'};{'Fz'}};
+analysis.erp.roi_names={'Pz','CPz', 'Cz', 'FCz', 'Fz'};
+
+
+startProcess(analysis, 'do_study_plot_roi_erp_curve_tw_individual_noalign');
+startProcess(analysis, 'do_study_plot_roi_erp_curve_tw_individual_align');
+
+% --------------------------------------------------------------------------------------
+analysis.erp.stats.pvalue = 0.05;
+startProcess(analysis, 'do_study_plot_roi_erp_curve_tw_individual_align');
+
+% --------------------------------------------------------------------------------------
+analysis.name ='ERP_tw_align_mesial_none001'
+analysis.erp.stats.pvalue = 0.001;
+analysis.erp.stats.correction = 'none';
+startProcess(analysis, 'do_study_plot_roi_erp_curve_tw_individual_align');
+
+% --------------------------------------------------------------------------------------
+analysis.name ='ERP_tw_align_mesial_fdr05'
+analysis.erp.stats.pvalue = 0.05;
+analysis.erp.stats.correction = 'fdr';
+startProcess(analysis, 'do_study_plot_roi_erp_curve_tw_individual_align');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%=====================================================================================================================================================================
 % create a study from preprocessed datasets
 project.operations.do_study                                                         = 0;
 
@@ -117,7 +156,7 @@ project.operations.do_study_compute_channels_measures                           
 % master-function:                                      proj_eeglab_study_plot_roi_erp_curve
 
 % CONTINUOUS: analyzes and plots of erp curve for all time points
-project.operations.do_study_plot_roi_erp_curve_continous                            = 0;
+project.operations.do_study_plot_roi_erp_curve_continous                            = 1;
 
 % TIMEWINDOW: perform (and save) statistics based time windows
 
@@ -185,7 +224,6 @@ project.operations.do_study_plot_roi_erpemg_curve_tw_individual_noalign         
 project.operations.do_study_plot_roi_erpemg_curve_tw_individual_align                  = 0;
 
 
-
 %% -------------------------------------------------------------------------------------------
 % ERP_TOPO_TW
 %--------------------------------------------------------------------------------------------
@@ -231,29 +269,8 @@ project.operations.do_study_plot_erp_topo_compact_tw_individual_noalign         
 project.operations.do_study_plot_erp_topo_compact_tw_individual_align               = 0;
 
 
-%% ------------------------------------------------------------------------------------------
-% ALLCH_ERP_TIME, evaluate and represent ERP of all channels as a fucntion
-% of time and compare different conditions in a time x channels space (TANOVA)
-%--------------------------------------------------------------------------------------------
-% master-function:                                      proj_eeglab_study_plot_allch_erp_time
-project.proj_eeglab_study_plot_allch_erp_time                                              = 0;
 
-
-%% -------------------------------------------------------------------------------------------
-% ALLCH_ERP_CC_TIME
-%--------------------------------------------------------------------------------------------
-% master-function:                                       proj_eeglab_study_plot_allch_erp_cc_time
-% settings:
-% evaluate and represent cross correlation of ERP of all channels between levels of one factor as a function of time and
-% compare different levels of the other factor in a time x channels space (TANOVA)
-project.operations.do_study_plot_allch_erp_cc_time                                              = 0;
-
-
-
-
-
-
-
+project.operations.do_eeglab_study_export_erp_r                                     = 0;
 
 %% ******************************************************************************************************************************************
 %==========================================================================================================================================
@@ -341,6 +358,8 @@ project.operations.do_study_plot_roi_ersp_curve_tw_individual_noalign_compact   
 project.operations.do_study_plot_roi_ersp_curve_tw_individual_align_compact         = 0;
 
 
+
+
 %% -------------------------------------------------------------------------------------------
 % FOR ersp, eog CURVE_standard, standard curve ersp modality: evaluate and represent standard EEGLab statistics on the curve of ersp, plot together levels of design factors
 %--------------------------------------------------------------------------------------------
@@ -390,6 +409,7 @@ project.operations.do_study_plot_roi_erspemg_curve_tw_individual_noalign        
 project.operations.do_study_plot_roi_erspemg_curve_tw_individual_align                  = 0;
 
 
+
 %% ------------------------------------------------------------------------------------------
 % ERSP_TOPO_TW_FB, evaluate and represent standard EEGLab statistics on the curve of ERSP in a selected frequency, plot together levels of design factors 
 %--------------------------------------------------------------------------------------------
@@ -435,9 +455,6 @@ project.operations.do_study_plot_ersp_topo_tw_fb_individual_align_compact       
 
 project.operations.do_eeglab_study_export_ersp_tf_r                                 = 0;
 
-
-
-
 %% =====================================================================================================================================================================
 %=====================================================================================================================================================================
 %=====================================================================================================================================================================
@@ -449,9 +466,22 @@ project.operations.do_eeglab_study_export_ersp_tf_r                             
 %=====================================================================================================================================================================
 
 try
+  
+%     project.stats.erp.num_permutations = 2;
+%     do_operations
+% 
+% 
+%     design_num_vec          = [4];
+%     project.stats.erp.num_permutations = 100000;
+%     stat_analysis_suffix = 'erp_N1_N2_ventral_reduced_100000perm_wnd20ms_180-250_365-450_eye_regr_sign_all_full_005_fdr';
+    ...stat_analysis_suffix = 'erp_N2_central_reduced_100000perm_wnd20ms_380-480_eye_regr_sign_all_full_005_fdr';
+    ...stat_analysis_suffix = 'erp_MPP_100000perm_wnd20ms_250-400_400-700_eye_regr_sign_all_full_005_fdr';
+
+%     proj_eeglab_study_plot_roi_erp_curve_regr_sign_all_full(project, stat_analysis_suffix, project.postprocess.erp.mode.tw_individual_align, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);        
+    ...proj_eeglab_study_plot_roi_erp_curve_regr_all_full(project, stat_analysis_suffix, project.postprocess.erp.mode.tw_individual_align, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);        
+%     proj_eeglab_study_plot_roi_erp_curve_regr_sign_by_tw_full(project, stat_analysis_suffix, project.postprocess.erp.mode.tw_individual_align, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);        
+    ...proj_eeglab_study_plot_roi_erp_curve_regr_by_tw_full(project, stat_analysis_suffix, project.postprocess.erp.mode.tw_individual_align, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);        
     
-   do_operations
-   
    
 catch err
     % This "catch" section executes in case of an error in the "try" section
