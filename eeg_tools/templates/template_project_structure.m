@@ -33,7 +33,7 @@
 project.study_suffix                                = '';                   % A4: sub name used to create a different STUDY name (fianl file will be called: [project.name project.study_suffix '.study'])
 project.analysis_name                               = 'raw_observation';    % A5: epoching output folder name, subfolder containing the condition files of the current analysis type
 
-project.operations.do_source_analysis               = 0;                    % A6:  
+project.operations.do_source_analysis               = 1;                    % A6:  
 project.operations.do_emg_analysis                  = 0;                    % A7:
 project.operations.do_cluster_analysis              = 0;                    % A8:
 
@@ -140,14 +140,16 @@ project.eegdata.emg_channels_list_labels    = [];
 project.eegdata.eog_channels_list           = [];
 project.eegdata.eog_channels_list_labels    = [];
 
+id_nextch=project.eegdata.nch_eeg;
 for ch_id=1:length(project.import.ch2transform)
     ch = project.import.ch2transform(ch_id);
     if ~isempty(ch.new_label)
+        id_nextch=id_nextch+1;
         if strcmp(ch.type, 'emg')
-            project.eegdata.emg_channels_list           = [project.eegdata.emg_channels_list (project.eegdata.nch_eeg+ch_id)];
+            project.eegdata.emg_channels_list           = [project.eegdata.emg_channels_list (id_nextch)];
             project.eegdata.emg_channels_list_labels    = [project.eegdata.emg_channels_list_labels ch.new_label];
         elseif strcmp(ch.type, 'eog')
-            project.eegdata.eog_channels_list           = [project.eegdata.eog_channels_list (project.eegdata.nch_eeg+ch_id)];
+            project.eegdata.eog_channels_list           = [project.eegdata.eog_channels_list (id_nextch)];
             project.eegdata.eog_channels_list_labels    = [project.eegdata.eog_channels_list_labels ch.new_label];
         end
     end
@@ -162,13 +164,13 @@ project.eegdata.no_eeg_channels_list = [project.eegdata.emg_channels_list projec
 % output file name = [original_data_prefix subj_name original_data_suffix project.import.output_suffix . set]
 
 % during import
-project.preproc.output_folder   = project.import.output_folder;   % F1:   string appended to fullfile(project.paths.project,'epochs', ...) , determining where to write imported file
+project.preproc.output_folder   = project.import.output_folder;     % F1:   string appended to fullfile(project.paths.project,'epochs', ...) , determining where to write imported file
 
 % FILTER ALGORITHM (FOR ALL FILTERS IN THE PROJECT)
 % the _12 suffix indicate filetrs of EEGLab 12; the _13 suffix indicate filetrs of EEGLab 13
 project.preproc.filter_algorithm = 'pop_eegfiltnew_12';     % F2:   
     % * 'pop_eegfiltnew_12'                     = pop_eegfiltnew without the causal/non-causal option. is the default filter of EEGLab, 
-    %                                             allows to set the band also for notch, so it is more flexible than pop_basicfilter of erplab 
+    %                                             allows to set the band also for notch, so it's more flexible than pop_basicfilter of erplab 
     % * 'pop_basicfilter'                       = erplab filters (version erplab_1.0.0.33: more recent presented many bugs)  
     % * 'causal_pop_iirfilt_12'                 = causal version of iirfilt
     % * 'noncausal_pop_iirfilt_12'              = noncausal version of iirfilt
@@ -299,7 +301,7 @@ project.preproc.insert_end_baseline.delay.s                 = [0];              
 % problem: when epoching, generally there is the need to do a baseline correction. however sometimes no part of the extracted epoch can be assumed as a good baseline.
 % The standard STUDY pipeline does NOT allow to consider smoothly external baselines.
 % Here is the possibility, for each trial, to replace part of the extracted epoch around each experimental event in the trial, by a segment (in the same trial or outside), 
-% that it is known to be a good baseline.
+% that it's known to be a 'good' baseline.
 % The procedure has some requirements:
 % 
 % 1. have already marked in the recording events denoting begin/end of trial
@@ -442,7 +444,7 @@ project.subjects.conditions_behavioral_data(1) =  struct('name', 'RT', 'data', .
 
 project.subjects.conditions_behavioral_data(2) =  struct('name', 'RT_RATIO', 'data', ...
                                    [1.057,1.057,1.055,1.055; ... 
-                                   [1.057,1.057,1.055,1.055; ... 
+                                    1.057,1.057,1.055,1.055; ... 
                                     ]);                                  
 
 %% ======================================================================================================
@@ -450,7 +452,7 @@ project.subjects.conditions_behavioral_data(2) =  struct('name', 'RT_RATIO', 'da
 % ======================================================================================================
 project.study.filename                          = [project.name project.study_suffix '.study'];
 
-% structures that associates conditions' file with (multiple) factor(s)
+% structures that associates conditions file with (multiple) factor(s)
 
 % IMPORTANT NOTE: as additional factors are added to the EEG.event
 % structure as new fields, you cannot call the new factor names using
@@ -938,7 +940,7 @@ project.postprocess.ersp.nroi = length(project.postprocess.ersp.roi_list);
 project.postprocess.ersp.eog.nroi = length(project.postprocess.ersp.eog.roi_list);
 project.postprocess.ersp.emg.nroi = length(project.postprocess.ersp.emg.roi_list);
 %==============================================
-% DESIGNS' TIME WINDOWS
+% DESIGNS TIME WINDOWS
 %==============================================
 
 project.postprocess.ersp.design(1).group_time_windows(1)        = struct('name','350-650','min',350, 'max',650);
@@ -1016,12 +1018,12 @@ project.postprocess.ersp.design(1).which_extrema_curve_continuous = {     .... d
 
 % semi-automatic (simplified) input mode: set values for the first roi/design and
 % other values will be automatically generated
-group_time_windows_continuous_roi = {{};{};{};{}};
-    group_time_windows_continuous_design = cell(project.postprocess.ersp.numroi,1);
-    for nr =1:project.postprocess.ersp.numroi
-        group_time_windows_continuous_design{nr} = group_time_windows_continuous_roi;
-    end
-    project.postprocess.ersp.design(1).which_extrema_curve_continuous = group_time_windows_continuous_design;
+% group_time_windows_continuous_roi = {{};{};{};{}};
+%     group_time_windows_continuous_design = cell(project.postprocess.ersp.numroi,1);
+%     for nr =1:project.postprocess.ersp.numroi
+%         group_time_windows_continuous_design{nr} = group_time_windows_continuous_roi;
+%     end
+%     project.postprocess.ersp.design(1).which_extrema_curve_continuous = group_time_windows_continuous_design;
 
 
 % time interval for searching extreme in the continuous curve ( NON time-window mode)
@@ -1392,6 +1394,21 @@ project.results_display.erp.display_compact_topo_mode           = 'errorbar';   
 project.results_display.erp.display_compact_show_head           = 'off';        % 'on'|'off'
 project.results_display.erp.z_transform                        = 'on';         % 'on'|'off' z-transform data data for each roi, and tw to allow to plot all figures on the same scale
 
+
+
+% ERP HEADPLOT
+project.results_display.erp.headplot.view_list                 = [0,  60; ...
+                                                                  0, -60  ...
+                                                                  ];
+
+%  'view'       - Camera viewpoint in deg. [azimuth elevation]
+%                    'back'|'b'=[  0 30]; 'front'|'f'=[180 30]
+%                    'left'|'l'=[-90 30]; 'right'|'r'=[ 90 30];
+%                    'frontleft'|'bl','backright'|'br', etc.,
+%                    'top'=[0 90],  Can rotate with mouse {default [143 18]}
+
+
+
 % ERP CC
 project.results_display.cclim_plot                               = [];           %y limits for the representation of cross correlation
 project.results_display.xlim_plot                                = [];           % time (lag) limits in ms for the representation of cross correlation
@@ -1406,7 +1423,7 @@ project.results_display.ersp.z_transform                        = 'on';         
 project.results_display.ersp.which_error_measure                = 'sem';        % 'sd'|'sem'; which error measure is adopted in the errorbar: standard deviation or standard error
 project.results_display.ersp.freq_scale                         = 'linear';     % 'log'|'linear' set frequency scale in time-frequency plots
 project.results_display.ersp.masked_times_max                   = [];
-project.results_display.ersp.display_pmode                      = 'raw_diff';   % 'raw_diff' | 'abs_diff'| 'standard'; plot p values in a time-frequency space. 'raw_diff': for 2 levels factors, show p values multipled with the raw difference between the average of level 1 and the average of level 2; 'abs_diff': for 2 levels factors, show p values multipled with the difference betwenn the abs of the average of level 1 and the abs of the average of level 2 (more focused on the strength of the spectral variatio with respect to the sign of the variation); 'standard': the standard mode of EEGLab, only indicating a significant difference between levels, without providing information about the sign of the difference, it's the only representation avalillable for factors with >2 levels (for which a difference cannot be simply calculated). 
+project.results_display.ersp.display_pmode                      = 'raw_diff';   % 'raw_diff' | 'abs_diff'| 'standard'; plot p values in a time-frequency space. 'raw_diff': for 2 levels factors, show p values multipled with the raw difference between the average of level 1 and the average of level 2; 'abs_diff': for 2 levels factors, show p values multipled with the difference betwenn the abs of the average of level 1 and the abs of the average of level 2 (more focused on the strength of the spectral variatio with respect to the sign of the variation); 'standard': the standard mode of EEGLab, only indicating a significant difference between levels, without providing information about the sign of the difference, it s the only representation avalillable for factors with >2 levels (for which a difference cannot be simply calculated). 
 
 % ERSP CURVE
 project.results_display.ersp.compact_plots                      = 'on';         % display (curve) plots with different conditions/groups on the same plots
@@ -1434,46 +1451,6 @@ project.results_display.ersp.display_compact_topo_mode          = 'errorbar';   
 project.results_display.ersp.display_compact_show_head          = 'off';        %'on'|'off' show the topographical representation of the roi (the head with the channels of the roi in red and te others in black)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 %% ======================================================================================================
 % P:    EXPORT
 % ======================================================================================================
@@ -1489,65 +1466,217 @@ end
 project.clustering.channels_file_name           = 'cluster_projection_channel_locations.loc';
 project.clustering.channels_file_path           = ''; ... later set by define_paths
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 %% ======================================================================================================
 % R:    BRAINSTORM
 % ======================================================================================================
-project.brainstorm.db_name                      = 'healthy_action_observation_sound';                  ... must correspond to brainstorm db name
+project.brainstorm.db_name='musicians_active';                  ... must correspond to brainstorm db name
 
-project.brainstorm.paths.db                     = '';
-project.brainstorm.paths.data                   = '';
-project.brainstorm.paths.channels_file          = '';
-
-project.brainstorm.sources.sources_norm         = 'wmne';        % possible values are: wmne, dspm, sloreta
-project.brainstorm.sources.source_orient        = 'fixed';      % possible values are: fixed, loose
-project.brainstorm.sources.loose_value          = 0.2;
-project.brainstorm.sources.depth_weighting      = 'nodepth';   % optional parameter, actually it is enabled for wmne and dspm and disabled for sloreta
-project.brainstorm.sources.downsample_atlasname = 's3000';
+project.brainstorm.paths.db                             = '';
+project.brainstorm.paths.data                           = '';
+project.brainstorm.paths.channels_file                  = '';
 
 
-for fb=1:length(project.postprocess.ersp.frequency_bands)
-    project.brainstorm.analysis_bands{fb,1} = project.postprocess.ersp.frequency_bands(fb).name;
-    project.brainstorm.analysis_bands{fb,2} = [num2str(project.postprocess.ersp.frequency_bands(fb).min) ', ' num2str(project.postprocess.ersp.frequency_bands(fb).max)];
-    project.brainstorm.analysis_bands{fb,3} = 'mean';
-end
-project.brainstorm.analysis_bands = {project.brainstorm.analysis_bands};
+%% STUDY
+project.brainstorm.study.use_same_montage                     = 1;
+project.brainstorm.study.default_anatomy                      = 'Colin27';
+project.brainstorm.study.channels_file_name                   = 'brainstorm_channel_biosemi_65.mat';
+project.brainstorm.study.channels_file_type                   = 'BST';
+project.brainstorm.study.channels_file_path                   = ''; ... later set by define_paths
+    
+%% SENSORS
+
+project.brainstorm.sensors.name_maineffects    = {'M' 'MM' '300' '100'};
+project.brainstorm.sensors.tot_num_contrasts   = project.epoching.numcond + length(project.brainstorm.sensors.name_maineffects);
+
+% used for ERP differences and paired ttest
+project.brainstorm.sensors.pairwise_comparisons = { ...
+                                                    {'M-100', 'MM-100'}; ...
+                                                    {'M-300', 'MM-300'}; ...
+                                                   };
+
+%% SOURCES
+
+% average FILE used to calculate sources
+% project.brainstorm.average_file_name    = 'data_average_tw_average_5_samples';        % after temporal reduction 1 sample for each component (in case of one component, it adds a fake second TP)
+% project.brainstorm.average_file_name    = 'data_average_tw_average_all_samples';      % after temporal reduction (2*window_samples_halfwidth + 1) * ncomponents 
+project.brainstorm.average_file_name    = 'data_average';  
+
+project.brainstorm.sources.flatting_method = 1; % 0: no flatting, 1: norm, 2: PCA
+
+project.brainstorm.conductorvolume.surf_bem_file_name   = 'headmodel_surf_openmeeg.mat';
+project.brainstorm.conductorvolume.vol_bem_file_name    = 'headmodel_vol_openmeeg.mat';
+
+project.brainstorm.sources.params =  {
+%                           {'norm', 'dspm',    'orient',   'free',  'headmodelfile', project.brainstorm.conductorvolume.surf_bem_file_name,  'tag', 'surf', 'project.operations.do_norm', project.brainstorm.sources.flatting_method, 'loose_value', 0}; ...
+%                           {'norm', 'dspm',    'orient',   'fixed', 'headmodelfile', project.brainstorm.conductorvolume.surf_bem_file_name,  'tag', 'surf', 'project.operations.do_norm', project.brainstorm.sources.flatting_method, 'loose_value', 0}; ...
+                            {'norm', 'wmne',    'orient',   'free',  'headmodelfile', project.brainstorm.conductorvolume.surf_bem_file_name,  'tag', 'surf', 'project.operations.do_norm', project.brainstorm.sources.flatting_method, 'loose_value', 0}; ...
+                            {'norm', 'wmne',    'orient',   'fixed', 'headmodelfile', project.brainstorm.conductorvolume.surf_bem_file_name,  'tag', 'surf', 'project.operations.do_norm', 0                                         , 'loose_value', 0}; ...
+%                           {'norm', 'sloreta', 'orient',   'free',  'headmodelfile', project.brainstorm.conductorvolume.surf_bem_file_name,  'tag', 'surf', 'project.operations.do_norm', project.brainstorm.sources.flatting_method, 'loose_value', 0}; ...
+%                           {'norm', 'dspm',    'orient',   'free',  'headmodelfile', project.brainstorm.conductorvolume.surf_bem_file_name,  'tag', 'surf', 'project.operations.do_norm', project.brainstorm.sources.flatting_method, 'loose_value', 0}; ...
+%                           {'norm', 'mne',     'orient',   'free',  'headmodelfile', project.brainstorm.conductorvolume.vol_bem_file_name,   'tag', 'vol',  'project.operations.do_norm', project.brainstorm.sources.flatting_method, 'loose_value', 0}; ...
+%                           {'norm', 'mne',     'orient',   'fixed', 'headmodelfile', project.brainstorm.conductorvolume.vol_bem_file_name,   'tag', 'vol',  'project.operations.do_norm', 0                                         , 'loose_value', 0}; ...
+%                           {'norm', 'sloreta', 'orient',   'free',  'headmodelfile', project.brainstorm.conductorvolume.vol_bem_file_name,   'tag', 'vol',  'project.operations.do_norm', project.brainstorm.sources.flatting_method, 'loose_value', 0}; ...
+%                           {'norm', 'dspm',    'orient',   'free',  'headmodelfile', project.brainstorm.conductorvolume.vol_bem_file_name,   'tag', 'vol',  'project.operations.do_norm', project.brainstorm.sources.flatting_method, 'loose_value', 0}; ...
+                        };
+
+                    
+                    
+                    
+%%
+%--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+% SOURCES DIMENSIONALITY REDUCTION & EXPORT
+%--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+% TEMPORAL
+
+% ------- time reduction (file containing the components' peaks...it's an ERP CURVE TW with individual peak calculation) 
+% ONLY suited for that design (usually the #1) reporting all the plain conditions. not structured factors
+project.brainstorm.postprocess.tw_latencies_file        = '/data/projects/PAP/moving_scrambled_walker/results/OCICA_250_raw/erp_N2_central_reduced_100000perm_wnd20ms_380-480_eye_regr_sign_all_full_005_fdr/all-erp_curve_individual_align-16-Dec-2015-17-39-21/erp_curve_roi-stat.mat';
+
+project.brainstorm.postprocess.group_time_windows(1)    = struct('name', '211', 'min', 211.3, 'max', 211.3);
+
+% project.brainstorm.postprocess.analysis_times                       = {{'t-4', '-0.4000, -0.3040', 'mean'; 't-3', '-0.3000, -0.2040', 'mean'; 't-2', '-0.2000, -0.1040', 'mean'; 't-1', '-0.1000, -0.0040', 'mean'; 't1', '0.0000, 0.0960', 'mean'; 't2', '0.1000, 0.1960', 'mean'; 't3', '0.2000, 0.2960', 'mean'; 't4', '0.3000, 0.3960', 'mean'; 't5', '0.4000, 0.4960', 'mean'; 't6', '0.5000, 0.5960', 'mean'; 't7', '0.6000, 0.6960', 'mean'; 't8', '0.7000, 0.7960', 'mean'; 't9', '0.8000, 0.8960', 'mean'; 't10', '0.9000, 0.9960', 'mean'}};
+
+
+
+
+project.brainstorm.postprocess.time_reduction_tag_list                = {'sloreta | free | surf',...
+    };
+
+
+project.brainstorm.postprocess.sources_tag_list            = {'sloreta | free | surf',...
+    'sloreta | free | surf | tw_average_C1',...
+    'sloreta | free | surf | tw_average_P140', ...
+    'sloreta | free | surf | tw_average_ACOP'  };
+
+
+
+
+
+
+% 
+%                     time_reduction_tag_list                = {'sloreta | free | surf',...
+%                                             };
+%                                        
+% 
+% postprocess_sources_tag_list            = {'sloreta | free | surf',...
+%                                            'sloreta | free | surf | tw_average_C1',...
+%                                            'sloreta | free | surf | tw_average_P140', ...
+%                                            'sloreta | free | surf | tw_average_ACOP'  };
+% 
+
+
+
+
+
+% Assuming you have N components. When you perform time reduction, it creates two ERP file:
+% 1)    one ERP average file with N timepoints calculated as the average of the
+%       window_samples_halfwidth samples before and after the obtained peak + the peak s tp (thus you get 2*window_samples_halfwidth + 1 samples)
+% 2)    one ERP average file with N*(2*window_samples_halfwidth + 1) timepoints
+project.brainstorm.postprocess.window_samples_halfwidth     = 2;        % number of TP before and after the calculated peak
+
+
+% SPATIAL
+project.brainstorm.postprocess.downsample_atlasname         = 's3000';  % name of the atlas defined in BST GUI
+
+project.brainstorm.postprocess.scouts_names             = {'r_ACC','r_MCC','r_IFG'};
+project.brainstorm.postprocess.numscouts                = length(project.brainstorm.postprocess.scouts_names);
+
+
+% SPECTRAL
+project.brainstorm.postprocess.analysis_bands={{ ...
+                    project.postprocess.ersp.frequency_bands(1).name, [num2str(project.postprocess.ersp.frequency_bands(1).min) ', ' num2str(project.postprocess.ersp.frequency_bands(1).max)], 'mean'; ...
+                    project.postprocess.ersp.frequency_bands(2).name, [num2str(project.postprocess.ersp.frequency_bands(2).min) ', ' num2str(project.postprocess.ersp.frequency_bands(2).max)], 'mean'; ...
+                    project.postprocess.ersp.frequency_bands(3).name, [num2str(project.postprocess.ersp.frequency_bands(3).min) ', ' num2str(project.postprocess.ersp.frequency_bands(3).max)], 'mean'; ...
+%                     project.postprocess.ersp.frequency_bands(4).name, [num2str(project.postprocess.ersp.frequency_bands(4).min) ', ' num2str(project.postprocess.ersp.frequency_bands(4).max)], 'mean' ...
+                                  }};
                                   
-project.brainstorm.analysis_times               = {{'t-4', '-0.4000, -0.3040', 'mean'; 't-3', '-0.3000, -0.2040', 'mean'; 't-2', '-0.2000, -0.1040', 'mean'; 't-1', '-0.1000, -0.0040', 'mean'; 't1', '0.0000, 0.0960', 'mean'; 't2', '0.1000, 0.1960', 'mean'; 't3', '0.2000, 0.2960', 'mean'; 't4', '0.3000, 0.3960', 'mean'; 't5', '0.4000, 0.4960', 'mean'; 't6', '0.5000, 0.5960', 'mean'; 't7', '0.6000, 0.6960', 'mean'; 't8', '0.7000, 0.7960', 'mean'; 't9', '0.8000, 0.8960', 'mean'; 't10', '0.9000, 0.9960', 'mean'}};
 
-project.brainstorm.conductorvolume.type         = 1;
-project.brainstorm.conductorvolume.surf_bem_file_name = 'headmodel_surf_openmeeg.mat';
-project.brainstorm.conductorvolume.vol_bem_file_name  = 'headmodel_vol_openmeeg.mat';
+%%
+%--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+% GROUP ANALYSIS
+%--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-if project.brainstorm.conductorvolume.type == 1
-    project.brainstorm.conductorvolume.bem_file_name = project.brainstorm.conductorvolume.surf_bem_file_name;
+list_select_groups = {};  %{ 'AS', 'AEB'} cell array to select groups to be analyzed project.subjects.group_names
+
+if not(exist('list_select_groups','var'))
+    list_select_groups    = project.subjects.group_names;
 else
-    project.brainstorm.conductorvolume.bem_file_name = project.brainstorm.conductorvolume.vol_bem_file_name;
+    if isempty(list_select_groups) 
+        list_select_groups    = project.subjects.group_names;
+    end
 end
 
-project.brainstorm.use_same_montage                 = 1;
-project.brainstorm.default_anatomy                  = 'MNI_Colin27';
-project.brainstorm.channels_file_name               = 'brainstorm_channel.pos';
-project.brainstorm.channels_file_type               = 'BST';  ... 'POLHEMUS'
-project.brainstorm.channels_file_path               = ''; ... later set by define_paths
-
-project.brainstorm.export.spm_vol_downsampling      = 2;
-project.brainstorm.export.spm_time_downsampling     = 1;
-
-project.brainstorm.std_loose_value                  = 0.2;
-
-project.brainstorm.average_file_name                = 'data_average';
-project.brainstorm.stats.ttest_abstype              = 1;
+project.brainstorm.groupanalysis.vec_select_groups  = find(ismember(project.subjects.group_names,  list_select_groups));
 
 
-project.brainstorm.postprocess.group_time_windows(1)=struct('name', '211', 'min', 211.3, 'max', 211.3);
+project.brainstorm.baselineanalysis.comparisons         = project.epoching.condition_names;     
+project.brainstorm.baselineanalysis.baseline            = [project.epoching.bc_st.s, project.epoching.bc_end.s];
+project.brainstorm.baselineanalysis.poststim            = [0.05, project.epoching.epo_end.s];
 
-project.brainstorm.postprocess.scout_list={
-                                  {'r_ACC'};    
-                                  {'r_MCC'};    
-                                  {'r_IFG'}
-};
-project.brainstorm.postprocess.scouts_names={'r_ACC','r_MCC','r_IFG'};
-project.brainstorm.postprocess.numscouts=length(project.brainstorm.postprocess.scout_list);
+project.brainstorm.groupanalysis.comment                = [];
+project.brainstorm.groupanalysis.data_type              = 'results_'; 
+project.brainstorm.groupanalysis.abs_type               = 0;  ... never normalize during z-transform
+project.brainstorm.groupanalysis.analysis_type          = 'wmne_fixed_surf_zscore'; %'wmne_free_surf_zscore_norm';
+project.brainstorm.groupanalysis.interval               = [0 project.epoching.epo_end.s];
+project.brainstorm.groupanalysis.pairwise_comparisons   = project.brainstorm.sensors.pairwise_comparisons;
+project.brainstorm.groupanalysis.analysis_type_list     = {'sloreta_free_surf_norm', 'sloreta_free_surf_tw_average_C1_norm', 'sloreta_free_surf_tw_average_P140_norm','sloreta_free_surf_tw_average_ACOP_norm'};
+project.brainstorm.groupanalysis.averaging_continuous_list = {'sloreta_free_surf_norm'};
+project.brainstorm.groupanalysis.averaging_tw_list = { 'sloreta_free_surf_tw_average_C1_norm', 'sloreta_free_surf_tw_average_P140_norm','sloreta_free_surf_tw_average_ACOP_norm'};
+
+project.brainstorm.groupanalysis.compare_conds_within_group          = 1;
+project.brainstorm.groupanalysis.compare_groups_within_cond          = 1;
+
+
+% group_comparison_analysis_type_list  = {'sloreta_free_surf_norm', 'sloreta_free_surf_tw_average_C1_norm', 'sloreta_free_surf_tw_average_P140_norm','sloreta_free_surf_tw_average_ACOP_norm'};
+% 
+% group_results_averaging_continuous_list = {'sloreta_free_surf_norm'};
+% group_results_averaging_tw_list = { 'sloreta_free_surf_tw_average_C1_norm', 'sloreta_free_surf_tw_average_P140_norm','sloreta_free_surf_tw_average_ACOP_norm'};
+ 
+ 
+
+
+
+%% --------------------------------------------------------------------------------------------------------------------------------------------------------------------
+% STATS
+%--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+project.brainstorm.stats.pvalue                         = 0.05;
+project.brainstorm.stats.correction                     = 'fdr';
+project.brainstorm.stats.num_permutations               = 1000;
+project.brainstorm.stats.ttest_abstype                  = 1;
+project.brainstorm.stats.correction_dimension           = 'space';
+
+
+%% --------------------------------------------------------------------------------------------------------------------------------------------------------------------
+% RESULTS POSTPROCESS & EXPORT
+%--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+% substring used to get and process specific results file
+project.brainstorm.results_processing.process_result_string='twalker_cwalker_wmne_free_surf_tw_average_5_samples_Uniform250';     
+
+project.brainstorm.export.scout_name_inputfile   = ['wmne_free_surf_zscore_norm_scouts' '_' strjoin2(project.brainstorm.postprocess.scouts_names, '_')]; 
+project.brainstorm.export.scout_name_outputfile   = ['wmne_free_surf_zscore_norm_scouts' '_' strjoin2(project.brainstorm.postprocess.scouts_names, '_') '_' strjoin2({project.brainstorm.postprocess.group_time_windows.name}, '_')]; 
+
+
+project.brainstorm.export.spm_vol_downsampling          = 2;
+project.brainstorm.export.spm_time_downsampling         = 1;
+
+
 % ======================================================================================================
 % ======================================================================================================
 % ======================================================================================================
@@ -1558,12 +1687,6 @@ project.brainstorm.postprocess.numscouts=length(project.brainstorm.postprocess.s
 % ======================================================================================================
 % ======================================================================================================
 % ======================================================================================================
-
-
-% project = eegtools_project_derive_parameters(project);
-% project = eegtools_project_check(project)
-
-
 
 
 
@@ -1595,7 +1718,7 @@ project.epoching.bc_end.ms  = project.epoching.bc_end.s*1000;           % baseli
 project.epoching.epo_st.ms  = project.epoching.epo_st.s*1000;             % epochs start latency
 project.epoching.epo_end.ms = project.epoching.epo_end.s*1000;             % epochs end latency
 
-project.epoching.baseline_mark.baseline_begin_target_marker_delay.ms = project.epoching.baseline_mark.baseline_begin_target_marker_delay.s *1000; % delay  between target and baseline begin marker to be inserted
+% project.epoching.baseline_mark.baseline_begin_target_marker_delay.ms = project.epoching.baseline_mark.baseline_begin_target_marker_delay.s *1000; % delay  between target and baseline begin marker to be inserted
 
 %  ********* /DERIVED DATA *****************************************************************
 

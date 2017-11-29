@@ -5,35 +5,32 @@ clear project
 % to be edited according to calling PC local file system
 os = system_dependent('getos');
 if  strncmp(os,'Linux',2)
-    
     project.paths.projects_data_root    = '/data/projects';
     project.paths.projects_scripts_root = '/data/behavior_lab_svn/behaviourPlatform';
     project.paths.plugins_root          = '/data/matlab_toolbox';
-    project.paths.global_scripts_root   = '/data/matlab_toolbox/eegtools-matlab-pipeline';
+    project.paths.framework_root        = '/data/CODE/MATLAB/eegtools/matlab-pipeline';
 else
     project.paths.projects_data_root    = 'd:\\data\projects';
     project.paths.projects_scripts_root = 'd:\\data\behavior_lab_svn\behaviourPlatform';
     project.paths.plugins_root          = 'd:\\data\matlab_toolbox';
-    project.paths.global_scripts_root   = 'd:\\data\matlab_toolbox\eegtools-matlab-pipeline';
+    project.paths.framework_root        = 'd:\\data\matlab_toolbox\eegtools-matlab-pipeline';
 end
-
 %% ==================================================================================
 %  PROJECT DATA 
 %==================================================================================
-project.research_group      = 'OTHER';
+project.research_group      = 'MNI';
 project.research_subgroup   = '';
-project.name                = 'gonogo_chess';                 ... must correspond to 'project.paths.local_projects_data' subfolder name
-project.conf_file_name      = 'project_structure';         ... project_structure file name, located in : project.paths.eegtools_svn_local / project.research_group_svn_folder / project.name
-%% =====================================================================================================================================================================
-%  DESIGN SPECIFICATION
-%==================================================================================
-
-
+project.name                = 'perception_action_musicians';    ... must correspond to 'project.paths.local_projects_data' subfolder name
+project.conf_file_name      = 'template_project_structure';              ... project_structure file name, located in : project.paths.eegtools_svn_local / project.research_group_svn_folder / project.name
 %% =====================================================================================================================================================================
 %  PROJECT STRUCTURE AND FILE SYSTEM INITIALIZATION
 %=====================================================================================================================================================================
-project.paths.script.eeg_tools_project = fullfile(project.paths.global_scripts_root, 'eeg_tools', 'project', ''); addpath(project.paths.script.eeg_tools_project); 
+project.paths.script.eeg_tools_project = fullfile(project.paths.framework_root, 'eeg_tools', 'project', ''); addpath(project.paths.script.eeg_tools_project); 
 project                                = project_init(project);             ... project structure
+%% =====================================================================================================================================================================
+%  DESIGN SPECIFICATION
+%==================================================================================
+% to be edited according to experiment.....
 %% =====================================================================================================================================================================
 %  OVERRIDE
 %=====================================================================================================================================================================
