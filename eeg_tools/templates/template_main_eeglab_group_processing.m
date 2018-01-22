@@ -80,7 +80,7 @@ project.stats.erp.num_permutations                      = 2;                    
 
 project.postprocess.erp.roi_list                        = {{'CP6'};{'TP8'}};
 project.postprocess.erp.roi_names                       = {'CP6', 'TP8'};
-result = startProcess(project, 'study_plot_roi_erp_curve_continous', stat_analysis_suffix, design_num_vec, list_select_subjects);
+result = startProcess(project, 'study_plot_roi_erp_curve_continous', 'stat_analysis_suffix', stat_analysis_suffix, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
 
 
 % --------------------------------------------------------------------------------------------------------------------------
@@ -91,7 +91,7 @@ project.postprocess.erp.roi_list                        = {{'CP6'};{'TP8'}};
 project.postprocess.erp.roi_names                       = {'CP6', 'TP8'};
 project.postprocess.erp.design(1).group_time_windows(1) = struct('name','N170','min',145, 'max',180, 'ref_roi', 'TP8');
 project.postprocess.erp.design(1).which_extrema_curve   = {{'min'};{'min'}};    ... roi x time_windows
-result = startProcess(project, 'study_plot_roi_erp_curve_tw_individual_align', stat_analysis_suffix, design_num_vec, list_select_subjects);
+result = startProcess(project, 'study_plot_roi_erp_curve_tw_individual_align', 'stat_analysis_suffix', stat_analysis_suffix, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
 
 
 
@@ -104,7 +104,7 @@ project.stats.erp.num_permutations                      = 2;                    
 
 project.postprocess.erp.roi_list                        = {{'FCz'};{'AFz'}};
 project.postprocess.erp.roi_names                       = {'FCz', 'AFz'};
-result = startProcess(project, 'study_plot_roi_erp_curve_continous', stat_analysis_suffix, design_num_vec, list_select_subjects);
+result = startProcess(project, 'study_plot_roi_erp_curve_continous', 'stat_analysis_suffix', stat_analysis_suffix, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
 
 
 % --------------------------------------------------------------------------------------------------------------------------
@@ -115,7 +115,7 @@ project.postprocess.erp.roi_list                        = {{'FCz'};{'AFz'}};
 project.postprocess.erp.roi_names                       = {'FCz', 'AFz'};
 project.postprocess.erp.design(1).group_time_windows(1) = struct('name','N200','min',175, 'max',225, 'ref_roi', 'FCz');
 project.postprocess.erp.design(1).which_extrema_curve   = {{'min'};{'min'}};    ... roi x time_windows
-result = startProcess(project, 'study_plot_roi_erp_curve_tw_individual_align', stat_analysis_suffix, design_num_vec, list_select_subjects);
+result = startProcess(project, 'study_plot_roi_erp_curve_tw_individual_align', 'stat_analysis_suffix', stat_analysis_suffix, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
 
 
 
