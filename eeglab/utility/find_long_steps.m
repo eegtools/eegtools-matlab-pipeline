@@ -16,16 +16,16 @@ curve          = input.curve;
 min_duration   = input.min_duration; % in samples
 
 
-lc             = length(curve);
+% lc             = length(curve);
 output         = nan(size(curve));
-ind_out        = 1:length(output);
+% ind_out        = 1:length(output);
 
 
-twmat      = [];
 stepvec    = find(curve>0);
 
-ini        = min(stepvec);
-fin        = max(stepvec);
+lsv = length(stepvec);
+
+
 
 
 
@@ -33,76 +33,48 @@ fin        = max(stepvec);
 % fisso il candidato all'inizio del primo step l'indice del primo elemento
 % >0
 
-if not(isempty(ini))
+if lsv
     
-    ind1    =  ini;
-    ind2    =  ind1;
-    ntw     =  1;
+    output0 = zeros(size(output));
     
-    while (ind1 <= fin && ind2 <= fin)        
+    
+    for nn = 1:lsv
         
-        ind2_temp = ind2;        
-        sbulacco1 = 0;
-        sbulacco2 = 0;
+        ini = stepvec(nn) - min_duration/2;
+        fin = stepvec(nn) + min_duration/2;
         
-        while (curve(ind2_temp) > 0 && not(sbulacco1) && not(sbulacco2))
-            if ind2_temp < lc
-                if curve(ind2_temp+1) > 0 && curve(ind2_temp) > 0
-                    ind2_temp = ind2_temp+1;
-                end
-                if ind2_temp+1 < lc
-                if not(curve(ind2_temp+1)> 0)  && curve(ind2_temp) > 0
-                    sbulacco2=1;
-                end
-                end
-            else
-                ind2_temp = lc;
-                sbulacco1  = 1;
-            end
-        end
+        sel = stepvec >= ini & stepvec <= fin;
         
-        if sbulacco1
-            ind2 = lc;
-        else
-            if sbulacco2
-                ind2 = ind2_temp;
-            else
-                ind2 = ind2_temp-1;
-            end
-        end
-        
-        dind = ind2-ind1+1;
-        
-        if dind >= min_duration
-            twmat(ntw,:) = [ind1, ind2];
-            ntw = ntw+1;
-        end
-        
-        ind1_temp = ind2+1;
-         
-        if ind1_temp > lc
-            sbulacco = 1;
-        else
-            sbulacco = 0;
-        end
-        
-        if not(sbulacco)
-            while (not(curve(ind1_temp)> 0) && not(sbulacco))
-                
-                if ind1_temp < lc
-                    ind1_temp = ind1_temp+1;
-                else
-                    sbulacco = 1;
-                end
-            end
-        end
-        
-        ind1    = ind1_temp;
-        ind2    = ind1;
+        selint = stepvec(sel);
+        if not(isempty(selint))
+            i1 = min(selint);
+            i2 = max(selint);
+            output0(i1:i2) = 1;            
+        end        
     end
     
-    for ntw = 1:size(twmat,1)
-        output(ind_out >= twmat(ntw,1)    & ind_out <= twmat(ntw,2)) =1;
-    end    
+    dd = diff(output0);
+    
+    ii = find(dd == 1);
+    ff = find(dd == -1);
+    
+    
+    
+    for mm = 1:length(ff)
+        rr = ff(mm) - ii(mm);
+        
+        if rr >= min_duration
+            output(ii(mm):ff(mm)) = 1;
+        end
+        
+    end
+    
+    if length(ff)<length(ii) 
+        output(ii(mm+1):end) = 1;
+    end
+    
 end
+
+    
+    
 end

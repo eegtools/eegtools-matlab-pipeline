@@ -13,7 +13,6 @@ levels_f1                                                                  = inp
 levels_f2                                                                  = input.levels_f2;
 plot_dir                                                                   = input.plot_dir;
 
-
 transpose                                                   = 'on';
 
 
@@ -93,6 +92,8 @@ if strcmp(transpose,'off')
             fig=figure('color','w'); % creo una figura che avrà tanti sub-plot quanti sono i livelli del secondo fattore
             
             mat_erp_plot = erp_avgsub{ns1,ns2} .* p_grand_average;% calcolo la matrice che media sui soggetti(lascia x=tempi, y=canali)
+            
+            
 %             imagesc(times(sel_times),1:tch,mat_erp_plot(:,sel_times));%faccio il plot della matrice
 pcolor(times(sel_times),1:tch,mat_erp_plot(:,sel_times));shading flat; grid on
 
@@ -129,6 +130,11 @@ else
 
 %             subplot(1,s1,ns1); % riempo un subplot della figura
             mat_erp_plot = erp_avgsub{ns1,ns2} .* p_grand_average;% calcolo la matrice che media sui soggetti(lascia x=tempi, y=canali)
+            
+            
+           
+            
+            
 %             imagesc(times(sel_times),1:tch,mat_erp_plot(:,sel_times));%faccio il plot della matrice
 pcolor(times(sel_times),1:tch,mat_erp_plot(:,sel_times));shading flat;grid on
  

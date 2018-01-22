@@ -90,6 +90,10 @@ end;
 
 study_path                  = fullfile(project.paths.output_epochs, project.study.filename);
 results_path                = project.paths.results;
+data_driven_path = fullfile(results_path,'data_driven');
+if not(exist(data_driven_path))
+    mkdir(data_driven_path)
+end
 
 paired_list = cell(length(project.design), 2);
 for ds=1:length(project.design)
@@ -119,6 +123,7 @@ compact_display_stats       = project.results_display.erp.compact_stats;
 display_single_subjects     = project.results_display.erp.single_subjects;
 xlim        = project.results_display.erp.compact_display_xlim;
 amplim        = project.results_display.erp.compact_display_ylim;
+select_tw_des=project.datadriven.select_tw_des;
 
 
 % group_time_windows_list     = arrange_structure(project.postprocess.erp.design, 'group_time_windows');
@@ -177,7 +182,7 @@ for par=1:2:length(varargin)
                 'do_plots',...
                 'recompute_precompute',...
                 'recompute_grand_average',...
-                 'recompute_grouping_factor',...
+                'recompute_grouping_factor',...
                 'levels_f1_grand_average_dd',...
                 'levels_f2_grand_average_dd'...
                 }
@@ -224,7 +229,7 @@ for design_num=design_num_vec
     
     erp_curve_roi_stat.study_des       = STUDY.design(design_num);
     erp_curve_roi_stat.study_des.num   = design_num;
-%     erp_curve_roi_stat.roi_names       = roi_names;
+    %     erp_curve_roi_stat.roi_names       = roi_names;
     
     name_f1                            = STUDY.design(design_num).variable(1).label;
     name_f2                            = STUDY.design(design_num).variable(2).label;
@@ -232,8 +237,8 @@ for design_num=design_num_vec
     levels_f1                          = STUDY.design(design_num).variable(1).value;
     levels_f2                          = STUDY.design(design_num).variable(2).value;
     
-    grouping_factor                    = project.design(design_num).grouping_factor;
-    comparing_factor                    = project.design(design_num).comparing_factor;
+    name_gf                    = project.design(design_num).grouping_factor;
+    name_cf                    = project.design(design_num).comparing_factor;
     
     % lista dei soggetti suddivisi per fattori
     list_design_subjects               = eeglab_generate_subjects_list_by_factor_levels(STUDY, design_num);
@@ -259,9 +264,16 @@ for design_num=design_num_vec
         % dimension times x channels x subjects
         [STUDY, erp_curve_allch, times]=std_erpplot(STUDY,ALLEEG,'channels',allch,'noplot','on');
         
-        save(precompute_file,'erp_curve_allch','times')
+        out_precompute.erp_curve_allch = erp_curve_allch;
+        out_precompute.times = times;
+
+        
+        save(precompute_file,'out_precompute')
     else
         load(precompute_file);
+        erp_curve_allch =  out_precompute.erp_curve_allch;
+        times = out_precompute.times;
+        
     end
     
     
@@ -285,7 +297,7 @@ for design_num=design_num_vec
     
     %% compute grand average file
     
-    grand_average_file = fullfile(study_path,['grand_average_erp_allch_', char(STUDY.design(design_num).name), '.mat']);
+    grand_average_file = fullfile(data_driven_path,['grand_average_erp_allch_', char(STUDY.design(design_num).name), '.mat']);
     exist_grand_average = exist(grand_average_file);
     
     if (strcmp(recompute_grand_average, 'on')  || not(exist_grand_average))
@@ -293,10 +305,18 @@ for design_num=design_num_vec
         
         sel_levels_f1_grand_average_dd = ismember(levels_f1,levels_f1_grand_average_dd{design_num});
         sel_levels_f2_grand_average_dd = ismember(levels_f2,levels_f2_grand_average_dd{design_num});
-
+        
         erp_curve_allch_grand_average = erp_curve_allch(sel_levels_f1_grand_average_dd,sel_levels_f2_grand_average_dd);
+        
+        %         medie per ogni livello di gf e cf (grouping e comparing factor)
+        %         in cui i soggetti sono collassati
+        
+        
         erp_curve_allch_collsub_grand_average = erp_curve_allch_collsub(sel_levels_f1_grand_average_dd,sel_levels_f2_grand_average_dd);
         
+        
+        
+        %% calcolo medione
         dim_erp_curve_allch = ndims(erp_curve_allch_grand_average{1});
         collapsing_dimension = dim_erp_curve_allch+1;
         
@@ -313,7 +333,7 @@ for design_num=design_num_vec
         input_dd.curve         = mean_collapsed_cell_all_sub;
         input_dd.base_tw       = [project.epoching.bc_st.ms project.epoching.bc_end.ms];
         input_dd.times        = times;
-        input_dd.levels_grouping_factor                                                     = {'grand_average'};
+        input_dd.levels_gf                                                     = {'grand_average'};
         input_dd.min_duration                                                               = project.postprocess.erp.design(design_num).min_duration ;                      % ha senso settare una diversa lunghezza minima a seconda della banda o del tipo del sgnale?
         input_dd.pvalue                                                                     = study_ls;                            % default will be 0.05
         input_dd.correction                                                                 = correction;                        % string. correction for multiple comparisons 'none'| 'fdr' | 'holms' | 'bonferoni'
@@ -322,50 +342,71 @@ for design_num=design_num_vec
         
         output_dd_grand_average = eeglab_study_curve_data_driven_onset_offset(input_dd);
         
+        output_grand_average.mean_collapsed_cell_all_sub = mean_collapsed_cell_all_sub;
+        output_grand_average.times = times;
+        output_grand_average.allch = allch;
+        output_grand_average.output_dd_grand_average = output_dd_grand_average;
+
+
+
         
-        
-        save(grand_average_file,'mean_collapsed_cell_all_sub','times','allch','output_dd_grand_average')
+        save(grand_average_file,'output_mask_cell_p_gf')
     else
         
         load(grand_average_file);
-        
+        mean_collapsed_cell_all_sub = output_grand_average.mean_collapsed_cell_all_sub;
+        times =         output_grand_average.times;
+        allch = output_grand_average.allch ;
+        output_dd_grand_average = output_grand_average.output_dd_grand_average;
     end
     
     
+    %% project time window on each condtion and extract parameters
+    
+    % cell array a cui applicare la maschera delle p: ha selezionato i
+    % soggetti e i livelli dei fattori da considerare MA non ha fatto
+    % nessuna media
+    %     erp_curve_allch_grand_average
+    
+    
+    %  struttura in cui ho le tw per ogni canale
+    %     output_dd_grand_average
     
     
     
     
     %% plot grand average
-input_ga.erp_grand_average = mean_collapsed_cell_all_sub{:};      
-input_ga.p_grand_average  = output_dd_grand_average.sigcell_pruned_gf{:};  
-input_ga.erp_avgsub = erp_curve_allch_collsub_grand_average;
-input_ga.pvalue = study_ls;
-input_ga.allch = allch;                                                                     
-input_ga.xlim = xlim;                                                                       
-input_ga.amplim = amplim;                                                                   
-input_ga.times = times;                                                                      
-input_ga.levels_f1 = levels_f1(sel_levels_f1_grand_average_dd);                                                                  
-input_ga.levels_f2 = levels_f2 (sel_levels_f2_grand_average_dd);                                                                
-input_ga.plot_dir = plot_dir;  
-
-
-% eeglab_study_allch_erp_time_dd_grand_average_graph(input_ga);
+    if strcmp(do_plots,'on')
+        input_ga.erp_grand_average = mean_collapsed_cell_all_sub{:};
+        input_ga.p_grand_average  = output_dd_grand_average.sigcell_pruned_gf{:};
+        input_ga.erp_avgsub = erp_curve_allch_collsub_grand_average;
+        input_ga.pvalue = study_ls;
+        input_ga.allch = allch;
+        input_ga.xlim = xlim;
+        input_ga.amplim = amplim;
+        input_ga.times = times;
+        input_ga.levels_f1 = levels_f1(sel_levels_f1_grand_average_dd);
+        input_ga.levels_f2 = levels_f2 (sel_levels_f2_grand_average_dd);
+        input_ga.plot_dir = plot_dir;
+        
+        %         eeglab_study_allch_erp_time_dd_grand_average_graph(input_ga);
+    end
+    %% export grand average
+    %input_ga_exp.p_grand_average  = output_dd_grand_average.sigcell_pruned_gf{:};
+    %input_ga_exp.erp_avgsub = erp_curve_allch_collsub_grand_average;
+    %input_ga_exp.levels_f1 = levels_f1(sel_levels_f1_grand_average_dd);
+    %input_ga_exp.levels_f2 = levels_f2 (sel_levels_f2_grand_average_dd);
+    %input_ga_exp.erp_curve_allch = erp_curve_allch;
     
-%% export grand average
-input_ga_exp.p_grand_average  = output_dd_grand_average.sigcell_pruned_gf{:};  
-input_ga_exp.erp_avgsub = erp_curve_allch_collsub_grand_average;
-input_ga.levels_f1 = levels_f1(sel_levels_f1_grand_average_dd);                                                                  
-input_ga.levels_f2 = levels_f2 (sel_levels_f2_grand_average_dd);
-text_export_allch_erp_time_dd_grand_average(input_ga_exp);
-
+    %text_export_allch_erp_time_dd_grand_average(input_ga_exp);
+    
     
     %% compute grouping factor
-    if (isempty(grouping_factor) || isempty(comparing_factor))
+    if (isempty(name_gf) || isempty(name_cf))
         disp('missing grouping or comparing factor: calculate only significant deflections based on the grand average!!!')
     else
         
-        grouping_factor_file = fullfile(study_path,['grouping_factor_erp_allch_', char(STUDY.design(design_num).name), '.mat']);
+        grouping_factor_file = fullfile(data_driven_path,['grouping_factor_erp_allch_', char(STUDY.design(design_num).name), '.mat']);
         exist_grouping_factor = exist(grouping_factor_file);
         
         if (strcmp(recompute_grouping_factor, 'on')  || not(exist_grouping_factor))
@@ -378,25 +419,25 @@ text_export_allch_erp_time_dd_grand_average(input_ga_exp);
             % tw.
             
             
-            if strcmp(grouping_factor, name_f1)
-                levels_grouping_factor = levels_f1;
-                name_grouping_factor   = name_f1;
-                levels_comparing_factor = levels_f2;
-                name_comparing_factor   = name_f2;
+            if strcmp(name_gf, name_f1)
+                levels_gf = levels_f1;
+                name_gf   = name_f1;
+                levels_cf = levels_f2;
+                name_cf   = name_f2;
                 
             else
-                levels_grouping_factor = levels_f2;
-                name_grouping_factor   = name_f2;
-                levels_comparing_factor = levels_f1;
-                name_comparing_factor   = name_f1;
+                levels_gf = levels_f2;
+                name_gf   = name_f2;
+                levels_cf = levels_f1;
+                name_cf   = name_f1;
             end
-            tl_gf = length(levels_grouping_factor);
-            cell_grouped_factor = {};
+            tl_gf = length(levels_gf);
+            cell_gf = {};
             
             %     for each level of grouping factor
             for nl_gf = 1:tl_gf
                 %     each cell grouped factor = mean of all levels of comparing factor
-                if strcmp(grouping_factor, name_f1)
+                if strcmp(name_gf, name_f1)
                     % select all the cells (levels) of the comparing factor corresponding to the current level (nl_gf) of grouping factor
                     current_cells = erp_curve_allch(nl_gf,:);
                 else
@@ -421,404 +462,123 @@ text_export_allch_erp_time_dd_grand_average(input_ga_exp);
                 %         put the matrix into the cell corrsponding to the nl_gf level of
                 %         grouping factor
                 
-                cell_grouped_factor{nl_gf} = mean_collapsed_cell_all_sub';
+                cell_gf{nl_gf} = mean_collapsed_cell_all_sub';
             end
             
             
             
-            input_dd.curve         = cell_grouped_factor;
+            input_dd.curve         = cell_gf;
             input_dd.base_tw       = [project.epoching.bc_st.ms project.epoching.bc_end.ms];
             input_dd.times        = times;
-            input_dd.levels_grouping_factor                                                     = levels_grouping_factor;
+            input_dd.levels_gf                                                     = levels_gf;
             input_dd.min_duration                                                               = project.postprocess.erp.design(design_num).min_duration ;                      % ha senso settare una diversa lunghezza minima a seconda della banda o del tipo del sgnale?
             input_dd.pvalue                                                                     = study_ls;                            % default will be 0.05
             input_dd.correction                                                                 = correction;                        % string. correction for multiple comparisons 'none'| 'fdr' | 'holms' | 'bonferoni'
             
-                       
             
-            output_dd_grouping_factor = eeglab_study_curve_data_driven_onset_offset(input_dd);
-            save(grouping_factor_file,'cell_grouped_factor','times','output_dd_grouping_factor','allch')
+            output_dd_gf = eeglab_study_curve_data_driven_onset_offset(input_dd);
+            
+            output_data_driven.cell_grouped_factor = cell_gf;
+            output_data_driven.times = times;            
+            output_data_driven.output_dd_grouping_factor = output_dd_gf;
+            output_data_driven.allch = allch;
+
+
+
+            save(grouping_factor_file,'output_data_driven')
         else
             
             load(grouping_factor_file);
+            
+            
+            cell_gf= output_data_driven.cell_grouped_factor;
+            times=output_data_driven.times;            
+            output_dd_gf=output_data_driven.output_dd_grouping_factor;
+            allch=output_data_driven.allch ;
+
         end
         
         
         %% plot grouping_factor
-%         input_gf.erp_grand_average = mean_collapsed_cell_all_sub{:};
-        input_gf.p_grouping_factor  = output_dd_grouping_factor.sigcell_pruned_gf;
-        input_gf.erp_avgsub = erp_curve_allch_collsub;
-        input_gf.erp_gf    = cell_grouped_factor;
-        
-        input_gf.pvalue = study_ls;
-        input_gf.allch = allch;
-        input_gf.xlim = xlim;
-        input_gf.amplim = amplim;
-        input_gf.times = times;
-        input_gf.levels_f1 = levels_f1;
-        input_gf.levels_f2 = levels_f2;
-        input_gf.plot_dir = plot_dir;
-        
-        input_gf.levels_grouping_factor = levels_grouping_factor;
-        input_gf.name_grouping_factor   = name_grouping_factor;
-        input_gf.levels_comparing_factor = levels_comparing_factor;
-        input_gf.name_comparing_factor   = name_comparing_factor;
         
         
-        eeglab_study_allch_erp_time_dd_grouping_factor_graph(input_gf);
+        if strcmp(do_plots,'on')
+            
+            %         input_gf.erp_grand_average = mean_collapsed_cell_all_sub{:};
+            input_gf.p_gf  = output_dd_gf.sigcell_pruned_gf;
+            input_gf.erp_avgsub = erp_curve_allch_collsub;
+            input_gf.erp_gf    = cell_gf;
+            
+            input_gf.pvalue = study_ls;
+            input_gf.allch = allch;
+            input_gf.xlim = xlim;
+            input_gf.amplim = amplim;
+            input_gf.times = times;
+            input_gf.levels_f1 = levels_f1;
+            input_gf.levels_f2 = levels_f2;
+            input_gf.plot_dir = plot_dir;
+            
+            input_gf.levels_gf = levels_gf;
+            input_gf.name_gf   = name_gf;
+            input_gf.levels_cf = levels_cf;
+            input_gf.name_cf   = name_cf;
+            input_gf.select_tw_des=select_tw_des{design_num};
+            
+            
+            
+            eeglab_study_allch_erp_time_dd_grouping_factor_graph(input_gf);
+            
+        end
+        
+        %% applicazione maschera a ciascun livello di ogni fattore usando le tw estratte raggruppando per gf
+        
+        %
+        %            cell array a cui applicare la maschera delle p: ha selezionato i
+        %     soggetti e i livelli dei fattori da considerare MA non ha fatto
+        %     nessuna media
+        input_mask.erp_curve_allch = erp_curve_allch;
+        %
+        %
+        %      struttura in cui ho le tw per ogni canale
+        input_mask.output_dd_grouping_factor = output_dd_gf;
+        input_mask.levels_f1 =   levels_f1;
+        input_mask.levels_f2 =   levels_f2;
+        input_mask.allch     =   allch;
+        input_mask.times    =  times;
+        input_mask.levels_gf  = levels_gf;
+        input_mask.name_gf = name_gf;
+        input_mask.levels_cf = levels_cf;
+        input_mask.name_cf = name_cf;
+        
+        
+        
+        mask_cell_p_gf_file = fullfile(data_driven_path,['grouping_factor_erp_allch_', char(STUDY.design(design_num).name), '.mat']);
+        
+        output_dd_eeglab_mask_cell_p_gf= eeglab_mask_cell_p_gf(input_mask);
+        
+        output_mask_cell_p_gf.cell_gf = cell_gf;
+        output_mask_cell_p_gf.times = times;
+        output_mask_cell_p_gf.output_dd_eeglab_mask_cell_p_gf = output_dd_eeglab_mask_cell_p_gf;
+        output_mask_cell_p_gf.allch = allch;
+        output_mask_cell_p_gf.list_design_subjects = list_design_subjects;
+        output_mask_cell_p_gf.levels_f1 = levels_f1;
+        output_mask_cell_p_gf.levels_f2 = levels_f2;
+        output_mask_cell_p_gf.name_f1 = name_f1;
+        output_mask_cell_p_gf.name_f2 = name_f2;
+
+
+
+        
+        save(mask_cell_p_gf_file,'output_mask_cell_p_gf')
+        
+        out_file_name = fullfile(data_driven_path,'gf.txt');
+        [dataexpcols, dataexp] = text_export_allch_erp_time_dd_gf(out_file_name,output_mask_cell_p_gf);
+
+        
         
     end
     
     
-    
-    
-    %     erp_curve_roi_stat.erp_curve_allch       = erp_curve_allch;
-    %     erp_curve_roi_stat.allch                 = allch;
-    %     erp_curve_roi_stat.times                 = times;
-    %
-    %     STUDY = pop_erpparams(STUDY, 'topotime',[] ,'plotgroups','apart' ,'plotconditions','apart','averagechan','on','method', stat_method);
-    %     % for each roi in the list
-    %     for nroi = 1:length(roi_list)
-    %         % lista dei soggetti suddivisi per fattori
-    %         list_design_subjects               = eeglab_generate_subjects_list_by_factor_levels(STUDY, design_num);
-    %
-    %         roi_channels=roi_list{nroi};
-    %         roi_name=roi_names{nroi};
-    %         STUDY = pop_statparams(STUDY, 'groupstats','off','condstats','off');
-    %
-    %
-    %         [STUDY, erp_curve_roi, times]=std_erpplot(STUDY,ALLEEG,'channels',roi_list{nroi},'noplot','on');
-    %
-    %         for nf1=1:length(levels_f1)
-    %             for nf2=1:length(levels_f2)
-    %                 if ~isempty(list_select_subjects)
-    %                     vec_select_subjects=ismember(list_design_subjects{nf1,nf2},list_select_subjects);
-    %                     if ~sum(vec_select_subjects)
-    %                         disp('Error: the selected subjects are not represented in the selected design')
-    %                         return;
-    %                     end
-    %                     erp_curve_roi{nf1,nf2}=erp_curve_roi{nf1,nf2}(:,vec_select_subjects);
-    %                      erp_curve_allch{nf1,nf2}=erp_curve_roi_stat.erp_curve_allch{nf1,nf2}(:,vec_select_subjects);
-    %                     list_design_subjects{nf1,nf2}=list_design_subjects{nf1,nf2}(vec_select_subjects);
-    %                 end
-    %             end
-    %         end
-    %
-    %         erp_curve_roi_stat.list_design_subjects = list_design_subjects;
-    %
-    %         if strcmp(time_resolution_mode,'tw')
-    %             group_time_windows_list_design  = group_time_windows_list{design_num};
-    %             group_time_windows_names_design = group_time_windows_names{design_num};
-    %
-    %
-    %
-    %
-    %             erp_curve_roi_stat.group_time_windows_list_design=group_time_windows_list_design;
-    %             erp_curve_roi_stat.group_time_windows_names_design=group_time_windows_names_design;
-    %
-    %             which_extrema_design            = project.postprocess.erp.design(design_num).which_extrema_curve;
-    %             which_extrema_design_roi        = which_extrema_design{nroi};
-    %
-    %             input_find_extrema.which_method_find_extrema             = which_method_find_extrema;
-    %             input_find_extrema.design_num                            = design_num;
-    %             input_find_extrema.roi_name                              = roi_name;
-    %             input_find_extrema.curve                                 = erp_curve_roi;
-    %             input_find_extrema.levels_f1                             = levels_f1;
-    %             input_find_extrema.levels_f2                             = levels_f2;
-    %             input_find_extrema.group_time_windows_list_design        = group_time_windows_list_design;
-    %             input_find_extrema.subject_time_windows_list             = subject_time_windows_list;
-    %             input_find_extrema.times                                 = times;
-    %             input_find_extrema.which_extrema_design_roi              = which_extrema_design_roi;
-    %             input_find_extrema.sel_extrema                           = sel_extrema;
-    %
-    %
-    %             erp_curve_roi_stat.dataroi(nroi).datatw.find_extrema = eeglab_study_plot_find_extrema(input_find_extrema);
-    %
-    %
-    %             deflection_polarity_list                                       = project.postprocess.erp.design(design_num).deflection_polarity_list;
-    %             deflection_polarity_roi                                        = deflection_polarity_list{nroi};
-    %
-    %             input_onset_offset.curve                                       = erp_curve_roi;
-    %             input_onset_offset.levels_f1                                   = levels_f1;
-    %             input_onset_offset.levels_f2                                   = levels_f2;
-    %             input_onset_offset.group_time_windows_list_design              = group_time_windows_list_design;
-    %             input_onset_offset.times                                       = times;
-    %             input_onset_offset.deflection_polarity_list                    = deflection_polarity_roi;
-    %             input_onset_offset.min_duration                                = project.postprocess.erp.design(design_num).min_duration ;
-    %             input_onset_offset.base_tw                                     = [project.epoching.bc_st.ms project.epoching.bc_end.ms] ;                           % baseline in ms
-    %             input_onset_offset.pvalue                                      = study_ls;                          % default will be 0.05
-    %             input_onset_offset.correction                                  = correction ;                       % string. correction for multiple comparisons 'none'| 'fdr' | 'holms' | 'bonferoni'
-    %
-    %             erp_curve_roi_stat.dataroi(nroi).datatw.onset_offset = eeglab_study_curve_tw_onset_offset(input_onset_offset);
-    %
-    %         end
-    %
-    %         % M2 viene salvata dentro erp_curve_roi, bisogna creare una nuova struttura con gli estremi ele loro latenze, possibile salvare i dati in forma più grezza
-    %         % (per ogni soggetto, i valori nella sottofinestra, non processati, se volessimo calcolare altre misure, tipo varianza, stdev, mediana, che comunque potremmo già calcolarci e salvarci anche qui).
-    %
-    %         % calculate statistics
-    %
-    %         %  pcond        - [cell] condition pvalues or mask (0 or 1) if an alpha value
-    %         %                 is selected. One element per group.
-    %         %  pgroup       - [cell] group pvalues or mask (0 or 1). One element per
-    %         %                 condition.
-    %         %  pinter       - [cell] three elements, condition pvalues (group pooled),
-    %         %                 group pvalues (condition pooled) and interaction pvalues.
-    %         %  statcond     - [cell] condition statistic values (F or T).
-    %         %  statgroup    - [cell] group pvalues or mask (0 or 1). One element per
-    %         %                 condition.
-    %         %  statinter    - [cell] three elements, condition statistics (group pooled),
-    %         %                 group statistics (condition pooled) and interaction F statistics.
-    %
-    %         times_plot=times;
-    %
-    %         if strcmp(time_resolution_mode,'tw')
-    %             if strcmp(which_method_find_extrema,'group_align')
-    %                 tw_stat_estimator = 'tw_mean'; % nel caso del pattern medio, forzo la media (NON vado a stimare gli estremi dei singoli soggetti come faccio negli altri 2 metodi)
-    %             end
-    %
-    %             switch tw_stat_estimator
-    %                 case 'tw_mean'
-    %                     erp_curve_roi=erp_curve_roi_stat.dataroi(nroi).datatw.find_extrema.curve;
-    %                 case 'tw_extremum'
-    %                     erp_curve_roi=erp_curve_roi_stat.dataroi(nroi).datatw.find_extrema.extr;
-    %
-    %
-    %
-    %             end
-    %             times_plot=1:length(group_time_windows_list_design);
-    %
-    %             %-------------------------------------------------------------------------------------------------------------
-    %             % 04/06/15 : HERE SHOULD BE INTRODUCED ANY DESIRED CORRECTION TO THE DATA BEFORE STATISTICAL ANALYSIS
-    %             %-------------------------------------------------------------------------------------------------------------
-    %
-    %             [pcond, pgroup, pinter, statscond, statsgroup, statsinter] = std_stat_corr(erp_curve_roi, 2, 'groupstats','on','condstats','on','mcorrect','none',...
-    %                 'threshold',NaN,'naccu',num_permutations,'method', stat_method,'paired',paired_list{design_num});
-    %
-    %             [stat df pvals] = statcond_corr(erp_curve_roi, 2, 'alpha',NaN,'naccu',num_permutations,'method', stat_method);
-    %
-    %             if iscell(df)
-    %                 if length(pcond)
-    %                     dfcond=df{1};
-    %                 end
-    %                 if length(pgroup)
-    %                     dfgroup=df{1};
-    %                 end
-    %                 if length(pinter)
-    %                     dfinter=df{1};
-    %                 end
-    %
-    %             else
-    %                 if length(pcond)
-    %                     dfcond=df(1,:);
-    %                 end
-    %                 if length(pgroup)
-    %                     dfgroup=df(1,:);
-    %                 end
-    %                 if length(pinter)
-    %                     dfinter=df(1,:);
-    %                 end
-    %
-    %
-    %             end
-    %
-    %
-    %
-    %
-    %             for ind = 1:length(pcond),  pcond{ind}    =  abs(pcond{ind}) ; end;
-    %             for ind = 1:length(pgroup),  pgroup{ind}  =  abs(pgroup{ind}) ; end;
-    %             for ind = 1:length(pinter),  pinter{ind}  =  abs(pinter{ind}) ; end
-    %
-    %
-    %             [pcond_corr, pgroup_corr,  pinter_corr] = eeglab_study_correct_pvals(pcond, pgroup, pinter,correction);
-    %
-    %             if (strcmp(do_plots,'on'))
-    %
-    %                 input_graph.STUDY                                          = STUDY;
-    %                 input_graph.design_num                                     = design_num;
-    %                 input_graph.roi_name                                       = roi_name;
-    %                 input_graph.name_f1                                        = name_f1;
-    %                 input_graph.name_f2                                        = name_f2;
-    %                 input_graph.levels_f1                                      = levels_f1;
-    %                 input_graph.levels_f2                                      = levels_f2;
-    %                 input_graph.erp_curve                                      = erp_curve_roi;
-    %                 input_graph.times                                          = times_plot;
-    %                 input_graph.time_windows_design_names                      = group_time_windows_names{design_num};
-    %                 input_graph.pcond                                          = pcond_corr;
-    %                 input_graph.pgroup                                         = pgroup_corr;
-    %                 input_graph.pinter                                         = pinter_corr;
-    %                 input_graph.study_ls                                       = study_ls ;
-    %                 input_graph.plot_dir                                       = plot_dir;
-    %                 input_graph.display_only_significant                       = display_only_significant;
-    %                 input_graph.display_compact_plots                          = display_compact_plots;
-    %                 input_graph.compact_display_h0                             = compact_display_h0;
-    %                 input_graph.compact_display_v0                             = compact_display_v0;
-    %                 input_graph.compact_display_sem                            = compact_display_sem;
-    %                 input_graph.compact_display_stats                          = compact_display_stats;
-    %                 input_graph.display_single_subjects                        = display_single_subjects;
-    %                 input_graph.compact_display_xlim                           = compact_display_xlim;
-    %                 input_graph.compact_display_ylim                           = compact_display_ylim;
-    %
-    %                 eeglab_study_roi_erp_curve_tw_graph(input_graph);
-    %             end
-    %
-    %         else
-    %             [pcond, pgroup, pinter, statscond, statsgroup, statsinter] = std_stat_corr(erp_curve_roi, 2, 'groupstats','on','condstats','on','mcorrect','none',...
-    %                 'threshold',NaN,'naccu',num_permutations,'method', stat_method,'paired',paired_list{design_num});
-    %
-    %             for ind = 1:length(pcond),  pcond{ind}    =  abs(pcond{ind}) ; end;
-    %             for ind = 1:length(pgroup),  pgroup{ind}  =  abs(pgroup{ind}) ; end;
-    %             for ind = 1:length(pinter),  pinter{ind}  =  abs(pinter{ind}) ; end
-    %
-    %             [pcond_corr, pgroup_corr,  pinter_corr] = eeglab_study_correct_pvals(pcond, pgroup, pinter,correction);
-    %
-    %             if ~ isempty(masked_times_max)
-    %                 [pcond_corr, pgroup_corr, pinter_corr] = eeglab_study_roi_curve_maskp(pcond_corr, pgroup_corr, pinter_corr,times_plot, masked_times_max);
-    %             end
-    %             if (strcmp(do_plots,'on'))
-    %
-    %                 input_graph.STUDY                                          = STUDY;
-    %                 input_graph.design_num                                     = design_num;
-    %                 input_graph.roi_name                                       = roi_name;
-    %                 input_graph.name_f1                                        = name_f1;
-    %                 input_graph.name_f2                                        = name_f2;
-    %                 input_graph.levels_f1                                      = levels_f1;
-    %                 input_graph.levels_f2                                      = levels_f2;
-    %                 input_graph.erp                                            = erp_curve_roi;
-    %                 input_graph.times                                          = times;
-    %                 input_graph.pcond                                          = pcond_corr;
-    %                 input_graph.pgroup                                         = pgroup_corr;
-    %                 input_graph.pinter                                         = pinter_corr;
-    %                 input_graph.study_ls                                       = study_ls;
-    %                 input_graph.filter                                         = filter;
-    %                 input_graph.plot_dir                                       = plot_dir;
-    %                 input_graph.display_only_significant                       = display_only_significant;
-    %                 input_graph.display_compact_plots                          = display_compact_plots;
-    %                 input_graph.compact_display_h0                             = compact_display_h0;
-    %                 input_graph.compact_display_v0                             = compact_display_v0;
-    %                 input_graph.compact_display_sem                            = compact_display_sem;
-    %                 input_graph.compact_display_stats                          = compact_display_stats;
-    %                 input_graph.display_single_subjects                        = display_single_subjects;
-    %                 input_graph.compact_display_xlim                           = compact_display_xlim;
-    %                 input_graph.compact_display_ylim                           = compact_display_ylim;
-    %                 input_graph.list_design_subjects                           = list_design_subjects;
-    %
-    %                 eeglab_study_roi_erp_curve_graph(input_graph);
-    %             end
-    %         end
-    %
-    %         erp_curve_roi_stat.dataroi(nroi).roi_channels   = roi_channels;
-    %         erp_curve_roi_stat.dataroi(nroi).roi_name       = roi_name;
-    %         erp_curve_roi_stat.dataroi(nroi).erp_curve_roi  = erp_curve_roi;
-    %         erp_curve_roi_stat.dataroi(nroi).pcond          = pcond;
-    %         erp_curve_roi_stat.dataroi(nroi).pgroup         = pgroup;
-    %         erp_curve_roi_stat.dataroi(nroi).pinter         = pinter;
-    %         erp_curve_roi_stat.dataroi(nroi).statscond      = statscond;
-    %         erp_curve_roi_stat.dataroi(nroi).statsgroup     = statsgroup;
-    %         erp_curve_roi_stat.dataroi(nroi).statsinter     = statsinter;
-    %         erp_curve_roi_stat.dataroi(nroi).dfcond         = dfcond;
-    %         erp_curve_roi_stat.dataroi(nroi).dfgroup        = dfgroup;
-    %         erp_curve_roi_stat.dataroi(nroi).dfinter        = dfinter;
-    %         erp_curve_roi_stat.dataroi(nroi).pcond_corr     = pcond_corr;
-    %         erp_curve_roi_stat.dataroi(nroi).pgroup_corr    = pgroup_corr;
-    %         erp_curve_roi_stat.dataroi(nroi).pinter_corr    = pinter_corr;
-    %
-    %     end
-    %
-    %     erp_curve_roi_stat.times=times_plot;
-    %
-    %     if strcmp(time_resolution_mode,'tw')
-    %         erp_curve_roi_stat.group_time_windows_list                 = group_time_windows_list_design;
-    %         erp_curve_roi_stat.group_time_windows_names                = group_time_windows_names_design;
-    %         erp_curve_roi_stat.which_extrema_design                    = which_extrema_design;
-    %         erp_curve_roi_stat.sel_extrema                             = sel_extrema;
-    %
-    %         if strcmp(mode.peak_type,'individual')
-    %             erp_curve_roi_stat.subject_time_windows_list            = subject_time_windows_list;
-    %         end
-    %     end
-    %
-    %     erp_curve_roi_stat.study_ls             = study_ls;
-    %     erp_curve_roi_stat.num_permutations     = num_permutations;
-    %     erp_curve_roi_stat.correction           = correction;
-    %     erp_curve_roi_stat.list_select_subjects = list_select_subjects;
-    %
-    %
-    %     %% EXPORTING DATA AND RESULTS OF ANALYSIS
-    %     %         save(fullfile(plot_dir,'erp_curve_roi-stat.mat'),'erp_curve_roi_stat');
-    %     %
-    %     %         if ~ ( strcmp(which_method_find_extrema,'group_noalign') || strcmp(which_method_find_extrema,'continuous') );
-    %     %             [dataexpcols, dataexp]=text_export_erp(plot_dir,erp_curve_roi_stat);
-    %     %         end
-    %     %
-    %
-    %     %% EXPORTING DATA AND RESULTS OF ANALYSIS
-    %     out_file_name = fullfile(plot_dir,'erp_curve_roi-stat');
-    %     save([out_file_name,'.mat'],'erp_curve_roi_stat','project');
-    %
-    %     %     if ~ ( strcmp(which_method_find_extrema,'group_noalign') || strcmp(which_method_find_extrema,'continuous') );
-    %     %         [dataexpcols, dataexp] = text_export_erp_struct([out_file_name,'.txt'],erp_curve_roi_stat);
-    %     % %         text_export_erp_resume_struct(erp_curve_roi_stat, [out_file_name '_resume']);
-    %     % %         text_export_erp_resume_struct(erp_curve_roi_stat, [out_file_name '_resume_signif'], 'p_thresh', erp_curve_roi_stat.study_ls);
-    %     %     end
-    %     if not( strcmp(which_method_find_extrema,'group_noalign') || strcmp(which_method_find_extrema,'continuous') );
-    %         [dataexpcols, dataexp] = text_export_erp_struct([out_file_name,'.txt'],erp_curve_roi_stat);
-    %         text_export_erp_resume_struct(erp_curve_roi_stat, [out_file_name '_resume']);
-    %         text_export_erp_resume_struct(erp_curve_roi_stat, [out_file_name '_resume_signif'], 'p_thresh', erp_curve_roi_stat.study_ls);
-    %     end
-    %
-    %     if strcmp(which_method_find_extrema,'continuous') ;
-    %         [dataexpcols, dataexp] = text_export_erp_continuous_struct([out_file_name,'.txt'],erp_curve_roi_stat);
-    %         %         text_export_erp_resume_struct(erp_curve_roi_stat, [out_file_name '_resume']);
-    %         %         text_export_erp_resume_struct(erp_curve_roi_stat, [out_file_name '_resume_signif'], 'p_thresh', erp_curve_roi_stat.study_ls);
-    %             [dataexpcols, dataexp] = text_export_erp_allch_sub_continuous_struct(plot_dir,erp_curve_roi_stat);%[out_file_name,'_allch_sub_continuous.txt']
-    %
-    %     end
-    %
-    %     if strcmp(time_resolution_mode,'tw')
-    %
-    %         % esportare statistiche onset-offset: sia statistiche riassuntive di
-    %         % ogni tw, sia il risultato punto a punto (linee sotto le curve) per
-    %         % ogni roi, cond, soggetto, ... il tutto su 2 file di testo separati
-    %         % per non fare casino: alla fine hai curve, linee di significatività,
-    %         % statistiche riassuntive
-    %         [dataexpcols, dataexp] = text_export_erp_onset_offset_sub_struct([out_file_name,'_sub_onset_offset.txt'],erp_curve_roi_stat);
-    %         [dataexpcols, dataexp] = text_export_erp_onset_offset_avgsub_struct([out_file_name,'_avgsub_onset_offset.txt'],erp_curve_roi_stat);
-    %
-    %         [dataexpcols, dataexp] = text_export_erp_onset_offset_sub_continuous_struct([out_file_name,'_sub_onset_offset_continuous.txt'],erp_curve_roi_stat);
-    %         [dataexpcols, dataexp] = text_export_erp_onset_offset_avgsub_continuous_struct([out_file_name,'_avgsub_onset_offset_continuous.txt'],erp_curve_roi_stat);
-    %     end
-    %     %
-    %     %
-    %
-    %
-    %     %% export onset_offset
-    %
-    %
-    %
-    %
-    %
-    %
-    %
-    %
-    %
-    %
-    %
-    %
-    %
-    %
-    %
-    %
-    %
-    %
-    %
-    %
-    %
-    %
-    %
-    %
-    %
-    %
-    %
+
 end
 end
