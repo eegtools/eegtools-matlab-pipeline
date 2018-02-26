@@ -1,4 +1,4 @@
-# matlab-pipeline
+# EEGTOOLS
 Complete EEG analysis (ERP, ERSP, Sources) pipeline written in matlab, using EEGLAB and BRAINSTORM
 
 ## Description
