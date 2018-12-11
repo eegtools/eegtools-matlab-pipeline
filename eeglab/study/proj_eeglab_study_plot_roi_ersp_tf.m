@@ -138,8 +138,34 @@ group_time_windows_names    = arrange_structure(project.postprocess.ersp.design,
 do_plots                    = project.results_display.ersp.do_plots;
 num_tails                   = project.stats.ersp.num_tails;
 display_pmode               = project.results_display.ersp.display_pmode;
-stat_freq_bands_list        = [];
-mask_coef                   = [];
+
+display_compact_plots       = project.results_display.ersp.compact_plots;
+
+
+if isfield(project.stats.eeglab.ersp,'stat_freq_bands_list')
+    stat_freq_bands_list        = project.stats.eeglab.ersp.stat_freq_bands_list;
+else
+    stat_freq_bands_list        = [];
+end
+
+if isfield(project.stats.eeglab.ersp,'mask_coef')
+    mask_coef                   = project.stats.eeglab.ersp.mask_coef;    
+else
+    mask_coef = [];
+end
+
+
+if not(isfield(project.stats.ersp,'alignt0'))
+    project.stats.ersp.alignt0 = 0;
+end
+
+alignt0                       = project.stats.ersp.alignt0;
+
+if not(isfield(project.stats.ersp,'split_base'))
+    project.stats.ersp.split_base = 0;
+end
+
+split_base                    = project.stats.ersp.split_base;
 
 for par=1:2:length(varargin)
     switch varargin{par}
@@ -173,7 +199,7 @@ for design_num=design_num_vec
     mkdir(plot_dir);
     
     %% subjects list divided by factor levels
-    list_design_subjects = eeglab_generate_subjects_list_by_factor_levels(STUDY, design_num);
+    list_design_subjects = eeglab_generate_subjects_list_by_factor_levels(project,STUDY, design_num);
     
     %% set representation to time-frequency representation
     STUDY = pop_erspparams(STUDY, 'topotime',[] ,'topofreq', [],'timerange',timerange,'freqrange',freqrange);
@@ -218,6 +244,12 @@ for design_num=design_num_vec
                 input_calc.num_tails                     = num_tails;
                 input_calc.stat_freq_bands_list          = stat_freq_bands_list;
                 input_calc.mask_coef                     = mask_coef;
+                input_calc.alignt0                       = alignt0;
+                input_calc.split_base                    = split_base;
+                input_calc.design_num                    = design_num;
+                
+
+                
                 
                 [output_calc] = eeglab_study_roi_ersp_tf_simple(input_calc);
                 
@@ -255,6 +287,7 @@ for design_num=design_num_vec
                     input_graph.group_time_windows_list       = group_time_windows_list;
                     input_graph.frequency_bands_list          = frequency_bands_list;
                     input_graph.display_pmode                 = display_pmode;
+                    input_graph.display_compact_plots         = display_compact_plots;
                     
                     eeglab_study_roi_ersp_tf_graph(input_graph)
                 end

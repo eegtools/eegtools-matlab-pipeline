@@ -5,10 +5,18 @@ clear project
 % to be edited according to calling PC local file system
 os = system_dependent('getos');
 if  strncmp(os,'Linux',2)
-    project.paths.projects_data_root    = '/data/projects';
-    project.paths.projects_scripts_root = '/data/behavior_lab_svn/behaviourPlatform';
-    project.paths.plugins_root          = '/data/matlab_toolbox';
-    project.paths.framework_root        = '/data/CODE/MATLAB/eegtools/matlab-pipeline';
+%     project.paths.projects_data_root    = '/data/projects';
+%     project.paths.projects_scripts_root = '/data/behavior_lab_svn/behaviourPlatform';
+%     project.paths.plugins_root          = '/data/matlab_toolbox';
+%     project.paths.framework_root        = '/data/CODE/MATLAB/eegtools/matlab-pipeline';
+
+project.paths.projects_data_root    = '/home/campus/projects/';
+project.paths.projects_scripts_root = '/home/campus/behaviourPlatform';
+project.paths.plugins_root          = '/home/campus/work/work-matlab/matlab_toolbox';
+project.paths.framework_root        = '/home/campus/behaviourPlatform/CommonScript/eeg';  
+project.paths.script.project       = '/home/campus/behaviourPlatform/VisuoHaptic/claudio/bisezione_lb/';%'/media/workingdir/VisuoHaptic/mariabianca_amadeo/bisezione_sordi/processing/matlab/'; 
+
+
 else
     project.paths.projects_data_root    = 'd:\\data\projects';
     project.paths.projects_scripts_root = 'd:\\data\behavior_lab_svn\behaviourPlatform';
@@ -28,22 +36,13 @@ project.conf_file_name      = 'template_project_structure';              ... pro
 project.paths.script.eeg_tools_project = fullfile(project.paths.framework_root, 'eeg_tools', 'project', ''); addpath(project.paths.script.eeg_tools_project); 
 project                                = project_init(project);             ... project structure
 %% =====================================================================================================================================================================
-%  DESIGN SPECIFICATION
-%==================================================================================
-% to be edited according to experiment.....
-%% =====================================================================================================================================================================
 %  OVERRIDE
 %=====================================================================================================================================================================
-% project.subjects.list       = {'CP_05_gregorio'};..., 'CC_02_fabio', 'CC_03_anna', 'CC_04_giacomo', 'CC_05_stefano', 'CC_06_giovanni', 'CC_07_davide', 'CC_08_jonathan', 'CC_09_antonella', 'CC_10_chiara', 'CP_01_riccardo', 'CP_02_ester', 'CP_03_sara', 'CP_04_matteo', 'CP_05_gregorio', 'CP_06_fernando', 'CP_07_roberta', 'CP_08_mattia', 'CP_09_alessia', 'CP_10_livia'}; ...
-% project.subjects.numsubj    = length(project.subjects.list);  % DO not remove this line if u override the subjects list
-
-
-custom_suffix = '_raw_er2';   ... 16/12/14 CLA: it's NOT an override but, apparently, a mandatory parameter file name suffix used for non-standard operations (second ica, patch triggers, etc...)
-% it's first _raw and then do ica. then open by hand _raw, clean segments, save as _raw_er, then do another ica, and save again as raw_er (overwrite). then reopen the ra_er and remove components and save as raw_mc.  
-
-
-% select number of subjects to be processed: can be  1) commented 2) set
-% to [] 3( set to a cell array of strings 4) set to project.subjects.list
+% select number of subjects to be processed: can be  
+% 1) commented 
+% 2) set to [] 
+% 3) set to a cell array of strings 
+% 4) set to project.subjects.list
 list_select_subjects    = project.subjects.list;% {'CC_01_vittoria', 'CC_02_fabio', 'CC_03_anna', 'CC_04_giacomo', 'CC_05_stefano', 'CC_06_giovanni', 'CC_07_davide', 'CC_08_jonathan', 'CC_09_antonella', 'CC_10_chiara', 'CP_01_riccardo', 'CP_02_ester', 'CP_03_sara', 'CP_04_matteo', 'CP_05_gregorio', 'CP_06_fernando', 'CP_07_roberta', 'CP_08_mattia', 'CP_09_alessia', 'CP_10_livia'}; ...project.subjects.list;
 
 % if a list is not set, or is empty, all subjects in the project are
@@ -58,104 +57,34 @@ end
 numsubj                         = length(list_select_subjects);
 project.subjects.curr_list      = list_select_subjects;
 
+
+custom_suffix = '_raw_er2';   ... 16/12/14 CLA: it's NOT an override but, apparently, a mandatory parameter file name suffix used for non-standard operations (second ica, patch triggers, etc...)
+% it's first _raw and then do ica. then open by hand _raw, clean segments, save as _raw_er, then do another ica, and save again as raw_er (overwrite). then reopen the ra_er and remove components and save as raw_mc.  
+
+
 stat_threshold                  = 0.05;
 electrode2inspect               = 'C4';
 save_figure                     = 0;
 
 
-%=====================================================================================================================================================================
-% OPERATIONS LIST 
-%=====================================================================================================================================================================
-
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-% import raw data and write set/fdt file into epochs subfolder, perform: import, event to string, channel lookup, global filtering
-project.operations.do_import                                                        = 1;
-
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-% preprocessing of the imported file: SUBSAMPLING, CHANNELS TRANSFORMATION, INTERPOLATION, RE-REFERENCE, SPECIFIC FILTERING
-project.operations.do_preproc                                                       = 0;
-
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-% do emg extraction analysis
-project.do_emg_analysis                                                             = 0;             
-
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-% do custom modification to event triggers
-project.operations.do_patch_triggers                                                = 0;
-
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-% remove pauses and undesidered time interval marked by specific markers
-project.operations.do_auto_pauses_removal                                           = 0;
-
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-% allow testing some semi-automatic aritfact removal algorhithms
-project.operations.do_testart                                                       = 0;
-
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-% perform ICA
-project.operations.do_ica                                                           = 0;
-
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-% use/test semi automatic toolboxes based on ICA to identify bad components
-project.operations.do_clean_ica                                                     = 0; 
-
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-% uniform montages between different polygraphs
-project.operations.do_uniform_montage                                               = 0;
-
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-% reref
-project.operations.do_reref                                                         = 0;
-
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-% insert trial triggers into the data
-project.operations.do_mark_trial                                                    = 0;
-
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-% insert baseline triggers into the data
-project.operations.do_mark_baseline                                                 = 0;
-
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-% check mc file status: triggers, num epochs, errors
-project.operations.do_check_mc                                                      = 0;
-
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-% epoching
-project.operations.do_epochs                                                        = 0;
-
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-% custom epoching
-project.operations.do_custom_epochs                                                 = 0;
-
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-% custom epoching that swap electrodes according to handedness
-project.operations.do_handedness_epochs                                             = 0;
-
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-% add experimental factors information to the data
-project.operations.do_factors                                                       = 0;
-
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-% perform basic single-subject plotting and analysis, basically 1 condition spectral graphs, single epochs desynch, or 2 conditions comparisons
-project.operations.do_singlesubjects_band_comparison                                = 0;
-
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-% extract narrowband for each subject and selected condition and save separately each condition in a mat file
-project.operations.do_extract_narrowband                                            = 0;
-
-%---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-% placeholder flag to execute any custom script
-project.operations.do_custom_analysis                                               = 0;
-
-%=====================================================================================================================================================================
-% S T A R T    P R O C E S S I N G  
-%=====================================================================================================================================================================
-
 try
+    operations = {'do_epochs','do_microstates','do_import_collect', 'do_testart','do_preproc', 'do_ica' ,'do_reref','do_mark_trial', ...
+        'do_factors',...
+        };
     
-    do_operations
+    for nop = 1:2%1:length(operations)
+        
+        operation = operations{nop};
+        project                                                 = project_init(project);
+        
+        result = startProcess(project, ...
+            operation,  ...
+            'list_select_subjects', list_select_subjects);
+        
+    end
 
-    %==================================================================================
+
+% fill here startPtocess operations .....
 
 % if do_patch_triggers
 %     for subj=1:project.subjects.numsubj

@@ -1,9 +1,28 @@
 
-function proj_brainstorm_subject_recover_bem_new(project)
+function proj_brainstorm_subject_recover_bem_new(project, varargin)
 
-iProtocol               = brainstorm_protocol_open(protocol_name);
+iProtocol               = brainstorm_protocol_open(project.brainstorm.db_name);
 protocol                = bst_get('ProtocolInfo');
 brainstorm_data_path    = protocol.STUDIES;
+
+
+list_select_subjects    = project.subjects.list;
+
+
+for par=1:2:length(varargin)
+    switch varargin{par}
+        case { 'list_select_subjects', ...
+                }
+            
+            if isempty(varargin{par+1})
+                continue;
+            else
+                assign(varargin{par}, varargin{par+1});
+            end
+    end
+end
+
+
 
 ProtocolSubjects    = bst_get('ProtocolSubjects');
 %     subj1_name          = ProtocolSubjects.Subject(1).Name;
@@ -31,7 +50,10 @@ if not(exist(bck_dir,'dir'))
     disp('no bem backup available')
 else
     
-    for subj=1:length(list_select_subjects);
+    
+
+    
+    for subj=1:length(list_select_subjects)
         
         dest_dir = fullfile(project.paths.brainstorm_data, list_select_subjects{subj},'@default_study');
         

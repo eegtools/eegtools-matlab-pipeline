@@ -41,7 +41,7 @@ for ns1 = 1:s1 % per ciascun livello del primo fattore
     for ns2 = 1:s2 % per ogni livello del secondo fattore
         subplot(1,s2+1,ns2); % riempo un subplot della figura
         mat_erp_plot = mean(erp_curve{ns1,ns2},3)';% calcolo la matrice che media sui soggetti(lascia x=tempi, y=canali)
-        imagesc(times(sel_times),1:tch,mat_erp_plot(:,sel_times));%faccio il plot della matrice
+        imagesc(times(sel_times),1:tch,mat_erp_plot(:,sel_times),'AlphaData',~isnan(mat_erp_plot(:,sel_times)));shading flat; grid on;%faccio il plot della matrice
         caxis(amplim);
         title([levels_f2{ns2}])
         line('XData', [0 0], 'YData', [1 tch], 'LineStyle', '--','LineWidth', 2, 'Color','k')
@@ -71,7 +71,7 @@ for ns1 = 1:s1 % per ciascun livello del primo fattore
     
     
     subplot(1,s2+1,s2+1); % riempo l'ultimo subplot della figura con le probabilita'
-    imagesc(times(sel_times),1:tch,mat_pvalue_plot(:,sel_times));%faccio il plot della matrice
+    imagesc(times(sel_times),1:tch,mat_pvalue_plot(:,sel_times),'AlphaData',~isnan(mat_pvalue_plot(:,sel_times)));shading flat; grid on;%faccio il plot della matrice
     caxis(pclim);
     set(gca,'YTick',1:tch,'YTicklabel',allch,'FontSize', 8)
     line('XData', [0 0], 'YData', [1 tch], 'LineStyle', '--','LineWidth', 2, 'Color','k')
@@ -97,7 +97,7 @@ for ns2 = 1:s2 % per ciascun livello del primo fattore
     for ns1 = 1:s1 % per ogni livello del secondo fattore
         subplot(1,s1+1,ns1); % riempo un subplot della figura
         mat_erp_plot = mean(erp_curve{ns1,ns2},3)';% calcolo la matrice che media sui soggetti(lascia x=tempi, y=canali)
-        imagesc(times(sel_times),1:tch,mat_erp_plot(:,sel_times));%faccio il plot della matrice
+        imagesc(times(sel_times),1:tch,mat_erp_plot(:,sel_times),'AlphaData',~isnan(mat_erp_plot(:,sel_times)));shading flat; grid on;%faccio il plot della matrice
         caxis(amplim);
         title([levels_f1{ns1}])
         line('XData', [0 0], 'YData', [1 tch], 'LineStyle', '--','LineWidth', 2, 'Color','k')
@@ -127,7 +127,7 @@ for ns2 = 1:s2 % per ciascun livello del primo fattore
     
     
     subplot(1,s1+1,s1+1); % riempo l'ultimo subplot della figura con le probabilita'
-    imagesc(times(sel_times),1:tch,mat_pvalue_plot(:,sel_times));%faccio il plot della matrice
+    imagesc(times(sel_times),1:tch,mat_pvalue_plot(:,sel_times),'AlphaData',~isnan(mat_pvalue_plot(:,sel_times)));shading flat; grid on;%faccio il plot della matrice
     caxis(pclim);
     set(gca,'YTick',1:tch,'YTicklabel',allch,'FontSize', 8)
     line('XData', [0 0], 'YData', [1 tch], 'LineStyle', '--','LineWidth', 2, 'Color','k')

@@ -132,7 +132,7 @@ for design_num=design_num_vec
     STUDY = pop_erpparams(STUDY, 'topotime',[] ,'plotgroups','apart' ,'plotconditions','apart','averagechan','off','method', stat_method);
     
     
-    list_design_subjects               = eeglab_generate_subjects_list_by_factor_levels(STUDY, design_num);
+    list_design_subjects               = eeglab_generate_subjects_list_by_factor_levels(project,STUDY, design_num);
     
     % erp_curve_allch cell array of dimension tlf1 x tlf2 , each cell of
     % dimension times x channels x subjects

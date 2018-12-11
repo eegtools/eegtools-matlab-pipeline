@@ -1,11 +1,10 @@
 ... model_type 1: surface, 2: vol
-function brainstorm_subject_bem_new(protocol_name, subj_file_name, varargin)
+function brainstorm_subject_bem_new(protocol_name, subj_file_name, model_type)
 
     iProtocol               = brainstorm_protocol_open(protocol_name);
     protocol                = bst_get('ProtocolInfo');
     brainstorm_data_path    = protocol.STUDIES;
     
-    model_type = project.brainstorm.conductorvolume.type; %typical 1
     
 %     options_num=size(varargin,2);
 %     for opt=1:2:options_num

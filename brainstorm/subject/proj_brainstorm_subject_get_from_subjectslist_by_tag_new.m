@@ -24,9 +24,14 @@ for par=1:2:length(varargin)
     end
 end
 
+if not(isfield(project.brainstorm,'condition_names'))
+    project.brainstorm.condition_names = project.epoching.condition_names;
+    project.brainstorm.numcond         = project.epoching.numcond;
+end
 
 
-condition_names             = project.epoching.condition_names;    cond_length = length(condition_names);
+
+condition_names             = project.brainstorm.condition_names;    cond_length = length(condition_names);
 for t=1:length(project.brainstorm.postprocess.tag_list)
     tag         = project.brainstorm.postprocess.tag_list{t};
     input_file  = [project.brainstorm.average_file_name '.mat'];   .... e.g. 'data_average.mat'

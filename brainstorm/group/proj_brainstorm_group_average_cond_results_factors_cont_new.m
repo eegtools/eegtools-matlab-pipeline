@@ -2,7 +2,7 @@ function  proj_brainstorm_group_average_cond_results_factors_cont_new(project,  
 % versione vecchia della senza distinzione tra gruppi (introdotta in
 % proj_brainstorm_group_average_cond_results_new2)
 
-iProtocol               = brainstorm_protocol_open(protocol_name);
+iProtocol               = brainstorm_protocol_open(project.brainstorm.db_name);
 protocol                = bst_get('ProtocolInfo');
 brainstorm_data_path    = protocol.STUDIES;
 

@@ -1050,6 +1050,10 @@ if ~strcmpi(STYLE,'blank') % if draw interpolated scalp map
   delta = xi(2)-xi(1); % length of grid entry
 
  end % if ~strcmpi(STYLE,'grid')
+ if isnan(amax) || isnan(amin)
+     amax = 0.1;
+     amin = -0.1;
+ end
   %
   %%%%%%%%%%%%%%%%%%%%%%%%%% Scale the axes %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %

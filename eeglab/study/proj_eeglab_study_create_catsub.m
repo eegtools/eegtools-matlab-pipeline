@@ -44,67 +44,81 @@ study_path  = fullfile(epochs_path, study_name);
 [ALLEEG, EEG, CURRENTSET, ALLCOM] = eeglab;
 STUDY = []; CURRENTSTUDY = 0; ALLEEG = []; EEG=[]; CURRENTSET=[];
 
+if not((isfield(project.study,'catsub')))
+    project.study.catsub.reconcatenate = 1;
+end
 %% create the study with the epoched data of all subjects
-% load each epochs set file (subject and condition) into the study structure
-% of EEGLab
-for grp=1:length(group_list)
-    for subj=1:length(group_list{grp})
-        
-        clear ALLEEG2
-        nn = 1;
-        clear EEG
-        
-        for cond=1:length(condition_names)
+
+if project.study.catsub.reconcatenate
+    
+    % load each epochs set file (subject and condition) into the study structure
+    % of EEGLab
+    for grp=1:length(group_list)
+        for subj=1:length(group_list{grp})
             
-            setname=[project.import.original_data_prefix group_list{grp}{subj} project.import.original_data_suffix import_out_suffix project.epoching.input_suffix '_'  condition_names{cond} '.set'];
-            fullsetname=fullfile(epochs_path,setname,'');
+            clear ALLEEG2
+            nn = 1;
+            clear EEG
             
-            
-            if exist(fullsetname,'file')
+            for cond=1:length(condition_names)
                 
-                EEG = pop_loadset(fullsetname);
+                setname=[project.import.original_data_prefix group_list{grp}{subj} project.import.original_data_suffix import_out_suffix project.epoching.input_suffix '_'  condition_names{cond} '.set'];
+                fullsetname=fullfile(epochs_path,setname,'');
                 
                 
-                if EEG.trials>1 && not(isempty(EEG.epoch)) 
+                if exist(fullsetname,'file')
                     
-                    EEG.icaact_unfiltered=[];
-                    EEG.icaact_filtered_resampled=[];
-                    EEG.dipfit=[];
-                    EEG.icaact=[];
-                    EEG.etc =[];
-                    EEG.reject=[];
-                    EEG.stats=[];
-                    EEG.virtual_topography=[];
-                    EEG.virtual_chanlocs=[];
-                    EEG.virtual_nbchan=[];
-                    EEG.urevent=[];
+                    EEG = pop_loadset(fullsetname);
                     
-                    ALLEEG2(nn) = EEG;
-                    nn=nn+1;
+                    
+                    if EEG.trials>1 && not(isempty(EEG.epoch))
+                        
+                        EEG.icaact_unfiltered=[];
+                        EEG.icaact_filtered_resampled=[];
+                        EEG.dipfit=[];
+                        EEG.icaact=[];
+                        EEG.etc =[];
+                        EEG.reject=[];
+                        EEG.stats=[];
+                        EEG.virtual_topography=[];
+                        EEG.virtual_chanlocs=[];
+                        EEG.virtual_nbchan=[];
+                        EEG.urevent=[];
+                        
+                        % creo una nuova variabile condition catsub per
+                        % consentire l'uso delle condizioni anche dopo la
+                        % concatenazione
+                        for neve = 1:length(EEG.event)
+                            EEG.event(neve).condition_catsub = condition_names{cond};
+                        end
+                        
+                        ALLEEG2(nn) = EEG;
+                        nn=nn+1;
+                    end
                 end
             end
-        end
-        
-        if exist('ALLEEG2')
-            setname2=[project.import.original_data_prefix group_list{grp}{subj} project.import.original_data_suffix import_out_suffix project.epoching.input_suffix '_catsub.set'];
-            fullsetname2=fullfile(epochs_path,setname2,'');
             
-            OUTEEG = pop_mergeset( ALLEEG2, 1:length(ALLEEG2), 1 );
-            OUTEEG.icaact=[];
-            
-            OUTEEG = eeg_checkset(OUTEEG);
-            OUTEEG = pop_saveset(OUTEEG, 'filename', setname2, 'filepath', epochs_path);
-        else
-            OUTEEG = [];
+            if exist('ALLEEG2')
+                setname2=[project.import.original_data_prefix group_list{grp}{subj} project.import.original_data_suffix import_out_suffix project.epoching.input_suffix '_catsub.set'];
+                fullsetname2=fullfile(epochs_path,setname2,'');
+                
+                OUTEEG = pop_mergeset( ALLEEG2, 1:length(ALLEEG2), 1 );
+                OUTEEG.icaact=[];
+                
+                OUTEEG = eeg_checkset(OUTEEG);
+                OUTEEG = pop_saveset(OUTEEG, 'filename', setname2, 'filepath', epochs_path);
+            else
+                OUTEEG = [];
+            end
         end
     end
+    
+    % start EEGLab
+    
+    clear ALLEEG2
+    [ALLEEG, EEG, CURRENTSET, ALLCOM] = eeglab;
+    STUDY = []; CURRENTSTUDY = 0; ALLEEG = []; EEG=[]; CURRENTSET=[];
 end
-
-% start EEGLab
-
-clear ALLEEG2
-[ALLEEG, EEG, CURRENTSET, ALLCOM] = eeglab;
-STUDY = []; CURRENTSTUDY = 0; ALLEEG = []; EEG=[]; CURRENTSET=[];
 
 %% create the study with the epoched data of all subjects
 % load each epochs set file (subject and condition) into the study structure
@@ -131,6 +145,8 @@ CURRENTSTUDY = 1; EEG = ALLEEG; CURRENTSET = [1:length(EEG)];
 
 %% save study on file
 [STUDY, ALLEEG] = std_checkset(STUDY, ALLEEG);
-[STUDY, EEG] = pop_savestudy( STUDY, EEG, 'filename',[study_name_noext '_catsub.study'],'filepath',study_folder);
+% [STUDY, EEG] = pop_savestudy( STUDY, EEG, 'filename',[study_name_noext '_catsub.study'],'filepath',study_folder);
+[STUDY, EEG] = pop_savestudy( STUDY, EEG, 'filename',[study_name_noext '.study'],'filepath',study_folder);
+
 end
 

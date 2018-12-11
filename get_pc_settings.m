@@ -58,4 +58,5 @@ function [os_ver, os_bit, matlab_ver, matlab_bit, matlab_tlbx] = get_pc_settings
     if ~isstruct(matlab_tlbx)
         matlab_tlbx = [];
     end
+
 end

@@ -16,7 +16,8 @@ levels_f2                                                                  = inp
 plot_dir                                                                   = input.plot_dir;
 select_tw_des                                                              = input.select_tw_des;
 
-
+name_f1 = input.name_f1;
+name_f2 = input.name_f2;
 
 levels_gf=   input.levels_gf  ;
 name_gf=        input.name_gf   ;
@@ -74,11 +75,24 @@ end
 
 
 
-if lgf == s1
+if strcmp(name_gf,name_f1)
     
     for ns1 = 1:s1 % per ciascun livello del primo fattore
+        
         mat_erp_plot = erp_gf{ns1} .* p_gf{ns1};% calcolo la matrice che media sui soggetti(lascia x=tempi, y=canali)
-        imagesc(times(sel_times),1:tch,mat_erp_plot(:,sel_times));%faccio il plot della matrice
+        
+        if not(isempty(select_tw_des{ns1,1}))
+            
+            tt1 = select_tw_des{ns1,1}(1);
+            tt2 = select_tw_des{ns1,1}(2);
+            sel_tt = times <tt1 | times > tt2;
+            mat_erp_plot(:,sel_tt)=0;
+            
+        end
+        
+        
+        fig=figure('color','w','visible','off'); % creo una figura che avrà tanti sub-plot quanti sono i livelli del secondo fattore
+         imagesc(times(sel_times),1:tch,mat_erp_plot(:,sel_times),'AlphaData',~isnan(mat_erp_plot(:,sel_times)));shading flat; grid on;%pcolor(times(sel_times),1:tch,mat_erp_plot(:,sel_times));shading flat; grid on  
         caxis(amplim);
         title(['grouped by ' levels_f1{ns1}])
         line('XData', [0 0], 'YData', [1 tch], 'LineStyle', '--','LineWidth', 2, 'Color','k')
@@ -87,31 +101,60 @@ if lgf == s1
         ylabel('Channels');
         cbar;title('uV');
         
+        input.plot_dir    = plot_dir;
+        input.fig         = fig;
+        input.name_embed  = 'masked_erp_grouping_factor';
+        input.suffix_plot = ['masked_erp_grouped_',levels_f1{ns1}];
+        save_figures(input);
+        
+        
+        fig=figure('color','w','visible','off'); % creo una figura che avrà tanti sub-plot quanti sono i livelli del secondo fattore
+         imagesc(times(sel_times),1:tch,erp_gf{ns1}(:,sel_times),'AlphaData',~isnan(erp_gf{ns1}(:,sel_times)));shading flat; grid on;%pcolor(times,1:tch,erp_gf{ns1}(:,sel_times));shading flat; grid on  
+        caxis(amplim);
+        title(['grouped by ' levels_f1{ns1}])
+        line('XData', [0 0], 'YData', [1 tch], 'LineStyle', '--','LineWidth', 2, 'Color','k')
+        xlabel('Times (ms)');
+        set(gca,'YTick',1:tch,'YTicklabel',allch,'FontSize', 8)
+        ylabel('Channels');
+        cbar;title('uV');
         
         input.plot_dir    = plot_dir;
         input.fig         = fig;
-        input.name_embed  = 'erp_grouping_factor';
-        input.suffix_plot = ['erp_grouped_',levels_f1{ns1}];
+        input.name_embed  = 'raw_erp_grouping_factor';
+        input.suffix_plot = ['raw_erp_grouped_',levels_f1{ns1}];
         save_figures(input);
         
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         for ns2 = 1:s2 % per ogni livello del secondo fattore
-            fig=figure('color','w'); % creo una figura che avrà tanti sub-plot quanti sono i livelli del secondo fattore
             
             mat_erp_plot = erp_avgsub{ns1,ns2} .* p_gf{ns1};% calcolo la matrice che media sui soggetti(lascia x=tempi, y=canali)
             
             if not(isempty(select_tw_des{ns1,ns2}))
+                
                 tt1 = select_tw_des{ns1,ns2}(1);
                 tt2 = select_tw_des{ns1,ns2}(2);
                 sel_tt = times <tt1 | times > tt2;
-                mat_erp_plot(:,sel_tt)=nan;
+                mat_erp_plot(:,sel_tt)=0;
+                
             end
             
-            %             imagesc(times(sel_times),1:tch,mat_erp_plot(:,sel_times));%faccio il plot della matrice
-            pcolor(times(sel_times),1:tch,mat_erp_plot(:,sel_times));shading flat; grid on
             
-            
+            fig=figure('color','w','visible','off'); % creo una figura che avrà tanti sub-plot quanti sono i livelli del secondo fattore
+             imagesc(times(sel_times),1:tch,mat_erp_plot(:,sel_times),'AlphaData',~isnan(mat_erp_plot(:,sel_times)));shading flat; grid on;%pcolor(times(sel_times),1:tch,mat_erp_plot(:,sel_times));shading flat; grid on  
             caxis(amplim);
-            title([levels_f1{ns1}, '__',levels_f2{ns2}])
+            title([levels_f2{ns2},'__', levels_f1{ns1}])
             line('XData', [0 0], 'YData', [1 tch], 'LineStyle', '--','LineWidth', 2, 'Color','k')
             xlabel('Times (ms)');
             set(gca,'YTick',1:tch,'YTicklabel',allch,'FontSize', 8)
@@ -120,8 +163,26 @@ if lgf == s1
             
             input.plot_dir    = plot_dir;
             input.fig         = fig;
-            input.name_embed  = 'erp_grouping_factor';
-            input.suffix_plot = ['erp_grouped_',levels_f1{ns1}, '__',levels_f2{ns2}];
+            input.name_embed  = 'masked_erp_grouping_factor';
+            input.suffix_plot = ['masked_erp_grouped_',levels_f2{ns2},'__',levels_f1{ns1}];
+            save_figures(input);      
+            
+            
+            
+            fig=figure('color','w','visible','off'); % creo una figura che avrà tanti sub-plot quanti sono i livelli del secondo fattore
+             imagesc(times(sel_times),1:tch,erp_avgsub{ns1,ns2}(:,sel_times),'AlphaData',~isnan(erp_avgsub{ns1,ns2}(:,sel_times)));shading flat; grid on;%pcolor(times,1:tch,erp_avgsub{ns1,ns2}(:,sel_times));shading flat; grid on  
+            caxis(amplim);
+            title([levels_f2{ns2},'__', levels_f1{ns1}])
+            line('XData', [0 0], 'YData', [1 tch], 'LineStyle', '--','LineWidth', 2, 'Color','k')
+            xlabel('Times (ms)');
+            set(gca,'YTick',1:tch,'YTicklabel',allch,'FontSize', 8)
+            ylabel('Channels');
+            cbar;title('uV');
+            
+            input.plot_dir    = plot_dir;
+            input.fig         = fig;
+            input.name_embed  = 'raw_erp_grouping_factor';
+            input.suffix_plot = ['raw_erp_grouped_',levels_f2{ns2},'__',levels_f1{ns1}];
             save_figures(input);
         end
     end
@@ -132,17 +193,23 @@ else
     
     
     for ns2 = 1:s2 % per ciascun livello del primo fattore
-        fig=figure('color','w'); % creo una figura che avrà tanti sub-plot quanti sono i livelli del secondo fattore
         
         mat_erp_plot = erp_gf{ns2} .* p_gf{ns2};% calcolo la matrice che media sui soggetti(lascia x=tempi, y=canali)
         
+        if not(isempty(select_tw_des{1,ns2}))
+            
+            tt1 = select_tw_des{1,ns2}(1);
+            tt2 = select_tw_des{1,ns2}(2);
+            sel_tt = times <tt1 | times > tt2;
+            mat_erp_plot(:,sel_tt)=0;
+            
+        end
         
         
+       
         
-        %         imagesc(times(sel_times),1:tch,mat_erp_plot(:,sel_times));%faccio il plot della matrice
-        pcolor(times(sel_times),1:tch,mat_erp_plot(:,sel_times));shading flat; grid on
-        
-        
+        fig=figure('color','w','visible','off'); % creo una figura che avrà tanti sub-plot quanti sono i livelli del secondo fattore
+         imagesc(times(sel_times),1:tch,mat_erp_plot(:,sel_times),'AlphaData',~isnan(mat_erp_plot(:,sel_times)));shading flat; grid on;%pcolor(times(sel_times),1:tch,mat_erp_plot(:,sel_times));shading flat; grid on   
         caxis(amplim);
         title(['grouped by ' levels_f2{ns2}])
         line('XData', [0 0], 'YData', [1 tch], 'LineStyle', '--','LineWidth', 2, 'Color','k')
@@ -153,12 +220,32 @@ else
         
         input.plot_dir    = plot_dir;
         input.fig         = fig;
-        input.name_embed  = 'erp_grouping_factor';
-        input.suffix_plot = ['erp_grouped_',levels_f2{ns2}];
+        input.name_embed  = 'masked_erp_grouping_factor';
+        input.suffix_plot = ['masked_erp_grouped_',levels_f2{ns2}];
         save_figures(input);
         
+        
+        fig=figure('color','w','visible','off'); % creo una figura che avrà tanti sub-plot quanti sono i livelli del secondo fattore
+         imagesc(times(sel_times),1:tch,erp_gf{ns2}(:,sel_times),'AlphaData',~isnan(erp_gf{ns2}(:,sel_times)));shading flat; grid on;%pcolor(times,1:tch,erp_gf{ns2}(:,sel_times));shading flat; grid on   
+        caxis(amplim);
+        title(['grouped by ' levels_f2{ns2}])
+        line('XData', [0 0], 'YData', [1 tch], 'LineStyle', '--','LineWidth', 2, 'Color','k')
+        xlabel('Times (ms)');
+        set(gca,'YTick',1:tch,'YTicklabel',allch,'FontSize', 8)
+        ylabel('Channels');
+        cbar;title('uV');
+        
+        input.plot_dir    = plot_dir;
+        input.fig         = fig;
+        input.name_embed  = 'raw_erp_grouping_factor';
+        input.suffix_plot = ['raw_erp_grouped_',levels_f2{ns2}];
+        save_figures(input);
+        
+        
+        
+        
+        
         for ns1 = 1:s1 % per ogni livello del secondo fattore
-            fig=figure('color','w'); % creo una figura che avrà tanti sub-plot quanti sono i livelli del secondo fattore
             
             mat_erp_plot = erp_avgsub{ns1,ns2} .* p_gf{ns2};% calcolo la matrice che media sui soggetti(lascia x=tempi, y=canali)
             
@@ -167,14 +254,12 @@ else
                 tt1 = select_tw_des{ns1,ns2}(1);
                 tt2 = select_tw_des{ns1,ns2}(2);
                 sel_tt = times <tt1 | times > tt2;
-                mat_erp_plot(:,sel_tt)=nan;
+                mat_erp_plot(:,sel_tt)=0;
                 
             end
             
-            %             imagesc(times(sel_times),1:tch,mat_erp_plot(:,sel_times));%faccio il plot della matrice
-            pcolor(times(sel_times),1:tch,mat_erp_plot(:,sel_times));shading flat; grid on
-            
-            
+            fig=figure('color','w','visible','off'); % creo una figura che avrà tanti sub-plot quanti sono i livelli del secondo fattore
+             imagesc(times(sel_times),1:tch,mat_erp_plot(:,sel_times),'AlphaData',~isnan(mat_erp_plot(:,sel_times)));shading flat; grid on;%pcolor(times(sel_times),1:tch,mat_erp_plot(:,sel_times));shading flat; grid on  
             caxis(amplim);
             title([levels_f1{ns1},'__', levels_f2{ns2}])
             line('XData', [0 0], 'YData', [1 tch], 'LineStyle', '--','LineWidth', 2, 'Color','k')
@@ -185,9 +270,28 @@ else
             
             input.plot_dir    = plot_dir;
             input.fig         = fig;
-            input.name_embed  = 'erp_grouping_factor';
-            input.suffix_plot = ['erp_grouped_',levels_f1{ns1},'__',levels_f2{ns2}];
+            input.name_embed  = 'masked_erp_grouping_factor';
+            input.suffix_plot = ['masked_erp_grouped_',levels_f1{ns1},'__',levels_f2{ns2}];
             save_figures(input);
+            
+            
+            fig=figure('color','w','visible','off'); % creo una figura che avrà tanti sub-plot quanti sono i livelli del secondo fattore
+             imagesc(times(sel_times),1:tch,erp_avgsub{ns1,ns2}(:,sel_times),'AlphaData',~isnan(erp_avgsub{ns1,ns2}(:,sel_times)));shading flat; grid on;%pcolor(times,1:tch,erp_avgsub{ns1,ns2}(:,sel_times));shading flat; grid on  
+            caxis(amplim);
+            title([levels_f1{ns1},'__', levels_f2{ns2}])
+            line('XData', [0 0], 'YData', [1 tch], 'LineStyle', '--','LineWidth', 2, 'Color','k')
+            xlabel('Times (ms)');
+            set(gca,'YTick',1:tch,'YTicklabel',allch,'FontSize', 8)
+            ylabel('Channels');
+            cbar;title('uV');
+            
+            input.plot_dir    = plot_dir;
+            input.fig         = fig;
+            input.name_embed  = 'raw_erp_grouping_factor';
+            input.suffix_plot = ['raw_erp_grouped_',levels_f1{ns1},'__',levels_f2{ns2}];
+            save_figures(input);
+            
+            
         end
     end
     

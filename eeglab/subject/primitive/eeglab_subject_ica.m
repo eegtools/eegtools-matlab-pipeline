@@ -90,7 +90,7 @@ try
         %         end
     else % se ho rango deficitario o non posso usare cudaica, allora uso binica/runica con sottocampionamento (pare che ica funzioni meglio), poi copio i pesi della scomposizione nei dati originali.
         
-        EEG2 = pop_eegfiltnew( EEG,0, floor(ica_sr/2), [], 0, [], 0);
+        EEG2 = pop_eegfiltnew( EEG,1, floor(ica_sr/2), [], 0, [], 0);
         EEG2 = pop_resample( EEG2, ica_sr);
         
         
@@ -123,6 +123,21 @@ try
     end
     disp(EEG.filename)
     EEG = pop_saveset( EEG, 'filename',[out_file_name],'filepath',output_path);
+    EEG = pop_saveset( EEG, 'filename',[name_noext,'_icabck'],'filepath',output_path);
+
+    
+    icadir = fullfile(output_path,'icadir');
+    if not(exist(icadir))
+        mkdir(icadir)
+    end
+    
+    out_ica.icaweights = EEG.icaweights;
+    out_ica.icasphere  = EEG.icasphere;
+    out_ica.icachansind  = EEG.icachansind;
+    out_ica.icawinv  = EEG.icawinv;
+    out_ica.icaact = EEG.icaact;
+    fname_out_ica = fullfile(icadir,[name_noext, '.mat']);
+    save(fname_out_ica,'out_ica');
     
     
 %     EEG = pop_ICMARC_interface(EEG, 'established_features', 1);

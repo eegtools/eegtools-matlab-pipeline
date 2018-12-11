@@ -50,7 +50,7 @@ function [output] = eeglab_study_plot_erp_headplot_tw_compact(input)
 if nargin < 1
     help eeglab_study_plot_erp_headplot_tw_compact;
     return;
-end;
+end
 
 project                                                                    = input.project;
 study_path                                                                 = input.study_path;
@@ -75,6 +75,11 @@ STUDY = []; CURRENTSTUDY = 0; ALLEEG = []; EEG=[]; CURRENTSET=[];
 
 %% load the study and working with the study structure
 [STUDY ALLEEG] = pop_loadstudy( 'filename',[study_name_noext study_ext],'filepath',study_path);
+
+eeglab_version = eeg_getversion;
+if (strcmp(eeglab_version,'development head'))        
+        list_select_subjects = intersect(list_select_subjects, STUDY.subject);
+end
 
 %%channels locations
 locs = eeg_mergelocs(ALLEEG.chanlocs);
@@ -108,7 +113,7 @@ for design_num=design_num_vec
     group_time_windows_list_design             = group_time_windows_list{design_num};
     group_time_windows_names_design            = group_time_windows_names{design_num};
     
-    list_design_subjects                       = eeglab_generate_subjects_list_by_factor_levels(STUDY, design_num);
+    list_design_subjects                       = eeglab_generate_subjects_list_by_factor_levels(project,STUDY, design_num);
     
     erp_headplot.list_design_subjects    = list_design_subjects;
     
@@ -121,7 +126,7 @@ for design_num=design_num_vec
     for nwin=1:length(group_time_windows_list_design)
         
         % lista dei soggetti che partecipano di quel design
-        list_design_subjects            = eeglab_generate_subjects_list_by_factor_levels(STUDY, design_num);
+        list_design_subjects            = eeglab_generate_subjects_list_by_factor_levels(project,STUDY, design_num);
         
         STUDY = pop_erpparams(STUDY, 'topotime',group_time_windows_list_design{nwin});
         
@@ -130,8 +135,12 @@ for design_num=design_num_vec
         
         STUDY = pop_statparams(STUDY, 'groupstats','off','condstats','off');
         
-        % calculate erp in the channels corresponding to the selected roi
+%         calculate erp in the channels corresponding to the selected roi
+if not(strcmp(eeglab_version,'development head'))
         [STUDY, erp_headplot_tw, ~]=std_erpplot_corr(STUDY,ALLEEG,'channels',locs_labels,'noplot','on');
+else
+        [STUDY, erp_headplot_tw, ~]=std_erpplot(STUDY,ALLEEG,'channels',locs_labels,'noplot','on');
+end
         
         for nf1=1:length(levels_f1)
             for nf2=1:length(levels_f2)

@@ -27,10 +27,12 @@ Moreover, it eases the integration between EEGLab and Brainstorm and allows call
   * Triggers manipulation
   * ICA & CUDAICA
   * Merge different montages
+  * Micristates
+  * Data driven selection of regions of interest and times
   
 * Group level
   * EEGLab Study creation, design and compute measure
-  * ERP & ERPS Stats (continuous curve, time-windows, Time-Frequency, frequency-bands, topo-plot, peak-analysis, individual align, individual narrow-band.. etc...)
+  * ERP & ERPS Stats (continuous curve, time-windows, time-frequency, frequency-bands, topo-plot, peak-analysis, individual align, individual narrow-band.. etc...)
   * Plotting
   * Result export
 

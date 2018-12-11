@@ -5,7 +5,7 @@
 
 function  proj_brainstorm_subject_sources_factors_new(project,  varargin)
 
-iProtocol               = brainstorm_protocol_open(protocol_name);
+iProtocol               = brainstorm_protocol_open(project.brainstorm.db_name);
 protocol                = bst_get('ProtocolInfo');
 brainstorm_data_path    = protocol.STUDIES;
 
@@ -32,8 +32,8 @@ sources_results = cell(length(list_select_subjects), length(length(project.study
         % 4 conditions
         for cond=1:length(project.study.factors)
             cond_name                       = project.study.factors(cond).level;
-            for sources_params=1:length(project.operations.do_sources_params)
-                sources_results{subj, cond}     = brainstorm_subject_sources(project.brainstorm.db_name, list_select_subjects{subj}, cond_name, [project.brainstorm.average_file_name '.mat'], project.operations.do_sources_params{sources_params}{:});
+            for sources_params=1:length(project.brainstorm.do_sources.params)
+                sources_results{subj, cond}     = brainstorm_subject_sources(project.brainstorm.db_name, list_select_subjects{subj}, cond_name, [project.brainstorm.average_file_name '.mat'], project.brainstorm.do_sources.params{sources_params}{:});
             end
         end
     end

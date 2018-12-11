@@ -183,7 +183,8 @@ STUDY = []; CURRENTSTUDY = 0; ALLEEG = []; EEG=[]; CURRENTSET=[];
 
 chanlocs = eeg_mergelocs(ALLEEG.chanlocs);
 allch         = {chanlocs.labels};
-
+sel_cheeg = 1:project.eegdata.nch_eeg;
+allch_eeg = allch(sel_cheeg);
 
 
 ersp_curve_allch_fb_stat.frequency_bands_names    = frequency_bands_names;
@@ -212,7 +213,7 @@ for design_num=design_num_vec
     
     
     % lista dei soggetti suddivisi per fattori
-    original_list_design_subjects                   = eeglab_generate_subjects_list_by_factor_levels(STUDY, design_num);
+    original_list_design_subjects                   = eeglab_generate_subjects_list_by_factor_levels(project,STUDY, design_num);
     original_individual_fb_bands                    = eeglab_generate_subjects_bands_by_factor_levels(STUDY, design_num, subjects_data, frequency_bands_list);  ... {factor1,factor2}{subj}{band}
         
 
@@ -223,7 +224,7 @@ STUDY = pop_erspparams(STUDY, 'topotime',[] ,'plotgroups','apart' ,'plotconditio
 %% for each allch in the list
 %         for nallch = 1:length(allch_list)
 ersp=[];
-list_design_subjects                   = eeglab_generate_subjects_list_by_factor_levels(STUDY, design_num);
+list_design_subjects                   = eeglab_generate_subjects_list_by_factor_levels(project,STUDY, design_num);
 
 
 STUDY = pop_statparams(STUDY, 'groupstats','off','condstats','off','method', stat_method);
@@ -249,7 +250,7 @@ for nf1=1:length(levels_f1)
                 disp('Error: the selected subjects are not represented in the selected design')
                 return;
             end
-            ersp{nf1,nf2}=ersp{nf1,nf2}(:,:,:,vec_select_subjects);
+            ersp{nf1,nf2}=ersp{nf1,nf2}(:,:,sel_cheeg,vec_select_subjects);
             individual_fb_bands{nf1,nf2} = {original_individual_fb_bands{nf1,nf2}{vec_select_subjects}};
             list_design_subjects{nf1,nf2} = {original_list_design_subjects{nf1,nf2}{vec_select_subjects}};
         else
@@ -314,7 +315,7 @@ for nband=1:length(frequency_bands_list)
         %                         ersp_curve_allch_fb_stat.name_f2                                         = name_f2;
         ersp_curve_allch_fb_stat.ersp_curve_fb                                   = ersp_curve_allch_fb;
         ersp_curve_allch_fb_stat.study_ls                                        = study_ls;
-         ersp_curve_allch_fb_stat.allch = allch;
+         ersp_curve_allch_fb_stat.allch = allch_eeg;
         ersp_curve_allch_fb_stat.amplim                                         = project.results_display.erp.compact_display_ylim;
          ersp_curve_allch_fb_stat.times                                           = times_plot;
        

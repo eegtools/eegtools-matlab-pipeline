@@ -27,17 +27,17 @@ name_cf = input.name_cf;
 
 
 % ho ancora i singoli soggetti
-erp_curve_allch                                              = input.erp_curve_allch;
-output_dd_grouping_factor                                                  = input.output_dd_grouping_factor;
+curve_allch                                              = input.curve_allch;
+output_dd_gf                                                  = input.output_dd_gf;
 
 allch                                                                      = input.allch;
 
 
 
 times                                                                      = input.times;
-levels_grouping_factor                                                     =   input.levels_grouping_factor  ;
+levels_gf                                                     =   input.levels_gf  ;
 
-lgf = length(levels_grouping_factor);
+lgf = length(levels_gf);
 
 
 
@@ -47,14 +47,14 @@ lgf = length(levels_grouping_factor);
 %
 
 % cell array con le p calcolate per ogni livello del grouping factor
-sigcell_pruned_gf =  output_dd_grouping_factor.sigcell_pruned_gf;
+sigcell_pruned_gf =  output_dd_gf.sigcell_pruned_gf;
 % per ogni livello del grouping factor i canali che presentano deflessioni
 % significative rispetto alla baseline
-sel_ch_cell_gf =  output_dd_grouping_factor.sel_ch_cell_gf;
+sel_ch_cell_gf =  output_dd_gf.sel_ch_cell_gf;
 % per livello del grouping factor e per ogni canale, le tw in cui c'è
 % deflessione significativa
-cell_tw_gf =  output_dd_grouping_factor.cell_tw_gf;
-results_tw_cell_gf = output_dd_grouping_factor.results_tw_cell_gf;
+cell_tw_gf =  output_dd_gf.cell_tw_gf;
+results_tw_cell_gf = output_dd_gf.results_tw_cell_gf;
 
 
 
@@ -62,7 +62,7 @@ results_tw_cell_gf = output_dd_grouping_factor.results_tw_cell_gf;
 tch = length(allch);
 
 %% dimensioni del cell array : livelli del primo fattore, livelli del secondo fattore del disegno: ogbi elemento è una matrice con  a tre dimesnioni : canali, tempi, soggetti
-[s1 s2]  = size(erp_curve_allch);
+[s1 s2]  = size(curve_allch);
 
 results_tw_cell_gf_cf_ch = {};
 % se il grouping factor è il primo fattore del disegno
@@ -82,17 +82,18 @@ if  strcmp(name_gf,name_f1)
             %  livello di gruping, per ogni livello di comparing e per ogni canale con deflessione significativa vado ad
             %  estrarmi i parametri di tutte le tw con deflessioni
             
-            results__ch ={};
+            results_ch = {};
+            
             for nch = 1:tot_ch
                 ind_ch = sel_ch(nch);
                 
-                curve_ch = squeeze(erp_curve_allch{ns1, ns2}(ind_ch,:,:));
+                curve_ch = squeeze(curve_allch{ns1, ns2}(:,ind_ch,:));
                 
                 tot_sub = size(curve_ch,2);
                 
                 mat_tw = cell_tw_gf{ns1,nch};
                 tot_tw = size(mat_tw,1);
-                
+                output_tw = struct;
                 
                 for ntw = 1:tot_tw;
                     
@@ -101,6 +102,7 @@ if  strcmp(name_gf,name_f1)
                     toffset                                                                    = mat_tw(ntw,2);
                     
                     seltsig = times >= tonset & times <= toffset;
+                    
                     
                     
                     
@@ -129,32 +131,36 @@ if  strcmp(name_gf,name_f1)
                     
                     vonset                                                                     = curve_ch(times == tonset,:);
                     voffset                                                                    = curve_ch(times == toffset,:);
-                    max_deflection                                                             = max(curve_ch(seltsig,:),[],2);
-                    min_deflection                                                             = min(curve_ch(seltsig,:),[],2);
+                    max_deflection                                                             = max(curve_ch(seltsig,:),[],1);
+                    min_deflection                                                             = min(curve_ch(seltsig,:),[],1);
                     
                     
                     for nsub = 1:tot_sub
-                        tmax_deflection                                                            = times(curve_ch(:,nsub) == max_deflection(nsub));
-                        tmin_deflection                                                            = times(curve_ch(:,nsub) == min_deflection(nsub));
+                        
+                        ttt = times(curve_ch(:,nsub) == max_deflection(nsub));
+                        tmax_deflection(nsub)                                                            = ttt(1);
+                        
+                        ttt = times(curve_ch(:,nsub) == min_deflection(nsub));
+                        tmin_deflection(nsub)                                                            = ttt(1);
                         
                         
-                        dt_onset_max_deflection(nsub)                                                    = tmax_deflection - tonset;
-                        dt_max_deflection_offset(nsub)                                                   = toffset - tmax_deflection;
+                        dt_onset_max_deflection(nsub)                                                    = tmax_deflection(nsub) - tonset;
+                        dt_max_deflection_offset(nsub)                                                   = toffset - tmax_deflection(nsub);
                         
                         
-                        selt2 = times >= tonset & times <= max_deflection(nsub);
+                        selt2 = times >= tonset & times <= tmax_deflection(nsub);
                         area_onset_max_deflection(nsub)                                                  = sum(curve_ch(selt2,nsub));
                         
-                        selt2 = times >= max_deflection(nsub) & times <= toffset;
+                        selt2 = times >= tmax_deflection(nsub) & times <= toffset;
                         area_max_deflection_offset(nsub)                                                 = sum(curve_ch(selt2,nsub));
                         
                         dt_onset_min_deflection(nsub)                                                    = tmin_deflection(nsub) - tonset;
                         dt_min_deflection_offset(nsub)                                                   = toffset - tmin_deflection(nsub);
                         
-                        selt2 = times >= tonset & times <= min_deflection(nsub);
+                        selt2 = times >= tonset & times <= tmin_deflection(nsub);
                         area_onset_min_deflection(nsub)                                                  = sum(curve_ch(selt2,nsub));
                         
-                        selt2 = times >= min_deflection(nsub) & times <= toffset;
+                        selt2 = times >= tmin_deflection(nsub) & times <= toffset;
                         area_min_deflection_offset(nsub)                                                 = sum(curve_ch(selt2,nsub));
                         
                         dt_onset_offset                                                           = toffset - tonset;
@@ -164,7 +170,7 @@ if  strcmp(name_gf,name_f1)
                         vmean_onset_offset(nsub)                                                         = mean(curve_ch(selt2,nsub));
                         vmedian_onset_offset(nsub)                                                       = median(curve_ch(selt2,nsub));
                         
-                        barycenter(nsub)                                                                 = sum( times(selt2).*curve_ch(selt2,nsub)) / sum(curve_ch(selt2,nsub));
+                        barycenter(nsub)                                                                 = sum( times(selt2).*curve_ch(selt2,nsub)') / sum(curve_ch(selt2,nsub));
                     end
                     
                     
@@ -195,17 +201,17 @@ if  strcmp(name_gf,name_f1)
                     
                 end
                 
+                results_ch{nch}= output_tw;
                 
-                results__ch{nch}= output_tw;
                 
                 
                 
             end
             results_tw_cell_gf_cf_ch{ns1, ns2}= results_ch;
-
             
         end
     end
+    
     
     
     
@@ -226,19 +232,20 @@ else
             
             %  livello di gruping, per ogni livello di comparing e per ogni canale con deflessione significativa vado ad
             %  estrarmi i parametri di tutte le tw con deflessioni
-        
+            
             results_ch = {};
             
             for nch = 1:tot_ch
                 ind_ch = sel_ch(nch);
                 
-                curve_ch = squeeze(erp_curve_allch{ns1, ns2}(ind_ch,:,:));
+                curve_ch = squeeze(curve_allch{ns1, ns2}(:,ind_ch,:));
                 
                 tot_sub = size(curve_ch,2);
                 
                 mat_tw = cell_tw_gf{ns2,nch};
                 tot_tw = size(mat_tw,1);
                 
+                output_tw = [];
                 
                 for ntw = 1:tot_tw;
                     
@@ -250,7 +257,7 @@ else
                     
                     
                     
-                     
+                    
                     output_tw(ntw).tonset                                                       = nan;                                            % tempo di onset
                     output_tw(ntw).vonset                                                       = nan(tot_sub,1);                                            % valore di onset
                     output_tw(ntw).toffset                                                      = nan;                                           % tempo di offset
@@ -276,32 +283,35 @@ else
                     
                     vonset                                                                     = curve_ch(times == tonset,:);
                     voffset                                                                    = curve_ch(times == toffset,:);
-                    max_deflection                                                             = max(curve_ch(seltsig,:),[],2);
-                    min_deflection                                                             = min(curve_ch(seltsig,:),[],2);
+                    max_deflection                                                             = max(curve_ch(seltsig,:),[],1);
+                    min_deflection                                                             = min(curve_ch(seltsig,:),[],1);
                     
                     
                     for nsub = 1:tot_sub
-                        tmax_deflection                                                            = times(curve_ch(:,nsub) == max_deflection(nsub));
-                        tmin_deflection                                                            = times(curve_ch(:,nsub) == min_deflection(nsub));
+                        
+                        ttt = times(curve_ch(:,nsub) == max_deflection(nsub));
+                        tmax_deflection(nsub)                                                            = ttt(1);
+                        
+                        ttt = times(curve_ch(:,nsub) == min_deflection(nsub));
+                        tmin_deflection(nsub)                                                            = ttt(1);
+                        
+                        dt_onset_max_deflection(nsub)                                                    = tmax_deflection(nsub) - tonset;
+                        dt_max_deflection_offset(nsub)                                                   = toffset - tmax_deflection(nsub);
                         
                         
-                        dt_onset_max_deflection(nsub)                                                    = tmax_deflection - tonset;
-                        dt_max_deflection_offset(nsub)                                                   = toffset - tmax_deflection;
-                        
-                        
-                        selt2 = times >= tonset & times <= max_deflection(nsub);
+                        selt2 = times >= tonset & times <= tmax_deflection(nsub);
                         area_onset_max_deflection(nsub)                                                  = sum(curve_ch(selt2,nsub));
                         
-                        selt2 = times >= max_deflection(nsub) & times <= toffset;
+                        selt2 = times >= tmax_deflection(nsub) & times <= toffset;
                         area_max_deflection_offset(nsub)                                                 = sum(curve_ch(selt2,nsub));
                         
                         dt_onset_min_deflection(nsub)                                                    = tmin_deflection(nsub) - tonset;
                         dt_min_deflection_offset(nsub)                                                   = toffset - tmin_deflection(nsub);
                         
-                        selt2 = times >= tonset & times <= min_deflection(nsub);
+                        selt2 = times >= tonset & times <= tmin_deflection(nsub);
                         area_onset_min_deflection(nsub)                                                  = sum(curve_ch(selt2,nsub));
                         
-                        selt2 = times >= min_deflection(nsub) & times <= toffset;
+                        selt2 = times >= tmin_deflection(nsub) & times <= toffset;
                         area_min_deflection_offset(nsub)                                                 = sum(curve_ch(selt2,nsub));
                         
                         dt_onset_offset                                                           = toffset - tonset;
@@ -311,7 +321,7 @@ else
                         vmean_onset_offset(nsub)                                                         = mean(curve_ch(selt2,nsub));
                         vmedian_onset_offset(nsub)                                                       = median(curve_ch(selt2,nsub));
                         
-                        barycenter(nsub)                                                                 = sum( times(selt2).*curve_ch(selt2,nsub)) / sum(curve_ch(selt2,nsub));
+                        barycenter(nsub)                                                                 = sum( times(selt2).*curve_ch(selt2,nsub)') / sum(curve_ch(selt2,nsub));
                     end
                     
                     
@@ -342,14 +352,14 @@ else
                     
                 end
                 
-                                results__ch{nch}= output_tw;
-
+                results_ch{nch}= output_tw;
+                
                 
                 
                 
             end
-                        results_tw_cell_gf_cf_ch{ns1, ns2}= results_ch;
-
+            results_tw_cell_gf_cf_ch{ns1, ns2}= results_ch;
+            
         end
     end
     

@@ -8,7 +8,7 @@ function proj_brainstorm_subject_noise_estimation_new(project, varargin)
 if nargin < 1
     help proj_brainstorm_subject_noise_estimation;
     return;
-end;
+end
 
 iProtocol               = brainstorm_protocol_open(project.brainstorm.db_name);
 protocol                = bst_get('ProtocolInfo');
@@ -20,6 +20,11 @@ list_select_subjects    = project.subjects.list;
 start_interval_s        = project.epoching.bc_st.s;
 end_interval_s          = project.epoching.bc_end.s;
 
+
+if not(isfield(project.brainstorm,'condition_names'))
+    project.brainstorm.condition_names = project.epoching.condition_names;
+    project.brainstorm.numcond         = project.epoching.numcond;
+end
 
 for par=1:2:length(varargin)
     switch varargin{par}
@@ -49,9 +54,9 @@ for subj=1:length(list_select_subjects)
     % define conditions inputs
     ...FileNamesA = cell(1, project.epoching.numcond);
         cnt_trials = 0;
-    for cond=1:project.epoching.numcond
+    for cond=1:project.brainstorm.numcond
         
-        [sStudies, iStudies] = bst_get('StudyWithCondition', [subj_name '/' project.epoching.condition_names{cond}]);
+        [sStudies, iStudies] = bst_get('StudyWithCondition', [subj_name '/' project.brainstorm.condition_names{cond}]);
         if not(isempty(sStudies)) && not(isempty(iStudies))
             num_trials = length(sStudies.Data);
             

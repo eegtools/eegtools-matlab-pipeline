@@ -120,6 +120,6 @@ function brainstorm_subject_results_tw_reduction(input_data_file, sec_tw_limits,
     
     %% refresh subject
     [sStudy, iStudy, iData] = bst_get('DataFile', original_data_file);
-    db_reload_studies(iStudy)
+    db_reload_studies(iStudy);
     
 end

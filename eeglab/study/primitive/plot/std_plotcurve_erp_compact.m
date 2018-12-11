@@ -137,7 +137,7 @@ plot(times, up_plot_mat(nlf,:),'col',list_col(nlf),'LineWidth',0.5,'LineStyle',l
     end
     
     if strcmp(compact_display_v0,'on')
-        line([0 0],get(gca,'XLim'),'LineWidth',1,'LineStyle','--','col','black')
+        line([0 0],get(gca,'YLim'),'LineWidth',1,'LineStyle','--','col','black')
     end
     
     xxlim=get(gca,'xlim');
@@ -263,8 +263,10 @@ hold on
         set(gca,'LineWidth',2, 'FontSize', 10)
         xlabel(['Time (ms)'])
         ylabel(['Amplitude (uV)'])
-        set(0,'defaulttextinterpreter','none') ;legend(levels_f2,'box','off', 'FontSize', 10,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1],'Location','NorthEastOutside')
-        title(['ERP in ', roi_name,': ', 'within ',levels_f1{nlf1}], 'FontSize', 10);
+%         set(0,'defaulttextinterpreter','none') ;legend(levels_f2,'box','off', 'FontSize', 10,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1],'Location','NorthEastOutside')
+        set(0,'defaulttextinterpreter','none') ;legend(levels_f2,'box','off', 'FontSize', 10,'EdgeColor',[1 1 1],'Location','NorthEastOutside')
+        
+title(['ERP in ', roi_name,': ', 'within ',levels_f1{nlf1}], 'FontSize', 10);
         hold off
         
         
@@ -371,7 +373,8 @@ plot(times, up_plot_mat(nlf1,:),'col',list_col(nlf1),'LineWidth',0.5,'LineStyle'
         set(gca,'LineWidth',2, 'FontSize', 10)
         xlabel(['Time (ms)'])
         ylabel(['Amplitude (uV)'])
-        set(0,'defaulttextinterpreter','none') ;legend(levels_f1,'box','off', 'FontSize', 10,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1],'Location','NorthEastOutside')
+%         set(0,'defaulttextinterpreter','none') ;legend(levels_f1,'box','off', 'FontSize', 10,'EdgeColor',[1 1 1],'YColor',[1 1 1],'XColor',[1 1 1],'Location','NorthEastOutside')
+        set(0,'defaulttextinterpreter','none') ;legend(levels_f1,'box','off', 'FontSize', 10,'EdgeColor',[1 1 1],'Location','NorthEastOutside')
         title(['ERP in ', roi_name,': ','within ',levels_f2{nlf2}], 'FontSize', 10);
         hold off
         

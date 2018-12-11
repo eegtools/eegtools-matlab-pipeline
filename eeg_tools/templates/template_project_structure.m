@@ -34,8 +34,9 @@ project.study_suffix                                = '';                   % A4
 project.analysis_name                               = 'raw_observation';    % A5: epoching output folder name, subfolder containing the condition files of the current analysis type
 
 project.operations.do_source_analysis               = 1;                    % A6:  
-project.operations.do_emg_analysis                  = 0;                    % A7:
-project.operations.do_cluster_analysis              = 0;                    % A8:
+project.operations.do_emg_analysis                  = 1;                    % A7:
+project.operations.do_cluster_analysis              = 1;                    % A8:
+project.operations.do_fieldtrip_analysis            = 1;                    % A8:
 
 %% ======================================================================================================
 % B:    PATHS  
@@ -107,6 +108,14 @@ project.import.original_data_suffix     = '_obs';                       % D4:   
 project.import.original_data_prefix     = '';                           % D5:   string before subject name in original EEG file name....often empty
 
 
+% possibilità di caricare diversi file per ogni soggetto e marcare i
+% trigger di ogni file per distinguerli
+project.import.file_label = {};
+
+project.import.file_match = {};
+
+
+
 % output
 project.import.output_folder            = project.import.original_data_folder;  % D6:   string appended to fullfile(project.paths.project,'epochs', ...) , determining where to write imported file, by default coincides with original_data_folder
 project.import.output_suffix            = '';                           % D7:   string appended to input file name after importing original file
@@ -123,6 +132,166 @@ project.import.ch2transform(5)          = struct('type', 'eog' , 'ch1', 55,'ch2'
 
 % D11:  list of trigger marker to import. can be a cel array, or a string with these values: 'all', 'stimuli','responses'
 project.import.valid_marker             = {'S1' 'S2' 'S3' 'S4' 'S5' 'S 16' 'S 17' 'S 19' 'S 19' 'S 20' 'S 21' 'S 48' 'S 49' 'S 50' 'S 51' 'S 52' 'S 53' 'S 80' 'S 81' 'S 82' 'S 83' 'S 84' 'S 85' };  
+
+% montaggio standard per uniformare i file edf (e.g esportati dalla clinica
+% con operatori creativi) in modo da avere tra file diversi gli stessi
+% canali (merge dei cell array sottostanti) con lo stesso ordine
+% (alfabetico)
+project.import.montage_list = {...   
+    {'Fp1','Fp2','F7','F3','Fz','F4','F8','FC5','FC1','FC2','FC6','T7','C3','Cz',...
+    'C4','T8','TP9','CP5','CP1','CP2','CP6','TP10','P7','P3','Pz','P4','P8',...
+    'O1','Oz','O2','AF7','AF3','AF4','AF8','F5','F1','F2','F6','FT9','FT7',...
+    'FC3','FC4','FT8','FT10','C5','C1','C2','C6','TP7','CP3','CPz','CP4',...
+    'TP8','P5','P1','P2','P6','PO7','PO3','POz','PO4','PO8'};
+    {'Fp1','AF7','AF3','F1','F3','F5','F7','FT7','FC5','FC3','FC1','C1','C3','C5',...
+    'T7','TP7','CP5','CP3','CP1','P1','P3','P5','P7','P9','PO7','PO3','O1','Iz','Oz',...
+    'POz','Pz','CPz','Fpz','Fp2','AF8','AF4','AFz','Fz','F2','F4','F6','F8','FT8','FC6',...
+    'FC4','FC2','FCz','Cz','C2','C4','C6','T8','TP8','CP6','CP4','CP2','P2','P4','P6',...
+    'P8','P10','PO8','PO4','O2'};
+    {  'Fp1',    'Fp2',    'F3',    'F4',    'F7',    'F8',    'T3',    'T4',  'T5',...
+    'T6',    'C3',    'C4',    'P3' ,   'P4',    'O1',    'O2',    'Fz',  'Cz',    ...
+    'Pz'};
+};
+
+complete_montage = unique([project.import.montage_list{:}]);
+tot_ch = length(complete_montage);
+
+%% TESTART
+% All-in-one function for artifact removal, including ASR.
+% [EEG,HP,BUR] = clean_artifacts(EEG, Options...)
+%
+% This function removes flatline channels, low-frequency drifts, noisy channels, short-time bursts
+% and incompletely repaird segments from the data. Tip: Any of the core parameters can also be
+% passed in as [] to use the respective default of the underlying functions, or as 'off' to disable
+% it entirely.
+%
+% Hopefully parameter tuning should be the exception when using this function -- however, there are
+% 3 parameters governing how aggressively bad channels, bursts, and irrecoverable time windows are
+% being removed, plus several detail parameters that only need tuning under special circumstances.
+%
+% Notes: 
+%  * This function uses the Signal Processing toolbox for pre- and post-processing of the data
+%    (removing drifts, channels and time windows); the core ASR method (clean_asr) does not require 
+%    this toolbox but you will need high-pass filtered data if you use it directly.
+%  * By default this function will identify subsets of clean data from the given recording to
+%    enhance the robustness of the ASR calibration phase to strongly contaminated data; this uses
+%    the Statistics toolbox, but can be skipped/bypassed if needed (see documentation).
+%
+% In:
+%   EEG : Raw continuous EEG recording to clean up (as EEGLAB dataset structure).
+%
+%
+%   NOTE: The following parameters are the core parameters of the cleaning procedure; they should be
+%   passed in as Name-Value Pairs. If the method removes too many (or too few) channels, time
+%   windows, or general high-amplitude ("burst") artifacts, you will want to tune these values.
+%   Hopefully you only need to do this in rare cases.
+%
+%   ChannelCriterion : Minimum channel correlation. If a channel is correlated at less than this
+%                      value to an estimate based on other channels, it is considered abnormal in
+%                      the given time window. This method requires that channel locations are
+%                      available and roughly correct; otherwise a fallback criterion will be used.
+%                      (default: 0.85)
+%
+%   LineNoiseCriterion : If a channel has more line noise relative to its signal than this value, in
+%                        standard deviations based on the total channel population, it is considered
+%                        abnormal. (default: 4)
+%
+%   BurstCriterion : Standard deviation cutoff for removal of bursts (via ASR). Data portions whose
+%                    variance is larger than this threshold relative to the calibration data are
+%                    considered missing data and will be removed. The most aggressive value that can
+%                    be used without losing much EEG is 3. For new users it is recommended to at
+%                    first visually inspect the difference between the original and cleaned data to
+%                    get a sense of the removed content at various levels. A quite conservative
+%                    value is 5. Default: 5.
+%
+%   WindowCriterion : Criterion for removing time windows that were not repaired completely. This may
+%                     happen if the artifact in a window was composed of too many simultaneous
+%                     uncorrelated sources (for example, extreme movements such as jumps). This is
+%                     the maximum fraction of contaminated channels that are tolerated in the final
+%                     output data for each considered window. Generally a lower value makes the
+%                     criterion more aggressive. Default: 0.25. Reasonable range: 0.05 (very
+%                     aggressive) to 0.3 (very lax).
+%
+%   Highpass : Transition band for the initial high-pass filter in Hz. This is formatted as
+%              [transition-start, transition-end]. Default: [0.25 0.75].
+%
+%
+%   NOTE: The following are detail parameters that may be tuned if one of the criteria does
+%   not seem to be doing the right thing. These basically amount to side assumptions about the
+%   data that usually do not change much across recordings, but sometimes do.
+%
+%   ChannelCriterionMaxBadTime : This is the maximum tolerated fraction of the recording duration 
+%                                during which a channel may be flagged as "bad" without being
+%                                removed altogether. Generally a lower (shorter) value makes the
+%                                criterion more aggresive. Reasonable range: 0.15 (very aggressive)
+%                                to 0.6 (very lax). Default: 0.5.
+%
+%   BurstCriterionRefMaxBadChns: If a number is passed in here, the ASR method will be calibrated based 
+%                                on sufficiently clean data that is extracted first from the
+%                                recording that is then processed with ASR. This number is the
+%                                maximum tolerated fraction of "bad" channels within a given time
+%                                window of the recording that is considered acceptable for use as
+%                                calibration data. Any data windows within the tolerance range are
+%                                then used for calibrating the threshold statistics. Instead of a
+%                                number one may also directly pass in a data set that contains
+%                                calibration data (for example a minute of resting EEG).
+%
+%                                If this is set to 'off', all data is used for calibration. This will 
+%                                work as long as the fraction of contaminated data is lower than the
+%                                the breakdown point of the robust statistics in the ASR
+%                                calibration (50%, where 30% of clearly recognizable artifacts is a
+%                                better estimate of the practical breakdown point).
+%
+%                                A lower value makes this criterion more aggressive. Reasonable
+%                                range: 0.05 (very aggressive) to 0.3 (quite lax). If you have lots
+%                                of little glitches in a few channels that don't get entirely
+%                                cleaned you might want to reduce this number so that they don't go
+%                                into the calibration data. Default: 0.075.
+%
+%   BurstCriterionRefTolerances : These are the power tolerances outside of which a channel in a
+%                                 given time window is considered "bad", in standard deviations
+%                                 relative to a robust EEG power distribution (lower and upper
+%                                 bound). Together with the previous parameter this determines how
+%                                 ASR calibration data is be extracted from a recording. Can also be
+%                                 specified as 'off' to achieve the same effect as in the previous
+%                                 parameter. Default: [-3.5 5.5].
+%
+%   WindowCriterionTolerances : These are the power tolerances outside of which a channel in the final
+%                               output data is considered "bad", in standard deviations relative
+%                               to a robust EEG power distribution (lower and upper bound). Any time
+%                               window in the final (repaired) output which has more than the
+%                               tolerated fraction (set by the WindowCriterion parameter) of channel
+%                               with a power outside of this range will be considered incompletely 
+%                               repaired and will be removed from the output. This last stage can be
+%                               skipped either by setting the WindowCriterion to 'off' or by taking
+%                               the third output of this processing function (which does not include
+%                               the last stage). Default: [-3.5 7].
+%
+%   FlatlineCriterion : Maximum tolerated flatline duration. In seconds. If a channel has a longer
+%                       flatline than this, it will be considered abnormal. Default: 5
+%
+%   NoLocsChannelCriterion : Criterion for removing bad channels when no channel locations are
+%                            present. This is a minimum correlation value that a given channel must
+%                            have w.r.t. a fraction of other channels. A higher value makes the
+%                            criterion more aggressive. Reasonable range: 0.4 (very lax) - 0.6
+%                            (quite aggressive). Default: 0.45.
+%
+%   NoLocsChannelCriterionExcluded : The fraction of channels that must be sufficiently correlated with
+%                                    a given channel for it to be considered "good" in a given time
+%                                    window. Applies only to the NoLocsChannelCriterion. This adds
+%                                    robustness against pairs of channels that are shorted or other
+%                                    that are disconnected but record the same noise process.
+%                                    Reasonable range: 0.1 (fairly lax) to 0.3 (very aggressive);
+%                                    note that increasing this value requires the ChannelCriterion
+%                                    to be relaxed in order to maintain the same overall amount of
+%                                    removed channels. Default: 0.1.
+
+project.testart.FlatlineCriterion = 4;
+project.testart.Highpass = 'off';
+project.testart.ChannelCriterion = 0.85;
+project.testart.LineNoiseCriterion = 4;
+project.testart.BurstCriterion = 5;
+project.testart.WindowCriterion = 0.25;
 
 %% ======================================================================================================
 % E:    FINAL EEGDATA
@@ -282,8 +451,13 @@ project.preproc.insert_end_baseline.delay.s                 = [0];              
                                                                                                                         % IMPOTANT NOTE: The latency information is displayed in seconds for continuous data, 
                                                                                                                         % or in milliseconds relative to the epoch's time-locking event for epoched data. 
                                                                                                                         % As we will see in the event scripting section, 
-                                                                                                                        % the latency information is stored internally in data samples (points or EEGLAB 'pnts') 
-                                                                                                                        % relative to the beginning of the continuous data matrix (EEG.data). 
+                                                                                                                       
+%% ICA
+project.ica.ica_type = 'runica';%'binica';
+project.ica.do_pca = 0;
+project.ica.ica_sr = 125; % deve essere almeno il doppio della max frequenza che si vuole scomporre con l'ica ma e' meglio che sia un divisore della frequenza di campionamento iniziale
+% the latency information is stored internally in data samples (points or EEGLAB 'pnts')
+% relative to the beginning of the continuous data matrix (EEG.data).
 
                                                                                            
 %% ======================================================================================================
@@ -328,7 +502,7 @@ project.epoching.baseline_replace.replace                    = 'part';          
 % EEG
 project.epoching.input_suffix           = '_mc';                        % G1:   final file name before epoching : default is '_raw_mc'
 project.epoching.input_folder           = project.preproc.output_folder;% G2:   input epoch folder, by default the preprocessing output folder
-project.epoching.bc_type                = 'global';                     % G3:   type of baseline correction: global: considering all the trials, 'condition': by condition, 'trial': trial-by-trial
+project.epoching.bc_type                = 'event';                     % G3:   type of baseline correction: global: considering all the trials, 'condition': by condition, 'event': event-by-event
 
 project.epoching.epo_st.s               = -0.99;                        % G4:   EEG epochs start latency
 project.epoching.epo_end.s              = 3;                            % G5:   EEG epochs end latency
@@ -445,7 +619,49 @@ project.subjects.conditions_behavioral_data(1) =  struct('name', 'RT', 'data', .
 project.subjects.conditions_behavioral_data(2) =  struct('name', 'RT_RATIO', 'data', ...
                                    [1.057,1.057,1.055,1.055; ... 
                                     1.057,1.057,1.055,1.055; ... 
-                                    ]);                                  
+                                    ]);
+                                
+                                
+                                
+%% MICORSTATES
+project.microstates.suffix = 'controlli';
+
+project.microstates.cond_list = {{'s-s2-1sc-1tc','s-s2-1sc-1tl','s-s2-1sl-1tc','s-s2-1sl-1tl'};... % condizioni epocate dall'epoching
+                                 {'t-s2-1sc-1tc','t-s2-1sc-1tl','t-s2-1sl-1tc','t-s2-1sl-1tl'};...
+                                 ... {'s-s2-1sc-1tc','s-s2-1sc-1tl','s-s2-1sl-1tc','s-s2-1sl-1tl','t-s2-1sc-1tc','t-s2-1sc-1tl','t-s2-1sl-1tc','t-s2-1sl-1tl'};...
+                                };
+
+project.microstates.cond_names = {'space','time','space-time',};                            
+project.microstates.micro_selectdata.datatype = 'ERPavg';
+project.microstates.micro_selectdata.avgref = 0;
+project.microstates.micro_selectdata.normalise = 1;
+
+project.microstates.micro_segment.algorithm = 'taahc';
+project.microstates.micro_segment.sorting = 'Global explained variance';
+project.microstates.micro_segment.normalise = 1;
+project.microstates.micro_segment.Nmicrostates = 3:8;
+project.microstates.micro_segment.verbose = 1;
+project.microstates.micro_segment.determinism = 1;
+project.microstates.micro_segment.polarity = 1;
+
+project.microstates.selectNmicro.Nmicro = 5;
+
+project.microstates.micro_fit.polarity = 0;
+
+project.microstates.micro_smooth.label_type ='segmentation';
+project.microstates.micro_smooth.smooth_type ='reject segments';
+project.microstates.micro_smooth.minTime =10;
+project.microstates.micro_smooth.polarity =1;
+
+project.microstates.micro_stats.label_type ='segmentation';
+project.microstates.micro_stats.polarity =0;
+
+
+project.microstates.MicroPlotSegments.label_type ='segmentation';
+project.microstates.MicroPlotSegments.plotsegnos ='all';
+project.microstates.MicroPlotSegments.plot_time =[];
+project.microstates.MicroPlotSegments.plottopos =1;
+                     
 
 %% ======================================================================================================
 % I:    STUDY
@@ -486,7 +702,7 @@ project.study.erp.timeout_analysis_interval.s   = [project.study.erp.tmin_analys
 % ERSP
 project.study.ersp.tmin_analysis.s              = project.epoching.epo_st.s;
 project.study.ersp.tmax_analysis.s              = project.epoching.epo_end.s;
-project.study.ersp.ts_analysis.s                = 0.008;
+project.study.ersp.ts_analysis.s                = 0.01;
 project.study.ersp.timeout_analysis_interval.s  = [project.study.ersp.tmin_analysis.s:project.study.ersp.ts_analysis.s:project.study.ersp.tmax_analysis.s];
 
 project.study.ersp.fmin_analysis                = 4;
@@ -495,6 +711,8 @@ project.study.ersp.fs_analysis                  = 0.5;
 project.study.ersp.freqout_analysis_interval    = [project.study.ersp.fmin_analysis:project.study.ersp.fs_analysis:project.study.ersp.fmax_analysis];
 project.study.ersp.padratio                     = 16;
 project.study.ersp.cycles                       = 0; ...[3 0.8];
+project.study.ersp.winsize                       = 32; ...128;  
+
 
 
 project.study.precompute.recompute              = 'on';
@@ -507,7 +725,8 @@ project.study.precompute.erp                    = {'interp','off','allcomps','on
 project.study.precompute.erpim                  = {'interp','off','allcomps','on','erpim','on','erpimparams',{'nlines' 10 'smoothing' 10},'recompute','off'};
 project.study.precompute.spec                   = {'interp','off','allcomps','on','spec' ,'on','specparams' ,{'specmode' 'fft','freqs' project.study.ersp.freqout_analysis_interval},'recompute','off'};
 project.study.precompute.ersp                   = {'interp','off' ,'allcomps','on','ersp' ,'on','erspparams' ,{'cycles' project.study.ersp.cycles,  'freqs', project.study.ersp.freqout_analysis_interval, 'timesout', project.study.ersp.timeout_analysis_interval.s*1000, ...
-                                                   'freqscale','linear','padratio',project.study.ersp.padratio, 'baseline',[project.epoching.bc_st.s*1000 project.epoching.bc_end.s*1000] },'itc','on','recompute','off'};
+                                                   'freqscale','linear','padratio',project.study.ersp.padratio, 'baseline',[project.epoching.bc_st.s*1000 project.epoching.bc_end.s*1000] , 'winsize',project.study.ersp.winsize},'itc','on','recompute','off'};
+
 
 %% ======================================================================================================
 % L:    DESIGN
@@ -516,7 +735,7 @@ if isfield(project, 'design')
     project = rmfield(project, 'design');
 end
 
-project.design(2)                   = struct('name',  'ao_control_ungrouped'   , 'factor1_name', 'condition', 'factor1_levels', [] , 'factor1_pairing', 'on', 'factor2_name', ''       , 'factor2_levels', [], 'factor2_pairing', 'off');
+project.design(2)                   = struct('name',  'ao_control_ungrouped'   , 'factor1_name', 'condition', 'factor1_levels', [] , 'factor1_pairing', 'on', 'factor2_name', ''       , 'factor2_levels', [], 'factor2_pairing', 'off', 'grouping_factor',[],'comparing_factor',[]);
 project.design(3)                   = struct('name',  'aocs_control_ungrouped' , 'factor1_name', 'condition', 'factor1_levels', [] , 'factor1_pairing', 'on', 'factor2_name', ''       , 'factor2_levels', [], 'factor2_pairing', 'off');
 project.design(4)                   = struct('name',  'aocs_ao_ungrouped'      , 'factor1_name', 'condition', 'factor1_levels', [] , 'factor1_pairing', 'on', 'factor2_name', ''       , 'factor2_levels', [], 'factor2_pairing', 'off');
 project.design(5)                   = struct('name',  'aois_ao_ungrouped'      , 'factor1_name', 'condition', 'factor1_levels', [] , 'factor1_pairing', 'on', 'factor2_name', ''       , 'factor2_levels', [], 'factor2_pairing', 'off');
@@ -600,7 +819,7 @@ project.postprocess.erp.roi_names={'left-ifg','right-ifg','left-PMd','right-PMd'
 project.postprocess.erp.numroi=length(project.postprocess.erp.roi_list);
 
 
-
+project.postprocess.erp.eog.sel_extrema='first_occurrence';%'avg_occurrences'
 project.postprocess.erp.eog.roi_list = {  ...
           {'UP_LEOG','DOWN_LEOG'};  ... 
           {'UP_REOG','DOWN_REOG'};  ... 
@@ -611,7 +830,7 @@ project.postprocess.erp.eog.roi_names={'L','R','U','D'}; ...,
 project.postprocess.erp.eog.numroi=length(project.postprocess.erp.eog.roi_list);
 
 
-
+project.postprocess.erp.emg.sel_extrema='first_occurrence';%'avg_occurrences'
 project.postprocess.erp.emg.roi_list = {  ...
           {'EMG1','EMG2'};  ... 
           {'EMG3','EMG4'};  ... 
@@ -819,7 +1038,8 @@ project.stats.ersp.tf_resolution_mode           = 'continuous';         %'contin
 project.stats.ersp.measure                      = 'dB';                 % 'Pfu';  dB decibel, Pfu, (A-R)/R * 100 = (A/R-1) * 100 = (10^.(ERSP/10)-1)*100 variazione percentuale definita da pfursheller
 project.stats.eeglab.ersp.method                = 'bootstrap';          % method applied in ERP statistical analysis
 project.stats.eeglab.ersp.correction            = 'none';               % multiple comparison correction applied in ERP statistical analysis
-
+project.stats.eeglab.ersp.mask_coef             = [];                   % in the timefrequency analysis, select a time window an a frequency band of interest to do multiple comparisons, based on a priori hypotheses
+project.stats.eeglab.ersp.stat_freq_bands_list  = [];
 %============================================================
 % FREQUENCY BANDS
 %============================================================
@@ -859,6 +1079,156 @@ for fb=1:project.postprocess.ersp.nbands
     project.postprocess.ersp.frequency_bands_list   = [project.postprocess.ersp.frequency_bands_list; {bands}];
 end
 project.postprocess.ersp.frequency_bands_names      = {project.postprocess.ersp.frequency_bands.name};
+
+
+
+%% data driven
+
+
+% ERP
+% data driven selection of tw-roi based on grand average
+project.postprocess.datadriven.erp.recompute_precompute                   = 'off';
+project.postprocess.datadriven.erp.precompute_folder = '';
+
+
+% grand average
+project.postprocess.datadriven.erp.ga.recompute                = 'on';
+project.postprocess.datadriven.erp.ga.levels_f1 = {project.design.factor1_levels};
+project.postprocess.datadriven.erp.ga.levels_f2 = {project.design.factor2_levels};
+% project.postprocess.datadriven.erp.ga.levels_f2{3} = project.postprocess.datadriven.erp.ga.levels_f2{3}(1); 
+project.postprocess.datadriven.erp.ga.levels_f2{3} = project.postprocess.datadriven.erp.ga.levels_f2{3}(3); 
+
+
+% cell  array di dimensione pari al numero di disegni. ogni cella è un cell
+% array a sua volta, corrispondente a ogni interazione tra grouping factor
+% e comparing fatcor
+
+project.postprocess.datadriven.erp.select_tw_des_stat = [0 520];
+
+project.postprocess.datadriven.erp.ga.select_tw_des_plot = {};
+select_tw_plot = [0,2000];
+tot_des = length(project.postprocess.datadriven.erp.ga.levels_f1);
+select_tw_des_plot = {};
+for ndes = 1:tot_des
+    select_tw_s1_s2_plot = {};
+
+    for ns1 = 1:length(project.postprocess.datadriven.erp.ga.levels_f1{ndes})
+        for ns2 = 1:length(project.postprocess.datadriven.erp.ga.levels_f2{ndes})
+            
+           select_tw_s1_s2_plot{ns1, ns2}  = select_tw_plot;
+           
+        end
+    end
+               select_tw_des_plot{ndes} = select_tw_s1_s2_plot;
+
+end
+project.postprocess.datadriven.erp.ga.select_tw_des_plot = select_tw_des_plot;
+
+
+% grouping factor
+
+project.postprocess.datadriven.erp.gf.recompute                 = 'on';
+project.postprocess.datadriven.erp.gf.levels_f1 = {project.design.factor1_levels};
+project.postprocess.datadriven.erp.gf.levels_f2 = {project.design.factor2_levels};
+
+% cell  array di dimensione pari al numero di disegni. ogni cella è un cell
+% array a sua volta, corrispondente a ogni interazione tra grouping factor
+% e comparing fatcor
+
+project.postprocess.datadriven.erp.gf.select_tw_des_plot = {};
+select_tw_plot = [0,2000];
+tot_des = length(project.postprocess.datadriven.erp.gf.levels_f1);
+select_tw_des_plot = {};
+for ndes = 1:tot_des
+    select_tw_s1_s2_plot = {};
+
+    for ns1 = 1:length(project.postprocess.datadriven.erp.gf.levels_f1{ndes})
+        for ns2 = 1:length(project.postprocess.datadriven.erp.gf.levels_f2{ndes})
+            
+           select_tw_s1_s2_plot{ns1, ns2}  = select_tw_plot;
+           
+        end
+    end
+               select_tw_des_plot{ndes} = select_tw_s1_s2_plot;
+
+end
+project.postprocess.datadriven.erp.gf.select_tw_des_plot = select_tw_des_plot;
+
+
+
+
+
+
+
+
+
+% ERSP
+% data driven selection of tw-roi based on grand average
+project.postprocess.datadriven.ersp.recompute_precompute                   = 'off';
+project.postprocess.datadriven.ersp.precompute_folder = '';
+
+
+% grand average
+project.postprocess.datadriven.ersp.ga.recompute                = 'on';
+project.postprocess.datadriven.ersp.ga.levels_f1 = {project.design.factor1_levels};
+project.postprocess.datadriven.ersp.ga.levels_f2 = {project.design.factor2_levels};
+% project.postprocess.datadriven.ersp.ga.levels_f2{3} = project.postprocess.datadriven.ersp.ga.levels_f2{3}(4:end); 
+ project.postprocess.datadriven.ersp.ga.levels_f2{3} = project.postprocess.datadriven.ersp.ga.levels_f2{3}(3); 
+
+
+% cell  array di dimensione pari al numero di disegni. ogni cella è un cell
+% array a sua volta, corrispondente a ogni interazione tra grouping factor
+% e comparing fatcor
+
+project.postprocess.datadriven.ersp.select_tw_des_stat = [0 520];
+project.postprocess.datadriven.ersp.ga.select_tw_des_plot = {};
+select_tw_plot = [0,2000];
+tot_des = length(project.postprocess.datadriven.ersp.ga.levels_f1);
+select_tw_des_plot = {};
+for ndes = 1:tot_des
+    select_tw_s1_s2_plot = {};
+
+    for ns1 = 1:length(project.postprocess.datadriven.ersp.ga.levels_f1{ndes})
+        for ns2 = 1:length(project.postprocess.datadriven.ersp.ga.levels_f2{ndes})
+            
+           select_tw_s1_s2_plot{ns1, ns2}  = select_tw_plot;
+           
+        end
+    end
+               select_tw_des_plot{ndes} = select_tw_s1_s2_plot;
+
+end
+project.postprocess.datadriven.ersp.ga.select_tw_des_plot = select_tw_des_plot;
+
+
+% grouping factor
+
+project.postprocess.datadriven.ersp.gf.recompute                 = 'on';
+project.postprocess.datadriven.ersp.gf.levels_f1 = {project.design.factor1_levels};
+project.postprocess.datadriven.ersp.gf.levels_f2 = {project.design.factor2_levels};
+
+% cell  array di dimensione pari al numero di disegni. ogni cella è un cell
+% array a sua volta, corrispondente a ogni interazione tra grouping factor
+% e comparing fatcor
+
+project.postprocess.datadriven.ersp.gf.select_tw_des_plot = {};
+select_tw_plot = [0,2000];
+tot_des = length(project.postprocess.datadriven.ersp.gf.levels_f1);
+select_tw_des_plot = {};
+for ndes = 1:tot_des
+    select_tw_s1_s2_plot = {};
+
+    for ns1 = 1:length(project.postprocess.datadriven.ersp.gf.levels_f1{ndes})
+        for ns2 = 1:length(project.postprocess.datadriven.ersp.gf.levels_f2{ndes})
+            
+           select_tw_s1_s2_plot{ns1, ns2}  = select_tw_plot;
+           
+        end
+    end
+               select_tw_des_plot{ndes} = select_tw_s1_s2_plot;
+
+end
+project.postprocess.datadriven.ersp.gf.select_tw_des_plot = select_tw_des_plot;
 
 
 %==============================================================
@@ -1423,7 +1793,7 @@ project.results_display.ersp.z_transform                        = 'on';         
 project.results_display.ersp.which_error_measure                = 'sem';        % 'sd'|'sem'; which error measure is adopted in the errorbar: standard deviation or standard error
 project.results_display.ersp.freq_scale                         = 'linear';     % 'log'|'linear' set frequency scale in time-frequency plots
 project.results_display.ersp.masked_times_max                   = [];
-project.results_display.ersp.display_pmode                      = 'raw_diff';   % 'raw_diff' | 'abs_diff'| 'standard'; plot p values in a time-frequency space. 'raw_diff': for 2 levels factors, show p values multipled with the raw difference between the average of level 1 and the average of level 2; 'abs_diff': for 2 levels factors, show p values multipled with the difference betwenn the abs of the average of level 1 and the abs of the average of level 2 (more focused on the strength of the spectral variatio with respect to the sign of the variation); 'standard': the standard mode of EEGLab, only indicating a significant difference between levels, without providing information about the sign of the difference, it s the only representation avalillable for factors with >2 levels (for which a difference cannot be simply calculated). 
+project.results_display.ersp.display_pmode                      = 'raw_diff';   % 'raw_diff' | 'abs_diff'| 'standard'; plot p values in a time-frequency space. 'raw_diff': for 2 levels factors, show p values multipled with the raw difference between the average of level 1 and the average of level 2; 'abs_diff': for 2 levels factors, show p values multipled with the difference betwenn the abs of the average of level 1 and the abs of the average of level 2 (more focused on the strength of the spectral variatio with respect to the sign of the variation); 'standard': the standard mode of EEGLab, only indicating a significant difference between levels, without providing information about the sign of the difference, it's the only representation avalillable for factors with >2 levels (for which a difference cannot be simply calculated). 
 
 % ERSP CURVE
 project.results_display.ersp.compact_plots                      = 'on';         % display (curve) plots with different conditions/groups on the same plots
@@ -1660,6 +2030,7 @@ project.brainstorm.stats.correction                     = 'fdr';
 project.brainstorm.stats.num_permutations               = 1000;
 project.brainstorm.stats.ttest_abstype                  = 1;
 project.brainstorm.stats.correction_dimension           = 'space';
+project.brainstorm.stats.method                         = 'parametric';% 'non-parametric'|'parametric'
 
 
 %% --------------------------------------------------------------------------------------------------------------------------------------------------------------------

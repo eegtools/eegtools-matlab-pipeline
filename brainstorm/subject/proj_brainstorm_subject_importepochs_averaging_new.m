@@ -7,6 +7,12 @@ brainstorm_data_path        = protocol.STUDIES;
 
 list_select_subjects    = project.subjects.list;
 
+if not(isfield(project.brainstorm,'condition_names'))
+    project.brainstorm.condition_names = project.epoching.condition_names;
+    project.brainstorm.numcond         = project.epoching.numcond;
+end
+
+
 for par=1:2:length(varargin)
     switch varargin{par}
         case { 'list_select_subjects', ...
@@ -41,59 +47,60 @@ for subj=1:length(list_select_subjects)
         db_add_subject(subj_name, [], 1, 1);
     end
     
-    for cond=1:project.epoching.numcond
-        cond_name=project.epoching.condition_names{cond};
+    for cond=1:project.brainstorm.numcond
+        cond_name=project.brainstorm.condition_names{cond};
         
         input_file=fullfile(project.paths.output_epochs, [project.import.original_data_prefix subj_name project.import.original_data_suffix project.import.output_suffix project.epoching.input_suffix '_' cond_name '.set']);
-        if not(exist(input_file, 'file'))
-            disp('epoch file is missing...exiting');
-            result = 0;
-            return;
+        %         if not(exist(input_file, 'file'))
+        %             disp('epoch file is missing...exiting');
+        %             result = 0;
+        %             return;
+        %         end
+        if exist(input_file, 'file')
+            % Input files
+            FileNamesA = [];
+            
+            % Start a new report
+            bst_report('Start', FileNamesA);
+            
+            % Process: Import MEG/EEG: Time
+            sFiles = bst_process(...
+                'CallProcess', 'process_import_data_epoch', ...
+                FileNamesA, [], ...
+                'subjectname', subj_name, ...
+                'condition', cond_name, ...
+                'datafile', {{input_file}, 'EEG-EEGLAB'}, ...
+                'iepochs', [], ...
+                'channelalign', 1, ...
+                'usectfcomp', 0, ...
+                'usessp', 0, ...
+                'freq', {project.eegdata.fs, 'Hz', 0}, ...
+                'baseline', [project.epoching.bc_st.s, project.epoching.bc_end.s]);
+            
+            sEpochsFiles = sFiles;            % may be we want to delete imported epochs
+            % Save and display report
+            ReportFile = bst_report('Save', sFiles);
+            bst_report('Open', ReportFile);
+            
+            % Start a new report
+            bst_report('Start', FileNamesA);
+            % Process: Average: By trial group (subject average)
+            sFiles = bst_process(...
+                'CallProcess', 'process_average', ...
+                sFiles, [], ...
+                'avgtype', 3, ...  % By condition (subject average)
+                'keepevents', 0);
+            
+            % Save and display report
+            ReportFile = bst_report('Save', sFiles);
+            bst_report('Open', ReportFile);
+            
+            outputfile = sFiles(1).FileName;
+            [dir,name,ext] = fileparts(outputfile);
+            src=fullfile(brainstorm_data_path, dir, [name ext]);
+            dest=fullfile(brainstorm_data_path, dir, ['data_average' ext]);
+            movefile(src,dest);
         end
-        % Input files
-        FileNamesA = [];
-        
-        % Start a new report
-        bst_report('Start', FileNamesA);
-        
-        % Process: Import MEG/EEG: Time
-        sFiles = bst_process(...
-            'CallProcess', 'process_import_data_epoch', ...
-            FileNamesA, [], ...
-            'subjectname', subj_name, ...
-            'condition', cond_name, ...
-            'datafile', {{input_file}, 'EEG-EEGLAB'}, ...
-            'iepochs', [], ...
-            'channelalign', 1, ...
-            'usectfcomp', 0, ...
-            'usessp', 0, ...
-            'freq', {project.eegdata.fs, 'Hz', 0}, ...
-            'baseline', [project.epoching.bc_st.s, project.epoching.bc_end.s]);
-        
-        sEpochsFiles = sFiles;            % may be we want to delete imported epochs
-        % Save and display report
-        ReportFile = bst_report('Save', sFiles);
-        bst_report('Open', ReportFile);
-        
-        % Start a new report
-        bst_report('Start', FileNamesA);
-        % Process: Average: By trial group (subject average)
-        sFiles = bst_process(...
-            'CallProcess', 'process_average', ...
-            sFiles, [], ...
-            'avgtype', 3, ...  % By condition (subject average)
-            'keepevents', 0);
-        
-        % Save and display report
-        ReportFile = bst_report('Save', sFiles);
-        bst_report('Open', ReportFile);
-        
-        outputfile = sFiles(1).FileName;
-        [dir,name,ext] = fileparts(outputfile);
-        src=fullfile(brainstorm_data_path, dir, [name ext]);
-        dest=fullfile(brainstorm_data_path, dir, ['data_average' ext]);
-        movefile(src,dest);
-        
     end
     
     % Start a new report
@@ -112,5 +119,4 @@ for subj=1:length(list_select_subjects)
     bst_report('Open', ReportFile);
     result = 1;
 end
-
 end

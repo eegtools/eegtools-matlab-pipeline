@@ -207,7 +207,7 @@ end
     set(findall(fig,'type','text'),'fontSize',new_fontsize);set(findall(fig,'type','text'),'interpreter','none');
     setfont(fig, 'fontsize', new_fontsize);
     
-    set(fig, 'PaperType', 'A4', 'PaperPositionMode', 'auto');
+%     set(fig, 'PaperType', 'A4', 'PaperPositionMode', 'auto');
     
     % set latex off
     set(fig,'defaulttextinterpreter','none')
@@ -218,11 +218,14 @@ end
     set(ll, 'Interpreter', 'none')
     
     pp = get(fig,'Position');
-    
-    pp(3) = 2 * pp(3);
-    pp(4) = 2* pp(4);
+     
+%     pp(3) = 2 * pp(3);
+%     pp(4) = 2* pp(4);
+   
+        
     set(fig, 'Position', pp)
-    
+    set(fig, 'PaperPositionMode', 'auto');          
+
 
     
 end

@@ -21,12 +21,16 @@ for par=1:2:length(varargin)
     end
 end
 
+if not(isfield(project.brainstorm,'condition_names'))
+    project.brainstorm.condition_names = project.epoching.condition_names;
+    project.brainstorm.numcond         = project.epoching.numcond;
+end
 
 
 for nt = 1:length(project.brainstorm.groupanalysis.averaging_tw_list)
     db_reload_database(iProtocol);
     group_comparison_analysis_type = project.brainstorm.groupanalysis.averaging_tw_list{nt};
-    brainstorm_group_average_cond_results(project.brainstorm.db_name, list_select_subjects, project.epoching.condition_names, group_comparison_analysis_type);
+    brainstorm_group_average_cond_results(project.brainstorm.db_name, list_select_subjects, project.brainstorm.condition_names, group_comparison_analysis_type);
     
 end
     db_reload_database(iProtocol);

@@ -261,7 +261,7 @@ for c = 1:nc
              end
              if ~isempty(pmaskgru)
                  if sum(sum(pmaskgru{c}))>0
-                    topoplot_masked(pmaskgru{c}, opt.chanlocs, 'style','map','pmask',pmaskgru{c},'threshold',0.5);set(gcf, 'Visible', 'off')
+                    topoplot_masked(pmaskgru{c}, opt.chanlocs, 'style','map','pmask',pmaskgru{c},'threshold',study_ls);set(gcf, 'Visible', 'off')
                  else
                     topoplot_masked(pmaskgru{c}, opt.chanlocs,'style','blank');set(gcf, 'Visible', 'off')
                  end
@@ -297,7 +297,7 @@ for g = 1:ng
         
         if ~isempty(pmaskcond)
             if sum(sum(pmaskcond{g}))>0
-                topoplot_masked(pmaskcond{g}, opt.chanlocs, 'style','map','pmask',pmaskcond{g},'threshold',0.5);set(gcf, 'Visible', 'off')
+                topoplot_masked(pmaskcond{g}, opt.chanlocs, 'style','map','pmask',pmaskcond{g},'threshold',study_ls);set(gcf, 'Visible', 'off')
             else
                 topoplot_masked(pmaskcond{g}, opt.chanlocs,'style','blank');set(gcf, 'Visible', 'off')
             end
@@ -318,7 +318,7 @@ if ~isempty(opt.condstats) && ~isempty(opt.groupstats) && ng > 1 && nc > 1
     
     if ~isempty(pmaskinter)
         if sum(sum(pmaskinter{3}))>0
-               topoplot_masked(pmaskinter{3}, opt.chanlocs,'style','map','pmask',pmaskinter{3},'threshold',0.5);set(gcf, 'Visible', 'off')
+               topoplot_masked(pmaskinter{3}, opt.chanlocs,'style','map','pmask',pmaskinter{3},'threshold',study_ls);set(gcf, 'Visible', 'off')
         else
             topoplot_masked(pmaskinter{3}, opt.chanlocs,'style','blank');set(gcf, 'Visible', 'off')
         end
@@ -415,7 +415,7 @@ input_save_fig.fig                    = fig;
 input_save_fig.name_embed             = [strfname,'_','esrp_topo'];
 input_save_fig.suffix_plot            = [time_window_name,'_',char(frequency_band_name)];
 
-save_figures( input_save_fig ,'exclude_format',{'svg'})
+save_figures( input_save_fig ,'exclude_format',{'svg'},'renderer', 'opengl')
  
 % set(fig, 'paperpositionmode', 'auto');
 % setfont(fig, 'fontsize', 16);

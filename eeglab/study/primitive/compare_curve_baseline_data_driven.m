@@ -5,7 +5,7 @@ curve                                                                      = inp
 base_tw                                                                    = input.base_tw;
 times                                                                      = input.times;
 % deflection_polarity_list                                                   = input.deflection_polarity_list; % 'unknown', 'positive','negative'
-sig_th                                                                     = input.sig_th;
+% sig_th                                                                     = input.sig_th;
 % min_duration                                                               = input.min_duration; % minima durata di un segmento significativamente diverso dalla baseline, per evitare rumore
 % correction                                                                 = input.correction;
 
@@ -27,11 +27,21 @@ output = [];
 
 tt              = length(times);
 pvec_raw        = nan(tt,1);
+zval_raw        = nan(tt,1);
+ci_raw        = nan(2,tt);
+
+
+
 % sel_tw_list     = false(tt,1);
 
 % mask to select the baseline
 sel_base    = times >= base_tw(1) & times <= base_tw(2);
-base        = curve(sel_base);
+base_raw        = curve(sel_base);
+
+% facciamo resampling per garantire numerosità sufficiente per fare z test
+tot_resamples = 1000; 
+s = RandStream('mlfg6331_64'); 
+base = datasample(s,base_raw,tot_resamples, 'Replace',true);
 
 
 % bisogna dividere il calcolo in 2 parti:
@@ -71,8 +81,13 @@ std_base = std(base);
 %         ind2test             = ind_deflection(ntt);
         point2test           = curve(ntt);
 %         [h,pval]             = ttest(base, point2test, sig_th, 'both');
-        [h,pval] = ztest(point2test,mean_base,std_base);
+        [h,pval, ci, zval] = ztest(point2test,mean_base,std_base);
         pvec_raw(ntt)       = pval;
+        zval_raw(ntt)       = zval;
+        ci_raw(:,ntt)       = ci;
+        
+        
+        
     end
     
 % end
@@ -100,7 +115,8 @@ output.curve          = curve;
 output.pvec_raw       = pvec_raw;
 % output.continuous.sigvec         = sigvec;
 output.times          = times;
-
+output.ci_raw         = ci_raw;
+output.zval_raw       = zval_raw;
 
 
 

@@ -50,7 +50,7 @@ function [output] = eeglab_study_plot_erp_topo_tw_compact(input)
 if nargin < 1
     help eeglab_study_plot_erp_topo_tw_compact;
     return;
-end;
+end
 
 project                                                                    = input.project;
 study_path                                                                 = input.study_path;
@@ -162,7 +162,7 @@ for design_num=design_num_vec
     group_time_windows_list_design             = group_time_windows_list{design_num};
     group_time_windows_names_design            = group_time_windows_names{design_num};
     
-    list_design_subjects                       = eeglab_generate_subjects_list_by_factor_levels(STUDY, design_num);
+    list_design_subjects                       = eeglab_generate_subjects_list_by_factor_levels(project,STUDY, design_num);
     
     erp_curve_roi_stat.list_design_subjects    = list_design_subjects;
     
@@ -190,7 +190,7 @@ for design_num=design_num_vec
     for nroi = 1:length(roi_list)
         roi_channels=roi_list{nroi};
         roi_name=roi_names{nroi};
-        list_design_subjects                       = eeglab_generate_subjects_list_by_factor_levels(STUDY, design_num);
+        list_design_subjects                       = eeglab_generate_subjects_list_by_factor_levels(project,STUDY, design_num);
         
         STUDY = pop_statparams(STUDY, 'groupstats','off','condstats','off');
         

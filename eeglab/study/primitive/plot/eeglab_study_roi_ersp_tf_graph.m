@@ -48,11 +48,14 @@ ersp_measure                    = input.ersp_measure;
 group_time_windows_list         = input. group_time_windows_list;
 frequency_bands_list            = input.frequency_bands_list;
 display_pmode                   = input.display_pmode;
+display_compact_plots           = input.display_compact_plots;
+
 
 
 pmaskcond=[];
 pmaskgru=[];
 pmaskinter=[];
+% do_compact = 1;
 
 titles=eeglab_study_set_subplot_titles(STUDY,design_num);
 
@@ -64,16 +67,16 @@ switch display_only_significant
     case 'on'
         if strcmp(display_only_significant_mode,'binary')
             tr=study_ls;
-            for ind = 1:length(pcond),  pcond{ind}  =  pcond{ind}<study_ls ; end;
-            for ind = 1:length(pgroup),  pgroup{ind}  =  pgroup{ind}<study_ls ; end;
-            for ind = 1:length(pinter),  pinter{ind}  =  pinter{ind}<study_ls ; end;
+            for ind = 1:length(pcond),  pmaskcond{ind}  =  pcond{ind}<study_ls ; end;
+            for ind = 1:length(pgroup),  pmaskgroup{ind}  =  pgroup{ind}<study_ls ; end;
+            for ind = 1:length(pinter),  pmaskinter{ind}  =  pinter{ind}<study_ls ; end;
         end
         
         if strcmp(display_only_significant_mode,'thresholded')
             tr=NaN;
             
             for ind = 1:length(pcond),    pmaskcond{ind}  =  abs(pcond{ind}<study_ls); end;
-            for ind = 1:length(pgroup),  pmaskgru{ind}  =  abs(pgroup{ind}<study_ls); end;
+            for ind = 1:length(pgroup),  pmaskgroup{ind}  =  abs(pgroup{ind}<study_ls); end;
             for ind = 1:length(pinter),  pmaskinter{ind}  =  abs(pinter{ind}<study_ls); end;
             
         end
@@ -92,16 +95,21 @@ input_graph.name_f2                                                        = nam
 input_graph.levels_f1                                                      = levels_f1;
 input_graph.levels_f2                                                      = levels_f2;
 input_graph.pmaskcond                                                      = pmaskcond;
-input_graph.pmaskgru                                                       = pmaskgru;
+input_graph.pmaskgru                                                       = pmaskgroup;
 input_graph.pmaskinter                                                     = pmaskinter;
 input_graph.ersp_measure                                                   = ersp_measure;
 % input_graph.group_time_windows_list                                        = group_time_windows_list;
 input_graph.frequency_bands_list                                           = frequency_bands_list;
 input_graph.display_pmode                                                  = display_pmode;
+input_graph.set_caxis                                                      = set_caxis;
+input_graph.study_ls                                                       = study_ls;
 
 % plot ersp and statistics
-
-std_plottf_ersp(input_graph, 'datatype', 'ersp','groupstats', pgroup, 'condstats', pcond,'interstats', pinter, 'plotmode','normal','titles',titles ,...
-    'tftopoopt',{'mode', 'ave'},'caxis',set_caxis ,'threshold',tr,'freqscale',freq_scale);
-
+if display_compact_plots
+    std_plottf_ersp_compact(input_graph);
+    
+else
+    std_plottf_ersp(input_graph, 'datatype', 'ersp','groupstats', pgroup, 'condstats', pcond,'interstats', pinter, 'plotmode','normal','titles',titles ,...
+        'tftopoopt',{'mode', 'ave'},'caxis',set_caxis ,'threshold',tr,'freqscale',freq_scale);
+end
 end

@@ -58,12 +58,23 @@ function project = project_define_paths(project, varargin)
     project.paths.script.resources          = fullfile(project.paths.script.eeg_tools, 'resources', '');    addpath(genpath2(project.paths.script.resources)); 
     project.paths.script.utilities          = fullfile(project.paths.script.eeg_tools, 'utilities', '');    addpath(genpath2(project.paths.script.utilities)); 
 
+    if not(isfield(project.paths.script,'project'))
+        % project script path. In general u don't need to import the others' projects svn folders
+        project.paths.script.project            = fullfile( project.paths.projects_scripts_root, ...
+            project.research_group, ...
+            project.research_subgroup , ...
+            project.name, '');
+    else
+        if isempty(project.paths.script.project)
+            % project script path. In general u don't need to import the others' projects svn folders
+            project.paths.script.project            = fullfile( project.paths.projects_scripts_root, ...
+                project.research_group, ...
+                project.research_subgroup , ...
+                project.name, '');
+        end
+    end
 
-    % project script path. In general u don't need to import the others' projects svn folders    
-    project.paths.script.project            = fullfile( project.paths.projects_scripts_root, ...            
-                                                        project.research_group, ...                         
-                                                        project.research_subgroup , ...
-                                                        project.name, '');                                  addpath(project.paths.script.project);   
+addpath(project.paths.script.project);
 
     % other files
     project.paths.templates.spm                 = fullfile(project.paths.script.spm,'templates');
@@ -97,7 +108,7 @@ function project = project_define_paths(project, varargin)
 %     end
 
     % fieldtrip
-    project.paths.plugin.fieldtrip              = fullfile(project.paths.plugins_root, 'fieldtrip-20130423', '');
+    project.paths.plugin.fieldtrip              = fullfile(project.paths.plugins_root, 'fieldtrip', '');
     if isempty(strfind(strpath, project.paths.plugin.fieldtrip)) && exist(project.paths.plugin.fieldtrip, 'dir')
         addpath(genpath2(project.paths.plugin.fieldtrip));      
     end
@@ -105,9 +116,17 @@ function project = project_define_paths(project, varargin)
     %% ================================================================================================================================
     %  PROJECT PATHS 
     %  ================================================================================================================================
+    if not(isfield(project.paths,'project'))
+        % project path
+        project.paths.project                       = fullfile(project.paths.projects_data_root, project.research_group, project.research_subgroup, project.name, '');
+        
+    else
+        if isempty(project.paths.project)
+            % project path
+            project.paths.project                       = fullfile(project.paths.projects_data_root, project.research_group, project.research_subgroup, project.name, '');
+        end
+    end
 
-    % project path
-    project.paths.project                       = fullfile(project.paths.projects_data_root, project.research_group, project.research_subgroup, project.name, '');
 
     % original data path
     project.paths.original_data                 = fullfile(project.paths.project, 'original_data', project.import.original_data_folder, '');
@@ -167,7 +186,7 @@ function project = project_define_paths(project, varargin)
         project.paths.brainstorm_data           = fullfile(project.paths.brainstorm_db,'data', '');
 
         % brainstorm project channels file
-        project.brainstorm.channels_file_path   = fullfile(project.paths.project, project.brainstorm.study.channels_file_name);
+        project.brainstorm.channels_file_path   = fullfile(project.paths.project, project.brainstorm.channels_file_name);
 
         % exported sources results files path
         project.paths.spmsources                = fullfile(project.paths.project,'spm_sources', '');
@@ -178,31 +197,35 @@ function project = project_define_paths(project, varargin)
         if ~exist(project.paths.spmstats, 'dir'), mkdir(project.paths.spmstats); end    
     end
 
-    %% ------------------------------------------------------------------------------------------------------------------
-%    if isfield(project, 'do_fieldtrip_analysis')
-%       project.operations.do_fieldtrip_analysis = project.do_fieldtrip_analysis 
-%    end
-%     if project.do_fieldtrip_analysis
-% 
-%         % imported fieldtrip continuous files
-%         project.paths.input_epochs                  = fullfile(project.paths.project,'fieldtrip','continuous', project.import.output_folder, '');
-%         if ~exist(project.paths.input_epochs, 'dir')
-%             mkdir(project.paths.input_epochs);
-%         end
-% 
-%         % exported eeglab epochs files
-%         project.paths.output_epochs                 = fullfile(project.paths.project,'fieldtrip','epochs', project.analysis_name, '');
-%         if ~exist(project.paths.output_epochs, 'dir')
-%             mkdir(project.paths.output_epochs);
-%         end
-% 
-%         % results files path
-%         project.paths.results                       = fullfile(project.paths.project,'results','fieldtrip',project.analysis_name, '');
-%         if ~exist(project.paths.results, 'dir')
-%             mkdir(project.paths.results);
-%         end
-% 
-%     end
+    % ------------------------------------------------------------------------------------------------------------------
+   
+   if not(isfield(project, 'do_fieldtrip_analysis') )
+       project.do_fieldtrip_analysis = 0;
+   end
+   if isfield(project, 'do_fieldtrip_analysis')
+      project.operations.do_fieldtrip_analysis = project.do_fieldtrip_analysis; 
+   end
+    if project.operations.do_fieldtrip_analysis
+
+        % imported fieldtrip continuous files
+        project.paths.field_trip_input_epochs                  = fullfile(project.paths.project,'fieldtrip','continuous', project.import.output_folder, '');
+        if ~exist(project.paths.field_trip_input_epochs, 'dir')
+            mkdir(project.paths.field_trip_input_epochs);
+        end
+
+        % exported eeglab epochs files
+        project.paths.field_trip_output_epochs                 = fullfile(project.paths.project,'fieldtrip','epochs', project.analysis_name, '');
+        if ~exist(project.paths.field_trip_output_epochs, 'dir')
+            mkdir(project.paths.field_trip_output_epochs);
+        end
+
+        % results files path
+        project.paths.results                       = fullfile(project.paths.project,'results','fieldtrip',project.analysis_name, '');
+        if ~exist(project.paths.results, 'dir')
+            mkdir(project.paths.results);
+        end
+
+    end
 
     %% ------------- OT
 

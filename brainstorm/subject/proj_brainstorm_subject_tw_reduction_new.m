@@ -5,7 +5,7 @@
 
 function  proj_brainstorm_subject_tw_reduction_new(project,  varargin)
 
-iProtocol               = brainstorm_protocol_open(protocol_name);
+iProtocol               = brainstorm_protocol_open(project.brainstorm.db_name);
 protocol                = bst_get('ProtocolInfo');
 brainstorm_data_path    = protocol.STUDIES;
 
@@ -26,9 +26,13 @@ for par=1:2:length(varargin)
     end
 end
 
+if not(isfield(project.brainstorm,'condition_names'))
+    project.brainstorm.condition_names = project.epoching.condition_names;
+    project.brainstorm.numcond         = project.epoching.numcond;
+end
 
 
-condition_names             = project.epoching.condition_names;
+condition_names             = project.brainstorm.condition_names;
 %     cond_length = length(condition_names);
 
 
@@ -57,7 +61,7 @@ for nd  = 1:length(project.postprocess.erp.design)
             
             
             
-            for cond  =1:project.epoching.numcond
+            for cond  =1:project.brainstorm.numcond
                 
                 cond_files = brainstorm_results_get_from_subjectslist_by_tag(list_select_subjects, condition_names{cond}, input_file, tag);
                 

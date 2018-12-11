@@ -11,11 +11,19 @@ list_select_subjects                = project.subjects.list;
 
 compare_conds_within_group          = project.brainstorm.groupanalysis.compare_conds_within_group;
 compare_groups_within_cond          = project.brainstorm.groupanalysis.compare_groups_within_cond;
+randomizations                      = project.brainstorm.stats.num_permutations;
+
+
+if not(isfield(project.brainstorm.stats, 'method'))
+    project.brainstorm.stats.method = 'parametric';
+end
+
+statistics_method = project.brainstorm.stats.method;
 
 
 vec_select_groups = project.brainstorm.groupanalysis.vec_select_groups;
 
-list_select_conds = [pairwise_comparisons{:}];
+list_select_conds = [project.brainstorm.groupanalysis.pairwise_comparisons{:}]; % [pairwise_comparisons{:}];
 
 
 for v=1:2:length(varargin)
@@ -43,58 +51,65 @@ if compare_conds_within_group
                     analysis_type, ...
                     group_name, ...
                     list_select_subjects_group, ...
+                    statistics_method,...
                     'comment', comparison_comment,...
                     'abs_type', comparison_abs_type, ...
-                    'timewindow', comparison_interval...
+                    'timewindow', comparison_interval,...
+                    'randomizations', randomizations...
                     );
                 
             end
             
-        end
-        
-    end
-end
-%% fisso la condizione e confronto a coppie i gruppi
-if compare_groups_within_cond
-    group_contrasts = combnk(vec_select_groups,2);
-    tot_group_contrasts = size(group_contrasts,1);
-    
-    for nt = 1:length(group_comparison_analysis_type_list)
-        analysis_type = group_comparison_analysis_type_list{nt};
-        
-        for nc = 1:length(list_select_conds)
-            
-            for ngc = 1:tot_group_contrasts
-                
-                indg1 = group_contrasts(ngc,1);
-                indg2 = group_contrasts(ngc,2);
-                
-                group_name1 = project.subjects.group_names{indg1};
-                sel_sub_gru1 = ismember(project.subjects.groups{indg1},list_select_subjects);
-                list_select_subjects_group1 = project.subjects.groups{indg1}(sel_sub_gru1);
-                
-                group_name2 = project.subjects.group_names{indg2};
-                sel_sub_gru2 = ismember(project.subjects.groups{indg2},list_select_subjects);
-                list_select_subjects_group2 = project.subjects.groups{indg2}(sel_sub_gru2);
-                
-                sFiles = brainstorm_group_stats_cond_2group_ttest(protocol_name,...
-                    group_name1, ...
-                    list_select_subjects_group1, ...
-                    group_name2, ...
-                    list_select_subjects_group2, ...
-                    data_type, ...
-                    analysis_type, ...
-                    list_select_conds{nc}, ...
-                    'comment', comparison_comment,...
-                    'abs_type', comparison_abs_type, ...
-                    'timewindow', comparison_interval...
-                    );
-            end
         end
         
     end
 end
 
+    %% fisso la condizione e confronto a coppie i gruppi
+
+if length(vec_select_groups) > 1
+    if compare_groups_within_cond
+        group_contrasts = combnk(vec_select_groups,2);
+        tot_group_contrasts = size(group_contrasts,1);
+        
+        for nt = 1:length(group_comparison_analysis_type_list)
+            analysis_type = group_comparison_analysis_type_list{nt};
+            
+            for nc = 1:length(list_select_conds)
+                
+                for ngc = 1:tot_group_contrasts
+                    
+                    indg1 = group_contrasts(ngc,1);
+                    indg2 = group_contrasts(ngc,2);
+                    
+                    group_name1 = project.subjects.group_names{indg1};
+                    sel_sub_gru1 = ismember(project.subjects.groups{indg1},list_select_subjects);
+                    list_select_subjects_group1 = project.subjects.groups{indg1}(sel_sub_gru1);
+                    
+                    group_name2 = project.subjects.group_names{indg2};
+                    sel_sub_gru2 = ismember(project.subjects.groups{indg2},list_select_subjects);
+                    list_select_subjects_group2 = project.subjects.groups{indg2}(sel_sub_gru2);
+                    
+                    sFiles = brainstorm_group_stats_cond_2group_ttest(protocol_name,...
+                        group_name1, ...
+                        list_select_subjects_group1, ...
+                        group_name2, ...
+                        list_select_subjects_group2, ...
+                        data_type, ...
+                        analysis_type, ...
+                        list_select_conds{nc}, ...
+                        statistics_method,...
+                        'comment', comparison_comment,...
+                        'abs_type', comparison_abs_type, ...
+                        'timewindow', comparison_interval,...
+                        'randomizations', randomizations...
+                        );
+                end
+            end
+            
+        end
+    end
+end
 iProtocol = brainstorm_protocol_open(project.brainstorm.db_name);
 db_reload_database(iProtocol);
 end

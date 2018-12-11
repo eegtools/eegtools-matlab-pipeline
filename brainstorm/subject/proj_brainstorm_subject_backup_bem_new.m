@@ -1,6 +1,7 @@
 
 function proj_brainstorm_subject_backup_bem_new(project)
 
+protocol_name           = project.brainstorm.db_name;
 iProtocol               = brainstorm_protocol_open(protocol_name);
 protocol                = bst_get('ProtocolInfo');
 brainstorm_data_path    = protocol.STUDIES;

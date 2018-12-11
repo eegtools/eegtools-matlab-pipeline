@@ -14,6 +14,7 @@ levels_f2                                                                  = inp
 plot_dir                                                                   = input.plot_dir;
 
 transpose                                                   = 'on';
+select_tw_des                                                              = input.select_tw_des;
 
 
 % input_ga.erp_grand_average = mean_collapsed_cell_all_sub;
@@ -59,11 +60,23 @@ end
 
 %% grand average
 
-fig=figure('color','w'); % creo una figura che avrà tanti sub-plot quanti sono i livelli del secondo fattore
+fig=figure('color','w','visible','off'); % creo una figura che avrà tanti sub-plot quanti sono i livelli del secondo fattore
 
 mat_erp_plot = erp_grand_average .* p_grand_average;% calcolo la matrice che media sui soggetti(lascia x=tempi, y=canali)
-% imagesc(times(sel_times),1:tch,mat_erp_plot(:,sel_times));%faccio il plot della matrice
-pcolor(times(sel_times),1:tch,mat_erp_plot(:,sel_times));shading flat; grid on
+
+
+if not(isempty(select_tw_des{1,1}))
+    
+    tt1 = select_tw_des{1,1}(1);
+    tt2 = select_tw_des{1,1}(2);
+    sel_tt = times <tt1 | times > tt2;
+    mat_erp_plot(:,sel_tt)=0;
+    
+end
+
+
+imagesc(times(sel_times),1:tch,mat_erp_plot(:,sel_times),'AlphaData',~isnan(mat_erp_plot(:,sel_times)));shading flat; grid on;%faccio il plot della matrice
+%% pcolor(times(sel_times),1:tch,mat_erp_plot(:,sel_times));shading flat; grid on
 
 caxis(amplim);
 line('XData', [0 0], 'YData', [1 tch], 'LineStyle', '--','LineWidth', 2, 'Color','k')
@@ -75,12 +88,34 @@ cbar;title('uV');
 
 input.plot_dir    = plot_dir;
 input.fig         = fig;
-input.name_embed  = 'erp_grand_average';
-input.suffix_plot = ['erp_grand_average_global'];
+input.name_embed  = 'masked_erp_grand_average';
+input.suffix_plot = ['masked_erp_grand_average_global'];
 save_figures(input);
 
 
 
+
+
+
+fig=figure('color','w','visible','off'); % creo una figura che avrà tanti sub-plot quanti sono i livelli del secondo fattore
+
+mat_erp_plot = erp_grand_average;% calcolo la matrice che media sui soggetti(lascia x=tempi, y=canali)
+imagesc(times(sel_times),1:tch,mat_erp_plot(:,sel_times),'AlphaData',~isnan(mat_erp_plot(:,sel_times)));shading flat; grid on;%faccio il plot della matrice
+%% pcolor(times(sel_times),1:tch,mat_erp_plot(:,sel_times));shading flat; grid on
+
+caxis(amplim);
+line('XData', [0 0], 'YData', [1 tch], 'LineStyle', '--','LineWidth', 2, 'Color','k')
+xlabel('Times (ms)');
+set(gca,'YTick',1:tch,'YTicklabel',allch,'FontSize', 8)
+ylabel('Channels');
+title('grand average')
+cbar;title('uV');
+
+input.plot_dir    = plot_dir;
+input.fig         = fig;
+input.name_embed  = 'raw_erp_grand_average';
+input.suffix_plot = ['raw_erp_grand_average_global'];
+save_figures(input);
 
 
 
@@ -89,34 +124,72 @@ if strcmp(transpose,'off')
     
     for ns1 = 1:s1 % per ciascun livello del primo fattore
         for ns2 = 1:s2 % per ogni livello del secondo fattore
-            fig=figure('color','w'); % creo una figura che avrà tanti sub-plot quanti sono i livelli del secondo fattore
             
             mat_erp_plot = erp_avgsub{ns1,ns2} .* p_grand_average;% calcolo la matrice che media sui soggetti(lascia x=tempi, y=canali)
             
             
-%             imagesc(times(sel_times),1:tch,mat_erp_plot(:,sel_times));%faccio il plot della matrice
-pcolor(times(sel_times),1:tch,mat_erp_plot(:,sel_times));shading flat; grid on
-
-
+            if not(isempty(select_tw_des{ns1,ns2}))
+                
+                tt1 = select_tw_des{ns1,ns2}(1);
+                tt2 = select_tw_des{ns1,ns2}(2);
+                sel_tt = times <tt1 | times > tt2;
+                mat_erp_plot(:,sel_tt)=0;
+                
+            end
+            
+            fig=figure('color','w','visible','off'); % creo una figura che avrà tanti sub-plot quanti sono i livelli del secondo fattore
+            
+            imagesc(times(sel_times),1:tch,mat_erp_plot(:,sel_times),'AlphaData',~isnan(mat_erp_plot(:,sel_times)));shading flat; grid on;%faccio il plot della matrice
+           % pcolor(times(sel_times),1:tch,mat_erp_plot(:,sel_times));shading flat; grid on
+            
+            
             caxis(amplim);
             title([levels_f1{ns1},'__', levels_f2{ns2}])
             line('XData', [0 0], 'YData', [1 tch], 'LineStyle', '--','LineWidth', 2, 'Color','k')
             xlabel('Times (ms)');
             set(gca,'YTick',1:tch,'YTicklabel',allch,'FontSize', 8)
-            ylabel('Channels');            
+            ylabel('Channels');
             cbar;title('uV');
             
             
             input.plot_dir    = plot_dir;
             input.fig         = fig;
-            input.name_embed  = 'erp_grand_average';
-            input.suffix_plot = ['erp_grand_average_',levels_f1{ns1},'__',levels_f2{ns2}];
+            input.name_embed  = 'masked_erp_grand_average';
+            input.suffix_plot = ['masked_erp_grand_average_',levels_f1{ns1},'__',levels_f2{ns2}];
             save_figures(input);
+            
+            
+            
+            
+            fig=figure('color','w','visible','off'); % creo una figura che avrà tanti sub-plot quanti sono i livelli del secondo fattore
+            
+            imagesc(times(sel_times),1:tch,erp_avgsub{ns1,ns2}(:,sel_times),'AlphaData',~isnan(erp_avgsub{ns1,ns2}(:,sel_times)));shading flat; grid on;%faccio il plot della matrice
+           % pcolor(times(sel_times),1:tch,erp_avgsub{ns1,ns2}(:,sel_times));shading flat; grid on
+            
+            
+            caxis(amplim);
+            title([levels_f1{ns1},'__', levels_f2{ns2}])
+            line('XData', [0 0], 'YData', [1 tch], 'LineStyle', '--','LineWidth', 2, 'Color','k')
+            xlabel('Times (ms)');
+            set(gca,'YTick',1:tch,'YTicklabel',allch,'FontSize', 8)
+            ylabel('Channels');
+            cbar;title('uV');
+            
+            
+            input.plot_dir    = plot_dir;
+            input.fig         = fig;
+            input.name_embed  = 'raw_erp_grand_average';
+            input.suffix_plot = ['raw_erp_grand_average_',levels_f1{ns1},'__',levels_f2{ns2}];
+            save_figures(input);
+            
+            
+            
+            
             
         end
         
-      
-       
+        
+        
         
         
     end
@@ -126,19 +199,26 @@ else
     
     for ns2 = 1:s2 % per ciascun livello del primo fattore
         for ns1 = 1:s1 % per ogni livello del secondo fattore
-            fig=figure('color','w'); % creo una figura che avrà tanti sub-plot quanti sono i livelli del secondo fattore
-
-%             subplot(1,s1,ns1); % riempo un subplot della figura
+            
+            %             subplot(1,s1,ns1); % riempo un subplot della figura
             mat_erp_plot = erp_avgsub{ns1,ns2} .* p_grand_average;% calcolo la matrice che media sui soggetti(lascia x=tempi, y=canali)
             
             
-           
+            if not(isempty(select_tw_des{ns1,ns2}))
+                
+                tt1 = select_tw_des{ns1,ns2}(1);
+                tt2 = select_tw_des{ns1,ns2}(2);
+                sel_tt = times <tt1 | times > tt2;
+                 mat_erp_plot(:,sel_tt)=0;
+                
+            end
+            
+            fig=figure('color','w','visible','off'); % creo una figura che avrà tanti sub-plot quanti sono i livelli del secondo fattore
+            
+            imagesc(times(sel_times),1:tch,mat_erp_plot(:,sel_times),'AlphaData',~isnan(mat_erp_plot(:,sel_times)));shading flat; grid on;%faccio il plot della matrice
+           % pcolor(times(sel_times),1:tch,mat_erp_plot(:,sel_times));shading flat;grid on
             
             
-%             imagesc(times(sel_times),1:tch,mat_erp_plot(:,sel_times));%faccio il plot della matrice
-pcolor(times(sel_times),1:tch,mat_erp_plot(:,sel_times));shading flat;grid on
- 
-
             caxis(amplim);
             title([levels_f1{ns1},'__', levels_f2{ns2}])
             line('XData', [0 0], 'YData', [1 tch], 'LineStyle', '--','LineWidth', 2, 'Color','k')
@@ -153,21 +233,63 @@ pcolor(times(sel_times),1:tch,mat_erp_plot(:,sel_times));shading flat;grid on
             %         end
             
             
-             cbar;title('uV');
-        %     end
-        
-        %     suptitle(levels_f1{ns1})
-        
-        input.plot_dir    = plot_dir;
-        input.fig         = fig;
-        input.name_embed  = 'erp_grand_average';
-        input.suffix_plot = ['erp_grand_average_',levels_f1{ns1},'__',levels_f2{ns2}];
-        save_figures(input);
+            cbar;title('uV');
+            %     end
+            
+            %     suptitle(levels_f1{ns1})
+            
+            input.plot_dir    = plot_dir;
+            input.fig         = fig;
+            input.name_embed  = 'masked_erp_grand_average';
+            input.suffix_plot = ['masked_erp_grand_average_',levels_f1{ns1},'__',levels_f2{ns2}];
+            save_figures(input);
+            
+            
+            
+            
+            
+            
+            
+            fig=figure('color','w','visible','off'); % creo una figura che avrà tanti sub-plot quanti sono i livelli del secondo fattore
+            
+            imagesc(times(sel_times),1:tch,erp_avgsub{ns1,ns2}(:,sel_times),'AlphaData',~isnan(erp_avgsub{ns1,ns2}(:,sel_times)));shading flat; grid on;%faccio il plot della matrice
+           % pcolor(times(sel_times),1:tch,erp_avgsub{ns1,ns2}(:,sel_times));shading flat;grid on
+            
+            
+            caxis(amplim);
+            title([levels_f1{ns1},'__', levels_f2{ns2}])
+            line('XData', [0 0], 'YData', [1 tch], 'LineStyle', '--','LineWidth', 2, 'Color','k')
+            xlabel('Times (ms)');
+            %         if not(s2==2)
+            %             if ns2 ==1
+            set(gca,'YTick',1:tch,'YTicklabel',allch,'FontSize', 8)
+            ylabel('Channels');
+            %             end
+            %         else
+            %             set(gca,'YTick',1:tch,'YTicklabel',allch,'FontSize', 8)
+            %         end
+            
+            
+            cbar;title('uV');
+            %     end
+            
+            %     suptitle(levels_f1{ns1})
+            
+            input.plot_dir    = plot_dir;
+            input.fig         = fig;
+            input.name_embed  = 'raw_erp_grand_average';
+            input.suffix_plot = ['raw_erp_grand_average_',levels_f1{ns1},'__',levels_f2{ns2}];
+            save_figures(input);
+            
+            
+            
+            
+            
             
         end
         
-      
-       
+        
+        
         
         
     end

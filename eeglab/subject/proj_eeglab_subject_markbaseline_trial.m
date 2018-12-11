@@ -70,10 +70,10 @@ for ntrial = 1: tot_trial
     lat_current_t1 = lat_t1(ntrial);
     lat_current_t2 = lat_t2(ntrial);
     
-    sel_lat_current_b1 = lat_b1 > lat_current_t1 & lat_b1 < lat_current_t2;
+    sel_lat_current_b1 = lat_b1 >= lat_current_t1 & lat_b1 <= lat_current_t2;
     exist_current_b1 = not(isempty(sel_lat_current_b1));
     
-    sel_lat_current_b2 = lat_b2 > lat_current_t1 & lat_b2 < lat_current_t2;
+    sel_lat_current_b2 = lat_b2 >= lat_current_t1 & lat_b2 <= lat_current_t2;
     exist_current_b2 = not(isempty(sel_lat_current_b2));
     
     

@@ -5,7 +5,7 @@
 
 function  proj_brainstorm_subject_uncontrained2flat_factors_new(project,  varargin)
 
-iProtocol               = brainstorm_protocol_open(protocol_name);
+iProtocol               = brainstorm_protocol_open(project.brainstorm.db_name);
 protocol                = bst_get('ProtocolInfo');
 brainstorm_data_path    = protocol.STUDIES;
 
@@ -35,7 +35,7 @@ for cond=1:cond_length
     cond_files = brainstorm_results_get_from_subjectslist_by_tag(list_select_subjects, condition_names{cond}, input_file, tag);
     for s=1:length(cond_files)
         result_file = fullfile(project.paths.project, project.brainstorm.db_name, 'data', cond_files{s});
-        brainstorm_result_uncontrained2flat(project.brainstorm.db_name, result_file, source_flatting_method);
+        brainstorm_result_uncontrained2flat(project.brainstorm.db_name, result_file, project.brainstorm.sources.flatting_method);
     end
 end
 end

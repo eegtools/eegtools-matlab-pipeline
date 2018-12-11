@@ -17,7 +17,7 @@
 % * project.subjects.group_names; the names of the subjects in each group (2d {grp}{subj} cell array)
 % ====================================================================================================
 
-function [STUDY, EEG] = proj_eeglab_study_create(project)
+function [STUDY, EEG] = proj_eeglab_study_create(project,varargin)
 if nargin < 1
     help proj_eeglab_study_create;
     return;

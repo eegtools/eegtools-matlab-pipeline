@@ -136,7 +136,7 @@ for design_num=design_num_vec
             for nwin=1:length(group_time_windows_list_design)
                 
                  % lista dei soggetti che partecipano di quel design
-            list_design_subjects            = eeglab_generate_subjects_list_by_factor_levels(STUDY, design_num);
+            list_design_subjects            = eeglab_generate_subjects_list_by_factor_levels(project,STUDY, design_num);
            
                 % set parameters for a topographic represntation
                 STUDY = pop_erpparams(STUDY, 'topotime',group_time_windows_list_design{nwin});

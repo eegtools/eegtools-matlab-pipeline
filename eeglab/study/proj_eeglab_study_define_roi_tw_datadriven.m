@@ -131,9 +131,13 @@ select_tw_des=project.datadriven.select_tw_des;
 % group_time_windows_names    = arrange_structure(project.postprocess.erp.design, 'group_time_windows_names');
 
 do_plots                    = project.results_display.erp.do_plots;
-recompute_precompute                   = 'off';
-recompute_grand_average                = 'on';
-recompute_grouping_factor              = 'on';
+
+
+recompute_precompute                   = project.datadriven.recompute_precompute;
+recompute_ga                = project.datadriven.recompute_ga;
+recompute_gf                 = project.datadriven.recompute_gf;
+levels_f1_ga             = project.datadriven.levels_f1_ga;
+levels_f2_ga             = project.datadriven.levels_f2_ga;
 
 
 % % ANALYSIS MODALITIES
@@ -241,7 +245,7 @@ for design_num=design_num_vec
     name_cf                    = project.design(design_num).comparing_factor;
     
     % lista dei soggetti suddivisi per fattori
-    list_design_subjects               = eeglab_generate_subjects_list_by_factor_levels(STUDY, design_num);
+    list_design_subjects               = eeglab_generate_subjects_list_by_factor_levels(project,STUDY, design_num);
     
     
     
@@ -266,7 +270,7 @@ for design_num=design_num_vec
         
         out_precompute.erp_curve_allch = erp_curve_allch;
         out_precompute.times = times;
-
+        
         
         save(precompute_file,'out_precompute')
     else
@@ -297,14 +301,14 @@ for design_num=design_num_vec
     
     %% compute grand average file
     
-    grand_average_file = fullfile(data_driven_path,['grand_average_erp_allch_', char(STUDY.design(design_num).name), '.mat']);
-    exist_grand_average = exist(grand_average_file);
+    ga_file = fullfile(data_driven_path,['grand_average_erp_allch_', char(STUDY.design(design_num).name), '.mat']);
+    exist_grand_average = exist(ga_file);
     
-    if (strcmp(recompute_grand_average, 'on')  || not(exist_grand_average))
+    if (strcmp(recompute_ga, 'on')  || not(exist_grand_average))
         
         
-        sel_levels_f1_grand_average_dd = ismember(levels_f1,levels_f1_grand_average_dd{design_num});
-        sel_levels_f2_grand_average_dd = ismember(levels_f2,levels_f2_grand_average_dd{design_num});
+        sel_levels_f1_grand_average_dd = ismember(levels_f1,levels_f1_ga{design_num});
+        sel_levels_f2_grand_average_dd = ismember(levels_f2,levels_f2_ga{design_num});
         
         erp_curve_allch_grand_average = erp_curve_allch(sel_levels_f1_grand_average_dd,sel_levels_f2_grand_average_dd);
         
@@ -317,6 +321,9 @@ for design_num=design_num_vec
         
         
         %% calcolo medione
+        
+        disp('compute grand average');
+        
         dim_erp_curve_allch = ndims(erp_curve_allch_grand_average{1});
         collapsing_dimension = dim_erp_curve_allch+1;
         
@@ -340,24 +347,24 @@ for design_num=design_num_vec
         
         
         
-        output_dd_grand_average = eeglab_study_curve_data_driven_onset_offset(input_dd);
+        output_dd_ga = eeglab_study_curve_data_driven_onset_offset(input_dd);
         
-        output_grand_average.mean_collapsed_cell_all_sub = mean_collapsed_cell_all_sub;
-        output_grand_average.times = times;
-        output_grand_average.allch = allch;
-        output_grand_average.output_dd_grand_average = output_dd_grand_average;
-
-
-
+        output_ga.mean_collapsed_cell_all_sub = mean_collapsed_cell_all_sub;
+        output_ga.times = times;
+        output_ga.allch = allch;
+        output_ga.output_dd_ga = output_dd_ga;
         
-        save(grand_average_file,'output_mask_cell_p_gf')
+        
+        
+        
+        save(ga_file,'output_ga')
     else
         
-        load(grand_average_file);
-        mean_collapsed_cell_all_sub = output_grand_average.mean_collapsed_cell_all_sub;
-        times =         output_grand_average.times;
-        allch = output_grand_average.allch ;
-        output_dd_grand_average = output_grand_average.output_dd_grand_average;
+        load(ga_file);
+        mean_collapsed_cell_all_sub = output_ga.mean_collapsed_cell_all_sub;
+        times =         output_ga.times;
+        allch = output_ga.allch ;
+        output_dd_ga = output_ga.output_dd_ga;
     end
     
     
@@ -374,11 +381,12 @@ for design_num=design_num_vec
     
     
     
-    
     %% plot grand average
     if strcmp(do_plots,'on')
+        disp('plot grand average');
+        
         input_ga.erp_grand_average = mean_collapsed_cell_all_sub{:};
-        input_ga.p_grand_average  = output_dd_grand_average.sigcell_pruned_gf{:};
+        input_ga.p_grand_average  = output_dd_ga.sigcell_pruned_gf{:};
         input_ga.erp_avgsub = erp_curve_allch_collsub_grand_average;
         input_ga.pvalue = study_ls;
         input_ga.allch = allch;
@@ -389,8 +397,65 @@ for design_num=design_num_vec
         input_ga.levels_f2 = levels_f2 (sel_levels_f2_grand_average_dd);
         input_ga.plot_dir = plot_dir;
         
-        %         eeglab_study_allch_erp_time_dd_grand_average_graph(input_ga);
+        eeglab_study_allch_erp_time_dd_grand_average_graph(input_ga);
     end
+    
+    
+    %% applicazione maschera a ciascun livello di ogni fattore usando le tw estratte raggruppando per gf
+    
+    %
+    %            cell array a cui applicare la maschera delle p: ha selezionato i
+    %     soggetti e i livelli dei fattori da considerare MA non ha fatto
+    %     nessuna media
+    input_mask.erp_curve_allch = erp_curve_allch;
+    %
+    %
+    %      struttura in cui ho le tw per ogni canale
+    input_mask.output_dd_ga = output_dd_ga;
+    input_mask.name_f1 =   name_f1;
+    input_mask.name_f2 =   name_f2;
+    input_mask.levels_f1 =   levels_f1;
+    input_mask.levels_f2 =   levels_f2;
+    input_mask.allch     =   allch;
+    input_mask.times    =  times;
+    %         input_mask.levels_gf  = levels_gf;
+    %         input_mask.name_gf = name_gf;
+    %         input_mask.levels_cf = levels_cf;
+    %         input_mask.name_cf = name_cf;
+    
+    
+    disp('mask grand average')
+    mask_cell_p_ga_file = fullfile(data_driven_path,['ga_erp_allch_', char(STUDY.design(design_num).name), '.mat']);
+    
+    output_dd_eeglab_mask_cell_p_ga= eeglab_mask_cell_p_ga(input_mask);
+    
+    
+    
+    %         output_mask_cell_p_gf.cell_gf = cell_gf;
+    %         output_mask_cell_p_ga.times = times;
+    output_mask_cell_p_ga.output_dd_eeglab_mask_cell_p_gf = output_dd_eeglab_mask_cell_p_ga;
+    output_mask_cell_p_ga.allch = allch;
+    output_mask_cell_p_ga.list_design_subjects = list_design_subjects;
+    output_mask_cell_p_ga.levels_f1 = levels_f1;
+    output_mask_cell_p_ga.levels_f2 = levels_f2;
+    output_mask_cell_p_ga.name_f1 = name_f1;
+    output_mask_cell_p_ga.name_f2 = name_f2;
+    %         output_mask_cell_p_gf.name_gf = name_gf;
+    %         output_mask_cell_p_gf.name_cf = name_cf;
+    
+    
+    
+    disp('text export grand average')
+    
+    out_dir = fullfile(data_driven_path,'ga');
+    if not(exist(out_dir))
+        mkdir(out_dir);
+    end
+    [dataexpcols, dataexp] = text_export_allch_erp_time_dd_ga(out_dir,output_mask_cell_p_ga);
+    
+    
+    clear dataexpcols dataexp output_mask_cell_p_ga
+    
     %% export grand average
     %input_ga_exp.p_grand_average  = output_dd_grand_average.sigcell_pruned_gf{:};
     %input_ga_exp.erp_avgsub = erp_curve_allch_collsub_grand_average;
@@ -409,7 +474,7 @@ for design_num=design_num_vec
         grouping_factor_file = fullfile(data_driven_path,['grouping_factor_erp_allch_', char(STUDY.design(design_num).name), '.mat']);
         exist_grouping_factor = exist(grouping_factor_file);
         
-        if (strcmp(recompute_grouping_factor, 'on')  || not(exist_grouping_factor))
+        if (strcmp(recompute_gf, 'on')  || not(exist_grouping_factor))
             
             % we have 2 kind of facors: 1 grouping factor and 1 comparing factor.
             % all levels of comparing factors will be averaged within each level of
@@ -436,6 +501,8 @@ for design_num=design_num_vec
             
             %     for each level of grouping factor
             for nl_gf = 1:tl_gf
+%                 disp(sprintf('compute grouping factor level %d / %d',nl_gf,tl_gf));
+                
                 %     each cell grouped factor = mean of all levels of comparing factor
                 if strcmp(name_gf, name_f1)
                     % select all the cells (levels) of the comparing factor corresponding to the current level (nl_gf) of grouping factor
@@ -465,7 +532,7 @@ for design_num=design_num_vec
                 cell_gf{nl_gf} = mean_collapsed_cell_all_sub';
             end
             
-            
+              disp(sprintf('compute grouping factor '));
             
             input_dd.curve         = cell_gf;
             input_dd.base_tw       = [project.epoching.bc_st.ms project.epoching.bc_end.ms];
@@ -478,24 +545,24 @@ for design_num=design_num_vec
             
             output_dd_gf = eeglab_study_curve_data_driven_onset_offset(input_dd);
             
-            output_data_driven.cell_grouped_factor = cell_gf;
-            output_data_driven.times = times;            
-            output_data_driven.output_dd_grouping_factor = output_dd_gf;
+            output_data_driven.cell_gf = cell_gf;
+            output_data_driven.times = times;
+            output_data_driven.output_dd_gf = output_dd_gf;
             output_data_driven.allch = allch;
-
-
-
+            
+            
+            
             save(grouping_factor_file,'output_data_driven')
         else
             
             load(grouping_factor_file);
             
             
-            cell_gf= output_data_driven.cell_grouped_factor;
-            times=output_data_driven.times;            
-            output_dd_gf=output_data_driven.output_dd_grouping_factor;
+            cell_gf= output_data_driven.cell_gf;
+            times=output_data_driven.times;
+            output_dd_gf=output_data_driven.output_dd_gf;
             allch=output_data_driven.allch ;
-
+            
         end
         
         
@@ -503,6 +570,7 @@ for design_num=design_num_vec
         
         
         if strcmp(do_plots,'on')
+            disp('plot grouping factor')
             
             %         input_gf.erp_grand_average = mean_collapsed_cell_all_sub{:};
             input_gf.p_gf  = output_dd_gf.sigcell_pruned_gf;
@@ -517,6 +585,8 @@ for design_num=design_num_vec
             input_gf.levels_f1 = levels_f1;
             input_gf.levels_f2 = levels_f2;
             input_gf.plot_dir = plot_dir;
+            input_gf.name_f1 = name_f1;
+            input_gf.name_f2 = name_f2;
             
             input_gf.levels_gf = levels_gf;
             input_gf.name_gf   = name_gf;
@@ -540,7 +610,9 @@ for design_num=design_num_vec
         %
         %
         %      struttura in cui ho le tw per ogni canale
-        input_mask.output_dd_grouping_factor = output_dd_gf;
+        input_mask.output_dd_gf = output_dd_gf;
+        input_mask.name_f1 =   name_f1;
+        input_mask.name_f2 =   name_f2;
         input_mask.levels_f1 =   levels_f1;
         input_mask.levels_f2 =   levels_f2;
         input_mask.allch     =   allch;
@@ -551,6 +623,7 @@ for design_num=design_num_vec
         input_mask.name_cf = name_cf;
         
         
+        disp('mask grouping factor')
         
         mask_cell_p_gf_file = fullfile(data_driven_path,['grouping_factor_erp_allch_', char(STUDY.design(design_num).name), '.mat']);
         
@@ -565,20 +638,29 @@ for design_num=design_num_vec
         output_mask_cell_p_gf.levels_f2 = levels_f2;
         output_mask_cell_p_gf.name_f1 = name_f1;
         output_mask_cell_p_gf.name_f2 = name_f2;
-
-
-
+        output_mask_cell_p_gf.name_gf = name_gf;
+        output_mask_cell_p_gf.name_cf = name_cf;
+        
+        
+        
+        
+        
         
         save(mask_cell_p_gf_file,'output_mask_cell_p_gf')
+        disp('text extport grouping factor')
         
-        out_file_name = fullfile(data_driven_path,'gf.txt');
-        [dataexpcols, dataexp] = text_export_allch_erp_time_dd_gf(out_file_name,output_mask_cell_p_gf);
-
+        out_dir = fullfile(data_driven_path,'gf',name_gf);
+        if not(exist(out_dir))
+            mkdir(out_dir);
+        end
+        [dataexpcols, dataexp] = text_export_allch_erp_time_dd_gf(out_dir,output_mask_cell_p_gf);
+        
+        clear dataexpcols dataexp output_mask_cell_p_gf
         
         
     end
     
     
-
+    
 end
 end

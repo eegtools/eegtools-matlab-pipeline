@@ -48,9 +48,9 @@ ersp_measure                         = input.ersp_measure;
 num_tails                            = input.num_tails;
 stat_freq_bands_list                 = input.stat_freq_bands_list;
 mask_coef                            = input.mask_coef;  
-
-
-
+alignt0                              = input.alignt0;
+split_base                           = input.split_base;
+design_num                           = input.design_num;
 
   if nargin < 1
     help eeglab_study_roi_ersp_tf_simple;
@@ -59,7 +59,40 @@ mask_coef                            = input.mask_coef;
  
 STUDY = pop_statparams(STUDY, 'groupstats','off','condstats','off');
 
-[STUDY ersp_tf times freqs]=std_erspplot(STUDY,ALLEEG,'channels',channels_list,'noplot','on');
+if not(split_base)
+    [STUDY ersp_tf times freqs]=std_erspplot(STUDY,ALLEEG,'channels',channels_list,'noplot','on');
+else
+    fname_out = fullfile(STUDY.filepath,[STUDY.design(design_num).name,'.mat']);
+    load(fname_out,'erspdata_post_bc','times_post', 'freqs_post');
+    allch = [STUDY.changrp.channels];
+    ersp_tf_allch = erspdata_post_bc;
+    times   = times_post;
+    freqs   = freqs_post;
+    clear erspdata_post_bc  times_post freqs_post;
+    sel_ch_roi = ismember(allch,channels_list);
+    [trr, tcc] = size(ersp_tf_allch);
+    for nrr = 1:trr
+        for ncc = 1:tcc
+            ersp_tf{nrr,ncc} = ersp_tf_allch{nrr,ncc}(:,:,sel_ch_roi,:);
+        end
+    end
+end
+
+if alignt0
+    
+    sel_times = times >= 0;
+    tsel_times = sum(sel_times);
+    [trr, tcc] = size(ersp_tf);
+    
+    for nrr = 1:trr
+        for ncc = 1:tcc
+            ersp_mat = ersp_tf{nrr,ncc}(:,sel_times,:,:);
+            ersp_mat0 = repmat(ersp_mat(:,1,:,:),1,tsel_times,1);
+            ersp_tf{nrr,ncc} = ersp_mat - ersp_mat0;
+        end
+    end
+    times = times(sel_times);
+end
     
 
     for nf1=1:length(levels_f1)

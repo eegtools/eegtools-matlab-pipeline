@@ -92,7 +92,7 @@ for design_num=design_num_vec
             
             
             % lista dei soggetti che partecipano di quel design
-            list_design_subjects            = eeglab_generate_subjects_list_by_factor_levels(STUDY, design_num);
+            list_design_subjects            = eeglab_generate_subjects_list_by_factor_levels(project,STUDY, design_num);
             
             
             

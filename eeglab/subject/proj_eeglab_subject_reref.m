@@ -39,11 +39,11 @@ for subj=1:numsubj
     
     if not(isfield(EEG,'reref'))
         
+        
+        EEG = pop_saveset( EEG, 'filename',[name_noext,'_rerefbck',ext],'filepath',EEG.filepath);
+        
         EEG.reref = 1;
-        
-        EEG = pop_saveset( EEG, 'filename',[name_noext,'_mcbck',ext],'filepath',EEG.filepath);
-        
-        
+
         reference   = [];
         
         tchanref = length(project.import.reference_channels);

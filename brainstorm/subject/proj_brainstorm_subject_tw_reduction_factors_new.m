@@ -5,7 +5,7 @@
 
 function  proj_brainstorm_subject_tw_reduction_factors_new(project,  varargin)
 
-iProtocol               = brainstorm_protocol_open(protocol_name);
+iProtocol               = brainstorm_protocol_open(project.brainstorm.db_name);
 protocol                = bst_get('ProtocolInfo');
 brainstorm_data_path    = protocol.STUDIES;
 

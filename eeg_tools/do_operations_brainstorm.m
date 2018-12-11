@@ -11,9 +11,13 @@ else
 end
 
 %  db_reload_database(iProtocol);
-chan_eeglab2brainstorm
+% chan_eeglab2brainstorm
+% chan_eeglab2brainstorm2
 
-
+% convertire il montaggio da eeglab a branstorm (si presuppone che il
+% montaggio sia stato esportato da eeglab con l'apposita funzione dal main
+% eeglab)
+status = proj_brainstorm_convert_montage_eeglab2brainstorm(project);
 
 %==================================================================================
 % import EEGLAB epochs into BRAINSTORM and do averaging
@@ -37,10 +41,10 @@ end
 
 
 %==================================================================================
-% create subjects differences between two experimental conditions
-if project.operations.do_sensors_conditions_differences    
-            proj_brainstorm_conditions_differences_new(project, 'list_select_subjects', list_select_subjects);     
-end
+% % create subjects differences between two experimental conditions
+% if project.operations.do_sensors_conditions_differences    
+%             proj_brainstorm_conditions_differences_new(project, 'list_select_subjects', list_select_subjects);     
+% end
 %==================================================================================
 % create group averages of erp experimental conditions
 if project.operations.do_sensors_group_erp_averaging
@@ -79,27 +83,33 @@ end
 if project.operations.do_bem
     proj_brainstorm_subject_bem_new(project); % 1: surface, 2: volume
 end
-%==================================================================================
-% check if all subjects have BEM file. if not, copy it from first subject
-% to remaining ones. copy to all subjects (assuming all the subjects used the same montage)
-if project.operations.do_check_bem
-        proj_brainstorm_subject_bem_new(project,'list_select_subjects', list_select_subjects); 
-
-end
-
 
 %==================================================================================
 % backup  BEM file.
 if project.operations.do_bck_bem
     proj_brainstorm_subject_backup_bem_new(project); 
-end   
-
+end 
 
 %==================================================================================
 % recover  BEM file.
 if project.operations.do_recover_bem
-       proj_brainstorm_subject_recover_bem_new(project); 
+       proj_brainstorm_subject_recover_bem_new(project,'list_select_subjects', list_select_subjects); 
 end
+
+
+%==================================================================================
+% check if all subjects have BEM file. if not, copy it from first subject
+% to remaining ones. copy to all subjects (assuming all the subjects used the same montage)
+if project.operations.do_check_bem
+        proj_brainstorm_subject_check_bem_new(project); 
+
+end
+
+
+  
+
+
+
 
 
 
@@ -453,13 +463,14 @@ end
 
 % %  2samples ttest NEW pairwise comparison by group and by condition
 if project.operations.do_brainstorm_group_stats_cond_group_ttest    
-    proj_brainstorm_group_stats_cond_group_ttest_new(project,'list_select_subjects',list_select_subjects,'vec_select_groups',vec_select_groups)    
+    proj_brainstorm_group_stats_cond_group_ttest_new(project,'list_select_subjects',list_select_subjects)    
 end
 
 
 % paired 2samples ttest process_ft_sourcestatistics DRAFT!
-results=cell(1,tot_num_contrasts);
 if project.operations.do_process_stats_paired_2samples_ttest_ft_sources
+    results=cell(1,project.brainstorm.sensors.tot_num_contrasts);
+
     for pwc=1:length(pairwise_comparisons)
         results{pwc} = brainstorm_group_stats_2cond_pairedttest(project.brainstorm.db_name, ...
             pairwise_comparisons{pwc}{1}, ...
@@ -474,7 +485,7 @@ if project.operations.do_process_stats_paired_2samples_ttest_ft_sources
 end
 %==================================================================================
 % % baseline ttest
-% results=cell(1,tot_num_contrasts);
+% results=cell(1,project.brainstorm.tot_num_contrasts);
 % if project.operations.do_process_stats_baseline_ttest_sources
 %     for bc=1:length(baseline_comparisons)                ...protocol_name, cond,  analysis_type, prestim, poststim, avg_func, subjects_list, varargin
 %             results{bc} = brainstorm_group_stats_baseline_ttest(project.brainstorm.db_name, ...
@@ -496,8 +507,10 @@ end
 
 %==================================================================================
 % TF all sources
-results_scouts_tf=cell(1,tot_num_contrasts);
+
 if project.operations.do_group_analysis_tf
+    results_scouts_tf=cell(1,project.brainstorm.sensors.tot_num_contrasts);
+
     file_input='timefreq_morlet_wmne_s3000_teta_mu_beta1_beta2_zscore';
     for pwc=1:length(pairwise_comparisons)
         results{pwc} = brainstorm_group_stats_2cond_pairedttest(project.brainstorm.db_name, pairwise_comparisons{pwc}{1}, pairwise_comparisons{pwc}{2}, group_comparison_analysis_type, 1, project.subjects.list);
@@ -505,8 +518,9 @@ if project.operations.do_group_analysis_tf
 end
 %==================================================================================
 % TF 69 scouts
-results_scouts_tf=cell(1,tot_num_contrasts);
 if project.operations.do_group_analysis_scouts_tf
+    results_scouts_tf=cell(1,project.brainstorm.tot_num_contrasts);
+
     file_input='timefreq_morlet_wmne_teta_mu_beta1_beta2_69scouts_zscore';
     results_scouts_tf{1} = brainstorm_group_stats_2cond_pairedttest(project.brainstorm.db_name, 'cwalker','cscrambled', file_input ,1,project.subjects.list);
 end

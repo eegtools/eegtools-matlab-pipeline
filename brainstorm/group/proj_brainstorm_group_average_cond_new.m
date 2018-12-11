@@ -5,9 +5,14 @@ function sFiles = proj_brainstorm_group_average_cond_new(project, varargin) ... 
     protocol                = bst_get('ProtocolInfo');
     brainstorm_data_path    = protocol.STUDIES;
     
+    if not(isfield(project.brainstorm,'condition_names'))
+        project.brainstorm.condition_names = project.epoching.condition_names;
+        project.brainstorm.numcond         = project.epoching.numcond;
+    end
+    
     % default
     list_select_subjects   = project.subjects.list;
-    cond_list       = project.epoching.condition_names;
+    cond_list       = project.brainstorm.condition_names;
     input_file_name = project.brainstorm.average_file_name;
     
     for v=1:2:length(varargin)

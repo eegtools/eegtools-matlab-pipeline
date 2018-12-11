@@ -74,11 +74,13 @@ for nb = 1:length(begin_trial_ind0)-1
     sel_ib1  = begin_baseline_ind0 > it1;
     ib1      = min(begin_baseline_ind0(sel_ib1));
     
-    sel_ib2  = end_baseline_ind0 > it2;
-    ib2      = min(end_baseline_ind0(sel_ib2));
-    
     sel_it2  = end_trial_ind0 > it1;
     it2      = min(end_trial_ind0(sel_it2));
+    
+    sel_ib2  = end_baseline_ind0 > it1;
+    ib2      = min(end_baseline_ind0(sel_ib2));
+    
+    
     
     it1f     = begin_trial_ind0(nb+1);
     

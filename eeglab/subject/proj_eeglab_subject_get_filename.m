@@ -51,7 +51,7 @@ function file_name = proj_eeglab_subject_get_filename(project, subj_name, analys
         case {'uniform_montage', 'input_epoching'}
             file_name = fullfile(project.paths.input_epochs, ...
                         [project.import.original_data_prefix subj_name project.import.original_data_suffix project.import.output_suffix project.epoching.input_suffix custom_suffix '.set']);
-        case {'output_epoching', 'add_factor', 'extract_narrowband'}
+        case {'output_epoching', 'add_factor', 'extract_narrowband','microstates'}
             file_name = fullfile(project.paths.output_epochs, ...
                         [project.import.original_data_prefix subj_name project.import.original_data_suffix project.import.output_suffix project.epoching.input_suffix custom_suffix '_' cond_name '.set']);
         case {'custom_step'}

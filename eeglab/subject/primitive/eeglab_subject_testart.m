@@ -1,4 +1,16 @@
-function EEG = eeglab_subject_testart(input_file_name, output_file_name,nch_eeg)
+function EEG = eeglab_subject_testart(input)
+
+input_file_name = input.input_file_name;
+output_file_name = input.output_file_name;
+nch_eeg = input.nch_eeg;
+FlatlineCriterion = input.FlatlineCriterion;
+Highpass = input.Highpass;
+ChannelCriterion = input.ChannelCriterion;
+LineNoiseCriterion = input.LineNoiseCriterion;
+BurstCriterion     = input.BurstCriterion;
+WindowCriterion = input.WindowCriterion;
+
+
 
 [path,name_noext,ext] = fileparts(input_file_name);
 [path2,name_noext2,ext] = fileparts(output_file_name);
@@ -26,12 +38,12 @@ try
 %   BUR : Optionally the data without final removal of "irrecoverable" windows.
 
     
-    [EEG3,HP,BUR] = clean_artifacts(EEG2, 'FlatlineCriterion', 4,...
-                                'Highpass',          'off',...
-                                'ChannelCriterion',  0.85,...
-                                'LineNoiseCriterion',  4,...
-                                'BurstCriterion',    3,...
-                                'WindowCriterion',   0.25);
+    [EEG3,HP,BUR] = clean_artifacts(EEG2, 'FlatlineCriterion', FlatlineCriterion,...
+                                'Highpass',          Highpass,...
+                                'ChannelCriterion',  ChannelCriterion,...
+                                'LineNoiseCriterion',  LineNoiseCriterion,...
+                                'BurstCriterion',    BurstCriterion,...
+                                'WindowCriterion',   WindowCriterion);
     
     
     % estraggo la maschera con le tw da rimuovere dal tracciato

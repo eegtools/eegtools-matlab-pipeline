@@ -61,7 +61,7 @@ function [STUDY, EEG] = proj_eeglab_study_plot_erp_headplot_tw(project, analysis
 if nargin < 1
     help proj_eeglab_study_plot_erp_topo_tw;
     return;
-end;
+end
 
 
 study_path                      = fullfile(project.paths.output_epochs, project.study.filename);

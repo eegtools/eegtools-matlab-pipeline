@@ -1,5 +1,5 @@
 
-function proj_brainstorm_subject_aggregate_conditions_new(project, varargin) ... settings_path, protocol_name, subj_name, new_condition_name,varargin)
+function proj_brainstorm_subject_aggregate_conditions_new(project, varargin) ... settings_path, protocol_name, subj_name, new_level_name,varargin)
     
 iProtocol               = brainstorm_protocol_open(project.brainstorm.db_name);
 protocol                = bst_get('ProtocolInfo');
@@ -20,6 +20,8 @@ for par=1:2:length(varargin)
     end
 end
 
+   
+
 for subj=1:length(list_select_subjects)
     subj_name = list_select_subjects{subj};
     
@@ -35,7 +37,7 @@ for subj=1:length(list_select_subjects)
         lev_num             = length(file_matches);
         
         
-        iStudies                = db_add_condition(subj_name, new_condition_name, 1);
+        iStudies                = db_add_condition(subj_name, new_level_name, 1);
         
         FileNamesA = {};
         num_epochs=0;
@@ -50,49 +52,54 @@ for subj=1:length(list_select_subjects)
                     file=studies.Data(nf);
                     
                     srcfilename        = fullfile(brainstorm_data_path,studies.Data(nf).FileName);
-                    
-                    [PATHSTR,NAME,EXT] = fileparts(srcfilename);
-                    name_dest = [NAME, EXT];
-                    
-                    destfilename        = fullfile(brainstorm_data_path, subj_name, new_condition_name,  name_dest);
-                    
-                    copyfile(srcfilename,destfilename );
-                    if (~isempty(strfind(file.Comment, cond_name)) && ~isempty(strfind(file.Comment, ' (#')))
-                        num_epochs              = num_epochs+1;
-                        FileNamesA{num_epochs}  = file.FileName;
+                    if exist(srcfilename)
+                        
+                        [PATHSTR,NAME,EXT] = fileparts(srcfilename);
+                        name_dest = [NAME, EXT];
+                        
+                        destfilename        = fullfile(brainstorm_data_path, subj_name, new_level_name,  name_dest);
+                        
+                        copyfile(srcfilename,destfilename );
+                        if (~isempty(strfind(file.Comment, lev_name)) && ~isempty(strfind(file.Comment, ' (#')))
+                            num_epochs              = num_epochs+1;
+                            FileNamesA{num_epochs}  = file.FileName;
+                            
+                        end
+                        
+                        
                     end
                 end
                 
-                
-                % Start a new report
-                bst_report('Start', FileNamesA);
-                
-                % Process: Average: By trial group (subject average)
-                sFiles = bst_process(...
-                    'CallProcess', 'process_average', ...
-                    FileNamesA, [], ...
-                    'avgtype', 2, ...  % By subject
-                    'keepevents', 0);
-                
-                
-                % Save and display report
-                ReportFile      = bst_report('Save', sFiles);
-                bst_report('Open', ReportFile);
-                
-                src_filename    = sFiles(1).FileName;
-                dest_filename   = fullfile(subj_name, new_condition_name, 'data_average.mat');
-                
-                srcfile         = fullfile(brainstorm_data_path, src_filename);
-                destfile        = fullfile(brainstorm_data_path, dest_filename);
-                
-                movefile(srcfile, destfile);
-                
-                %iStudies = bst_get('StudyWithSubject', subj_name);
-                db_reload_studies(iStudies);
-                [sStudies, iStudies] = bst_get('StudyWithCondition', [subj_name '/@intra']);
-                db_reload_studies(iStudies);
+                if length(FileNamesA)>2
+                    % Start a new report
+                    bst_report('Start', FileNamesA);
+                    
+                    % Process: Average: By trial group (subject average)
+                    sFiles = bst_process(...
+                        'CallProcess', 'process_average', ...
+                        FileNamesA, [], ...
+                        'avgtype', 2, ...  % By subject
+                        'keepevents', 0);
+                    
+                    
+                    % Save and display report
+                    ReportFile      = bst_report('Save', sFiles);
+                    bst_report('Open', ReportFile);
+                    
+                    src_filename    = sFiles(1).FileName;
+                    dest_filename   = fullfile(subj_name, new_level_name, 'data_average.mat');
+                    
+                    srcfile         = fullfile(brainstorm_data_path, src_filename);
+                    destfile        = fullfile(brainstorm_data_path, dest_filename);
+                    
+                    movefile(srcfile, destfile);
+                    
+                    %iStudies = bst_get('StudyWithSubject', subj_name);
+                    db_reload_studies(iStudies);
+                    [sStudies, iStudies] = bst_get('StudyWithCondition', [subj_name '/@intra']);
+                    db_reload_studies(iStudies);
+                end
             end
         end
     end
-    
 end

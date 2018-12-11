@@ -45,9 +45,15 @@ ps_path   =  fullfile(plot_dir,[name_embed,'.ps']);
 ppt_path  =  fullfile(plot_dir,[name_embed,'.ppt']);
 pdf_path  =  fullfile(plot_dir,[name_embed,'.pdf']);
 
-res             = '-r300'; % resolution
+res             = '-r100'; % resolution
 exclude_format  = [];
-renderer        = 'painters';
+if verLessThan('matlab', '8.3')
+    renderer        = 'painter';
+else
+    renderer        = 'painters';
+    
+end
+  
 pdf_mode        = 'export_fig';
 printer         ='-depsc2';
 do_pdf = 1;
@@ -108,11 +114,22 @@ if strncmp(os,'PCWIN',2)
 end
 
 
-% if strncmp(os,'Linux',2)
-%     if do_ps
-%         print(fig, ps_path,'-append',['-',renderer],res)
-%     end
-% end
+if strncmp(os,'Linux',2)
+    if do_ps
+        if verLessThan('matlab', '8.3')
+            
+            print(fig, ps_path, '-append',['-',renderer],res)
+        else
+%             pp = get(fig,'Position');
+%             if pp(3) <= pp(4)
+%                 set(fig,'PaperOrientation','portrait');
+%             else
+%                 set(fig,'PaperOrientation','landscape');
+%             end
+            print(fig, ps_path,'-dps2c', '-append',['-',renderer],res,'-fillpage')
+        end
+    end
+end
 
 
 
@@ -128,25 +145,29 @@ if strncmp(os,'Darwin',2)
     %print(fig, eps_path,'-depsc2',res)
     hgexport(fig,eps_path)
     if do_ps
-        print(fig, ps_path,'-append','-depsc2',res) %'-dpsc'
+        print(fig, ps_path,'-append','-depsc2',res,'-fillpage') %'-dpsc'
     end
     %print(fig, '-dpsc', '-append', ps_path)
 end
 % in any operating system, append the current figure to a global pdf file
 % for overview
 
-% if not(strncmp(os,'Darwin',2))
-%     if do_pdf
-%         switch pdf_mode
-%             case 'export_fig'
-%                 export_fig(fig, pdf_path, '-pdf', '-append',res);
-%             case 'ps2pdf'
-%                 if do_ps
-%                     ps2pdf('psfile',  ps_path, 'pdffile', pdf_path, 'gspapersize', 'a4')
-%                 end
+if not(strncmp(os,'Darwin',2))
+    if do_pdf
+%         if not(verLessThan('matlab', '8.3'))
+%             pdf_mode = 'ps2pdf';
 %         end
-%     end
-% end
+
+        switch pdf_mode
+            case 'export_fig'
+                export_fig(fig, pdf_path, '-pdf', '-append',res);
+            case 'ps2pdf'
+                if do_ps
+                    ps2pdf('psfile',  ps_path, 'pdffile', pdf_path, 'gspapersize', 'a4')
+                end
+        end
+    end
+end
 close all
 
 end

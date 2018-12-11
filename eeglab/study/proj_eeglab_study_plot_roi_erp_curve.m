@@ -215,10 +215,26 @@ for design_num=design_num_vec
     erp_curve_roi_stat.roi_names       = roi_names;
     
     name_f1                            = STUDY.design(design_num).variable(1).label;
-    name_f2                            = STUDY.design(design_num).variable(2).label;
+    eeglab_version = eeg_getversion;
+    if not(strcmp(eeglab_version,'development head'))
+        name_f2                            = STUDY.design(design_num).variable(2).label;
+    else
+        name_f2 = [];
+        if length(STUDY.design(design_num).variable)>1
+            name_f2                            = STUDY.design(design_num).variable(2).label;
+        end
+    end
     
     levels_f1                          = STUDY.design(design_num).variable(1).value;
-    levels_f2                          = STUDY.design(design_num).variable(2).value;
+    
+    if not(strcmp(eeglab_version,'development head'))
+        levels_f2                          = STUDY.design(design_num).variable(2).value;
+    else
+        levels_f2 = [];
+        if length(STUDY.design(design_num).variable)>1
+            levels_f2                          = STUDY.design(design_num).variable(2).value;
+        end
+    end
     
     str                                = datestr(now, 'dd-mmm-yyyy-HH-MM-SS');
     plot_dir                           = fullfile(results_path,analysis_name,[STUDY.design(design_num).name,'-erp_curve_', which_method_find_extrema,'-',str]);
@@ -230,7 +246,7 @@ for design_num=design_num_vec
     
     % erp_curve_allch cell array of dimension tlf1 x tlf2 , each cell of
     % dimension times x channels x subjects
-    [STUDY, erp_curve_allch, times]=std_erpplot(STUDY,ALLEEG,'channels',allch,'noplot','on'); 
+    [STUDY, erp_curve_allch, times]=std_erpplot(STUDY,ALLEEG,'channels',allch,'noplot','on');
     
     
     
@@ -242,17 +258,18 @@ for design_num=design_num_vec
     % for each roi in the list
     for nroi = 1:length(roi_list)
         % lista dei soggetti suddivisi per fattori
-        list_design_subjects               = eeglab_generate_subjects_list_by_factor_levels(STUDY, design_num);
+        list_design_subjects               = eeglab_generate_subjects_list_by_factor_levels(project,STUDY, design_num);
         
         roi_channels=roi_list{nroi};
         roi_name=roi_names{nroi};
         STUDY = pop_statparams(STUDY, 'groupstats','off','condstats','off');
         
-      
+        
         [STUDY, erp_curve_roi, times]=std_erpplot(STUDY,ALLEEG,'channels',roi_list{nroi},'noplot','on');
         
-        for nf1=1:length(levels_f1)
-            for nf2=1:length(levels_f2)
+        [tf1, tf2] = size(erp_curve_roi);
+        for nf1=1:tf1
+            for nf2=1:tf2
                 if ~isempty(list_select_subjects)
                     vec_select_subjects=ismember(list_design_subjects{nf1,nf2},list_select_subjects);
                     if ~sum(vec_select_subjects)
@@ -260,7 +277,7 @@ for design_num=design_num_vec
                         return;
                     end
                     erp_curve_roi{nf1,nf2}=erp_curve_roi{nf1,nf2}(:,vec_select_subjects);
-                     erp_curve_allch{nf1,nf2}=erp_curve_roi_stat.erp_curve_allch{nf1,nf2}(:,vec_select_subjects);
+                    erp_curve_allch{nf1,nf2}=erp_curve_roi_stat.erp_curve_allch{nf1,nf2}(:,vec_select_subjects);
                     list_design_subjects{nf1,nf2}=list_design_subjects{nf1,nf2}(vec_select_subjects);
                 end
             end
@@ -349,7 +366,7 @@ for design_num=design_num_vec
                     
             end
             times_plot=1:length(group_time_windows_list_design);
-
+            
             %-------------------------------------------------------------------------------------------------------------
             % 04/06/15 : HERE SHOULD BE INTRODUCED ANY DESIRED CORRECTION TO THE DATA BEFORE STATISTICAL ANALYSIS
             %-------------------------------------------------------------------------------------------------------------
@@ -525,16 +542,16 @@ for design_num=design_num_vec
     %     end
     if not( strcmp(which_method_find_extrema,'group_noalign') || strcmp(which_method_find_extrema,'continuous') );
         [dataexpcols, dataexp] = text_export_erp_struct([out_file_name,'.txt'],erp_curve_roi_stat);
-        text_export_erp_resume_struct(erp_curve_roi_stat, [out_file_name '_resume']);
-        text_export_erp_resume_struct(erp_curve_roi_stat, [out_file_name '_resume_signif'], 'p_thresh', erp_curve_roi_stat.study_ls);
+        %         text_export_erp_resume_struct(erp_curve_roi_stat, [out_file_name '_resume']);
+        %         text_export_erp_resume_struct(erp_curve_roi_stat, [out_file_name '_resume_signif'], 'p_thresh', erp_curve_roi_stat.study_ls);
     end
     
     if strcmp(which_method_find_extrema,'continuous') ;
         [dataexpcols, dataexp] = text_export_erp_continuous_struct([out_file_name,'.txt'],erp_curve_roi_stat);
         %         text_export_erp_resume_struct(erp_curve_roi_stat, [out_file_name '_resume']);
         %         text_export_erp_resume_struct(erp_curve_roi_stat, [out_file_name '_resume_signif'], 'p_thresh', erp_curve_roi_stat.study_ls);
-            [dataexpcols, dataexp] = text_export_erp_allch_sub_continuous_struct(plot_dir,erp_curve_roi_stat);%[out_file_name,'_allch_sub_continuous.txt']
-
+        [dataexpcols, dataexp] = text_export_erp_allch_sub_continuous_struct(plot_dir,erp_curve_roi_stat);%[out_file_name,'_allch_sub_continuous.txt']
+        
     end
     
     if strcmp(time_resolution_mode,'tw')
@@ -560,7 +577,7 @@ for design_num=design_num_vec
     
     
     
-   
+    
     
     
     

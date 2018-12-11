@@ -1,4 +1,4 @@
-function [Index logical] = strfind_index(cell_array,string)
+function [Index, logical] = strfind_index(cell_array,string)
 if iscell(string)
     Index = [];
     ls = length(string);

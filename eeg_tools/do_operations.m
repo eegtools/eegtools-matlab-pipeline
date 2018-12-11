@@ -357,7 +357,7 @@ end
 %% HEADPLOT (TOPO PLOT 3D)
 % perform (and save) additional statistics based on individual subjects within time windows,
 % adjusting the group time windows to time windws which are re-aligned to the latencies of time window extrema
-if project.operations.do_study_plot_erp_headplot_tw
+if project.operations.do_project.proj_eeglab_study_plot_erp_headplot_tw
     proj_eeglab_study_plot_erp_headplot_tw(project, stat_analysis_suffix,  'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects,'display_compact_topo','on' );
 end
 
@@ -377,6 +377,11 @@ if project.operations.do_study_plot_allch_erp_time
 end
 
 
+% CONTINUOUS: analyzes and plots of erp curve for all time points
+if project.operations.do_study_plot_cluster_fieldtrip
+    proj_eeglab_study_plot_cluster_fieldtrip(project, stat_analysis_suffix, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
+end
+
 %% -------------------------------------------------------------------------------------------
 % ALLCH_ERP_CC_TIME
 %--------------------------------------------------------------------------------------------
@@ -389,18 +394,11 @@ if project.operations.do_study_plot_allch_erp_cc_time
     proj_eeglab_study_plot_allch_erp_cc_time(project, stat_analysis_suffix, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
 end
 
-
-%% -------------------------------------------------------------------------------------------
-% ALLCH_ERP_CLUSTERBASED_TIME
-%--------------------------------------------------------------------------------------------
-% master-function:                                       proj_eeglab_study_plot_allch_erp_cc_time
-% settings:
-% evaluate and represent cross correlation of ERP of all channels between levels of one factor as a function of time and
-% compare different levels of the other factor in a time x channels space (TANOVA)
-
-if project.operations.do_study_plot_allch_erp_clusterperm_time
-    proj_eeglab_study_plot_cluster_fieldtrip(project, stat_analysis_suffix, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
+if project.operations.do_study_study_define_roi_tw_datadriven
+    proj_eeglab_study_define_roi_tw_datadriven(project, stat_analysis_suffix, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects,...
+        'levels_f1_grand_average_dd',levels_f1_grand_average_dd, 'levels_f2_grand_average_dd',levels_f2_grand_average_dd);
 end
+
 
 
 %% ******************************************************************************************************************************************
@@ -426,22 +424,24 @@ end
 
 % continuous
 if project.operations.do_study_plot_roi_ersp_tf_continuous
-    proj_eeglab_study_plot_roi_ersp_tf(project, stat_analysis_suffix,'ersp_tf_resolution_mode','continuous' , 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects,'mask_coef',mask_coef,'stat_freq_bands_list',stat_freq_bands_list);
+%     proj_eeglab_study_plot_roi_ersp_tf(project, stat_analysis_suffix,'ersp_tf_resolution_mode','continuous' , 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects,'mask_coef',mask_coef,'stat_freq_bands_list',stat_freq_bands_list);
+    proj_eeglab_study_plot_roi_ersp_tf(project, stat_analysis_suffix,'ersp_tf_resolution_mode','continuous' , 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
+
 end
 
 % decimate_times
 if project.operations.do_study_plot_roi_ersp_tf_decimate_times
-    proj_eeglab_study_plot_roi_ersp_tf(project, stat_analysis_suffix,'ersp_tf_resolution_mode','decimate_times' , 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects,'mask_coef',mask_coef,'stat_freq_bands_list',stat_freq_bands_list);
+    proj_eeglab_study_plot_roi_ersp_tf(project, stat_analysis_suffix,'ersp_tf_resolution_mode','decimate_times' , 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
 end
 
 % decimate_freqs
 if project.operations.do_study_plot_roi_ersp_tf_decimate_freqs
-    proj_eeglab_study_plot_roi_ersp_tf(project, stat_analysis_suffix,'ersp_tf_resolution_mode','decimate_freqs' , 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects,'mask_coef',mask_coef,'stat_freq_bands_list',stat_freq_bands_list);
+    proj_eeglab_study_plot_roi_ersp_tf(project, stat_analysis_suffix,'ersp_tf_resolution_mode','decimate_freqs' , 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
 end
 
 % decimate_times_freqs
 if project.operations.do_study_plot_roi_ersp_tf_decimate_times_freqs
-    proj_eeglab_study_plot_roi_ersp_tf(project, stat_analysis_suffix,'ersp_tf_resolution_mode','decimate_times_freqs' , 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects,'mask_coef',mask_coef,'stat_freq_bands_list',stat_freq_bands_list);
+    proj_eeglab_study_plot_roi_ersp_tf(project, stat_analysis_suffix,'ersp_tf_resolution_mode','decimate_times_freqs' , 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
 end
 
 % time-frequency distribution freely binned in the frequency and/or in the time domain

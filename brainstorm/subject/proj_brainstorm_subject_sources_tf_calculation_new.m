@@ -24,6 +24,10 @@ for par=1:2:length(varargin)
     end
 end
 
+if not(isfield(project.brainstorm,'condition_names'))
+    project.brainstorm.condition_names = project.epoching.condition_names;
+    project.brainstorm.numcond         = project.epoching.numcond;
+end
 
 
 sources_norm=[sources_norm '_s3000'];
@@ -36,8 +40,8 @@ if ~project.operations.do_sources_calculation
     end
     sources_results=cell(length(list_select_subjects), project.brainstorm.sensors.tot_num_contrasts);
     for subj=1:length(list_select_subjects)
-        for cond=1:project.epoching.numcond
-            cond_name                       = project.epoching.condition_names{cond};
+        for cond=1:project.brainstorm.numcond
+            cond_name                       = project.brainstorm.condition_names{cond};
             sources_tf_results{subj,cond} = fullfile(list_select_subjects{subj}, cond_name, [src_name '.mat']);
         end
         for mcond=1:length(name_maineffects)

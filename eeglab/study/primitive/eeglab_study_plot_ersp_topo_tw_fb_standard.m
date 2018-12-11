@@ -99,8 +99,8 @@ r2         = {locs.labels};
 % roi_list   = [roi_list;{r1};{r2}];
 % roi_names  = [roi_names, 'all_rois','all_chan'];
 
-roi_list = [{r1};{r2}];
-roi_names  = {'all_rois','all_chan'};
+roi_list = {r2};%[{r1};{r2}];
+roi_names  = {'all_chan'};
 
 
 for design_num=design_num_vec
@@ -168,7 +168,7 @@ for design_num=design_num_vec
                 % calculate ersp in the channels corresponding to the selected roi
                 [STUDY ersp_topo_tw_fb times freqs]=std_erspplot(STUDY,ALLEEG,'channels',roi_ch,'noplot','on');
                 
-                list_design_subjects   = eeglab_generate_subjects_list_by_factor_levels(STUDY, design_num);
+                list_design_subjects   = eeglab_generate_subjects_list_by_factor_levels(project,STUDY, design_num);
 
                
                 

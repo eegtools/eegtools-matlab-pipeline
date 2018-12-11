@@ -204,7 +204,7 @@ function [output] = eeglab_study_plot_ersp_topo_tw_fb_compact(input)
 
 
         % lista dei soggetti suddivisi per fattori
-        original_list_design_subjects                   = eeglab_generate_subjects_list_by_factor_levels(STUDY, design_num);
+        original_list_design_subjects                   = eeglab_generate_subjects_list_by_factor_levels(project,STUDY, design_num);
         original_individual_fb_bands                    = eeglab_generate_subjects_bands_by_factor_levels(STUDY, design_num, subjects_data, frequency_bands_list);  ... {factor1,factor2}{subj}{band}
 
         list_design_subjects = [];
