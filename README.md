@@ -4,14 +4,14 @@ Complete EEG analysis (ERP, ERSP, Sources) pipeline written in matlab, using EEG
 ## Description
 
 EEGTools was developed in the Robotics, Brain and Cognitive Sciences (RBCS) department of the Istituto Italiano di Tecnologia (IIT) of Genova, Italy.
-It has been equally developed by Alberto Inuggi and Claudio Campus, Ph.D. Researchers currently working respectively for the RBCS (https://www.iit.it/lines/robotics-brain-and-cognitive-sciences) and U-VIP (https://www.iit.it/lines/unit-for-visually-impaired-people) units.
+It has been equally developed by Alberto Inuggi and Claudio Campus, PostDoc Researchers currently working for the U-VIP (https://www.iit.it/lines/unit-for-visually-impaired-people) unit.
 It is a huge set of matlab scripts allowing a complete analysis of the Electroencephalography (EEG) signal at either the sensor and source levels.
 It implement all the analysis steps relying on the EEGLab (https://sccn.ucsd.edu/eeglab) and Brainstorm (http://neuroimage.usc.edu/brainstorm) software primitives.
 
 ## Why use it
 
 Every huge analysis pipeline has a learning curve which must be matched with the advantages it provides to the user.
-eegtools offer several features (see next paragraph), most of them can be found in many other software packages. Its unicity is the possibility to model all the characteristics of a huge and complex EEG project and perform automatic analysis. All the analysis steps (but for artefact removal) can be performed in batch mode (code, start, go home and find everything processed next morning). Once you create your clean continuous files, you can concatenate all the steps from epoching to group stats, plotting and results export. This is granted by compiling a huge project_structure.m file, where you can define eeg data characteristics, preprocessing params, participants definition, statistical models, electrodes cluster, time window, frequency bands, analysis types and many other features.
+eegtools offer several features (see next paragraph), most of them can be found in many other software packages. Its unicity is the possibility to model all the characteristics of a huge and complex EEG project and perform automatic analysis. All the analysis steps (but for artefact removal) can be performed in batch mode (code, start, go home and find everything processed next morning). Once you create your clean continuous files, you can concatenate all the steps from epoching to group stats, plotting and results export. This is granted by compiling a huge project_structure.m file, where you can define eeg data characteristics, preprocessing params, participants details, statistical models, electrodes cluster, time window, frequency bands, analysis types and many other features.
 Moreover, it eases the integration between EEGLab and Brainstorm and allows calling the latter methods, and many others custom methods, from matlab command line using the same data structure used for ERP/ERSP analysis.
 
 ## Features
