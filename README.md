@@ -27,7 +27,7 @@ Moreover, it eases the integration between EEGLab and Brainstorm and allows call
   * Triggers manipulation
   * ICA & CUDAICA
   * Merge different montages
-  * Micristates
+  * Microstates
   * Data driven selection of regions of interest and times
   
 * Group level
