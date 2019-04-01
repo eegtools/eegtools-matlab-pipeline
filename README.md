@@ -93,8 +93,8 @@ PROJECT DATA
 The last params identify the project structure file, a huge (up to 1500 lines) files containing variables definitions.
 
 ## Publications using it
-5. Deloglu F, Brunetti R, Inuggi A, Campus C, Del Gatto C, D'Ausilio A. That does not sound right: Sounds affect visual ERPs during a piano sight-reading task. Behavioural Brain Research, 2019. (ERP + source analysis)
-4. Inuggi A, Campus C, Vastano R, Keuroghlanian A, Saunier G, Pozzo T.  Locomotion observation induces motor resonance only when explicitly represented; An EEG source analysis study. Frontiers in Psychology, 2018.    (ERP + source analysis)
-3. Inuggi A, Bassolino M, Tacchino C, Pippo V, Bergamaschi V, Campus C, De Franchis V, Pozzo T, Moretti P. Ipsilesional functional recruitment within lower mu band in children with unilateral cerebral palsy , an event-related desynchronization study", Experimental Brain Research. 2017.                             (ERSP)
-2. Pozzo T, Inuggi A, Keuroghlanian A, Panzeri S, Saunier G, Campus C. Natural Translating locomotion modulates cortical activity at action observation. Frontiers in Systems Neuroscience. 2017  (ERSP)
-1. Campus C, Sandini G, Morrone MC, Gori M. Spatial localization of sound elicits early responses from occipital visual cortex in humans. Sci Rep. 2017; 7: 10415.       (ERP)
+5 . Deloglu F, Brunetti R, Inuggi A, Campus C, Del Gatto C, D'Ausilio A. That does not sound right: Sounds affect visual ERPs during a piano sight-reading task. Behavioural Brain Research, 2019. (ERP + source analysis)
+4 . Inuggi A, Campus C, Vastano R, Keuroghlanian A, Saunier G, Pozzo T.  Locomotion observation induces motor resonance only when explicitly represented; An EEG source analysis study. Frontiers in Psychology, 2018.    (ERP + source analysis)
+3 . Inuggi A, Bassolino M, Tacchino C, Pippo V, Bergamaschi V, Campus C, De Franchis V, Pozzo T, Moretti P. Ipsilesional functional recruitment within lower mu band in children with unilateral cerebral palsy , an event-related desynchronization study", Experimental Brain Research. 2017.                             (ERSP)
+2 . Pozzo T, Inuggi A, Keuroghlanian A, Panzeri S, Saunier G, Campus C. Natural Translating locomotion modulates cortical activity at action observation. Frontiers in Systems Neuroscience. 2017  (ERSP)
+1 . Campus C, Sandini G, Morrone MC, Gori M. Spatial localization of sound elicits early responses from occipital visual cortex in humans. Sci Rep. 2017; 7: 10415.       (ERP)
