@@ -2273,4 +2273,11 @@ project.results_display.ersp.time_range.ms          = project.results_display.er
 % ======================================================================================================
 % eeglab_derived_parameters_project(project)
 
+%% import additional subject parameters from external excel file
+%        mark subject column with 'subject' |  'soggetto' |  'subj' |  'sub' NO case sensitive;
+
+project.external_xls.xls_folder = '';
+project.external_xls.xls_file = '';
+project.external_xls.xls_sheet = '';
+project = project_import_external_xls(project);
 
