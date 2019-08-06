@@ -208,7 +208,7 @@ for subj=1:numsubj
                 subj_name,...
                 sexsub,...
                 agesub,...
-                spectra_sub.duration,...                
+                spectra_sub.duration,...
                 list_roi_name{nroi},...
                 spectra_sub.freqs(nf),...
                 spectra_sub.roi(nroi).roispectra_abs(nf),...
@@ -252,7 +252,7 @@ for subj=1:numsubj
                 subj_name,...
                 sexsub,...
                 agesub,...
-                spectra_sub.duration,...                
+                spectra_sub.duration,...
                 list_ch_name{nch},...
                 spectra_sub.freqs(nf),...
                 spectra_sub.ch(nch).chspectra_abs(nf),...
@@ -319,349 +319,354 @@ if (strcmp(project.preproc.subject_spectra.do_group,'on'))
     
     %% confornto consideando tutti i canali
     %% confronto age bin within gruppi
-    for nband = 1:length(list_band_name)
-        
-        % blocco il gruppo e confronto i bin di et�
-        for ng = 1:tg
-            %         combinazioni di tutti i bin di et� a 2 a 2
-            comb_ab = nchoosek(1:tab,2);
-            %         fig = figure;
+    
+    if tab > 1
+        for nband = 1:length(list_band_name)
             
-            
-            for ncomb_ab = 1:size(comb_ab,1)
-                
-                str_comp = [list_agebin_name{comb_ab(ncomb_ab,2)},'-',list_agebin_name{comb_ab(ncomb_ab,1)} ];
-                
-                fig=figure('color','w','visible','off'); % creo una figura che avrà tanti sub-plot quanti sono i livelli del secondo fattore
-                
+            % blocco il gruppo e confronto i bin di et�
+            for ng = 1:tg
+                %         combinazioni di tutti i bin di et� a 2 a 2
+                comb_ab = nchoosek(1:tab,2);
+                %         fig = figure;
                 
                 
-                cell4stat = group_spectra.band(nband).cell_spectra(ng,comb_ab(ncomb_ab,:));
-                %             [t, df, pvals_raw] = statcond(cell4stat);
-                [stat, df, pvals_raw] = statcond_corr(cell4stat, project.stats.ersp.num_tails, 'alpha',NaN,...
-                    'naccu',project.stats.ersp.num_permutations,'method', project.stats.eeglab.ersp.method);
-                
-                pvals = mcorrect(pvals_raw,  project.stats.eeglab.ersp.correction);
-                
-                %             [t, df, pvals] = statcond(cell4stat);
-                vmean2 = nan(2,length(pvals));
-                for ncs = 1:length(cell4stat)
-                    sel_ind = comb_ab(ncomb_ab,ncs);
-                    vmean = mean(group_spectra.band(nband).cell_spectra{ng,sel_ind},2);
-                    if not(isempty(vmean))
-                        vmean2(ncs,:) = vmean;
-                        subplot(1, 4, ncs);
-                        if isempty(set_caxis)
-                            topoplot(vmean, spectra_sub.chanlocs);
-                        else
-                            topoplot(vmean, spectra_sub.chanlocs,'maplimits',set_caxis(nband,:));
-                        end
-                        title(list_agebin_name(sel_ind))
-                        cbar;
-                        title('rel_power %')
-                    end
-                end
-                
-                
-                if sum(isnan(pvals)) == 0
-                    psig = pvals<project.stats.ersp.pvalue;
-                    all_ch = {spectra_sub.chanlocs.labels};
-                    sig_ch = all_ch(psig);
+                for ncomb_ab = 1:size(comb_ab,1)
+                    
+                    str_comp = [list_agebin_name{comb_ab(ncomb_ab,2)},'-',list_agebin_name{comb_ab(ncomb_ab,1)} ];
+                    
+                    fig=figure('color','w','visible','off'); % creo una figura che avrà tanti sub-plot quanti sono i livelli del secondo fattore
                     
                     
-                    differ = diff(vmean2,1)';
-                    if sum(isnan(differ)) == 0
-                        subplot(1, 4, ncs+1);
-                        if isempty(set_caxis)
-                            topoplot(psig.*differ, spectra_sub.chanlocs);
-                        else
-                            topoplot(psig.*differ, spectra_sub.chanlocs,'maplimits',set_caxis(nband,:));
+                    
+                    cell4stat = group_spectra.band(nband).cell_spectra(ng,comb_ab(ncomb_ab,:));
+                    %             [t, df, pvals_raw] = statcond(cell4stat);
+                    [stat, df, pvals_raw] = statcond_corr(cell4stat, project.stats.ersp.num_tails, 'alpha',NaN,...
+                        'naccu',project.stats.ersp.num_permutations,'method', project.stats.eeglab.ersp.method);
+                    
+                    pvals = mcorrect(pvals_raw,  project.stats.eeglab.ersp.correction);
+                    
+                    %             [t, df, pvals] = statcond(cell4stat);
+                    vmean2 = nan(2,length(pvals));
+                    for ncs = 1:length(cell4stat)
+                        sel_ind = comb_ab(ncomb_ab,ncs);
+                        vmean = mean(group_spectra.band(nband).cell_spectra{ng,sel_ind},2);
+                        if not(isempty(vmean))
+                            vmean2(ncs,:) = vmean;
+                            subplot(1, 4, ncs);
+                            if isempty(set_caxis)
+                                topoplot(vmean, spectra_sub.chanlocs);
+                            else
+                                topoplot(vmean, spectra_sub.chanlocs,'maplimits',set_caxis(nband,:));
+                            end
+                            title(list_agebin_name(sel_ind))
+                            cbar;
+                            title('rel_power %')
                         end
-                        title({'significant differences',str_comp});
-                        
-                        cbar;
-                        title('delta %')
-                        
-                        subplot(1, 4, ncs+2);
-                        topoplot(psig, spectra_sub.chanlocs,'style','blank','emarker','r');
-                        title('different channels');
-                        
                     end
+                    
+                    
+                    if sum(isnan(pvals)) == 0
+                        psig = pvals<project.stats.ersp.pvalue;
+                        all_ch = {spectra_sub.chanlocs.labels};
+                        sig_ch = all_ch(psig);
+                        
+                        
+                        differ = diff(vmean2,1)';
+                        if sum(isnan(differ)) == 0
+                            subplot(1, 4, ncs+1);
+                            if isempty(set_caxis)
+                                topoplot(psig.*differ, spectra_sub.chanlocs);
+                            else
+                                topoplot(psig.*differ, spectra_sub.chanlocs,'maplimits',set_caxis(nband,:));
+                            end
+                            title({'significant differences',str_comp});
+                            
+                            cbar;
+                            title('delta %')
+                            
+                            subplot(1, 4, ncs+2);
+                            topoplot(psig, spectra_sub.chanlocs,'style','blank','emarker','r');
+                            title('different channels');
+                            
+                        end
+                    end
+                    %             str_comp = [list_agebin_name{comb_ab(ncomb_ab,1)},'_',list_agebin_name{comb_ab(ncomb_ab,2)} ];
+                    str_plot = [list_band_name{nband},'_', groups{ng}, '_',str_comp];
+                    suptitle2(str_plot);
+                    group_spectra.band(nband).group(ng).comparison(ncomb_ab).str_comp = str_comp;
+                    group_spectra.band(nband).group(ng).comparison(ncomb_ab).sig_ch = sig_ch;
+                    group_spectra.band(nband).group(ng).comparison(ncomb_ab).str_plot = str_plot;
+                    
+                    fprintf(fid5,'%s\n',str_plot);
+                    fprintf(fid5,[repmat('%s\t',1,length(sig_ch)),'\n'],sig_ch{:});
+                    
+                    inputsf.plot_dir    = plot_dir_group_allch;
+                    inputsf.fig         = fig;
+                    inputsf.name_embed  = 'group_spectra_map';
+                    inputsf.suffix_plot = str_plot;
+                    save_figures(inputsf,'res','-r100','exclude_format','svg');
                 end
-                %             str_comp = [list_agebin_name{comb_ab(ncomb_ab,1)},'_',list_agebin_name{comb_ab(ncomb_ab,2)} ];
-                str_plot = [list_band_name{nband},'_', groups{ng}, '_',str_comp];
-                suptitle2(str_plot);
-                group_spectra.band(nband).group(ng).comparison(ncomb_ab).str_comp = str_comp;
-                group_spectra.band(nband).group(ng).comparison(ncomb_ab).sig_ch = sig_ch;
-                group_spectra.band(nband).group(ng).comparison(ncomb_ab).str_plot = str_plot;
-                
-                fprintf(fid5,'%s\n',str_plot);
-                fprintf(fid5,[repmat('%s\t',1,length(sig_ch)),'\n'],sig_ch{:});
-                
-                inputsf.plot_dir    = plot_dir_group_allch;
-                inputsf.fig         = fig;
-                inputsf.name_embed  = 'group_spectra_map';
-                inputsf.suffix_plot = str_plot;
-                save_figures(inputsf,'res','-r100','exclude_format','svg');
             end
         end
     end
-    
     %% confronto gruppi within age bin
-    for nband = 1:length(list_band_name)
-        
-        % blocco il gruppo e confronto i bin di et�
-        for nab = 1:tab
-            %         combinazioni di tutti i gruppi a 2 a 2
-            comb_g = nchoosek(1:tg,2);
-            for ncomb_g = 1:size(comb_g,1)
-                str_comp = [groups{comb_g(ncomb_g,2)},'-',groups{comb_g(ncomb_g,1)} ];
-                
-                fig=figure('color','w','visible','off'); % creo una figura che avrà tanti sub-plot quanti sono i livelli del secondo fattore
-                
-                cell4stat = group_spectra.band(nband).cell_spectra(comb_ab(ncomb_g,:),nab);
-                %             [t, df, pvals] = statcond(cell4stat);
-                [stat, df, pvals_raw] = statcond_corr(cell4stat, project.stats.ersp.num_tails, 'alpha',NaN,...
-                    'naccu',project.stats.ersp.num_permutations,'method', project.stats.eeglab.ersp.method);
-                
-                pvals = mcorrect(pvals_raw,  project.stats.eeglab.ersp.correction);
-                vmean2 = nan(2,length(pvals));
-                for ncs = 1:length(cell4stat)
-                    sel_ind = comb_g(ncomb_g,ncs);
-                    vmean = mean(group_spectra.band(nband).cell_spectra{sel_ind, nab},2);
-                    if not(isempty(vmean))
-                        vmean2(ncs,:) = vmean;
-                        subplot(1, 4, ncs);
-                        if isempty(set_caxis)
-                            topoplot(vmean, spectra_sub.chanlocs);
-                        else
-                            topoplot(vmean, spectra_sub.chanlocs,'maplimits',set_caxis(nband,:));
-                        end
-                        title(groups(sel_ind))
-                        cbar;
-                        title('rel_power %')
-                    end
-                end
-                
-                
-                if sum(isnan(pvals)) == 0
-                    psig = pvals<project.stats.ersp.pvalue;
-                    all_ch = {spectra_sub.chanlocs.labels};
-                    sig_ch = all_ch(psig);
+    if tg > 1
+        for nband = 1:length(list_band_name)
+            
+            % blocco il gruppo e confronto i bin di et�
+            for nab = 1:tab
+                %         combinazioni di tutti i gruppi a 2 a 2
+                comb_g = nchoosek(1:tg,2);
+                for ncomb_g = 1:size(comb_g,1)
+                    str_comp = [groups{comb_g(ncomb_g,2)},'-',groups{comb_g(ncomb_g,1)} ];
                     
-                    differ = diff(vmean2,1)';
-                    if sum(isnan(differ)) == 0
-                        subplot(1, 4, ncs+1);
-                        if isempty(set_caxis)
-                            topoplot(psig.*differ, spectra_sub.chanlocs);
-                        else
-                            topoplot(psig.*differ, spectra_sub.chanlocs,'maplimits',set_caxis(nband,:));
+                    fig=figure('color','w','visible','off'); % creo una figura che avrà tanti sub-plot quanti sono i livelli del secondo fattore
+                    
+                    cell4stat = group_spectra.band(nband).cell_spectra(comb_ab(ncomb_g,:),nab);
+                    %             [t, df, pvals] = statcond(cell4stat);
+                    [stat, df, pvals_raw] = statcond_corr(cell4stat, project.stats.ersp.num_tails, 'alpha',NaN,...
+                        'naccu',project.stats.ersp.num_permutations,'method', project.stats.eeglab.ersp.method);
+                    
+                    pvals = mcorrect(pvals_raw,  project.stats.eeglab.ersp.correction);
+                    vmean2 = nan(2,length(pvals));
+                    for ncs = 1:length(cell4stat)
+                        sel_ind = comb_g(ncomb_g,ncs);
+                        vmean = mean(group_spectra.band(nband).cell_spectra{sel_ind, nab},2);
+                        if not(isempty(vmean))
+                            vmean2(ncs,:) = vmean;
+                            subplot(1, 4, ncs);
+                            if isempty(set_caxis)
+                                topoplot(vmean, spectra_sub.chanlocs);
+                            else
+                                topoplot(vmean, spectra_sub.chanlocs,'maplimits',set_caxis(nband,:));
+                            end
+                            title(groups(sel_ind))
+                            cbar;
+                            title('rel_power %')
                         end
-                        title({'significant differences',str_comp});
-                        
-                        cbar;
-                        title('delta %')
-                        
-                        subplot(1, 4, ncs+2);
-                        topoplot(psig, spectra_sub.chanlocs,'style','blank','emarker','r');
-                        title('different channels');
-                        
                     end
+                    
+                    
+                    if sum(isnan(pvals)) == 0
+                        psig = pvals<project.stats.ersp.pvalue;
+                        all_ch = {spectra_sub.chanlocs.labels};
+                        sig_ch = all_ch(psig);
+                        
+                        differ = diff(vmean2,1)';
+                        if sum(isnan(differ)) == 0
+                            subplot(1, 4, ncs+1);
+                            if isempty(set_caxis)
+                                topoplot(psig.*differ, spectra_sub.chanlocs);
+                            else
+                                topoplot(psig.*differ, spectra_sub.chanlocs,'maplimits',set_caxis(nband,:));
+                            end
+                            title({'significant differences',str_comp});
+                            
+                            cbar;
+                            title('delta %')
+                            
+                            subplot(1, 4, ncs+2);
+                            topoplot(psig, spectra_sub.chanlocs,'style','blank','emarker','r');
+                            title('different channels');
+                            
+                        end
+                    end
+                    str_plot = [list_band_name{nband},'_', list_agebin_name{nab}, '_',str_comp];
+                    suptitle2(str_plot);
+                    
+                    group_spectra.band(nband).age_bin(nab).comparison(ncomb_g).str_comp = str_comp;
+                    group_spectra.band(nband).age_bin(nab).comparison(ncomb_g).sig_ch = sig_ch;
+                    group_spectra.band(nband).age_bin(nab).comparison(ncomb_g).str_plot = str_plot;
+                    fprintf(fid5,'%s\n',str_plot);
+                    fprintf(fid5,[repmat('%s\t',1,length(sig_ch)),'\n'],sig_ch{:});
+                    
+                    inputsf.plot_dir    = plot_dir_group_allch;
+                    inputsf.fig         = fig;
+                    inputsf.name_embed  = 'group_spectra_map';
+                    inputsf.suffix_plot = str_plot;
+                    save_figures(inputsf,'res','-r100','exclude_format','svg');
                 end
-                str_plot = [list_band_name{nband},'_', list_agebin_name{nab}, '_',str_comp];
-                suptitle2(str_plot);
-                
-                group_spectra.band(nband).age_bin(nab).comparison(ncomb_g).str_comp = str_comp;
-                group_spectra.band(nband).age_bin(nab).comparison(ncomb_g).sig_ch = sig_ch;
-                group_spectra.band(nband).age_bin(nab).comparison(ncomb_g).str_plot = str_plot;
-                fprintf(fid5,'%s\n',str_plot);
-                fprintf(fid5,[repmat('%s\t',1,length(sig_ch)),'\n'],sig_ch{:});
-                
-                inputsf.plot_dir    = plot_dir_group_allch;
-                inputsf.fig         = fig;
-                inputsf.name_embed  = 'group_spectra_map';
-                inputsf.suffix_plot = str_plot;
-                save_figures(inputsf,'res','-r100','exclude_format','svg');
             end
         end
     end
-    
     %% confronto considerando solo i canali delle roi
     %% confronto age bin within gruppi
-    for nband = 1:length(list_band_name)
-        
-        % blocco il gruppo e confronto i bin di et�
-        for ng = 1:tg
-            %         combinazioni di tutti i bin di et� a 2 a 2
-            comb_ab = nchoosek(1:tab,2);
-            %         fig = figure;
+    if tab > 1
+        for nband = 1:length(list_band_name)
             
-            
-            for ncomb_ab = 1:size(comb_ab,1)
-                
-                str_comp = [list_agebin_name{comb_ab(ncomb_ab,2)},'-',list_agebin_name{comb_ab(ncomb_ab,1)} ];
-                
-                fig=figure('color','w','visible','off'); % creo una figura che avrà tanti sub-plot quanti sono i livelli del secondo fattore
-                
+            % blocco il gruppo e confronto i bin di et�
+            for ng = 1:tg
+                %         combinazioni di tutti i bin di et� a 2 a 2
+                comb_ab = nchoosek(1:tab,2);
+                %         fig = figure;
                 
                 
-                cell4stat = group_spectra.band(nband).cell_spectra(ng,comb_ab(ncomb_ab,:));
-                %             [t, df, pvals_raw] = statcond(cell4stat);
-                [stat, df, pvals_raw] = statcond_corr(cell4stat, project.stats.ersp.num_tails, 'alpha',NaN,...
-                    'naccu',project.stats.ersp.num_permutations,'method', project.stats.eeglab.ersp.method);
-                pvals_raw_roi = pvals_raw(sel_roi_ch);
-                pvals_roi = mcorrect(pvals_raw_roi,  project.stats.eeglab.ersp.correction);
-                pvals = ones(size(pvals_raw));
-                pvals(sel_roi_ch) = pvals_roi;
-                
-                %             [t, df, pvals] = statcond(cell4stat);
-                vmean2 = nan(2,length(pvals));
-                for ncs = 1:length(cell4stat)
-                    sel_ind = comb_ab(ncomb_ab,ncs);
-                    vmean = mean(group_spectra.band(nband).cell_spectra{ng,sel_ind},2);
-                    if not(isempty(vmean))
-                        vmean2(ncs,:) = vmean;
-                        subplot(1, 4, ncs);
-                        if isempty(set_caxis)
-                            topoplot(vmean, spectra_sub.chanlocs);
-                        else
-                            topoplot(vmean, spectra_sub.chanlocs,'maplimits',set_caxis(nband,:));
-                        end
-                        title(list_agebin_name(sel_ind))
-                        cbar;
-                        title('rel_power %')
-                    end
-                end
-                
-                
-                if sum(isnan(pvals)) == 0
-                    psig = pvals<project.stats.ersp.pvalue;
-                    all_ch = {spectra_sub.chanlocs.labels};
-                    sig_ch = all_ch(psig);
+                for ncomb_ab = 1:size(comb_ab,1)
+                    
+                    str_comp = [list_agebin_name{comb_ab(ncomb_ab,2)},'-',list_agebin_name{comb_ab(ncomb_ab,1)} ];
+                    
+                    fig=figure('color','w','visible','off'); % creo una figura che avrà tanti sub-plot quanti sono i livelli del secondo fattore
                     
                     
-                    differ = diff(vmean2,1)';
-                    if sum(isnan(differ)) == 0
-                        subplot(1, 4, ncs+1);
-                        if isempty(set_caxis)
-                            topoplot(psig.*differ, spectra_sub.chanlocs);
-                        else
-                            topoplot(psig.*differ, spectra_sub.chanlocs,'maplimits',set_caxis(nband,:));
+                    
+                    cell4stat = group_spectra.band(nband).cell_spectra(ng,comb_ab(ncomb_ab,:));
+                    %             [t, df, pvals_raw] = statcond(cell4stat);
+                    [stat, df, pvals_raw] = statcond_corr(cell4stat, project.stats.ersp.num_tails, 'alpha',NaN,...
+                        'naccu',project.stats.ersp.num_permutations,'method', project.stats.eeglab.ersp.method);
+                    pvals_raw_roi = pvals_raw(sel_roi_ch);
+                    pvals_roi = mcorrect(pvals_raw_roi,  project.stats.eeglab.ersp.correction);
+                    pvals = ones(size(pvals_raw));
+                    pvals(sel_roi_ch) = pvals_roi;
+                    
+                    %             [t, df, pvals] = statcond(cell4stat);
+                    vmean2 = nan(2,length(pvals));
+                    for ncs = 1:length(cell4stat)
+                        sel_ind = comb_ab(ncomb_ab,ncs);
+                        vmean = mean(group_spectra.band(nband).cell_spectra{ng,sel_ind},2);
+                        if not(isempty(vmean))
+                            vmean2(ncs,:) = vmean;
+                            subplot(1, 4, ncs);
+                            if isempty(set_caxis)
+                                topoplot(vmean, spectra_sub.chanlocs);
+                            else
+                                topoplot(vmean, spectra_sub.chanlocs,'maplimits',set_caxis(nband,:));
+                            end
+                            title(list_agebin_name(sel_ind))
+                            cbar;
+                            title('rel_power %')
                         end
-                        title({'significant differences',str_comp});
-                        
-                        cbar;
-                        title('delta %')
-                        
-                        subplot(1, 4, ncs+2);
-                        topoplot(psig, spectra_sub.chanlocs,'style','blank','emarker','r');
-                        title('different channels');
-                        
                     end
+                    
+                    
+                    if sum(isnan(pvals)) == 0
+                        psig = pvals<project.stats.ersp.pvalue;
+                        all_ch = {spectra_sub.chanlocs.labels};
+                        sig_ch = all_ch(psig);
+                        
+                        
+                        differ = diff(vmean2,1)';
+                        if sum(isnan(differ)) == 0
+                            subplot(1, 4, ncs+1);
+                            if isempty(set_caxis)
+                                topoplot(psig.*differ, spectra_sub.chanlocs);
+                            else
+                                topoplot(psig.*differ, spectra_sub.chanlocs,'maplimits',set_caxis(nband,:));
+                            end
+                            title({'significant differences',str_comp});
+                            
+                            cbar;
+                            title('delta %')
+                            
+                            subplot(1, 4, ncs+2);
+                            topoplot(psig, spectra_sub.chanlocs,'style','blank','emarker','r');
+                            title('different channels');
+                            
+                        end
+                    end
+                    %             str_comp = [list_agebin_name{comb_ab(ncomb_ab,1)},'_',list_agebin_name{comb_ab(ncomb_ab,2)} ];
+                    str_plot = [list_band_name{nband},'_', groups{ng}, '_',str_comp];
+                    suptitle2(str_plot);
+                    group_spectra.band(nband).group(ng).comparison(ncomb_ab).str_comp = str_comp;
+                    group_spectra.band(nband).group(ng).comparison(ncomb_ab).sig_ch = sig_ch;
+                    group_spectra.band(nband).group(ng).comparison(ncomb_ab).str_plot = str_plot;
+                    
+                    fprintf(fid5,'%s\n',str_plot);
+                    fprintf(fid5,[repmat('%s\t',1,length(sig_ch)),'\n'],sig_ch{:});
+                    
+                    inputsf.plot_dir    = plot_dir_group_allroi;
+                    inputsf.fig         = fig;
+                    inputsf.name_embed  = 'group_spectra_map';
+                    inputsf.suffix_plot = str_plot;
+                    save_figures(inputsf,'res','-r100','exclude_format','svg');
                 end
-                %             str_comp = [list_agebin_name{comb_ab(ncomb_ab,1)},'_',list_agebin_name{comb_ab(ncomb_ab,2)} ];
-                str_plot = [list_band_name{nband},'_', groups{ng}, '_',str_comp];
-                suptitle2(str_plot);
-                group_spectra.band(nband).group(ng).comparison(ncomb_ab).str_comp = str_comp;
-                group_spectra.band(nband).group(ng).comparison(ncomb_ab).sig_ch = sig_ch;
-                group_spectra.band(nband).group(ng).comparison(ncomb_ab).str_plot = str_plot;
-                
-                fprintf(fid5,'%s\n',str_plot);
-                fprintf(fid5,[repmat('%s\t',1,length(sig_ch)),'\n'],sig_ch{:});
-                
-                inputsf.plot_dir    = plot_dir_group_allroi;
-                inputsf.fig         = fig;
-                inputsf.name_embed  = 'group_spectra_map';
-                inputsf.suffix_plot = str_plot;
-                save_figures(inputsf,'res','-r100','exclude_format','svg');
             end
         end
     end
-    
     %% confronto gruppi within age bin
-    for nband = 1:length(list_band_name)
-        
-        % blocco il gruppo e confronto i bin di et�
-        for nab = 1:tab
-            %         combinazioni di tutti i gruppi a 2 a 2
-            comb_g = nchoosek(1:tg,2);
-            for ncomb_g = 1:size(comb_g,1)
-                str_comp = [groups{comb_g(ncomb_g,2)},'-',groups{comb_g(ncomb_g,1)} ];
-                
-                fig=figure('color','w','visible','off'); % creo una figura che avrà tanti sub-plot quanti sono i livelli del secondo fattore
-                
-                cell4stat = group_spectra.band(nband).cell_spectra(comb_ab(ncomb_g,:),nab);
-                %             [t, df, pvals] = statcond(cell4stat);
-                [stat, df, pvals_raw] = statcond_corr(cell4stat, project.stats.ersp.num_tails, 'alpha',NaN,...
-                    'naccu',project.stats.ersp.num_permutations,'method', project.stats.eeglab.ersp.method);
-                
-                pvals_raw_roi = pvals_raw(sel_roi_ch);
-                pvals_roi = mcorrect(pvals_raw_roi,  project.stats.eeglab.ersp.correction);
-                pvals = ones(size(pvals_raw));
-                pvals(sel_roi_ch) = pvals_roi;
-                
-                vmean2 = nan(2,length(pvals));
-                for ncs = 1:length(cell4stat)
-                    sel_ind = comb_g(ncomb_g,ncs);
-                    vmean = mean(group_spectra.band(nband).cell_spectra{sel_ind, nab},2);
-                    if not(isempty(vmean))
-                        vmean2(ncs,:) = vmean;
-                        subplot(1, 4, ncs);
-                        if isempty(set_caxis)
-                            topoplot(vmean, spectra_sub.chanlocs);
-                        else
-                            topoplot(vmean, spectra_sub.chanlocs,'maplimits',set_caxis(nband,:));
-                        end
-                        title(groups(sel_ind))
-                        cbar;
-                        title('rel_power %')
-                    end
-                end
-                
-                
-                if sum(isnan(pvals)) == 0
-                    psig = pvals<project.stats.ersp.pvalue;
-                    all_ch = {spectra_sub.chanlocs.labels};
-                    sig_ch = all_ch(psig);
+    if tg > 1
+        for nband = 1:length(list_band_name)
+            
+            % blocco il gruppo e confronto i bin di et�
+            for nab = 1:tab
+                %         combinazioni di tutti i gruppi a 2 a 2
+                comb_g = nchoosek(1:tg,2);
+                for ncomb_g = 1:size(comb_g,1)
+                    str_comp = [groups{comb_g(ncomb_g,2)},'-',groups{comb_g(ncomb_g,1)} ];
                     
-                    differ = diff(vmean2,1)';
-                    if sum(isnan(differ)) == 0
-                        subplot(1, 4, ncs+1);
-                        if isempty(set_caxis)
-                            topoplot(psig.*differ, spectra_sub.chanlocs);
-                        else
-                            topoplot(psig.*differ, spectra_sub.chanlocs,'maplimits',set_caxis(nband,:));
+                    fig=figure('color','w','visible','off'); % creo una figura che avrà tanti sub-plot quanti sono i livelli del secondo fattore
+                    
+                    cell4stat = group_spectra.band(nband).cell_spectra(comb_ab(ncomb_g,:),nab);
+                    %             [t, df, pvals] = statcond(cell4stat);
+                    [stat, df, pvals_raw] = statcond_corr(cell4stat, project.stats.ersp.num_tails, 'alpha',NaN,...
+                        'naccu',project.stats.ersp.num_permutations,'method', project.stats.eeglab.ersp.method);
+                    
+                    pvals_raw_roi = pvals_raw(sel_roi_ch);
+                    pvals_roi = mcorrect(pvals_raw_roi,  project.stats.eeglab.ersp.correction);
+                    pvals = ones(size(pvals_raw));
+                    pvals(sel_roi_ch) = pvals_roi;
+                    
+                    vmean2 = nan(2,length(pvals));
+                    for ncs = 1:length(cell4stat)
+                        sel_ind = comb_g(ncomb_g,ncs);
+                        vmean = mean(group_spectra.band(nband).cell_spectra{sel_ind, nab},2);
+                        if not(isempty(vmean))
+                            vmean2(ncs,:) = vmean;
+                            subplot(1, 4, ncs);
+                            if isempty(set_caxis)
+                                topoplot(vmean, spectra_sub.chanlocs);
+                            else
+                                topoplot(vmean, spectra_sub.chanlocs,'maplimits',set_caxis(nband,:));
+                            end
+                            title(groups(sel_ind))
+                            cbar;
+                            title('rel_power %')
                         end
-                        title({'significant differences',str_comp});
-                        
-                        cbar;
-                        title('delta %')
-                        
-                        subplot(1, 4, ncs+2);
-                        topoplot(psig, spectra_sub.chanlocs,'style','blank','emarker','r');
-                        title('different channels');
-                        
                     end
+                    
+                    
+                    if sum(isnan(pvals)) == 0
+                        psig = pvals<project.stats.ersp.pvalue;
+                        all_ch = {spectra_sub.chanlocs.labels};
+                        sig_ch = all_ch(psig);
+                        
+                        differ = diff(vmean2,1)';
+                        if sum(isnan(differ)) == 0
+                            subplot(1, 4, ncs+1);
+                            if isempty(set_caxis)
+                                topoplot(psig.*differ, spectra_sub.chanlocs);
+                            else
+                                topoplot(psig.*differ, spectra_sub.chanlocs,'maplimits',set_caxis(nband,:));
+                            end
+                            title({'significant differences',str_comp});
+                            
+                            cbar;
+                            title('delta %')
+                            
+                            subplot(1, 4, ncs+2);
+                            topoplot(psig, spectra_sub.chanlocs,'style','blank','emarker','r');
+                            title('different channels');
+                            
+                        end
+                    end
+                    str_plot = [list_band_name{nband},'_', list_agebin_name{nab}, '_',str_comp];
+                    suptitle2(str_plot);
+                    
+                    group_spectra.band(nband).age_bin(nab).comparison(ncomb_g).str_comp = str_comp;
+                    group_spectra.band(nband).age_bin(nab).comparison(ncomb_g).sig_ch = sig_ch;
+                    group_spectra.band(nband).age_bin(nab).comparison(ncomb_g).str_plot = str_plot;
+                    fprintf(fid5,'%s\n',str_plot);
+                    fprintf(fid5,[repmat('%s\t',1,length(sig_ch)),'\n'],sig_ch{:});
+                    
+                    inputsf.plot_dir    = plot_dir_group_allroi;
+                    inputsf.fig         = fig;
+                    inputsf.name_embed  = 'group_spectra_map';
+                    inputsf.suffix_plot = str_plot;
+                    save_figures(inputsf,'res','-r100','exclude_format','svg');
                 end
-                str_plot = [list_band_name{nband},'_', list_agebin_name{nab}, '_',str_comp];
-                suptitle2(str_plot);
-                
-                group_spectra.band(nband).age_bin(nab).comparison(ncomb_g).str_comp = str_comp;
-                group_spectra.band(nband).age_bin(nab).comparison(ncomb_g).sig_ch = sig_ch;
-                group_spectra.band(nband).age_bin(nab).comparison(ncomb_g).str_plot = str_plot;
-                fprintf(fid5,'%s\n',str_plot);
-                fprintf(fid5,[repmat('%s\t',1,length(sig_ch)),'\n'],sig_ch{:});
-                
-                inputsf.plot_dir    = plot_dir_group_allroi;
-                inputsf.fig         = fig;
-                inputsf.name_embed  = 'group_spectra_map';
-                inputsf.suffix_plot = str_plot;
-                save_figures(inputsf,'res','-r100','exclude_format','svg');
             end
         end
+        
     end
-    
-    
     
     
     

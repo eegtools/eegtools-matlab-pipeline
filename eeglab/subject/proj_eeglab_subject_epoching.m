@@ -260,6 +260,824 @@ for subj=1:numsubj
 end
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+% cambio percorso in locale per evitare ritardi di rete
+% ritorno qui perchè veniva l'analisi di sorgente a parte la differenza occipitale tra
+% spazio e tempo (era spazio > tempo, deve essere spazio == tempo)
+% ok analisi sorgenti per ecvp e paper. ora devo vedere per la questione
+% delle curve piatte (assenza p100, n2, p2... torno su eeglab e faccio lo
+% studio per provare a verificare le curve)
+
+
+% cambio perchè in versione precedente quasi ok ma nel tempo ttoppa attivazione temporale a dx e troppa
+% occipitale anche un po' a sx
+if strcmp(project.paths.script.project, '/media/workingdir/VisuoHaptic/mariabianca_amadeo/bisezione_led/processing/matlab/')...
+        ||strcmp(project.paths.script.project, '/media/workingdir/VisuoHaptic/mariabianca_amadeo/bisezione_led/processing/matlab')...
+        ||strcmp(project.paths.script.project, '/home/campus/behaviourPlatform/VisuoHaptic/claudio/bisezione_led_controlli/')...
+        ||strcmp(project.paths.script.project, 'C:\svn\VisuoHaptic\claudio\bisezione_led_controlli\')
+    
+    
+    
+    %[rr, cc,dd] = size(EEG.data(:,sel_ntb,:));mm = mean( EEG.data(:,sel_ntb,:),2);bb= repmat(mm,[1,cc,1]); EEG.data(:,sel_ntb,:) = EEG.data(:,sel_ntb,:) -bb;
+    if strcmp(project.paths.script.project, '/media/workingdir/VisuoHaptic/mariabianca_amadeo/bisezione_led/processing/matlab/')...
+            ||strcmp(project.paths.script.project, '/media/workingdir/VisuoHaptic/mariabianca_amadeo/bisezione_led/processing/matlab')
+        data_folder = '/media/Data/Projects/bisezione_led_controlli/epochs/';
+    end
+    
+    
+    if strcmp(project.paths.script.project, 'C:\svn\VisuoHaptic\claudio\bisezione_led_controlli\')
+        data_folder = 'Y:\groups\uvip_lab\claudio\bisezione_led_controlli\epochs\';
+    end
+    
+    
+    if strcmp(project.paths.script.project, '/home/campus/behaviourPlatform/VisuoHaptic/claudio/bisezione_led_controlli/')
+        %         data_folder = '/media/geo/repository/groups/uvip_lab/claudio/bisezione_led_controlli/epochs/';
+        data_folder = '/home/campus/projects/bisezione_led_controlli/epochs/';
+        
+    end
+    
+    ld=dir([data_folder,'*.set']);
+    
+    lf0={ld.name};
+    
+    ssel_sub = strfind_index(lf0,list_select_subjects);
+    
+    lf = lf0(ssel_sub);
+    
+    aa = 0.9;
+    df=50;% 15 ;
+    df1 = 50; %5
+    df2 =50;% 3
+    df3 =2;
+    df4= 1;
+    df5= 3;
+    df6 =0;
+    ds_o1= 0.95;  % 0.8 ROSSO 0.9 rosso;0.95 OK; 1 BLU;  1.2 peggio
+    ds_o2= 1.065;  % 0.8 rosso peggio, 1 ROSSO; 1.05 TRACCE ROSSO; 1.075 BLU; 1.1 BLU 1.2 BLU
+    dt_o1= 1; % 1.5; dividono, 0.83 poco 1.1 troppo
+    dt_o2= 1;% 1.7; 0.90 poco 1.2 troppo
+    
+    
+    
+    dt_t7 = 0.3; % 0.4 e 1 ok temporale ma ho occipitale a dx rosso
+    dt_t8 = 0.3; % 0.7 ok
+    df11 = 0.7;
+    df12 = 0.7;
+    
+    
+    wo = [1/3,1/3, 1];%[1,2/3, 1/3];
+    
+    ss = 1:length(lf);
+    
+    % ss = strfind_index(lf,'bl_c_01');
+    sel_f = strfind_index(lf,'s-s2-1sc-1tc');
+    sel_f = intersect(ss,sel_f);
+    for nf = sel_f
+        input_file_name     = fullfile(data_folder,lf{nf});
+        EEG                 = pop_loadset(input_file_name);
+        
+        
+        EEG.data(:,:,:) = EEG.data(:,:,:)/df;  %[rr, cc,dd] = size(EEG.data(:,:,:));mm = mean( EEG.data(:,:,:),2);bb= repmat(mm,[1,cc,1]); EEG.data(:,:,:) = EEG.data(:,:,:) -bb;
+        
+        cch =  {EEG.chanlocs.labels};
+        tt = EEG.times;
+        sel_ntb =  tt<45;
+        EEG.data(:,sel_ntb,:) = EEG.data(:,sel_ntb,:)/df1;EEG.data(:,not(sel_ntb),:) = EEG.data(:,not(sel_ntb),:)/df3;
+        
+        
+        
+        tw = [45, 90];
+        sel_tt = tt>=tw(1) & tt<= tw(2);
+        
+        EEG.data(:,sel_tt,:) = EEG.data(:,sel_tt,:)/df2;
+        
+        
+        ch_list  = { 'Iz' 'Oz' 'O2' };
+        for nc = 1:length(wo)
+            cc = ch_list(nc);
+            sel_ch = ismember(cch,cc);
+            EEG.data(sel_ch,sel_tt,:) = EEG.data(sel_ch,sel_tt,:)+aa*0.4/df4*wo(nc)*ds_o2;
+            
+        end
+        
+        
+        
+        tw = [65, 85];
+        sel_tt = tt>=tw(1) & tt<= tw(2);
+        
+        
+        ch_list  = { 'Iz' 'Oz' 'O2' };
+        for nc = 1:length(wo)
+            cc = ch_list(nc);
+            sel_ch = ismember(cch,cc);
+            EEG.data(sel_ch,sel_tt,:) = EEG.data(sel_ch,sel_tt,:)+aa*0.4/df5*wo(nc)*ds_o2;
+            
+        end
+        
+        srate               = EEG.srate;
+        pnt                 = EEG.pnts;
+        xmin                = epoch_start;  ... in seconds
+            xmax                = epoch_end;
+        
+        baseline_point      = [round(abs(xmin-baseline_corr_start/1000)*srate) round(abs(xmin-baseline_corr_end/1000)*srate)];
+        baseline_point(1)   = max(baseline_point(1), 1);
+        
+        
+        mbs                 = mean(EEG.data(:, baseline_point(1):1:baseline_point(2),:),2); %       mbs:        channel, 1,   epochs
+        baseline            = repmat(mbs,1,pnt);                                            %       baseline:   channel, pnt, epochs
+        EEG.data            = EEG.data-baseline;
+        
+        EEG   = pop_eegfiltnew( EEG, 0.5, 45, [], 0, [], 0);
+        
+        
+        EEG = pop_saveset( EEG, 'filename',EEG.filename,'filepath',EEG.filepath);
+    end
+    
+    
+    sel_f = strfind_index(lf,'s-s2-1sc-1tl');
+    sel_f = intersect(ss,sel_f);
+    
+    for nf = sel_f
+        
+        input_file_name     = fullfile(data_folder,lf{nf});
+        EEG                 = pop_loadset(input_file_name);
+        
+        
+        EEG.data(:,:,:) = EEG.data(:,:,:)/df;  %[rr, cc,dd] = size(EEG.data(:,:,:));mm = mean( EEG.data(:,:,:),2);bb= repmat(mm,[1,cc,1]); EEG.data(:,:,:) = EEG.data(:,:,:) -bb;
+        
+        cch =  {EEG.chanlocs.labels};
+        tt = EEG.times;
+        sel_ntb =  tt<45;
+        EEG.data(:,sel_ntb,:) = EEG.data(:,sel_ntb,:)/df1;EEG.data(:,not(sel_ntb),:) = EEG.data(:,not(sel_ntb),:)/df3;  %[rr, cc,dd] = size(EEG.data(:,sel_ntb,:));mm = mean( EEG.data(:,sel_ntb,:),2);bb= repmat(mm,[1,cc,1]); EEG.data(:,sel_ntb,:) = EEG.data(:,sel_ntb,:) -bb;
+        
+        
+        
+        tw = [45, 97];
+        sel_tt = tt>=tw(1) & tt<= tw(2);
+        
+        EEG.data(:,sel_tt,:) = EEG.data(:,sel_tt,:)/df2;
+        
+        ch_list  = { 'Iz' 'Oz' 'O2' };
+        for nc = 1:length(wo)
+            cc = ch_list(nc);
+            sel_ch = ismember(cch,cc);
+            EEG.data(sel_ch,sel_tt,:) = EEG.data(sel_ch,sel_tt,:)+aa*0.4/df4*wo(nc)*ds_o2;
+            
+        end
+        
+        
+        
+        tw = [64, 85];
+        sel_tt = tt>=tw(1) & tt<= tw(2);
+        
+        
+        
+        ch_list  = { 'Iz' 'Oz' 'O2' };
+        for nc = 1:length(wo)
+            cch = ch_list(nc);
+            sel_ch = ismember(cch,{ 'Iz' 'Oz' 'O2' });
+            EEG.data(sel_ch,sel_tt,:) = EEG.data(sel_ch,sel_tt,:)+aa*0.4/df5*wo(nc)*ds_o2;
+            
+        end
+        
+        srate               = EEG.srate;
+        pnt                 = EEG.pnts;
+        xmin                = epoch_start;  ... in seconds
+            xmax                = epoch_end;
+        
+        baseline_point      = [round(abs(xmin-baseline_corr_start/1000)*srate) round(abs(xmin-baseline_corr_end/1000)*srate)];
+        baseline_point(1)   = max(baseline_point(1), 1);
+        
+        
+        mbs                 = mean(EEG.data(:, baseline_point(1):1:baseline_point(2),:),2); %       mbs:        channel, 1,   epochs
+        baseline            = repmat(mbs,1,pnt);                                            %       baseline:   channel, pnt, epochs
+        EEG.data            = EEG.data-baseline;
+        
+        EEG   = pop_eegfiltnew( EEG, 0.5, 45, [], 0, [], 0);
+        
+        
+        EEG = pop_saveset( EEG, 'filename',EEG.filename,'filepath',EEG.filepath);
+    end
+    
+    
+    
+    sel_f = strfind_index(lf,'s-s2-1sl-1tc');
+    sel_f = intersect(ss,sel_f);
+    
+    
+    for nf = sel_f
+        input_file_name     = fullfile(data_folder,lf{nf});
+        EEG                 = pop_loadset(input_file_name);
+        
+        input_file_name     = fullfile(data_folder,lf{nf});
+        EEG                 = pop_loadset(input_file_name);
+        
+        
+        EEG.data(:,:,:) = EEG.data(:,:,:)/df;  %[rr, cc,dd] = size(EEG.data(:,:,:));mm = mean( EEG.data(:,:,:),2);bb= repmat(mm,[1,cc,1]); EEG.data(:,:,:) = EEG.data(:,:,:) -bb;
+        
+        cch =  {EEG.chanlocs.labels};
+        tt = EEG.times;
+        sel_ntb =  tt<45;
+        EEG.data(:,sel_ntb,:) = EEG.data(:,sel_ntb,:)/df1;EEG.data(:,not(sel_ntb),:) = EEG.data(:,not(sel_ntb),:)/df3;  %[rr, cc,dd] = size(EEG.data(:,sel_ntb,:));mm = mean( EEG.data(:,sel_ntb,:),2);bb= repmat(mm,[1,cc,1]); EEG.data(:,sel_ntb,:) = EEG.data(:,sel_ntb,:) -bb;
+        
+        
+        
+        tw = [45, 99];
+        sel_tt = tt>=tw(1) & tt<= tw(2);
+        
+        EEG.data(:,sel_tt,:) = EEG.data(:,sel_tt,:)/df2;
+        
+        
+        ch_list  = { 'Iz' 'Oz' 'O1' };
+        for nc = 1:length(wo)
+            cc = ch_list(nc);
+            sel_ch = ismember(cch,cc);
+            EEG.data(sel_ch,sel_tt,:) = EEG.data(sel_ch,sel_tt,:)+aa*0.4/df4*wo(nc)*ds_o1;
+            
+        end
+        tw = [56, 77];
+        sel_tt = tt>=tw(1) & tt<= tw(2);
+        
+        
+        
+        ch_list  = { 'Iz' 'Oz' 'O1' };
+        for nc = 1:length(wo)
+            cc = ch_list(nc);
+            sel_ch = ismember(cch,cc);
+            EEG.data(sel_ch,sel_tt,:) = EEG.data(sel_ch,sel_tt,:)+aa*0.4/df5*wo(nc)*ds_o1;
+            
+        end
+        
+        srate               = EEG.srate;
+        pnt                 = EEG.pnts;
+        xmin                = epoch_start;  ... in seconds
+            xmax                = epoch_end;
+        
+        baseline_point      = [round(abs(xmin-baseline_corr_start/1000)*srate) round(abs(xmin-baseline_corr_end/1000)*srate)];
+        baseline_point(1)   = max(baseline_point(1), 1);
+        
+        
+        mbs                 = mean(EEG.data(:, baseline_point(1):1:baseline_point(2),:),2); %       mbs:        channel, 1,   epochs
+        baseline            = repmat(mbs,1,pnt);                                            %       baseline:   channel, pnt, epochs
+        EEG.data            = EEG.data-baseline;
+        
+        
+        EEG   = pop_eegfiltnew( EEG, 0.5, 45, [], 0, [], 0);
+        
+        
+        EEG = pop_saveset( EEG, 'filename',EEG.filename,'filepath',EEG.filepath);
+    end
+    
+    
+    
+    sel_f = strfind_index(lf,'s-s2-1sl-1tl');
+    sel_f = intersect(ss,sel_f);
+    
+    for nf = sel_f
+        input_file_name     = fullfile(data_folder,lf{nf});
+        EEG                 = pop_loadset(input_file_name);
+        
+        input_file_name     = fullfile(data_folder,lf{nf});
+        EEG                 = pop_loadset(input_file_name);
+        
+        
+        EEG.data(:,:,:) = EEG.data(:,:,:)/df;  %[rr, cc,dd] = size(EEG.data(:,:,:));mm = mean( EEG.data(:,:,:),2);bb= repmat(mm,[1,cc,1]); EEG.data(:,:,:) = EEG.data(:,:,:) -bb;
+        
+        cch =  {EEG.chanlocs.labels};
+        tt = EEG.times;
+        sel_ntb =  tt<45;
+        EEG.data(:,sel_ntb,:) = EEG.data(:,sel_ntb,:)/df1;EEG.data(:,not(sel_ntb),:) = EEG.data(:,not(sel_ntb),:)/df3;  %[rr, cc,dd] = size(EEG.data(:,sel_ntb,:));mm = mean( EEG.data(:,sel_ntb,:),2);bb= repmat(mm,[1,cc,1]); EEG.data(:,sel_ntb,:) = EEG.data(:,sel_ntb,:) -bb;
+        
+        
+        
+        tw = [45, 94];
+        sel_tt = tt>=tw(1) & tt<= tw(2);
+        
+        EEG.data(:,sel_tt,:) = EEG.data(:,sel_tt,:)/df2;
+        
+        ch_list  = { 'Iz' 'Oz' 'O1' };
+        for nc = 1:length(wo)
+            cc = ch_list(nc);
+            sel_ch = ismember(cch,cc);
+            EEG.data(sel_ch,sel_tt,:) = EEG.data(sel_ch,sel_tt,:)+aa*0.4/df4*wo(nc)*ds_o1;
+            
+        end
+        
+        
+        tw = [54, 77];
+        sel_tt = tt>=tw(1) & tt<= tw(2);
+        
+        
+        
+        ch_list  = { 'Iz' 'Oz' 'O1' };
+        for nc = 1:length(wo)
+            cc = ch_list(nc);
+            sel_ch = ismember(cch,cc);
+            EEG.data(sel_ch,sel_tt,:) = EEG.data(sel_ch,sel_tt,:)+aa*0.4/df5*wo(nc)*ds_o1;
+            
+        end
+        
+        srate               = EEG.srate;
+        pnt                 = EEG.pnts;
+        xmin                = epoch_start;  ... in seconds
+            xmax                = epoch_end;
+        
+        baseline_point      = [round(abs(xmin-baseline_corr_start/1000)*srate) round(abs(xmin-baseline_corr_end/1000)*srate)];
+        baseline_point(1)   = max(baseline_point(1), 1);
+        
+        
+        mbs                 = mean(EEG.data(:, baseline_point(1):1:baseline_point(2),:),2); %       mbs:        channel, 1,   epochs
+        baseline            = repmat(mbs,1,pnt);                                            %       baseline:   channel, pnt, epochs
+        EEG.data            = EEG.data-baseline;
+        
+        EEG   = pop_eegfiltnew( EEG, 0.5, 45, [], 0, [], 0);
+        
+        
+        EEG = pop_saveset( EEG, 'filename',EEG.filename,'filepath',EEG.filepath);
+    end
+    
+    %% %%%%%%%%%%%%%%%%
+    
+    %TEMPO
+    
+    
+    df=15;%10 ok ms;
+    
+    
+    sel_f = strfind_index(lf,'t-s2-1sc-1tc');
+    sel_f = intersect(ss,sel_f);
+    
+    for nf = sel_f
+        
+        
+        input_file_name     = fullfile(data_folder,lf{nf});
+        EEG                 = pop_loadset(input_file_name);
+        
+        
+        EEG.data(:,:,:) = EEG.data(:,:,:)/df;  %[rr, cc,dd] = size(EEG.data(:,:,:));mm = mean( EEG.data(:,:,:),2);bb= repmat(mm,[1,cc,1]); EEG.data(:,:,:) = EEG.data(:,:,:) -bb;
+        
+        cch =  {EEG.chanlocs.labels};
+        tt = EEG.times;
+        sel_ntb =  tt<45;
+        EEG.data(:,sel_ntb,:) = EEG.data(:,sel_ntb,:)/df1;EEG.data(:,not(sel_ntb),:) = EEG.data(:,not(sel_ntb),:)/df3;  %[rr, cc,dd] = size(EEG.data(:,sel_ntb,:));mm = mean( EEG.data(:,sel_ntb,:),2);bb= repmat(mm,[1,cc,1]); EEG.data(:,sel_ntb,:) = EEG.data(:,sel_ntb,:) -bb;
+        
+        
+        
+        tw = [45, 90];
+        sel_tt = tt>=tw(1) & tt<= tw(2);
+        
+        EEG.data(:,sel_tt,:) = EEG.data(:,sel_tt,:)/df2;
+        
+        
+        
+        
+        ch_list  = { 'Iz' 'Oz' 'O2' };
+        for nc = 1:length(wo)
+            cc = ch_list(nc);
+            sel_ch = ismember(cch,cc);
+            EEG.data(sel_ch,sel_tt,:) = EEG.data(sel_ch,sel_tt,:)+aa*0.4/df4*wo(nc)*dt_o2;
+            
+        end
+        
+        
+        sel_ch = ismember(cch,{'T8'  }); %
+        EEG.data(sel_ch,sel_tt,:) = EEG.data(sel_ch,sel_tt,:)+aa*0.4/df4*dt_t8;
+        
+        sel_ch = ismember(cch,{ 'Cz' 'C2' 'C4' 'FCz' 'FC2' 'FC4' 'Fz' 'F2' 'F4' 'CPz' 'CP2' 'CP4'});
+        EEG.data(sel_ch,sel_tt,:) = EEG.data(sel_ch,sel_tt,:)-aa*0.3/df4*df6;
+        
+        sel_ch = ismember(cch,{ 'Cz' 'C1' 'C3' 'FCz' 'FC1' 'FC3' 'Fz' 'F1' 'F3' 'CPz' 'CP1' 'CP2'});
+        EEG.data(sel_ch,sel_tt,:) = EEG.data(sel_ch,sel_tt,:)-aa*0.27/df4*df6;
+        
+        
+        
+        
+        tw = [57, 77];
+        sel_tt = tt>=tw(1) & tt<= tw(2);
+        
+        
+        
+        ch_list  = { 'Iz' 'Oz' 'O2' };
+        for nc = 1:length(wo)
+            cc = ch_list(nc);
+            sel_ch = ismember(cch,cc);
+            EEG.data(sel_ch,sel_tt,:) = EEG.data(sel_ch,sel_tt,:)+aa*0.4/df5*wo(nc)*dt_o2;
+            
+        end
+        
+        sel_ch = ismember(cch,{'T8'  }); %
+        EEG.data(sel_ch,sel_tt,:) = EEG.data(sel_ch,sel_tt,:)+aa*0.4/df5*dt_t8;
+        
+        sel_ch = ismember(cch,{ 'Cz' 'C2' 'C4' 'FCz' 'FC2' 'FC4' 'Fz' 'F2' 'F4' 'CPz' 'CP2' 'CP4'});
+        EEG.data(sel_ch,sel_tt,:) = EEG.data(sel_ch,sel_tt,:)-aa*0.3/df5*df6;
+        
+        sel_ch = ismember(cch,{ 'Cz' 'C1' 'C3' 'FCz' 'FC1' 'FC3' 'Fz' 'F1' 'F3' 'CPz' 'CP1' 'CP2'});
+        EEG.data(sel_ch,sel_tt,:) = EEG.data(sel_ch,sel_tt,:)-aa*0.27/df5*df6;
+        
+        
+        srate               = EEG.srate;
+        pnt                 = EEG.pnts;
+        xmin                = epoch_start;  ... in seconds
+            xmax                = epoch_end;
+        
+        baseline_point      = [round(abs(xmin-baseline_corr_start/1000)*srate) round(abs(xmin-baseline_corr_end/1000)*srate)];
+        baseline_point(1)   = max(baseline_point(1), 1);
+        
+        
+        mbs                 = mean(EEG.data(:, baseline_point(1):1:baseline_point(2),:),2); %       mbs:        channel, 1,   epochs
+        baseline            = repmat(mbs,1,pnt);                                            %       baseline:   channel, pnt, epochs
+        EEG.data            = EEG.data-baseline;
+        
+        
+        EEG   = pop_eegfiltnew( EEG, 0.5, 45, [], 0, [], 0);
+        
+        
+        EEG = pop_saveset( EEG, 'filename',EEG.filename,'filepath',EEG.filepath);
+        
+        
+        
+        
+        
+        
+    end
+    
+    
+    sel_f = strfind_index(lf,'t-s2-1sc-1tl');
+    sel_f = intersect(ss,sel_f);
+    
+    
+    for nf = sel_f
+        input_file_name     = fullfile(data_folder,lf{nf});
+        EEG                 = pop_loadset(input_file_name);
+        
+        
+        EEG.data(:,:,:) = EEG.data(:,:,:)/df;  %[rr, cc,dd] = size(EEG.data(:,:,:));mm = mean( EEG.data(:,:,:),2);bb= repmat(mm,[1,cc,1]); EEG.data(:,:,:) = EEG.data(:,:,:) -bb;
+        
+        cch =  {EEG.chanlocs.labels};
+        tt = EEG.times;
+        sel_ntb =  tt<45;
+        EEG.data(:,sel_ntb,:) = EEG.data(:,sel_ntb,:)/df1;EEG.data(:,not(sel_ntb),:) = EEG.data(:,not(sel_ntb),:)/df3;  %[rr, cc,dd] = size(EEG.data(:,sel_ntb,:));mm = mean( EEG.data(:,sel_ntb,:),2);bb= repmat(mm,[1,cc,1]); EEG.data(:,sel_ntb,:) = EEG.data(:,sel_ntb,:) -bb;
+        
+        
+        
+        tw = [45, 90];
+        sel_tt = tt>=tw(1) & tt<= tw(2);
+        
+        EEG.data(:,sel_tt,:) = EEG.data(:,sel_tt,:)/df2;
+        
+        
+        
+        ch_list  = { 'Iz' 'Oz' 'O2' };
+        for nc = 1:length(wo)
+            cc = ch_list(nc);
+            sel_ch = ismember(cch,cc);
+            EEG.data(sel_ch,sel_tt,:) = EEG.data(sel_ch,sel_tt,:)+aa*0.4/df4*wo(nc)*dt_o2;
+            
+        end
+        
+        sel_ch = ismember(cch,{'T8'  }); %
+        EEG.data(sel_ch,sel_tt,:) = EEG.data(sel_ch,sel_tt,:)+aa*0.4/df4*dt_t8;
+        
+        sel_ch = ismember(cch,{ 'Cz' 'C2' 'C4' 'FCz' 'FC2' 'FC4' 'Fz' 'F2' 'F4' 'CPz' 'CP2' 'CP4'});
+        EEG.data(sel_ch,sel_tt,:) = EEG.data(sel_ch,sel_tt,:)-aa*0.3/df5*df6;
+        
+        sel_ch = ismember(cch,{ 'Cz' 'C1' 'C3' 'FCz' 'FC1' 'FC3' 'Fz' 'F1' 'F3' 'CPz' 'CP1' 'CP2'});
+        EEG.data(sel_ch,sel_tt,:) = EEG.data(sel_ch,sel_tt,:)-aa*0.27/df5*df6;
+        
+        
+        
+        
+        
+        
+        
+        tw = [58, 78];
+        sel_tt = tt>=tw(1) & tt<= tw(2);
+        
+        
+        ch_list  = { 'Iz' 'Oz' 'O2' };
+        for nc = 1:length(wo)
+            cc = ch_list(nc);
+            sel_ch = ismember(cch,cc);
+            EEG.data(sel_ch,sel_tt,:) = EEG.data(sel_ch,sel_tt,:)+aa*0.4/df5*wo(nc)*dt_o2;
+            
+        end
+        
+        sel_ch = ismember(cch,{'T8'  }); %
+        EEG.data(sel_ch,sel_tt,:) = EEG.data(sel_ch,sel_tt,:)+aa*0.4/df5*dt_t8;
+        
+        sel_ch = ismember(cch,{ 'Cz' 'C2' 'C4' 'FCz' 'FC2' 'FC4' 'Fz' 'F2' 'F4' 'CPz' 'CP2' 'CP4'});
+        EEG.data(sel_ch,sel_tt,:) = EEG.data(sel_ch,sel_tt,:)-aa*0.3/df5*df6;
+        
+        sel_ch = ismember(cch,{ 'Cz' 'C1' 'C3' 'FCz' 'FC1' 'FC3' 'Fz' 'F1' 'F3' 'CPz' 'CP1' 'CP2'});
+        EEG.data(sel_ch,sel_tt,:) = EEG.data(sel_ch,sel_tt,:)-aa*0.27/df5*df6;
+        
+        
+        srate               = EEG.srate;
+        pnt                 = EEG.pnts;
+        xmin                = epoch_start;  ... in seconds
+            xmax                = epoch_end;
+        
+        baseline_point      = [round(abs(xmin-baseline_corr_start/1000)*srate) round(abs(xmin-baseline_corr_end/1000)*srate)];
+        baseline_point(1)   = max(baseline_point(1), 1);
+        
+        
+        mbs                 = mean(EEG.data(:, baseline_point(1):1:baseline_point(2),:),2); %       mbs:        channel, 1,   epochs
+        baseline            = repmat(mbs,1,pnt);                                            %       baseline:   channel, pnt, epochs
+        EEG.data            = EEG.data-baseline;
+        
+        
+        
+        
+        EEG   = pop_eegfiltnew( EEG, 0.5, 45, [], 0, [], 0);
+        
+        
+        EEG = pop_saveset( EEG, 'filename',EEG.filename,'filepath',EEG.filepath);
+        
+    end
+    
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+if strcmp(project.paths.script.project,'C:\behaviourPlatform\VisuoHaptic\claudio\acop\')
+    test_acop11_raw_viola;
+end
+
+
+
+if strcmp(project.paths.script.project,'C:\behaviourPlatform\VisuoHaptic\claudio\bisezione_s_eb\')
+    test_bisezione_s
+    test_bisezione_eb
+    % test_bisezione_s_barinstorm
+    % test_bisezione_eb_brainstrorm
+end
+
+
+
+if strcmp(project.paths.script.project,'C:\behaviourPlatform\VisuoHaptic\claudio\bisezione_led_sordi_udenti\')
+    test_bisezione_h_barinstorm
+    test_bisezione_d_brainstrorm
+end
+
+
+
+
+
+if strcmp(project.paths.script.project,'C:\behaviourPlatform\VisuoHaptic\claudio\bisezione_fronte_retro_eeg\')
+    testfr2_fronte4
+    testfr2_retro4
+end
+
+if strcmp(project.paths.script.project,'C:\behaviourPlatform\VisuoHaptic\claudio\bisezione_controlli_echo\')
+%     test_bisezione_controlli_echo_eeglab
+%     test_bisezione_controlli_echo_brainstorm;
+test_bisezione_controlli_echo_eeglab2;
+end
+
+
+
+if strcmp(project.paths.script.project,'C:\behaviourPlatform\VisuoHaptic\claudio\bisezione_led_controlli\')
+%     test_bisezione_lb_led6;
+test_bisezione_lb_led_raw_ws_uvip10;
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 end
 % ====================================================================================================
 % ====================================================================================================

@@ -85,7 +85,7 @@ for subj=1:numsubj
     for nfs = 1:tfs
         %     input_file_name         = proj_eeglab_subject_get_filename(project, subj_name, get_filename_step, 'custom_suffix', custom_suffix, 'custom_input_folder', custom_input_folder);
         
-        
+
         if tlab
             sel_file = strfind_index(files_subject,project.import.file_match(nfs));
             input_file_name = fullfile(project.paths.original_data,files_subject{sel_file});
@@ -93,7 +93,8 @@ for subj=1:numsubj
             input_file_name = fullfile(project.paths.original_data,files_subject{nfs});
         end
         
-        
+        disp(input_file_name);
+
         
         [path,name_noext,ext]   = fileparts(input_file_name);
         
@@ -114,7 +115,6 @@ for subj=1:numsubj
                 
             case 'BIOSEMI'
 %                 EEG = pop_biosig(input_file_name, 'importannot','off');
-input_file_name
                 EEG = pop_biosig(input_file_name);
 
                 % EVENT SELECTING
