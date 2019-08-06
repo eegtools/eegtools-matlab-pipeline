@@ -161,7 +161,7 @@ function  EEG = eeglab_subject_bandstop(EEG, params)
                 EEG.data(params.channels_list,:) = EEG2.data;
            case 'pop_eegfilt'
                EEG2                          = pop_select(EEG,'channel',params.channels_list);
-               EEG2                          = pop_eegfilt( EEG2,notch_ff1(nharmonics), notch_ff2(nharmonics), [], 1, [], 0);
+               EEG2                          = pop_eegfilt( EEG2,notch_ff1(nharmonics), notch_ff2(nharmonics));
                EEG.data(params.channels_list,:) = EEG2.data;
      
                 

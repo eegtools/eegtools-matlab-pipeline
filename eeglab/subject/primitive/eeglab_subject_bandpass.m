@@ -150,7 +150,7 @@ function  EEG = eeglab_subject_bandpass(EEG, params)
            
        case 'pop_eegfilt'
            EEG2                          = pop_select(EEG,'channel',params.channels_list);
-           EEG2                          = pop_eegfilt( EEG2,params.ff1, params.ff2, [], 0, [], 0);
+           EEG2                          = pop_eegfilt( EEG2,params.ff1, params.ff2);
            EEG.data(params.channels_list,:) = EEG2.data;
            
     %##################################################################################        
