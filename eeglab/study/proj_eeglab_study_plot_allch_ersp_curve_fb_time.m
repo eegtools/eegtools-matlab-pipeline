@@ -351,28 +351,28 @@ for nband=1:length(frequency_bands_list)
     
     
     
-%     ersp_curve_allch_fb_stat.dataallch(nallch).databand(nband).frequency_band_name   = frequency_bands_names{nband};
-%     ersp_curve_allch_fb_stat.dataallch(nallch).databand(nband).frequency_band        = frequency_bands_list{nband};
-%     ersp_curve_allch_fb_stat.dataallch(nallch).databand(nband).ersp_curve_allch_fb     = ersp_curve_allch_fb;
+    ersp_curve_allch_fb_stat.databand(nband).frequency_band_name   = frequency_bands_names{nband};
+    ersp_curve_allch_fb_stat.databand(nband).frequency_band        = frequency_bands_list{nband};
+    ersp_curve_allch_fb_stat.databand(nband).ersp_curve_allch_fb     = ersp_curve_allch_fb;
+    
+%     ersp_curve_allch_fb_stat.datach(nallch).databand(nband).pcond                 = pcond;
+%     ersp_curve_allch_fb_stat.datach(nallch).databand(nband).pgroup                = pgroup;
+%     ersp_curve_allch_fb_stat.datach(nallch).databand(nband).pinter                = pinter;
 %     
-%     ersp_curve_allch_fb_stat.dataallch(nallch).databand(nband).pcond                 = pcond;
-%     ersp_curve_allch_fb_stat.dataallch(nallch).databand(nband).pgroup                = pgroup;
-%     ersp_curve_allch_fb_stat.dataallch(nallch).databand(nband).pinter                = pinter;
+%     ersp_curve_allch_fb_stat.datach(nallch).databand(nband).statscond             = statscond;
+%     ersp_curve_allch_fb_stat.datach(nallch).databand(nband).statsgroup            = statsgroup;
+%     ersp_curve_allch_fb_stat.datach(nallch).databand(nband).statsinter            = statsinter;
 %     
-%     ersp_curve_allch_fb_stat.dataallch(nallch).databand(nband).statscond             = statscond;
-%     ersp_curve_allch_fb_stat.dataallch(nallch).databand(nband).statsgroup            = statsgroup;
-%     ersp_curve_allch_fb_stat.dataallch(nallch).databand(nband).statsinter            = statsinter;
+%     ersp_curve_allch_fb_stat.datach(nallch).databand(nband).pcond_corr            = pcond_corr;
+%     ersp_curve_allch_fb_stat.datach(nallch).databand(nband).pgroup_corr           = pgroup_corr;
+%     ersp_curve_allch_fb_stat.datach(nallch).databand(nband).pinter_corr           = pinter_corr;
 %     
-%     ersp_curve_allch_fb_stat.dataallch(nallch).databand(nband).pcond_corr            = pcond_corr;
-%     ersp_curve_allch_fb_stat.dataallch(nallch).databand(nband).pgroup_corr           = pgroup_corr;
-%     ersp_curve_allch_fb_stat.dataallch(nallch).databand(nband).pinter_corr           = pinter_corr;
-%     
-%     ersp_curve_allch_fb_stat.dataallch(nallch).databand(nband).dfcond                = dfcond;
-%     ersp_curve_allch_fb_stat.dataallch(nallch).databand(nband).dfgroup               = dfgroup;
-%     ersp_curve_allch_fb_stat.dataallch(nallch).databand(nband).dfinter               = dfinter;
+%     ersp_curve_allch_fb_stat.datach(nallch).databand(nband).dfcond                = dfcond;
+%     ersp_curve_allch_fb_stat.datach(nallch).databand(nband).dfgroup               = dfgroup;
+%     ersp_curve_allch_fb_stat.datach(nallch).databand(nband).dfinter               = dfinter;
     
     
-    %         ersp_curve_allch_fb_stat.dataallch(nallch).databand(nband).narrowband            = narrowband;
+    %         ersp_curve_allch_fb_stat.datach(nallch).databand(nband).narrowband            = narrowband;
     
 %% EXPORTING DATA AND RESULTS OF ANALYSIS
 out_file_name = fullfile(plot_dir,'ersp_curve_allch_fb-stat')
@@ -380,8 +380,8 @@ save([out_file_name,'.mat'],'ersp_curve_allch_fb_stat','project');
 
 end
 
-% ersp_curve_allch_fb_stat.dataallch(nallch).allch_channels=allch_channels;
-% ersp_curve_allch_fb_stat.dataallch(nallch).allch_name=allch_name;
+% ersp_curve_allch_fb_stat.datach(nallch).allch_channels=allch_channels;
+% ersp_curve_allch_fb_stat.datach(nallch).allch_name=allch_name;
 % 
 % 
 % ersp_curve_allch_fb_stat.times=times_plot;
@@ -399,7 +399,7 @@ end
 % end
 
 % ersp_curve_allch_fb_stat.list_select_subjects = list_select_subjects;
-% ersp_curve_allch_fb_stat.list_design_subjects = list_design_subjects;
+ersp_curve_allch_fb_stat.list_design_subjects = list_design_subjects;
 % 
 % ersp_curve_allch_fb_stat.study_ls             = study_ls;
 % ersp_curve_allch_fb_stat.num_permutations     = num_permutations;
@@ -420,7 +420,7 @@ end
 % end
 
 % if  strcmp(which_method_find_extrema,'continuous') ;
-%     [dataexpcols, dataexp]=text_export_ersp_continuous_struct([out_file_name,'.txt'],ersp_curve_allch_fb_stat);
+    [dataexpcols, dataexp]=text_export_ersp_allch_sub_continuous_struct(plot_dir,ersp_curve_allch_fb_stat);
 % end
 
 % if strcmp(time_resolution_mode,'tw')

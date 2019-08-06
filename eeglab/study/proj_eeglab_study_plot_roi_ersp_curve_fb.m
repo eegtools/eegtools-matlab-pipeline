@@ -238,12 +238,23 @@ STUDY = pop_erspparams(STUDY, 'topotime',[] ,'plotgroups','apart' ,'plotconditio
 if split_base
     fname_out = fullfile(STUDY.filepath,[STUDY.design(design_num).name,'.mat']);
     load(fname_out,'erspdata_post_bc','times_post', 'freqs_post');
-    allch = [STUDY.changrp.channels];
+    allch = [STUDY.changrp.channels];    
+    sel_cheeg = 1:project.eegdata.nch_eeg;
+    allch_eeg = allch(sel_cheeg);
+    
     ersp_allch = erspdata_post_bc;
     times   = times_post;
     freqs   = freqs_post;
     clear erspdata_post_bc  times_post freqs_post;
+else
+    STUDY = pop_statparams(STUDY, 'groupstats','off','condstats','off','method', stat_method);
+    [STUDY, ersp_allch, times, freqs]=std_erspplot(STUDY,ALLEEG,'channels',allch_eeg,'noplot','on');
+
 end
+
+ersp_curve_roi_fb_stat.erp_curve_allch       = erp_curve_allch;
+ersp_curve_roi_fb_stat.allch                 = allch;
+ersp_curve_roi_fb_stat.times                 = times;
 
 %% for each roi in the list
 for nroi = 1:length(roi_list)
@@ -258,9 +269,9 @@ for nroi = 1:length(roi_list)
     %             [STUDY, ersp, times, freqs]=std_erspplot(STUDY,ALLEEG,'channels',roi_list{nroi},'noplot','on');
     %
     
-    if not(split_base)        
-        [STUDY, ersp, times, freqs]=std_erspplot(STUDY,ALLEEG,'channels',roi_channels,'noplot','on');
-    else
+%     if not(split_base)        
+%         [STUDY, ersp, times, freqs]=std_erspplot(STUDY,ALLEEG,'channels',roi_channels,'noplot','on');
+%     else
        sel_ch_roi = ismember(allch,roi_channels);
        [trr, tcc] = size(ersp_allch);
        for nrr = 1:trr
@@ -268,7 +279,7 @@ for nroi = 1:length(roi_list)
                ersp{nrr,ncc} = ersp_allch{nrr,ncc}(:,:,sel_ch_roi,:);
            end
        end
-    end
+%     end
     
     
     
@@ -793,13 +804,13 @@ if  strcmp(which_method_find_extrema,'continuous') ;
     [dataexpcols, dataexp]=text_export_ersp_continuous_struct([out_file_name,'.txt'],ersp_curve_roi_fb_stat);
 end
 
-if strcmp(time_resolution_mode,'tw')
-    [dataexpcols, dataexp] = text_export_ersp_onset_offset_sub_struct([out_file_name,'_sub_onset_offset.txt'],ersp_curve_roi_fb_stat);
-    [dataexpcols, dataexp] = text_export_ersp_onset_offset_avgsub_struct([out_file_name,'_avgsub_onset_offset.txt'],ersp_curve_roi_fb_stat);
-    
-    [dataexpcols, dataexp] = text_export_ersp_onset_offset_sub_continuous_struct([out_file_name,'_sub_onset_offset_continuous.txt'],ersp_curve_roi_fb_stat);
-    [dataexpcols, dataexp] = text_export_ersp_onset_offset_avgsub_continuous_struct([out_file_name,'_avgsub_onset_offset_continuous.txt'],ersp_curve_roi_fb_stat);
-end
+% if strcmp(time_resolution_mode,'tw')
+%     [dataexpcols, dataexp] = text_export_ersp_onset_offset_sub_struct([out_file_name,'_sub_onset_offset.txt'],ersp_curve_roi_fb_stat);
+%     [dataexpcols, dataexp] = text_export_ersp_onset_offset_avgsub_struct([out_file_name,'_avgsub_onset_offset.txt'],ersp_curve_roi_fb_stat);
+%     
+%     [dataexpcols, dataexp] = text_export_ersp_onset_offset_sub_continuous_struct([out_file_name,'_sub_onset_offset_continuous.txt'],ersp_curve_roi_fb_stat);
+%     [dataexpcols, dataexp] = text_export_ersp_onset_offset_avgsub_continuous_struct([out_file_name,'_avgsub_onset_offset_continuous.txt'],ersp_curve_roi_fb_stat);
+% end
 end
 end
 

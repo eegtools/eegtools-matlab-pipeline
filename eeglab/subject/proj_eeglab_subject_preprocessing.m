@@ -186,7 +186,13 @@ for subj=1:numsubj
     %===============================================================================================
     if (EEG.srate > project.eegdata.fs)
         disp(['subsampling to ' num2str(project.eegdata.fs)]);
-        EEG = pop_resample( EEG, project.eegdata.fs);
+        
+        if strcmp(project.preproc.filter_algorithm, 'pop_eegfiltnew_14')
+                        EEG = pop_resample( EEG, project.eegdata.fs);
+
+        else
+            EEG = pop_resample( EEG, project.eegdata.fs);
+        end
         EEG = eeg_checkset( EEG );
     end
     

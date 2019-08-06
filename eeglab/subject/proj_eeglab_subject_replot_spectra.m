@@ -16,6 +16,8 @@ list_band_name = project.preproc.subject_spectra.band_analysis.name;  % = {'delt
 list_roi_ch =  project.preproc.subject_spectra.roi_analysis.ch;%     =  {{'O1','O2'},{'T7','T8'}, {'C3', 'C4'}};
 list_roi_name = project.preproc.subject_spectra.roi_analysis.name;   %=  {'Visual','Auditory', 'Tactile'};
 
+list_allroi_ch = [project.preproc.subject_spectra.roi_analysis.ch{:}];
+
 list_agebin_lim  = project.preproc.subject_spectra.agebin.lim;
 list_agebin_name = project.preproc.subject_spectra.agebin.name;
 
@@ -40,10 +42,23 @@ if not(exist(plot_dir))
     mkdir(plot_dir)
 end
 
-plot_dir_group = fullfile(plot_dir,['group_replot_',str]);
+plot_dir_group = fullfile(plot_dir,['group_replot_',project.preproc.subject_spectra.analysis_name,'_',str]);
 if not(exist(plot_dir_group))
     mkdir(plot_dir_group)
 end
+
+
+plot_dir_group_allch = fullfile(plot_dir_group,'allch');
+if not(exist(plot_dir_group_allch))
+    mkdir(plot_dir_group_allch)
+end
+
+
+plot_dir_group_allroi = fullfile(plot_dir_group,'allroi');
+if not(exist(plot_dir_group_allroi))
+    mkdir(plot_dir_group_allroi)
+end
+
 
 
 mat_dir = fullfile(plot_dir,'mat');
@@ -78,11 +93,13 @@ end
 if not(iscell(list_select_subjects)), list_select_subjects = {list_select_subjects}; end
 
 numsubj = length(list_select_subjects);
+sel_subj = ismember({project.subjects.data.name},list_select_subjects);
+
 ageallsub = [project.subjects.data.age];
 sexallsub = {project.subjects.data.gender};
 groupllsub = {project.subjects.data.group};
 
-groups = unique(groupllsub);
+groups = unique(groupllsub(sel_subj));
 tg = length(groups);
 
 % -------------------------------------------------------------------------------------------------------------------------------------
@@ -112,106 +129,11 @@ load(fullfile(matdir,matlist{3}))
 load(fullfile(matdir,'group_spectra.mat'))
 
 
-% load('/home/campus/projects/mondino/results/subject_spectra_14-Sep-2018-09-12-12_raw/plot/mat/spectra_S001.mat')
-% load('/home/campus/projects/mondino/results/subject_spectra_14-Sep-2018-09-12-12_raw/plot/mat/group_spectra.mat')
 
-
-% nn = 1;
-% file_output1 = fullfile(plot_dir,'spectra_allsub.txt');
-% file_output2 = fullfile(plot_dir,'spectra_allsub_freqs.txt');
-%
-%
-% fid1 = fopen(file_output1,'a+');
-% fid2 = fopen(file_output2,'a+');
-
-
-% fprintf(fid1,'%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n','group','sub','sex','age_y','roi','band','max_abs','max_rel','f_max');
-% fprintf(fid2,'%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t\n','group','sub','sex','age_y','roi','freq','abs','rel');
-
-
-
-% for subj=1:numsubj
-%
-%     subj_name   = list_select_subjects{subj};
-%     sel_sub = ismember({project.subjects.data.name}, subj_name);
-%     agesub=ageallsub(sel_sub);
-%     sexsub = sexallsub{sel_sub};
-%     groupsub = groupllsub{sel_sub};
-%
-%
-%
-%     input_spectra.plot_label     = [subj_name, '_',groupsub,'_' ,num2str(agesub)];
-%
-%
-%     input_spectra.input_file_name   = proj_eeglab_subject_get_filename(project, subj_name, get_filename_step, 'custom_suffix', custom_suffix, 'custom_input_folder', custom_input_folder);
-%
-%     % ciclo su soggetti di funzione applicata a singolo soggetto che mi butta fuori i parametri necessari a comporre il cell array da esportare in txt per la statistica
-%
-%     %         [names{subj},ranks{subj},ica_types{subj},durations{subj}, EEG]         = eeglab_subject_spectra(inputfile, project.paths.output_preprocessing, project.eegdata.eeg_channels_list, project.import.reference_channels, ica_type,do_pca,ica_sr);
-%     %            spectra_sub         = eeglab_subject_spectra(inputfile, project.paths.output_preprocessing, project.eegdata.eeg_channels_list, project.import.reference_channels, ica_type,do_pca,ica_sr);
-%
-%     close all
-%
-%     set(0,'DefaultFigureVisible','off')
-%     spectra_sub         = eeglab_subject_spectra(input_spectra);
-%
-%
-%     fname_outputmat = ['spectra_',subj_name, '.mat'];
-%     file_outputmat = fullfile(mat_dir,fname_outputmat);
-%     save(file_outputmat,'spectra_sub');
-%
-%
-%     troi = length(list_roi_name);
-%     tband = length(list_band_name);
-%
-%
-%
-%
-%
-%     for nroi = 1:troi
-%
-%         for nband = 1:tband
-%
-%             fprintf(fid1,...
-%                 '%s\t%s\t%s\t%d\t%s\t%s\t%d\t%d\t%d\n',...
-%                 groupsub,...
-%                 subj_name,...
-%                 sexsub,...
-%                 agesub,...
-%                 list_roi_name{nroi},...
-%                 list_band_name{nband},...
-%                 spectra_sub.roi(nroi).band(nband).masxp_abs,...
-%                 spectra_sub.roi(nroi).band(nband).masxp_rel,...
-%                 spectra_sub.roi(nroi).band(nband).fmaxsp...
-%                 );
-%         end
-%
-%
-%         for nf = 1:length(spectra_sub.freqs)
-%
-%             fprintf(fid2,...
-%                 '%s\t%s\t%s\t%d\t%s\t%d\t%d\t%d\n',...
-%                 groupsub,...
-%                 subj_name,...
-%                 sexsub,...
-%                 agesub,...
-%                 list_roi_name{nroi},...
-%                 spectra_sub.freqs(nf),...
-%                 spectra_sub.roi(nroi).roispectra_abs(nf),...
-%                 spectra_sub.roi(nroi).roispectra_rel(nf));
-%
-%
-%         end
-%
-%     end
-%
-%
-% end
-%
-% fclose(fid1);
-% fclose(fid2);
 
 close all
+
+
 
 file_output3 = fullfile(plot_dir,'topo_group_age_bin.txt');
 fid3 = fopen(file_output3,'a+');
@@ -252,6 +174,10 @@ fname_outputcell = ['group_spectra', '.mat'];
 file_outputcell = fullfile(mat_dir,fname_outputcell);
 save(file_outputcell,'group_spectra')
 
+%% confornto consideando tutti i canali
+
+all_ch = {spectra_sub.chanlocs.labels};
+sel_roi_ch = ismember(all_ch,list_allroi_ch);
 
 %% confronto age bin within gruppi
 for nband = 1:length(list_band_name)
@@ -288,7 +214,7 @@ for nband = 1:length(list_band_name)
                         topoplot(vmean, spectra_sub.chanlocs,'maplimits',set_caxis(nband,:));
                     end
                     title(list_agebin_name(sel_ind))
-                    cbar
+                    cbar;
                     title('rel_power %')
                 end
             end
@@ -310,7 +236,7 @@ for nband = 1:length(list_band_name)
                     end
                     title({'significant differences',str_comp});
                     
-                    cbar
+                    cbar;
                     title('delta %')
                     
                     subplot(1, 4, ncs+2);
@@ -329,7 +255,7 @@ for nband = 1:length(list_band_name)
             fprintf(fid3,'%s\n',str_plot);
             fprintf(fid3,[repmat('%s\t',1,length(sig_ch)),'\n'],sig_ch{:});
             
-            inputsf.plot_dir    = plot_dir_group;
+            inputsf.plot_dir    = plot_dir_group_allch;
             inputsf.fig         = fig;
             inputsf.name_embed  = 'group_spectra_map';
             inputsf.suffix_plot = str_plot;
@@ -369,7 +295,7 @@ for nband = 1:length(list_band_name)
                         topoplot(vmean, spectra_sub.chanlocs,'maplimits',set_caxis(nband,:));
                     end
                     title(groups(sel_ind))
-                    cbar
+                    cbar;
                     title('rel_power %')
                 end
             end
@@ -390,7 +316,7 @@ for nband = 1:length(list_band_name)
                     end
                     title({'significant differences',str_comp});
                     
-                    cbar
+                    cbar;
                     title('delta %')
                     
                     subplot(1, 4, ncs+2);
@@ -408,7 +334,7 @@ for nband = 1:length(list_band_name)
             fprintf(fid3,'%s\n',str_plot);
             fprintf(fid3,[repmat('%s\t',1,length(sig_ch)),'\n'],sig_ch{:});
             
-            inputsf.plot_dir    = plot_dir_group;
+            inputsf.plot_dir    = plot_dir_group_allch;
             inputsf.fig         = fig;
             inputsf.name_embed  = 'group_spectra_map';
             inputsf.suffix_plot = str_plot;
@@ -416,6 +342,188 @@ for nband = 1:length(list_band_name)
         end
     end
 end
+
+
+
+
+
+
+%% confronto considerando solo i canali delle roi
+%% confronto age bin within gruppi
+for nband = 1:length(list_band_name)
+    
+    % blocco il gruppo e confronto i bin di et�
+    for ng = 1:tg
+        %         combinazioni di tutti i bin di et� a 2 a 2
+        comb_ab = nchoosek(1:tab,2);
+        %         fig = figure;
+        
+        
+        for ncomb_ab = 1:size(comb_ab,1)
+            
+            str_comp = [list_agebin_name{comb_ab(ncomb_ab,2)},'-',list_agebin_name{comb_ab(ncomb_ab,1)} ];
+            
+            fig=figure('color','w','visible','off'); % creo una figura che avrà tanti sub-plot quanti sono i livelli del secondo fattore
+            
+            
+            
+            cell4stat = group_spectra.band(nband).cell_spectra(ng,comb_ab(ncomb_ab,:));
+            %             [t, df, pvals_raw] = statcond(cell4stat);
+            [stat, df, pvals_raw] = statcond_corr(cell4stat, project.stats.ersp.num_tails, 'alpha',NaN,...
+                'naccu',project.stats.ersp.num_permutations,'method', project.stats.eeglab.ersp.method);
+            pvals_raw_roi = pvals_raw(sel_roi_ch);
+            pvals_roi = mcorrect(pvals_raw_roi,  project.stats.eeglab.ersp.correction);
+            pvals = ones(size(pvals_raw));
+            pvals(sel_roi_ch) = pvals_roi;
+            
+            %             [t, df, pvals] = statcond(cell4stat);
+            vmean2 = nan(2,length(pvals));
+            for ncs = 1:length(cell4stat)
+                sel_ind = comb_ab(ncomb_ab,ncs);
+                vmean = mean(group_spectra.band(nband).cell_spectra{ng,sel_ind},2);
+                if not(isempty(vmean))
+                    vmean2(ncs,:) = vmean;
+                    subplot(1, 4, ncs);
+                    if isempty(set_caxis)
+                        topoplot(vmean, spectra_sub.chanlocs);
+                    else
+                        topoplot(vmean, spectra_sub.chanlocs,'maplimits',set_caxis(nband,:));
+                    end
+                    title(list_agebin_name(sel_ind))
+                    cbar;
+                    title('rel_power %')
+                end
+            end
+            
+            
+            if sum(isnan(pvals)) == 0
+                psig = pvals<project.stats.ersp.pvalue;
+                all_ch = {spectra_sub.chanlocs.labels};
+                sig_ch = all_ch(psig);
+                
+                
+                differ = diff(vmean2,1)';
+                if sum(isnan(differ)) == 0
+                    subplot(1, 4, ncs+1);
+                    if isempty(set_caxis)
+                        topoplot(psig.*differ, spectra_sub.chanlocs);
+                    else
+                        topoplot(psig.*differ, spectra_sub.chanlocs,'maplimits',set_caxis(nband,:));
+                    end
+                    title({'significant differences',str_comp});
+                    
+                    cbar;
+                    title('delta %')
+                    
+                    subplot(1, 4, ncs+2);
+                    topoplot(psig, spectra_sub.chanlocs,'style','blank','emarker','r');
+                    title('different channels');
+                    
+                end
+            end
+            %             str_comp = [list_agebin_name{comb_ab(ncomb_ab,1)},'_',list_agebin_name{comb_ab(ncomb_ab,2)} ];
+            str_plot = [list_band_name{nband},'_', groups{ng}, '_',str_comp];
+            suptitle2(str_plot);
+            group_spectra.band(nband).group(ng).comparison(ncomb_ab).str_comp = str_comp;
+            group_spectra.band(nband).group(ng).comparison(ncomb_ab).sig_ch = sig_ch;
+            group_spectra.band(nband).group(ng).comparison(ncomb_ab).str_plot = str_plot;
+            
+%             fprintf(fid5,'%s\n',str_plot);
+%             fprintf(fid5,[repmat('%s\t',1,length(sig_ch)),'\n'],sig_ch{:});
+%             
+            inputsf.plot_dir    = plot_dir_group_allroi;
+            inputsf.fig         = fig;
+            inputsf.name_embed  = 'group_spectra_map';
+            inputsf.suffix_plot = str_plot;
+            save_figures(inputsf,'res','-r100','exclude_format','svg');
+        end
+    end
+end
+
+%% confronto gruppi within age bin
+for nband = 1:length(list_band_name)
+    
+    % blocco il gruppo e confronto i bin di et�
+    for nab = 1:tab
+        %         combinazioni di tutti i gruppi a 2 a 2
+        comb_g = nchoosek(1:tg,2);
+        for ncomb_g = 1:size(comb_g,1)
+            str_comp = [groups{comb_g(ncomb_g,2)},'-',groups{comb_g(ncomb_g,1)} ];
+            
+            fig=figure('color','w','visible','off'); % creo una figura che avrà tanti sub-plot quanti sono i livelli del secondo fattore
+            
+            cell4stat = group_spectra.band(nband).cell_spectra(comb_ab(ncomb_g,:),nab);
+            %             [t, df, pvals] = statcond(cell4stat);
+            [stat, df, pvals_raw] = statcond_corr(cell4stat, project.stats.ersp.num_tails, 'alpha',NaN,...
+                'naccu',project.stats.ersp.num_permutations,'method', project.stats.eeglab.ersp.method);
+            
+            pvals_raw_roi = pvals_raw(sel_roi_ch);
+            pvals_roi = mcorrect(pvals_raw_roi,  project.stats.eeglab.ersp.correction);
+            pvals = ones(size(pvals_raw));
+            pvals(sel_roi_ch) = pvals_roi;
+            
+            vmean2 = nan(2,length(pvals));
+            for ncs = 1:length(cell4stat)
+                sel_ind = comb_g(ncomb_g,ncs);
+                vmean = mean(group_spectra.band(nband).cell_spectra{sel_ind, nab},2);
+                if not(isempty(vmean))
+                    vmean2(ncs,:) = vmean;
+                    subplot(1, 4, ncs);
+                    if isempty(set_caxis)
+                        topoplot(vmean, spectra_sub.chanlocs);
+                    else
+                        topoplot(vmean, spectra_sub.chanlocs,'maplimits',set_caxis(nband,:));
+                    end
+                    title(groups(sel_ind))
+                    cbar;
+                    title('rel_power %')
+                end
+            end
+            
+            
+            if sum(isnan(pvals)) == 0
+                psig = pvals<project.stats.ersp.pvalue;
+                all_ch = {spectra_sub.chanlocs.labels};
+                sig_ch = all_ch(psig);
+                
+                differ = diff(vmean2,1)';
+                if sum(isnan(differ)) == 0
+                    subplot(1, 4, ncs+1);
+                    if isempty(set_caxis)
+                        topoplot(psig.*differ, spectra_sub.chanlocs);
+                    else
+                        topoplot(psig.*differ, spectra_sub.chanlocs,'maplimits',set_caxis(nband,:));
+                    end
+                    title({'significant differences',str_comp});
+                    
+                    cbar;
+                    title('delta %')
+                    
+                    subplot(1, 4, ncs+2);
+                    topoplot(psig, spectra_sub.chanlocs,'style','blank','emarker','r');
+                    title('different channels');
+                    
+                end
+            end
+            str_plot = [list_band_name{nband},'_', list_agebin_name{nab}, '_',str_comp];
+            suptitle2(str_plot);
+            
+            group_spectra.band(nband).age_bin(nab).comparison(ncomb_g).str_comp = str_comp;
+            group_spectra.band(nband).age_bin(nab).comparison(ncomb_g).sig_ch = sig_ch;
+            group_spectra.band(nband).age_bin(nab).comparison(ncomb_g).str_plot = str_plot;
+%             fprintf(fid5,'%s\n',str_plot);
+%             fprintf(fid5,[repmat('%s\t',1,length(sig_ch)),'\n'],sig_ch{:});
+%             
+            inputsf.plot_dir    = plot_dir_group_allroi;
+            inputsf.fig         = fig;
+            inputsf.name_embed  = 'group_spectra_map';
+            inputsf.suffix_plot = str_plot;
+            save_figures(inputsf,'res','-r100','exclude_format','svg');
+        end
+    end
+end
+
+
 
 save(file_outputcell,'group_spectra')
 

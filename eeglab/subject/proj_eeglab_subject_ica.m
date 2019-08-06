@@ -12,8 +12,14 @@ function EEG = proj_eeglab_subject_ica(project, varargin)
 				do_pca = project.ica.do_pca;
 			else
 				do_pca = 1;
-			end
+            end
 
+            if isfield(project.ica,'do_subsample')
+				do_subsample = project.ica.do_subsample;
+			else
+				do_subsample = 0;
+			end
+            
 			if isfield(project.ica,'ica_sr')
 				ica_sr = project.ica.ica_sr;
 			else
@@ -27,8 +33,9 @@ function EEG = proj_eeglab_subject_ica(project, varargin)
 			end
 
 		else
-				do_pca = 1;
+				do_pca = 0;
 				ica_sr = 128;
+                do_subsample = 0;
         ica_type = 'cudaica';
 		end
 
@@ -44,7 +51,7 @@ function EEG = proj_eeglab_subject_ica(project, varargin)
                     'get_filename_step',    ... 
                     'custom_input_folder',  ...
                     'custom_suffix' ...
-                    };
+                    }
 
                 if isempty(varargin{par+1})
                     continue;
@@ -70,7 +77,7 @@ function EEG = proj_eeglab_subject_ica(project, varargin)
         subj_name   = list_select_subjects{subj}; 
         inputfile   = proj_eeglab_subject_get_filename(project, subj_name, get_filename_step, 'custom_suffix', custom_suffix, 'custom_input_folder', custom_input_folder);
                      
-        [names{subj},ranks{subj},ica_types{subj},durations{subj}, EEG]         = eeglab_subject_ica(inputfile, project.paths.output_preprocessing, project.eegdata.eeg_channels_list, project.import.reference_channels, ica_type,do_pca,ica_sr);    
+        [names{subj},ranks{subj},ica_types{subj},durations{subj}, EEG]         = eeglab_subject_ica(inputfile, project.paths.output_preprocessing, project.eegdata.eeg_channels_list, project.import.reference_channels, ica_type,do_pca,ica_sr,do_subsample);    
    
     end
     

@@ -1,4 +1,4 @@
-function [name_noext, rr2,ica_type,duration, EEG] = eeglab_subject_ica(input_file_name, output_path, eeg_ch_list, ch_ref, ica_type, do_pca, ica_sr, varargin)
+function [name_noext, rr2,ica_type,duration, EEG] = eeglab_subject_ica(input_file_name, output_path, eeg_ch_list, ch_ref, ica_type, do_pca, ica_sr, do_subsample,varargin)
 %
 %    function EEG = eeglab_subject_ica(input_file_name, settings_path,  output_path, ica_type)%
 %    computes ica decompositions and saves the data with the decomposition
@@ -35,8 +35,13 @@ end
 
 try
     
+    % rimuovo la media da ogni canale
+    EEG = pop_loadset(input_file_name);    
+    mm = repmat(mean(EEG.data,2),1,EEG.pnts);    
+    EEG.data = EEG.data - mm;
     
-    EEG = pop_loadset(input_file_name);
+    
+    
     
     
     
@@ -89,10 +94,12 @@ try
         EEG = pop_runica_octave_matlab(EEG, 'icatype',ica_type,'chanind',eeg_ch_list,'options',{'extended' 1 'd' gpu_id });
         %         end
     else % se ho rango deficitario o non posso usare cudaica, allora uso binica/runica con sottocampionamento (pare che ica funzioni meglio), poi copio i pesi della scomposizione nei dati originali.
-        
-        EEG2 = pop_eegfiltnew( EEG,1, floor(ica_sr/2), [], 0, [], 0);
-        EEG2 = pop_resample( EEG2, ica_sr);
-        
+        if do_subsample
+            EEG2 = pop_eegfiltnew( EEG,1, floor(ica_sr/2), [], 0, [], 0);
+            EEG2 = pop_resample( EEG2, ica_sr);
+        else
+            EEG2 = EEG;
+        end
         
         if do_pca
             EEG2 = pop_runica_octave_matlab(EEG2, 'icatype',ica_type,'chanind',eeg_ch_list,'options',{'extended' 1 'pca' (rr2-1)});

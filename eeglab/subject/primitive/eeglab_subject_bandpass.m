@@ -141,7 +141,15 @@ function  EEG = eeglab_subject_bandpass(EEG, params)
             EEG2                          = pop_select(EEG,'channel',params.channels_list);
             EEG2                          = pop_eegfiltnew( EEG2,params.ff1, params.ff2, [], 0, [], 0);
             EEG.data(params.channels_list,:) = EEG2.data;
-        
+            
+            
+       case 'pop_eegfiltnew_14'
+           EEG2                          = pop_select(EEG,'channel',params.channels_list);
+           EEG2                          = pop_eegfiltnew( EEG2,'locutoff',params.ff1,'hicutoff' ,params.ff2);
+           EEG.data(params.channels_list,:) = EEG2.data;
+           
+           
+           
     %##################################################################################        
         % pop_eegfiltnew() - Filter data using Hamming windowed sinc FIR filter
         %

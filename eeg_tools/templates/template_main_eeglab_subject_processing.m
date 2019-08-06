@@ -66,7 +66,6 @@ stat_threshold                  = 0.05;
 electrode2inspect               = 'C4';
 save_figure                     = 0;
 
-
 try
     operations = {'do_epochs','do_microstates','do_import_collect', 'do_testart','do_preproc', 'do_ica' ,'do_reref','do_mark_trial', ...
         'do_factors',...

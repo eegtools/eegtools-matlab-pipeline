@@ -376,7 +376,9 @@ switch lower(g.icatype)
         if tmprank == size(tmpdata,1) | pca_opt
             % NOTE VERSION OF RUNICA WITH FIXED SEED WHICH MAKE IT REPRODUCIBLE
 % 22-6-2017 CLAUDIO CAMPUS & DAVIDE QUARONA
-            [EEG.icaweights,EEG.icasphere] = runica_fixed_seed( tmpdata, 'lrate', 0.001,  g.options{:} );
+%             [EEG.icaweights,EEG.icasphere] = runica_fixed_seed( tmpdata, 'lrate', 0.001,  g.options{:} );
+                  [EEG.icaweights,EEG.icasphere] = runica( tmpdata, 'lrate', 0.001,  g.options{:} );
+
         else 
             if nargin < 2
                 uilist = { { 'style' 'text' 'string' [ 'EEGLAB has detected that the rank of your data matrix' 10 ...

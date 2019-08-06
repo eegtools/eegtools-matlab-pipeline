@@ -79,206 +79,217 @@ for par=1:2:length(varargin)
 end
 
 if not(iscell(list_select_subjects)), list_select_subjects = {list_select_subjects}; end
-numsubj = length(list_select_subjects);
-% -------------------------------------------------------------------------------------------------------------------------------------
+if isempty(project.microstates.group_list)
+    project.microstates.group_list = project.subjects.group_names;
+end
+vec_select_groups  = find(ismember(project.subjects.group_names,  project.microstates.group_list));
 
-if not(isempty(project.microstates.cond_list))
-    tcl = length(project.microstates.cond_list);
-    for ncl = 1:tcl
-        current_cond_list = project.microstates.cond_list{ncl};
-        current_cond_name = project.microstates.cond_names{ncl};
+
+for ng = vec_select_groups
+    list_select_subjects_g = intersect(list_select_subjects,project.subjects.groups{ng});
+    if not(isempty(list_select_subjects_g))
         
-        [ALLEEG EEG CURRENTSET] = eeglab;
+        numsubj = length(list_select_subjects_g);
+        % -------------------------------------------------------------------------------------------------------------------------------------
         
-        for subj=1:numsubj
-            subj_name       = list_select_subjects{subj};
-            
-            eeg_input_path  = project.paths.output_epochs;
-            tc = length(current_cond_list);
-            
-            % ----------------------------------------------------------------------------------------------------------------------------
-            if not(isempty(current_cond_list))
-                for nc=1:tc
-                    cond_name                               = current_cond_list{nc};
-                    input_file_name                         = proj_eeglab_subject_get_filename(project, subj_name, get_filename_step, 'cond_name', cond_name, 'custom_suffix', custom_suffix, 'custom_input_folder', custom_input_folder);
-                    [input_path,input_name_noext,input_ext] = fileparts(input_file_name);
+        if not(isempty(project.microstates.cond_list))
+            tcl = length(project.microstates.cond_list);
+            for ncl = 1:tcl
+                current_cond_list = project.microstates.cond_list{ncl};
+                current_cond_name = project.microstates.cond_names{ncl};
+                
+                [ALLEEG EEG CURRENTSET] = eeglab;
+                
+                for subj=1:numsubj
+                    subj_name       = list_select_subjects_g{subj};
                     
-                    if exist(input_file_name, 'file')
-                        tmpEEG                 = pop_loadset(input_file_name);
-                        tmpEEG = pop_select(tmpEEG,'channel' ,1:project.eegdata.nch_eeg);
-                        tmpEEG = eeg_checkset(tmpEEG);
-                        ALLEEG = eeg_store(ALLEEG,tmpEEG, CURRENTSET);
+                    eeg_input_path  = project.paths.output_epochs;
+                    tc = length(current_cond_list);
+                    
+                    % ----------------------------------------------------------------------------------------------------------------------------
+                    if not(isempty(current_cond_list))
+                        for nc=1:tc
+                            cond_name                               = current_cond_list{nc};
+                            input_file_name                         = proj_eeglab_subject_get_filename(project, subj_name, get_filename_step, 'cond_name', cond_name, 'custom_suffix', custom_suffix, 'custom_input_folder', custom_input_folder);
+                            [input_path,input_name_noext,input_ext] = fileparts(input_file_name);
+                            
+                            if exist(input_file_name, 'file')
+                                tmpEEG                 = pop_loadset(input_file_name);
+                                tmpEEG = pop_select(tmpEEG,'channel' ,1:project.eegdata.nch_eeg);
+                                tmpEEG = eeg_checkset(tmpEEG);
+                                ALLEEG = eeg_store(ALLEEG,tmpEEG, CURRENTSET);
+                            end
+                        end
                     end
                 end
+                
+                times_ms = tmpEEG.times;
+                xmin_ms = tmpEEG.xmin;
+                xmax_ms = tmpEEG.xmax;
+                
+                
+                tset = length(ALLEEG);
+                % % % % end
+                eeglab redraw
+                
+                
+                % [EEG, ALLEEG, CURRENTSET, NewEEG] =....
+                %     pop_micro_selectdata( EEG, ALLEEG, ...
+                %                          'datatype', 'ERPavg', ...
+                %                          'avgref', 0, ...
+                %                          'normalise', 0,...
+                %                          'dataset_idx', 1:length(ALLEEG) );
+                
+                [EEG, ALLEEG, CURRENTSET, NewEEG] =....
+                    pop_micro_selectdata( EEG, ALLEEG, ...
+                    'datatype', project.microstates.micro_selectdata.datatype, ...
+                    'avgref', project.microstates.micro_selectdata.avgref, ...
+                    'normalise', project.microstates.micro_selectdata.normalise,...
+                    'dataset_idx', 1:length(ALLEEG) );
+                EEG.times = times_ms;
+                EEG.xmin = xmin_ms;
+                EEG.xmax = xmax_ms;
+                
+                
+                eeglab redraw
+                ind_ms_set = tset+1;
+                [ALLEEG EEG] = eeg_store(ALLEEG, NewEEG, ind_ms_set);
+                eeglab redraw
+                [ALLEEG EEG CURRENTSET] = pop_newset(ALLEEG, EEG, ind_ms_set,'overwrite','on','gui','off');
+                eeglab redraw
+                
+                % EEG = pop_micro_segment( EEG, ...
+                %                         'algorithm', 'taahc', ...
+                %                         'sorting', 'Global explained variance',...
+                %                         'normalise', 1, ...
+                %                         'Nmicrostates', 3:8,...
+                %                         'verbose', 1,...
+                %                         'determinism', 1,...
+                %                         'polarity', 1 );
+                EEG.times = times_ms;
+                EEG.xmin = xmin_ms;
+                EEG.xmax = xmax_ms;
+                
+                EEG = pop_micro_segment( EEG, ...
+                    'algorithm', project.microstates.micro_segment.algorithm, ...
+                    'sorting', project.microstates.micro_segment.sorting,...
+                    'normalise', project.microstates.micro_segment.normalise, ...
+                    'Nmicrostates', project.microstates.micro_segment.Nmicrostates,...
+                    'verbose', project.microstates.micro_segment.verbose,...
+                    'determinism', project.microstates.micro_segment.determinism,...
+                    'polarity', project.microstates.micro_segment.polarity );
+                
+                
+                [ALLEEG EEG] = eeg_store(ALLEEG, EEG, CURRENTSET);
+                
+                
+                % EEG = pop_micro_selectNmicro( EEG,...
+                %                             'Nmicro', 4 );
+                
+                EEG.times = times_ms;
+                EEG.xmin = xmin_ms;
+                EEG.xmax = xmax_ms;
+                
+                EEG = pop_micro_selectNmicro( EEG,...
+                    'Nmicro', project.microstates.selectNmicro.Nmicro );
+                
+                [ALLEEG EEG] = eeg_store(ALLEEG, EEG, CURRENTSET);
+                
+                
+                % EEG = pop_micro_fit( EEG,...
+                %                     'polarity', 0 );
+                
+                EEG.times = times_ms;
+                EEG.xmin = xmin_ms;
+                EEG.xmax = xmax_ms;
+                
+                EEG = pop_micro_fit( EEG,...
+                    'polarity', project.microstates.micro_fit.polarity );
+                
+                [ALLEEG EEG] = eeg_store(ALLEEG, EEG, CURRENTSET);
+                
+                
+                % EEG = pop_micro_smooth( EEG, ...
+                %                         'label_type', 'segmentation',...
+                %                         'smooth_type', 'reject segments',...
+                %                         'minTime', 30,...
+                %                         'polarity', 1 );
+                
+                EEG.times = times_ms;
+                EEG.xmin = xmin_ms;
+                EEG.xmax = xmax_ms;
+                
+                EEG = pop_micro_smooth( EEG, ...
+                    'label_type', project.microstates.micro_smooth.label_type,...
+                    'smooth_type', project.microstates.micro_smooth.smooth_type,...
+                    'minTime', project.microstates.micro_smooth.minTime,...
+                    'polarity', project.microstates.micro_smooth.polarity );
+                
+                
+                [ALLEEG EEG] = eeg_store(ALLEEG, EEG, CURRENTSET);
+                
+                % EEG = pop_micro_stats( EEG,...
+                %                        'label_type', 'segmentation',...
+                %                        'polarity', 0 );
+                
+                EEG.times = times_ms;
+                EEG.xmin = xmin_ms;
+                EEG.xmax = xmax_ms;
+                
+                EEG = pop_micro_stats( EEG,...
+                    'label_type', project.microstates.micro_stats.label_type,...
+                    'polarity', project.microstates.micro_stats.polarity );
+                
+                [ALLEEG EEG] = eeg_store(ALLEEG, EEG, CURRENTSET);
+                
+                
+                fig=figure( 'color', 'w', 'Visible', 'off');
+                % MicroPlotSegments( EEG, ...
+                %                    'label_type', 'segmentation',...
+                %                    'plotsegnos', 'all',...
+                %                    'plot_time', [],...
+                %                    'plottopos', 1 );
+                
+                
+                EEG.times = times_ms;
+                EEG.xmin = xmin_ms;
+                EEG.xmax = xmax_ms;
+                
+                MicroPlotSegments( EEG, ...
+                    'label_type', project.microstates.MicroPlotSegments.label_type,...
+                    'plotsegnos', project.microstates.MicroPlotSegments.plotsegnos,...
+                    'plot_time', project.microstates.MicroPlotSegments.plot_time,...
+                    'plottopos', project.microstates.MicroPlotSegments.plottopos );
+                
+                handles=findobj(fig,'Type','axes');
+                axes(handles((project.microstates.selectNmicro.Nmicro+1)))
+                ylim manual
+                ylim(project.microstates.MicroPlotSegments.plot_ylim)
+                
+                str =  ['microstates','_',project.microstates.suffix];
+                str2 = [str,'_',project.subjects.group_names{ng},'_',current_cond_name];
+                
+                suptitle(str2)
+                
+                input_save_fig.plot_dir               = plot_dir;
+                input_save_fig.fig                    = fig;
+                input_save_fig.name_embed             = str;
+                input_save_fig.suffix_plot            = current_cond_name;
+                save_figures( input_save_fig , 'renderer', 'opengl');
+                
+                EEG.filename = str2;
+                EEG.filepath = eeg_input_path;
+                
+                EEG.times = times_ms;
+                EEG.xmin = xmin_ms;
+                EEG.xmax = xmax_ms;
+                
+                EEG = pop_saveset( EEG, 'filename',[str2,'.set'],'filepath',EEG.filepath);
             end
         end
-        
-        times_ms = tmpEEG.times;
-        xmin_ms = tmpEEG.xmin;
-        xmax_ms = tmpEEG.xmax;
-        
-        
-        tset = length(ALLEEG);
-        % % % % end
-        eeglab redraw
-        
-        
-        % [EEG, ALLEEG, CURRENTSET, NewEEG] =....
-        %     pop_micro_selectdata( EEG, ALLEEG, ...
-        %                          'datatype', 'ERPavg', ...
-        %                          'avgref', 0, ...
-        %                          'normalise', 0,...
-        %                          'dataset_idx', 1:length(ALLEEG) );
-        
-        [EEG, ALLEEG, CURRENTSET, NewEEG] =....
-            pop_micro_selectdata( EEG, ALLEEG, ...
-            'datatype', project.microstates.micro_selectdata.datatype, ...
-            'avgref', project.microstates.micro_selectdata.avgref, ...
-            'normalise', project.microstates.micro_selectdata.normalise,...
-            'dataset_idx', 1:length(ALLEEG) );
-        EEG.times = times_ms;
-        EEG.xmin = xmin_ms;
-        EEG.xmax = xmax_ms;
-        
-        
-        eeglab redraw
-        ind_ms_set = tset+1;
-        [ALLEEG EEG] = eeg_store(ALLEEG, NewEEG, ind_ms_set);
-        eeglab redraw
-        [ALLEEG EEG CURRENTSET] = pop_newset(ALLEEG, EEG, ind_ms_set,'overwrite','on','gui','off');
-        eeglab redraw
-        
-        % EEG = pop_micro_segment( EEG, ...
-        %                         'algorithm', 'taahc', ...
-        %                         'sorting', 'Global explained variance',...
-        %                         'normalise', 1, ...
-        %                         'Nmicrostates', 3:8,...
-        %                         'verbose', 1,...
-        %                         'determinism', 1,...
-        %                         'polarity', 1 );
-        EEG.times = times_ms;
-        EEG.xmin = xmin_ms;
-        EEG.xmax = xmax_ms;
-        
-        EEG = pop_micro_segment( EEG, ...
-            'algorithm', project.microstates.micro_segment.algorithm, ...
-            'sorting', project.microstates.micro_segment.sorting,...
-            'normalise', project.microstates.micro_segment.normalise, ...
-            'Nmicrostates', project.microstates.micro_segment.Nmicrostates,...
-            'verbose', project.microstates.micro_segment.verbose,...
-            'determinism', project.microstates.micro_segment.determinism,...
-            'polarity', project.microstates.micro_segment.polarity );
-        
-        
-        [ALLEEG EEG] = eeg_store(ALLEEG, EEG, CURRENTSET);
-        
-        
-        % EEG = pop_micro_selectNmicro( EEG,...
-        %                             'Nmicro', 4 );
-        
-        EEG.times = times_ms;
-        EEG.xmin = xmin_ms;
-        EEG.xmax = xmax_ms;
-        
-        EEG = pop_micro_selectNmicro( EEG,...
-            'Nmicro', project.microstates.selectNmicro.Nmicro );
-        
-        [ALLEEG EEG] = eeg_store(ALLEEG, EEG, CURRENTSET);
-        
-        
-        % EEG = pop_micro_fit( EEG,...
-        %                     'polarity', 0 );
-        
-        EEG.times = times_ms;
-        EEG.xmin = xmin_ms;
-        EEG.xmax = xmax_ms;
-        
-        EEG = pop_micro_fit( EEG,...
-            'polarity', project.microstates.micro_fit.polarity );
-        
-        [ALLEEG EEG] = eeg_store(ALLEEG, EEG, CURRENTSET);
-        
-        
-        % EEG = pop_micro_smooth( EEG, ...
-        %                         'label_type', 'segmentation',...
-        %                         'smooth_type', 'reject segments',...
-        %                         'minTime', 30,...
-        %                         'polarity', 1 );
-        
-        EEG.times = times_ms;
-        EEG.xmin = xmin_ms;
-        EEG.xmax = xmax_ms;
-        
-        EEG = pop_micro_smooth( EEG, ...
-            'label_type', project.microstates.micro_smooth.label_type,...
-            'smooth_type', project.microstates.micro_smooth.smooth_type,...
-            'minTime', project.microstates.micro_smooth.minTime,...
-            'polarity', project.microstates.micro_smooth.polarity );
-        
-        
-        [ALLEEG EEG] = eeg_store(ALLEEG, EEG, CURRENTSET);
-        
-        % EEG = pop_micro_stats( EEG,...
-        %                        'label_type', 'segmentation',...
-        %                        'polarity', 0 );
-        
-        EEG.times = times_ms;
-        EEG.xmin = xmin_ms;
-        EEG.xmax = xmax_ms;
-        
-        EEG = pop_micro_stats( EEG,...
-            'label_type', project.microstates.micro_stats.label_type,...
-            'polarity', project.microstates.micro_stats.polarity );
-        
-        [ALLEEG EEG] = eeg_store(ALLEEG, EEG, CURRENTSET);
-        
-        
-        fig=figure( 'color', 'w', 'Visible', 'off');
-        % MicroPlotSegments( EEG, ...
-        %                    'label_type', 'segmentation',...
-        %                    'plotsegnos', 'all',...
-        %                    'plot_time', [],...
-        %                    'plottopos', 1 );
-        
-        
-        EEG.times = times_ms;
-        EEG.xmin = xmin_ms;
-        EEG.xmax = xmax_ms;
-        
-        MicroPlotSegments( EEG, ...
-            'label_type', project.microstates.MicroPlotSegments.label_type,...
-            'plotsegnos', project.microstates.MicroPlotSegments.plotsegnos,...
-            'plot_time', project.microstates.MicroPlotSegments.plot_time,...
-            'plottopos', project.microstates.MicroPlotSegments.plottopos );
-        
-        handles=findobj(fig,'Type','axes');
-        axes(handles((project.microstates.selectNmicro.Nmicro+1)))
-        ylim manual
-        ylim(project.microstates.MicroPlotSegments.plot_ylim)
-        
-        str =  ['microstates','_',project.microstates.suffix];
-        str2 = [str,'_',current_cond_name];
-        
-        suptitle(str2)
-        
-        input_save_fig.plot_dir               = plot_dir;
-        input_save_fig.fig                    = fig;
-        input_save_fig.name_embed             = str;
-        input_save_fig.suffix_plot            = current_cond_name;
-        save_figures( input_save_fig , 'renderer', 'opengl');
-        
-        EEG.filename = str2;
-        EEG.filepath = eeg_input_path;
-        
-        EEG.times = times_ms;
-        EEG.xmin = xmin_ms;
-        EEG.xmax = xmax_ms;
-        
-        EEG = pop_saveset( EEG, 'filename',[str2,'.set'],'filepath',EEG.filepath);
     end
 end
 end
-
 % ====================================================================================================
 % ====================================================================================================
 % CHANGE LOG

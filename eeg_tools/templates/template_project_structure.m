@@ -403,6 +403,110 @@ project.preproc.montage_list = {...
 };
 
 
+% CALCULATE SUBJECT SPECTRA
+
+project.preproc.subject_spectra.do_group             = 'off';
+
+project.preproc.subject_spectra.freqrange            = [1,13];
+project.preproc.subject_spectra.freq                 = 1:10;
+project.preproc.subject_spectra.plotchans            = 1:tot_ch;
+% project.preproc.subject_spectra.band_analysis.lim   = [0, 2; 2, 4; 4, 6; 6, 8;8, 10; 10, 12];
+% project.preproc.subject_spectra.band_analysis.name   = {'delta1', 'delta2', 'theta1', 'theta2', 'alpha1', 'alpha2'};
+% project.preproc.subject_spectra.band_analysis.caxis   = [-30, 30; -10, 10; -5, 5;-5, 5; -7, 7; -3, 3];
+% 
+project.preproc.subject_spectra.band_analysis.lim   = [0, 2; 2, 4; 4, 8; 8, 10; 10, 12];
+project.preproc.subject_spectra.band_analysis.name   = {'delta1', 'delta2', 'theta', 'alpha1', 'alpha2'};
+project.preproc.subject_spectra.band_analysis.caxis   = [-30, 30; -10, 10; -5, 5; -7, 7; -3, 3];
+
+
+% project.preproc.subject_spectra.roi_analysis.ch     =  {...
+%     {'O1','Oz','O2'},.... 'Occipital'
+%     {'T7'},...'T7'
+%     {'T8'},...'T8'
+%     {'POz','Pz','CPz'},...'Dorsal'
+%     {'C3', 'C4'}, ... 'Tactile'
+%     {'PO7','P5','P9'},... 'Left_ventral'
+%     {'PO8','P6','P10'},...'Right_ventral'
+%     {'Cz','C1','C2'},... 'Central_dorsal'
+%     {'FCz','FC1','FC2'},... 'SMA'
+%     {'Fz','F1','F2'},... 'Frontal_dorsal'
+%     {'F5','F7','FT7'},...'Left_FT'
+%     {'F6','F8','FT8'}...'Right_FT'
+%     };
+% project.preproc.subject_spectra.roi_analysis.name   =  {...
+%     'Occipital',...
+%     'T7',...
+%     'T8',...
+%     'Dorsal',...
+%     'Tactile',...
+%     'Left_ventral',...
+%     'Right_ventral',...    
+%     'Central_dorsal',...
+%     'SMA',...
+%     'Frontal_dorsal',...
+%     'Left_FT',...
+%     'Right_FT'};
+
+
+
+project.preproc.subject_spectra.roi_analysis.ch     =  {...
+    {'O1','Oz','O2'},.... 'Occipital'
+    {'T7'},...'T7'
+    {'T8'},...'T8'
+    {'POz','Pz','CPz'},...'Dorsal'
+    {'C3', 'C4'}, ... 'Tactile'
+    {'PO7','P5','P9'},... 'Left_ventral'
+    {'PO8','P6','P10'},...'Right_ventral'
+    {'Cz','C1','C2'},... 'Central_dorsal'
+    {'FCz','FC1','FC2'},... 'SMA'
+    {'Fz','F1','F2'},... 'Frontal_dorsal'
+    ...{'F5','F7','FT7'},...'Left_FT'
+    ...{'F6','F8','FT8'}...'Right_FT'
+    };
+project.preproc.subject_spectra.roi_analysis.name   =  {...
+    'Occipital',...
+    'T7',...
+    'T8',...
+    'Dorsal',...
+    'Tactile',...
+    'Left_ventral',...
+    'Right_ventral',...    
+    'Central_dorsal',...
+    'SMA',...
+    'Frontal_dorsal',...
+    ...'Left_FT',...
+    ...'Right_FT'...
+    };
+
+
+
+
+
+% project.preproc.subject_spectra.agebin.lim   = [0, 2; 2, 5; 5, 11];
+% project.preproc.subject_spectra.agebin.name   = {'[0-2)', '[2-5)', '[5-11)'};
+
+% project.preproc.subject_spectra.agebin.lim   = [0,3; 3,6; 6,9; 9,11; ];
+% project.preproc.subject_spectra.agebin.name   = {'[0-3)', '[3-6)','[6-9)','[9-11)'};
+
+% project.preproc.subject_spectra.agebin.lim   = [0,2; 2,4; 4,6; 6,8; 8,11 ];
+% project.preproc.subject_spectra.agebin.name   = {'[0-2)', '[2-4)','[4-6)','[6-8)','[8-11)'};
+
+project.preproc.subject_spectra.agebin.lim   = [0,3; 3,6; 6,11 ];
+project.preproc.subject_spectra.agebin.name   = {'[0-3)', '[3-6)','[6-11)'};
+
+
+% project.preproc.subject_spectra.group        = {};
+
+
+project.preproc.subject_spectra.scale           = 'raw'; %'raw'|'log'
+project.preproc.subject_spectra.plot_single_subject           = 'on'; %'off'|'on'
+
+project.preproc.subject_spectra.replot_folder           = 'C:\projects\mondino\results\subject_spectra_15-Apr-2019-12-48-09_raw\plot'; 
+project.preproc.subject_spectra.analysis_name           = 'vexclin_vex0_vex_2'; 
+
+
+
+
                                                                                                
 % INSERT BLOCK MARKERS (only if
 % project.preproc.insert_end_trial.end_trial_marker_type is non empty)
@@ -455,7 +559,9 @@ project.preproc.insert_end_baseline.delay.s                 = [0];              
 %% ICA
 project.ica.ica_type = 'runica';%'binica';
 project.ica.do_pca = 0;
+project.ica.do_subsample = 0;
 project.ica.ica_sr = 125; % deve essere almeno il doppio della max frequenza che si vuole scomporre con l'ica ma e' meglio che sia un divisore della frequenza di campionamento iniziale
+
 % the latency information is stored internally in data samples (points or EEGLAB 'pnts')
 % relative to the beginning of the continuous data matrix (EEG.data).
 
@@ -568,31 +674,48 @@ project.subjects.baseline_file_interval_s   = [];
 %% allow the possibility to define a different reference condition for each band
 % project.subjects.narrowband_suffix_cell ={'baseline','ao','aois'}; 
 
-project.subjects.data(1)  = struct('name', 'CC_01_vittoria', 'group', 'CC', 'age', 13, 'gender', 'f', 'handedness', 'r', 'bad_ch', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
-project.subjects.data(2)  = struct('name', 'CC_02_fabio',    'group', 'CC', 'age', 12, 'gender', 'm', 'handedness', 'r', 'bad_ch', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
-project.subjects.data(3)  = struct('name', 'CC_03_anna',     'group', 'CC', 'age', 12, 'gender', 'f', 'handedness', 'r', 'bad_ch', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
-project.subjects.data(4)  = struct('name', 'CC_04_giacomo',  'group', 'CC', 'age', 8,  'gender', 'm', 'handedness', 'l', 'bad_ch', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
-project.subjects.data(5)  = struct('name', 'CC_05_stefano',  'group', 'CC', 'age', 9,  'gender', 'm', 'handedness', 'r', 'bad_ch', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
-project.subjects.data(6)  = struct('name', 'CC_06_giovanni', 'group', 'CC', 'age', 6,  'gender', 'm', 'handedness', 'r', 'bad_ch', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
-project.subjects.data(7)  = struct('name', 'CC_07_davide',   'group', 'CC', 'age', 11, 'gender', 'm', 'handedness', 'l', 'bad_ch', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
-project.subjects.data(8)  = struct('name', 'CC_08_jonathan', 'group', 'CC', 'age', 8,  'gender', 'm', 'handedness', 'r', 'bad_ch', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
-project.subjects.data(9)  = struct('name', 'CC_09_antonella','group', 'CC', 'age', 9,  'gender', 'f', 'handedness', 'r', 'bad_ch', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
-project.subjects.data(10) = struct('name', 'CC_10_chiara',   'group', 'CC', 'age', 11, 'gender', 'f', 'handedness', 'r', 'bad_ch', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
+project.subjects.data(1)  = struct('name', 'CC_01_vittoria', 'group', 'CC', 'age', 13, 'gender', 'f', 'handedness', 'r', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
+project.subjects.data(2)  = struct('name', 'CC_02_fabio',    'group', 'CC', 'age', 12, 'gender', 'm', 'handedness', 'r', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
+project.subjects.data(3)  = struct('name', 'CC_03_anna',     'group', 'CC', 'age', 12, 'gender', 'f', 'handedness', 'r', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
+project.subjects.data(4)  = struct('name', 'CC_04_giacomo',  'group', 'CC', 'age', 8,  'gender', 'm', 'handedness', 'l', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
+project.subjects.data(5)  = struct('name', 'CC_05_stefano',  'group', 'CC', 'age', 9,  'gender', 'm', 'handedness', 'r', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
+project.subjects.data(6)  = struct('name', 'CC_06_giovanni', 'group', 'CC', 'age', 6,  'gender', 'm', 'handedness', 'r', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
+project.subjects.data(7)  = struct('name', 'CC_07_davide',   'group', 'CC', 'age', 11, 'gender', 'm', 'handedness', 'l', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
+project.subjects.data(8)  = struct('name', 'CC_08_jonathan', 'group', 'CC', 'age', 8,  'gender', 'm', 'handedness', 'r', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
+project.subjects.data(9)  = struct('name', 'CC_09_antonella','group', 'CC', 'age', 9,  'gender', 'f', 'handedness', 'r', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
+project.subjects.data(10) = struct('name', 'CC_10_chiara',   'group', 'CC', 'age', 11, 'gender', 'f', 'handedness', 'r', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
 
 
-project.subjects.data(11) = struct('name', 'CP_01_riccardo', 'group', 'CP', 'age', 6,  'gender', 'm', 'handedness', 'l', 'bad_ch', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
-project.subjects.data(12) = struct('name', 'CP_02_ester',    'group', 'CP', 'age', 8,  'gender', 'f', 'handedness', 'l', 'bad_ch', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
-project.subjects.data(13) = struct('name', 'CP_03_sara',     'group', 'CP', 'age', 11, 'gender', 'f', 'handedness', 'r', 'bad_ch', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
-project.subjects.data(14) = struct('name', 'CP_04_matteo',   'group', 'CP', 'age', 10, 'gender', 'm', 'handedness', 'l', 'bad_ch', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
-project.subjects.data(15) = struct('name', 'CP_05_gregorio', 'group', 'CP', 'age', 6,  'gender', 'm', 'handedness', 'r', 'bad_ch', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
-project.subjects.data(16) = struct('name', 'CP_06_fernando', 'group', 'CP', 'age', 8,  'gender', 'm', 'handedness', 'l', 'bad_ch', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
-project.subjects.data(17) = struct('name', 'CP_07_roberta',  'group', 'CP', 'age', 9,  'gender', 'f', 'handedness', 'l', 'bad_ch', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
-project.subjects.data(18) = struct('name', 'CP_08_mattia',   'group', 'CP', 'age', 7,  'gender', 'm', 'handedness', 'r', 'bad_ch', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
-project.subjects.data(19) = struct('name', 'CP_09_alessia',  'group', 'CP', 'age', 10, 'gender', 'f', 'handedness', 'l', 'bad_ch', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
-project.subjects.data(20) = struct('name', 'CP_10_livia',    'group', 'CP', 'age', 10, 'gender', 'm', 'handedness', 'l', 'bad_ch', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
+project.subjects.data(11) = struct('name', 'CP_01_riccardo', 'group', 'CP', 'age', 6,  'gender', 'm', 'handedness', 'l', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
+project.subjects.data(12) = struct('name', 'CP_02_ester',    'group', 'CP', 'age', 8,  'gender', 'f', 'handedness', 'l', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
+project.subjects.data(13) = struct('name', 'CP_03_sara',     'group', 'CP', 'age', 11, 'gender', 'f', 'handedness', 'r', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
+project.subjects.data(14) = struct('name', 'CP_04_matteo',   'group', 'CP', 'age', 10, 'gender', 'm', 'handedness', 'l', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
+project.subjects.data(15) = struct('name', 'CP_05_gregorio', 'group', 'CP', 'age', 6,  'gender', 'm', 'handedness', 'r', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
+project.subjects.data(16) = struct('name', 'CP_06_fernando', 'group', 'CP', 'age', 8,  'gender', 'm', 'handedness', 'l', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
+project.subjects.data(17) = struct('name', 'CP_07_roberta',  'group', 'CP', 'age', 9,  'gender', 'f', 'handedness', 'l', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
+project.subjects.data(18) = struct('name', 'CP_08_mattia',   'group', 'CP', 'age', 7,  'gender', 'm', 'handedness', 'r', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
+project.subjects.data(19) = struct('name', 'CP_09_alessia',  'group', 'CP', 'age', 10, 'gender', 'f', 'handedness', 'l', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
+project.subjects.data(20) = struct('name', 'CP_10_livia',    'group', 'CP', 'age', 10, 'gender', 'm', 'handedness', 'l', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
 
+
+% bad segments (begin and end in sec) to be removed and interpolated (visual inspection, no asr) in the preprocessing (do_preproc)
+project.subjects.data(16).bad_segm    = ...
+{
+    [...
+    216157  216955;... 
+    216157  216955;...
+    218155  218959; ...
+    ]
+};
+
+
+% bad channels to be removed and interpolated (visual inspection, no asr) in the preprocessing (do_preproc)
 project.subjects.data(16).bad_ch    = {'P1'};
 project.subjects.data(6).bad_ch     = {'PO3'};
+
+% bad independent components to be removed in the preprocessing (do_remove_ica)
+project.subjects.data(16).bad_ic    = {1,2,5};
+project.subjects.data(6).bad_ic     = {1:3};
 
 
 ...project.subjects.data(1).frequency_bands_list = {[4,8];[5,9];[14,20];[20,32]};
@@ -624,6 +747,9 @@ project.subjects.conditions_behavioral_data(2) =  struct('name', 'RT_RATIO', 'da
                                 
                                 
 %% MICORSTATES
+
+project.microstates.group_list = { 'AS', 'AEB'};
+
 project.microstates.suffix = 'controlli';
 
 project.microstates.cond_list = {{'s-s2-1sc-1tc','s-s2-1sc-1tl','s-s2-1sl-1tc','s-s2-1sl-1tl'};... % condizioni epocate dall'epoching
@@ -661,6 +787,9 @@ project.microstates.MicroPlotSegments.label_type ='segmentation';
 project.microstates.MicroPlotSegments.plotsegnos ='all';
 project.microstates.MicroPlotSegments.plot_time =[];
 project.microstates.MicroPlotSegments.plottopos =1;
+project.microstates.MicroPlotSegments.plot_ylim = [-1,1];
+
+
                      
 
 %% ======================================================================================================

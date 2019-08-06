@@ -79,7 +79,7 @@ if lsv
         
             if curve(end) == 1 && not(isempty((ii)))
                 if (length(output) - ii(end)) >= min_duration
-                    ff = [ff;length(output)];
+                    ff = [ff,length(output)];
                 else
                     ii = ii(1:(end-1));
                 end
