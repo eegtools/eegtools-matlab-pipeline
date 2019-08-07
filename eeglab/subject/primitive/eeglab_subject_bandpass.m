@@ -150,7 +150,9 @@ function  EEG = eeglab_subject_bandpass(EEG, params)
            
        case 'pop_eegfilt'
            EEG2                          = pop_select(EEG,'channel',params.channels_list);
-           EEG2                          = pop_eegfilt( EEG2,params.ff1, params.ff2);
+%            EEG2                          = pop_eegfilt( EEG2,params.ff1, params.ff2);
+           EEG2                          = pop_eegfilt( EEG2,params.ff1, 0);
+           EEG2                          = pop_eegfilt( EEG2,0, params.ff2);
            EEG.data(params.channels_list,:) = EEG2.data;
            
     %##################################################################################        
@@ -224,7 +226,16 @@ function  EEG = eeglab_subject_bandpass(EEG, params)
         % EEGOUT      - (filtered) output dataset
         %
         case 'pop_basicfilter'
-           EEG = pop_basicfilter( EEG, params.channels_list,params.ff1, params.ff2, 2, 'butter', 0, [] );
+%            EEG = pop_basicfilter( EEG, params.channels_list,params.ff1, params.ff2, 2, 'butter', 0, [] );
+            EEG = pop_basicfilter( EEG, params.channels_list, ...
+                'Boundary', 'boundary',...
+                'Cutoff', [params.ff1,params.ff2],....
+                'Design', 'butter',...
+                'Filter', 'bandpass'...
+                ...'Order', 2 ...
+                );
+ 
+
            EEG = eeg_checkset( EEG );
         otherwise % if is empty, use the default
             disp('Please select a valid filter!')

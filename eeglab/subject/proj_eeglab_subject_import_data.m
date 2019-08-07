@@ -61,7 +61,7 @@ for subj=1:numsubj
     input_file_name         = proj_eeglab_subject_get_filename(project, subj_name, get_filename_step, 'custom_suffix', custom_suffix, 'custom_input_folder', custom_input_folder);
     [path,name_noext,ext]   = fileparts(input_file_name);
     
-    
+    disp(input_file_name);
     
     switch project.import.acquisition_system
         
