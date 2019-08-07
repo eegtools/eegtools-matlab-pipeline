@@ -103,8 +103,8 @@ project.task.events.import_marker                   = [{'1' '2' '3' '4' '5' '6' 
 % input
 project.import.acquisition_system       = 'BIOSEMI';                    % D1:   EEG hardware type: BIOSEMI | BRAINAMP
 project.import.original_data_extension  = 'bdf';                        % D2:   original data file extension BDF | vhdr
-project.import.original_data_folder     = 'raw_observation';            % D3:   original data file subfolder
-project.import.original_data_suffix     = '_obs';                       % D4:   string after subject name in original EEG file name....often empty
+project.import.original_data_folder     = '';            % D3:   original data file subfolder
+project.import.original_data_suffix     = '';                       % D4:   string after subject name in original EEG file name....often empty
 project.import.original_data_prefix     = '';                           % D5:   string before subject name in original EEG file name....often empty
 
 
@@ -124,14 +124,16 @@ project.import.emg_output_postfix       = [];                  			% D8:   string
 project.import.reference_channels       = {'CAR'};                      % D9:   list of electrodes to be used as reference: []: no referencing, {'CAR'}: CAR ref, {'el1', 'el2'}: used those electrodes
 
 % D10:   list of electrodes to transform
-project.import.ch2transform(1)          = struct('type', 'emg' , 'ch1', 28,'ch2', 32, 'new_label', 'bAPB');         ... emg bipolar                   
-project.import.ch2transform(2)          = struct('type', 'emg' , 'ch1', 43,'ch2', [], 'new_label', 'APB2');         ... emg monopolar
-project.import.ch2transform(3)          = struct('type', []    , 'ch1', 7,'ch2' , [], 'new_label', []);             ... discarded 
-project.import.ch2transform(4)          = struct('type', 'eog' , 'ch1', 53,'ch2', 54, 'new_label', 'hEOG');         ... eog bipolar
-project.import.ch2transform(5)          = struct('type', 'eog' , 'ch1', 55,'ch2', [], 'new_label', 'vEOG');         ... eog monopolar
+project.import.ch2transform            = []; %no channel transformation
+
+% project.import.ch2transform(1)          = struct('type', 'emg' , 'ch1', 28,'ch2', 32, 'new_label', 'bAPB');         ... emg bipolar                   
+% project.import.ch2transform(2)          = struct('type', 'emg' , 'ch1', 43,'ch2', [], 'new_label', 'APB2');         ... emg monopolar
+% project.import.ch2transform(3)          = struct('type', []    , 'ch1', 7,'ch2' , [], 'new_label', []);             ... discarded 
+% project.import.ch2transform(4)          = struct('type', 'eog' , 'ch1', 53,'ch2', 54, 'new_label', 'hEOG');         ... eog bipolar
+% project.import.ch2transform(5)          = struct('type', 'eog' , 'ch1', 55,'ch2', [], 'new_label', 'vEOG');         ... eog monopolar
 
 % D11:  list of trigger marker to import. can be a cel array, or a string with these values: 'all', 'stimuli','responses'
-project.import.valid_marker             = {'S1' 'S2' 'S3' 'S4' 'S5' 'S 16' 'S 17' 'S 19' 'S 19' 'S 20' 'S 21' 'S 48' 'S 49' 'S 50' 'S 51' 'S 52' 'S 53' 'S 80' 'S 81' 'S 82' 'S 83' 'S 84' 'S 85' };  
+project.import.valid_marker             = 'all';  
 
 % montaggio standard per uniformare i file edf (e.g esportati dalla clinica
 % con operatori creativi) in modo da avere tra file diversi gli stessi
@@ -403,106 +405,6 @@ project.preproc.montage_list = {...
 };
 
 
-% CALCULATE SUBJECT SPECTRA
-
-project.preproc.subject_spectra.do_group             = 'off';
-
-project.preproc.subject_spectra.freqrange            = [1,13];
-project.preproc.subject_spectra.freq                 = 1:10;
-project.preproc.subject_spectra.plotchans            = 1:tot_ch;
-% project.preproc.subject_spectra.band_analysis.lim   = [0, 2; 2, 4; 4, 6; 6, 8;8, 10; 10, 12];
-% project.preproc.subject_spectra.band_analysis.name   = {'delta1', 'delta2', 'theta1', 'theta2', 'alpha1', 'alpha2'};
-% project.preproc.subject_spectra.band_analysis.caxis   = [-30, 30; -10, 10; -5, 5;-5, 5; -7, 7; -3, 3];
-% 
-project.preproc.subject_spectra.band_analysis.lim   = [0, 2; 2, 4; 4, 8; 8, 10; 10, 12];
-project.preproc.subject_spectra.band_analysis.name   = {'delta1', 'delta2', 'theta', 'alpha1', 'alpha2'};
-project.preproc.subject_spectra.band_analysis.caxis   = [-30, 30; -10, 10; -5, 5; -7, 7; -3, 3];
-
-
-% project.preproc.subject_spectra.roi_analysis.ch     =  {...
-%     {'O1','Oz','O2'},.... 'Occipital'
-%     {'T7'},...'T7'
-%     {'T8'},...'T8'
-%     {'POz','Pz','CPz'},...'Dorsal'
-%     {'C3', 'C4'}, ... 'Tactile'
-%     {'PO7','P5','P9'},... 'Left_ventral'
-%     {'PO8','P6','P10'},...'Right_ventral'
-%     {'Cz','C1','C2'},... 'Central_dorsal'
-%     {'FCz','FC1','FC2'},... 'SMA'
-%     {'Fz','F1','F2'},... 'Frontal_dorsal'
-%     {'F5','F7','FT7'},...'Left_FT'
-%     {'F6','F8','FT8'}...'Right_FT'
-%     };
-% project.preproc.subject_spectra.roi_analysis.name   =  {...
-%     'Occipital',...
-%     'T7',...
-%     'T8',...
-%     'Dorsal',...
-%     'Tactile',...
-%     'Left_ventral',...
-%     'Right_ventral',...    
-%     'Central_dorsal',...
-%     'SMA',...
-%     'Frontal_dorsal',...
-%     'Left_FT',...
-%     'Right_FT'};
-
-
-
-project.preproc.subject_spectra.roi_analysis.ch     =  {...
-    {'O1','Oz','O2'},.... 'Occipital'
-    {'T7'},...'T7'
-    {'T8'},...'T8'
-    {'POz','Pz','CPz'},...'Dorsal'
-    {'C3', 'C4'}, ... 'Tactile'
-    {'PO7','P5','P9'},... 'Left_ventral'
-    {'PO8','P6','P10'},...'Right_ventral'
-    {'Cz','C1','C2'},... 'Central_dorsal'
-    {'FCz','FC1','FC2'},... 'SMA'
-    {'Fz','F1','F2'},... 'Frontal_dorsal'
-    ...{'F5','F7','FT7'},...'Left_FT'
-    ...{'F6','F8','FT8'}...'Right_FT'
-    };
-project.preproc.subject_spectra.roi_analysis.name   =  {...
-    'Occipital',...
-    'T7',...
-    'T8',...
-    'Dorsal',...
-    'Tactile',...
-    'Left_ventral',...
-    'Right_ventral',...    
-    'Central_dorsal',...
-    'SMA',...
-    'Frontal_dorsal',...
-    ...'Left_FT',...
-    ...'Right_FT'...
-    };
-
-
-
-
-
-% project.preproc.subject_spectra.agebin.lim   = [0, 2; 2, 5; 5, 11];
-% project.preproc.subject_spectra.agebin.name   = {'[0-2)', '[2-5)', '[5-11)'};
-
-% project.preproc.subject_spectra.agebin.lim   = [0,3; 3,6; 6,9; 9,11; ];
-% project.preproc.subject_spectra.agebin.name   = {'[0-3)', '[3-6)','[6-9)','[9-11)'};
-
-% project.preproc.subject_spectra.agebin.lim   = [0,2; 2,4; 4,6; 6,8; 8,11 ];
-% project.preproc.subject_spectra.agebin.name   = {'[0-2)', '[2-4)','[4-6)','[6-8)','[8-11)'};
-
-project.preproc.subject_spectra.agebin.lim   = [0,3; 3,6; 6,11 ];
-project.preproc.subject_spectra.agebin.name   = {'[0-3)', '[3-6)','[6-11)'};
-
-
-% project.preproc.subject_spectra.group        = {};
-
-
-project.preproc.subject_spectra.scale           = 'raw'; %'raw'|'log'
-project.preproc.subject_spectra.plot_single_subject           = 'on'; %'off'|'on'
-
-project.preproc.subject_spectra.replot_folder           = 'C:\projects\mondino\results\subject_spectra_15-Apr-2019-12-48-09_raw\plot'; 
-project.preproc.subject_spectra.analysis_name           = 'vexclin_vex0_vex_2'; 
 
 
 
@@ -789,6 +691,108 @@ project.microstates.MicroPlotSegments.plot_time =[];
 project.microstates.MicroPlotSegments.plottopos =1;
 project.microstates.MicroPlotSegments.plot_ylim = [-1,1];
 
+
+
+% CALCULATE SUBJECT SPECTRA
+
+project.preproc.subject_spectra.do_group             = 'off';
+
+project.preproc.subject_spectra.freqrange            = [1,13];
+project.preproc.subject_spectra.freq                 = 1:10;
+project.preproc.subject_spectra.plotchans            = 1:tot_ch;
+% project.preproc.subject_spectra.band_analysis.lim   = [0, 2; 2, 4; 4, 6; 6, 8;8, 10; 10, 12];
+% project.preproc.subject_spectra.band_analysis.name   = {'delta1', 'delta2', 'theta1', 'theta2', 'alpha1', 'alpha2'};
+% project.preproc.subject_spectra.band_analysis.caxis   = [-30, 30; -10, 10; -5, 5;-5, 5; -7, 7; -3, 3];
+% 
+project.preproc.subject_spectra.band_analysis.lim   = [0, 2; 2, 4; 4, 8; 8, 10; 10, 12];
+project.preproc.subject_spectra.band_analysis.name   = {'delta1', 'delta2', 'theta', 'alpha1', 'alpha2'};
+project.preproc.subject_spectra.band_analysis.caxis   = [-30, 30; -10, 10; -5, 5; -7, 7; -3, 3];
+
+
+% project.preproc.subject_spectra.roi_analysis.ch     =  {...
+%     {'O1','Oz','O2'},.... 'Occipital'
+%     {'T7'},...'T7'
+%     {'T8'},...'T8'
+%     {'POz','Pz','CPz'},...'Dorsal'
+%     {'C3', 'C4'}, ... 'Tactile'
+%     {'PO7','P5','P9'},... 'Left_ventral'
+%     {'PO8','P6','P10'},...'Right_ventral'
+%     {'Cz','C1','C2'},... 'Central_dorsal'
+%     {'FCz','FC1','FC2'},... 'SMA'
+%     {'Fz','F1','F2'},... 'Frontal_dorsal'
+%     {'F5','F7','FT7'},...'Left_FT'
+%     {'F6','F8','FT8'}...'Right_FT'
+%     };
+% project.preproc.subject_spectra.roi_analysis.name   =  {...
+%     'Occipital',...
+%     'T7',...
+%     'T8',...
+%     'Dorsal',...
+%     'Tactile',...
+%     'Left_ventral',...
+%     'Right_ventral',...    
+%     'Central_dorsal',...
+%     'SMA',...
+%     'Frontal_dorsal',...
+%     'Left_FT',...
+%     'Right_FT'};
+
+
+
+project.preproc.subject_spectra.roi_analysis.ch     =  {...
+    {'O1','Oz','O2'},.... 'Occipital'
+    {'T7'},...'T7'
+    {'T8'},...'T8'
+    {'POz','Pz','CPz'},...'Dorsal'
+    {'C3', 'C4'}, ... 'Tactile'
+    {'PO7','P5','P9'},... 'Left_ventral'
+    {'PO8','P6','P10'},...'Right_ventral'
+    {'Cz','C1','C2'},... 'Central_dorsal'
+    {'FCz','FC1','FC2'},... 'SMA'
+    {'Fz','F1','F2'},... 'Frontal_dorsal'
+    ...{'F5','F7','FT7'},...'Left_FT'
+    ...{'F6','F8','FT8'}...'Right_FT'
+    };
+project.preproc.subject_spectra.roi_analysis.name   =  {...
+    'Occipital',...
+    'T7',...
+    'T8',...
+    'Dorsal',...
+    'Tactile',...
+    'Left_ventral',...
+    'Right_ventral',...    
+    'Central_dorsal',...
+    'SMA',...
+    'Frontal_dorsal',...
+    ...'Left_FT',...
+    ...'Right_FT'...
+    };
+
+
+
+
+
+% project.preproc.subject_spectra.agebin.lim   = [0, 2; 2, 5; 5, 11];
+% project.preproc.subject_spectra.agebin.name   = {'[0-2)', '[2-5)', '[5-11)'};
+
+% project.preproc.subject_spectra.agebin.lim   = [0,3; 3,6; 6,9; 9,11; ];
+% project.preproc.subject_spectra.agebin.name   = {'[0-3)', '[3-6)','[6-9)','[9-11)'};
+
+% project.preproc.subject_spectra.agebin.lim   = [0,2; 2,4; 4,6; 6,8; 8,11 ];
+% project.preproc.subject_spectra.agebin.name   = {'[0-2)', '[2-4)','[4-6)','[6-8)','[8-11)'};
+
+project.preproc.subject_spectra.agebin.lim   = [0,3; 3,6; 6,11 ];
+project.preproc.subject_spectra.agebin.name   = {'[0-3)', '[3-6)','[6-11)'};
+
+
+% project.preproc.subject_spectra.group        = {};
+
+
+project.preproc.subject_spectra.scale           = 'raw'; %'raw'|'log'
+project.preproc.subject_spectra.plot_single_subject           = 'on'; %'off'|'on'
+
+project.preproc.subject_spectra.replot_folder           = 'C:\projects\mondino\results\subject_spectra_15-Apr-2019-12-48-09_raw\plot'; 
+project.preproc.subject_spectra.analysis_name           = 'vexclin_vex0_vex_2'; 
 
                      
 
