@@ -337,10 +337,10 @@ project.preproc.output_folder   = project.import.output_folder;     % F1:   stri
 
 % FILTER ALGORITHM (FOR ALL FILTERS IN THE PROJECT)
 % the _12 suffix indicate filetrs of EEGLab 12; the _13 suffix indicate filetrs of EEGLab 13
-project.preproc.filter_algorithm = 'pop_eegfiltnew_12';     % F2:   
+project.preproc.filter_algorithm = 'pop_basicfilter';     % F2:   
     % * 'pop_eegfiltnew_12'                     = pop_eegfiltnew without the causal/non-causal option. is the default filter of EEGLab, 
     %                                             allows to set the band also for notch, so it's more flexible than pop_basicfilter of erplab 
-    % * 'pop_basicfilter'                       = erplab filters (version erplab_1.0.0.33: more recent presented many bugs)  
+    % * 'pop_basicfilter'                       = erplab filters (best solution)  
     % * 'causal_pop_iirfilt_12'                 = causal version of iirfilt
     % * 'noncausal_pop_iirfilt_12'              = noncausal version of iirfilt
     % * 'causal_pop_eegfilt_12'                 = causal pop_eegfilt (old version of EEGLab filters)
