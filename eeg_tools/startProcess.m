@@ -72,6 +72,12 @@ switch action_name
     case 'do_emg_analysis'
         eeglab_subject_emgextraction_epoching(project, 'list_select_subjects', list_select_subjects);
         
+    case 'do_remove_upto_start_experiment'
+        proj_eeglab_subject_events_remove_upto_triggercode(project, 'list_select_subjects', list_select_subjects);
+        
+    case 'do_remove_pauses'
+        proj_eeglab_subject_remove_pauses(project, 'list_select_subjects', list_select_subjects);
+        
     case 'do_auto_pauses_removal'
         
         if isempty(list_select_subjects)

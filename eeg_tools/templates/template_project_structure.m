@@ -648,7 +648,7 @@ project.subjects.conditions_behavioral_data(2) =  struct('name', 'RT_RATIO', 'da
                                 
                                 
                                 
-%% MICORSTATES
+%% MICROSTATES
 
 project.microstates.group_list = { 'AS', 'AEB'};
 
