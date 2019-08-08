@@ -9,7 +9,7 @@ function [name_noext, rr2,ica_type,duration, EEG] = eeglab_subject_ica(input_fil
 %    ica_type is the algorithm employed to peform ica decomposition (see EEGLab manua, eg. 'runica'). The cuda implementation of ica ('cudaica')
 %    is only available on linux or mac and only if the PC has been previously properly configured
 
-[~, name_noext, ~] = fileparts(input_file_name);
+[~, name_noext, ext] = fileparts(input_file_name);
 
 % DEFAULTS
 gpu_id=0;
@@ -129,8 +129,8 @@ try
         EEG.icaact = EEG.icaweights*EEG.icasphere*EEG.data(eeg_ch_list, :);
     end
     disp(EEG.filename)
-    EEG = pop_saveset( EEG, 'filename',[out_file_name],'filepath',output_path);
-    EEG = pop_saveset( EEG, 'filename',[name_noext,'_icabck'],'filepath',output_path);
+    EEG = pop_saveset( EEG, 'filename',[out_file_name,ext],'filepath',output_path);
+    EEG = pop_saveset( EEG, 'filename',[name_noext,'_icabck',ext],'filepath',output_path);
 
     
     icadir = fullfile(output_path,'icadir');
@@ -161,8 +161,8 @@ try
    
     
     
-    disp(EEG.filename)
-    EEG = pop_saveset( EEG, 'filename',out_file_name,'filepath',output_path);
+%     disp(EEG.filename)
+%     EEG = pop_saveset( EEG, 'filename',[out_file_name,ext],'filepath',output_path);
     
     close all
 catch err

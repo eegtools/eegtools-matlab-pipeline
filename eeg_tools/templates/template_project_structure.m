@@ -645,18 +645,31 @@ project.subjects.conditions_behavioral_data(2) =  struct('name', 'RT_RATIO', 'da
                                    [1.057,1.057,1.055,1.055; ... 
                                     1.057,1.057,1.055,1.055; ... 
                                     ]);
+      
                                 
                                 
+%% AUTOMATIC MARK TO REMOVE BAD EPOCHS
+project.mark_badepochs.eegthresh.lowthresh = -25;
+project.mark_badepochs.eegthresh.upthresh  = 25;
+
+project.mark_badepochs.rejtrend.maxslope  = 50;
+project.mark_badepochs.rejtrend.minR      = 0.3;
+
+project.mark_badepochs.rejkurt.locthresh  = 5;
+project.mark_badepochs.rejkurt.globthresh = 5;
+
+project.mark_badepochs.jointprob.locthresh  = 5;
+project.mark_badepochs.jointprob.globthresh = 5;
+
                                 
 %% MICROSTATES
-
 project.microstates.group_list = { 'AS', 'AEB'};
 
 project.microstates.suffix = 'controlli';
 
 project.microstates.cond_list = {{'s-s2-1sc-1tc','s-s2-1sc-1tl','s-s2-1sl-1tc','s-s2-1sl-1tl'};... % condizioni epocate dall'epoching
                                  {'t-s2-1sc-1tc','t-s2-1sc-1tl','t-s2-1sl-1tc','t-s2-1sl-1tl'};...
-                                 ... {'s-s2-1sc-1tc','s-s2-1sc-1tl','s-s2-1sl-1tc','s-s2-1sl-1tl','t-s2-1sc-1tc','t-s2-1sc-1tl','t-s2-1sl-1tc','t-s2-1sl-1tl'};...
+                                  {'s-s2-1sc-1tc','s-s2-1sc-1tl','s-s2-1sl-1tc','s-s2-1sl-1tl','t-s2-1sc-1tc','t-s2-1sc-1tl','t-s2-1sl-1tc','t-s2-1sl-1tl'};...
                                 };
 
 project.microstates.cond_names = {'space','time','space-time',};                            
@@ -695,21 +708,23 @@ project.microstates.MicroPlotSegments.plot_ylim = [-1,1];
 
 % CALCULATE SUBJECT SPECTRA
 
-project.preproc.subject_spectra.do_group             = 'off';
+project.subject_spectra.do_group             = 'off';
 
-project.preproc.subject_spectra.freqrange            = [1,13];
-project.preproc.subject_spectra.freq                 = 1:10;
-project.preproc.subject_spectra.plotchans            = 1:tot_ch;
-% project.preproc.subject_spectra.band_analysis.lim   = [0, 2; 2, 4; 4, 6; 6, 8;8, 10; 10, 12];
-% project.preproc.subject_spectra.band_analysis.name   = {'delta1', 'delta2', 'theta1', 'theta2', 'alpha1', 'alpha2'};
-% project.preproc.subject_spectra.band_analysis.caxis   = [-30, 30; -10, 10; -5, 5;-5, 5; -7, 7; -3, 3];
+project.subject_spectra.freqrange            = [1,13];
+project.subject_spectra.freq                 = 1:10;
+project.subject_spectra.plotchans            = 1:tot_ch;
+% project.subject_spectra.band_analysis.lim   = [0, 2; 2, 4; 4, 6; 6, 8;8, 10; 10, 12];
+% project.subject_spectra.band_analysis.name   = {'delta1', 'delta2', 'theta1', 'theta2', 'alpha1', 'alpha2'};
+% project.subject_spectra.band_analysis.caxis   = [-30, 30; -10, 10; -5, 5;-5, 5; -7, 7; -3, 3];
 % 
-project.preproc.subject_spectra.band_analysis.lim   = [0, 2; 2, 4; 4, 8; 8, 10; 10, 12];
-project.preproc.subject_spectra.band_analysis.name   = {'delta1', 'delta2', 'theta', 'alpha1', 'alpha2'};
-project.preproc.subject_spectra.band_analysis.caxis   = [-30, 30; -10, 10; -5, 5; -7, 7; -3, 3];
+project.subject_spectra.band_analysis.lim   = [0, 2; 2, 4; 4, 8; 8, 10; 10, 12];
+project.subject_spectra.band_analysis.name   = {'delta1', 'delta2', 'theta', 'alpha1', 'alpha2'};
+project.subject_spectra.band_analysis.caxis   = [-30, 30; -10, 10; -5, 5; -7, 7; -3, 3];
+project.subject_spectra.ylim_rel               = [0,80];
+project.subject_spectra.ylim_abs               = [];
 
 
-% project.preproc.subject_spectra.roi_analysis.ch     =  {...
+% project.subject_spectra.roi_analysis.ch     =  {...
 %     {'O1','Oz','O2'},.... 'Occipital'
 %     {'T7'},...'T7'
 %     {'T8'},...'T8'
@@ -723,7 +738,7 @@ project.preproc.subject_spectra.band_analysis.caxis   = [-30, 30; -10, 10; -5, 5
 %     {'F5','F7','FT7'},...'Left_FT'
 %     {'F6','F8','FT8'}...'Right_FT'
 %     };
-% project.preproc.subject_spectra.roi_analysis.name   =  {...
+% project.subject_spectra.roi_analysis.name   =  {...
 %     'Occipital',...
 %     'T7',...
 %     'T8',...
@@ -739,7 +754,7 @@ project.preproc.subject_spectra.band_analysis.caxis   = [-30, 30; -10, 10; -5, 5
 
 
 
-project.preproc.subject_spectra.roi_analysis.ch     =  {...
+project.subject_spectra.roi_analysis.ch     =  {...
     {'O1','Oz','O2'},.... 'Occipital'
     {'T7'},...'T7'
     {'T8'},...'T8'
@@ -753,7 +768,7 @@ project.preproc.subject_spectra.roi_analysis.ch     =  {...
     ...{'F5','F7','FT7'},...'Left_FT'
     ...{'F6','F8','FT8'}...'Right_FT'
     };
-project.preproc.subject_spectra.roi_analysis.name   =  {...
+project.subject_spectra.roi_analysis.name   =  {...
     'Occipital',...
     'T7',...
     'T8',...
@@ -772,27 +787,27 @@ project.preproc.subject_spectra.roi_analysis.name   =  {...
 
 
 
-% project.preproc.subject_spectra.agebin.lim   = [0, 2; 2, 5; 5, 11];
-% project.preproc.subject_spectra.agebin.name   = {'[0-2)', '[2-5)', '[5-11)'};
+% project.subject_spectra.agebin.lim   = [0, 2; 2, 5; 5, 11];
+% project.subject_spectra.agebin.name   = {'[0-2)', '[2-5)', '[5-11)'};
 
-% project.preproc.subject_spectra.agebin.lim   = [0,3; 3,6; 6,9; 9,11; ];
-% project.preproc.subject_spectra.agebin.name   = {'[0-3)', '[3-6)','[6-9)','[9-11)'};
+% project.subject_spectra.agebin.lim   = [0,3; 3,6; 6,9; 9,11; ];
+% project.subject_spectra.agebin.name   = {'[0-3)', '[3-6)','[6-9)','[9-11)'};
 
-% project.preproc.subject_spectra.agebin.lim   = [0,2; 2,4; 4,6; 6,8; 8,11 ];
-% project.preproc.subject_spectra.agebin.name   = {'[0-2)', '[2-4)','[4-6)','[6-8)','[8-11)'};
+% project.subject_spectra.agebin.lim   = [0,2; 2,4; 4,6; 6,8; 8,11 ];
+% project.subject_spectra.agebin.name   = {'[0-2)', '[2-4)','[4-6)','[6-8)','[8-11)'};
 
-project.preproc.subject_spectra.agebin.lim   = [0,3; 3,6; 6,11 ];
-project.preproc.subject_spectra.agebin.name   = {'[0-3)', '[3-6)','[6-11)'};
-
-
-% project.preproc.subject_spectra.group        = {};
+project.subject_spectra.agebin.lim   = [0,3; 3,6; 6,11 ];
+project.subject_spectra.agebin.name   = {'[0-3)', '[3-6)','[6-11)'};
 
 
-project.preproc.subject_spectra.scale           = 'raw'; %'raw'|'log'
-project.preproc.subject_spectra.plot_single_subject           = 'on'; %'off'|'on'
+% project.subject_spectra.group        = {};
 
-project.preproc.subject_spectra.replot_folder           = 'C:\projects\mondino\results\subject_spectra_15-Apr-2019-12-48-09_raw\plot'; 
-project.preproc.subject_spectra.analysis_name           = 'vexclin_vex0_vex_2'; 
+
+project.subject_spectra.scale           = 'raw'; %'raw'|'log'
+project.subject_spectra.plot_single_subject           = 'on'; %'off'|'on'
+
+project.subject_spectra.replot_folder           = 'C:\projects\mondino\results\subject_spectra_15-Apr-2019-12-48-09_raw\plot'; 
+project.subject_spectra.analysis_name           = 'vexclin_vex0_vex_2'; 
 
                      
 

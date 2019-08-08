@@ -2,29 +2,29 @@ function spectra = proj_eeglab_subject_replot_spectra(project, varargin)
 
 spectra = [];
 
-freqrange       = project.preproc.subject_spectra.freqrange;
-freq            = project.preproc.subject_spectra.freq;
-plotchans       = project.preproc.subject_spectra.plotchans;
-% band_analysis    = project.preproc.subject_spectra.band_analysis;
-% chan_analysis    = project.preproc.subject_spectra.chan_analysis;
-scale            = project.preproc.subject_spectra.scale;
+freqrange       = project.subject_spectra.freqrange;
+freq            = project.subject_spectra.freq;
+plotchans       = project.subject_spectra.plotchans;
+% band_analysis    = project.subject_spectra.band_analysis;
+% chan_analysis    = project.subject_spectra.chan_analysis;
+scale            = project.subject_spectra.scale;
 
 
-list_band_lim =  project.preproc.subject_spectra.band_analysis.lim;   %= [0, 2; 2, 4; 4, 8; 8, 12];
-list_band_name = project.preproc.subject_spectra.band_analysis.name;  % = {'delta1', 'delta2', 'theta', 'alpha1', 'alpha2'};
+list_band_lim =  project.subject_spectra.band_analysis.lim;   %= [0, 2; 2, 4; 4, 8; 8, 12];
+list_band_name = project.subject_spectra.band_analysis.name;  % = {'delta1', 'delta2', 'theta', 'alpha1', 'alpha2'};
 
-list_roi_ch =  project.preproc.subject_spectra.roi_analysis.ch;%     =  {{'O1','O2'},{'T7','T8'}, {'C3', 'C4'}};
-list_roi_name = project.preproc.subject_spectra.roi_analysis.name;   %=  {'Visual','Auditory', 'Tactile'};
+list_roi_ch =  project.subject_spectra.roi_analysis.ch;%     =  {{'O1','O2'},{'T7','T8'}, {'C3', 'C4'}};
+list_roi_name = project.subject_spectra.roi_analysis.name;   %=  {'Visual','Auditory', 'Tactile'};
 
-list_allroi_ch = [project.preproc.subject_spectra.roi_analysis.ch{:}];
+list_allroi_ch = [project.subject_spectra.roi_analysis.ch{:}];
 
-list_agebin_lim  = project.preproc.subject_spectra.agebin.lim;
-list_agebin_name = project.preproc.subject_spectra.agebin.name;
+list_agebin_lim  = project.subject_spectra.agebin.lim;
+list_agebin_name = project.subject_spectra.agebin.name;
 
 tab= length(list_agebin_name);
 
-set_caxis = project.preproc.subject_spectra.band_analysis.caxis;
-plot_single_subject = project.preproc.subject_spectra.plot_single_subject;
+set_caxis = project.subject_spectra.band_analysis.caxis;
+plot_single_subject = project.subject_spectra.plot_single_subject;
 
 % set_caxis                           = project.results_display.ersp.set_caxis_topo_tw_fb;
 
@@ -37,12 +37,12 @@ subject_spectra_path = fullfile(results_path,['subject_spectra','_',str,'_',scal
 %     mkdir(subject_spectra_path)
 % end
 
-plot_dir = project.preproc.subject_spectra.replot_folder;%fullfile(subject_spectra_path,'plot');
+plot_dir = project.subject_spectra.replot_folder;%fullfile(subject_spectra_path,'plot');
 if not(exist(plot_dir))
     mkdir(plot_dir)
 end
 
-plot_dir_group = fullfile(plot_dir,['group_replot_',project.preproc.subject_spectra.analysis_name,'_',str]);
+plot_dir_group = fullfile(plot_dir,['group_replot_',project.subject_spectra.analysis_name,'_',str]);
 if not(exist(plot_dir_group))
     mkdir(plot_dir_group)
 end
@@ -122,7 +122,7 @@ input_spectra.list_roi_name = list_roi_name;
 input_spectra.scale               = scale;
 input_spectra.plot_single_subject  = plot_single_subject;
 
-matdir = fullfile(project.preproc.subject_spectra.replot_folder,'mat'); 
+matdir = fullfile(project.subject_spectra.replot_folder,'mat'); 
 matdir0 = dir(matdir);
 matlist = {matdir0.name};
 load(fullfile(matdir,matlist{3}))

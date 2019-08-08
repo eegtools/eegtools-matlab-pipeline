@@ -100,7 +100,16 @@ switch action_name
                 pause_resume_errors;
             end
         end
+    
+    case 'do_epoch_catcond'
+        % global epoching around all conditions to do ica, epochs removal
+        % on less data but more related to the experiment (automatically removes pauses and works around the triggers).
+        % note that NO baseline correction is applied
+        EEG = proj_eeglab_subject_epoching_catcond(project, 'list_select_subjects', list_select_subjects);
         
+     case 'mark_badepochs_catcond'    
+        EEG = proj_eeglab_subject_mark_badepochs_catcond(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
+      
     case 'do_ica'
         % do ica
         result = proj_eeglab_subject_ica(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
@@ -154,7 +163,10 @@ switch action_name
     case 'do_epochs'
         % do preprocessing up to epochs: avgref, epochs, rmbase: create one trails dataset for each condition
         result = proj_eeglab_subject_epoching(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
-        
+    
+    case 'mark_badepochs'
+        EEG = proj_eeglab_subject_mark_badepochs(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
+         
     case 'do_handedness_epochs'
         % swap data according to handedness and to epoching
         result = proj_eeglab_subject_handedness_epoching(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);

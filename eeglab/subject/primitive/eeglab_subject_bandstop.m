@@ -24,9 +24,9 @@ function  EEG = eeglab_subject_bandstop(EEG, params)
             notch_fcenter = params.notch_fcenter:params.notch_fcenter:(floor(EEG.srate/2)-params.notch_fcenter);        % frequency center of the notch filters (to remove 50 Hz and harmonics
     end
         
-    notch_fspan   = 5;                                                                                         % halved frequency range of the notch filters     
-    notch_ff1 = notch_fcenter - notch_fspan;                                                                   % low cutoff of the notch
-    notch_ff2 = notch_fcenter + notch_fspan;                                                                   % high cutoff of the notch
+    notch_fspan   = params.notch_fspan;                                                                                         % halved frequency range of the notch filters     
+    notch_ff1     = notch_fcenter - notch_fspan;                                                                   % low cutoff of the notch
+    notch_ff2     = notch_fcenter + notch_fspan;                                                                   % high cutoff of the notch
     
    for nharmonics = 1:length(notch_fcenter) 
 
@@ -164,7 +164,10 @@ function  EEG = eeglab_subject_bandstop(EEG, params)
                EEG2                          = pop_eegfilt( EEG2,notch_ff1(nharmonics), notch_ff2(nharmonics), [], 1, 0, 0, 'firl',0);
                EEG.data(params.channels_list,:) = EEG2.data;
      
-                
+                case 'pop_eegfiltnew_2019'
+                EEG2                          = pop_select(EEG,'channel',params.channels_list);
+                EEG2                          = pop_eegfiltnew( EEG2,notch_ff1(nharmonics), notch_ff2(nharmonics), [], 1, [], 0);
+                EEG.data(params.channels_list,:) = EEG2.data; 
                 
         %##################################################################################        
             % pop_eegfiltnew() - Filter data using Hamming windowed sinc FIR filter
