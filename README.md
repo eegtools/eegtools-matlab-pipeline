@@ -6,7 +6,7 @@ Complete EEG analysis (ERP, ERSP, Sources) pipeline written in matlab, using EEG
 EEGTools was developed in the Robotics, Brain and Cognitive Sciences (RBCS) department of the Istituto Italiano di Tecnologia (IIT) of Genova, Italy.
 It has been equally developed by Alberto Inuggi and Claudio Campus, PostDoc Researchers currently working for the U-VIP (https://www.iit.it/lines/unit-for-visually-impaired-people) unit.
 It is a huge set of matlab scripts allowing a complete analysis of the Electroencephalography (EEG) signal at either the sensor and source levels.
-It implement all the analysis steps relying on the EEGLab (https://sccn.ucsd.edu/eeglab) and Brainstorm (http://neuroimage.usc.edu/brainstorm) software primitives.
+It implement all the analysis steps relying on the EEGLab (https://sccn.ucsd.edu/eeglab), Brainstorm (http://neuroimage.usc.edu/brainstorm) and FieldTrip (http://www.fieldtriptoolbox.org)software primitives.
 
 ## Why use it
 
@@ -93,6 +93,15 @@ PROJECT DATA
 The last params identify the project structure file, a huge (up to 1500 lines) files containing variables definitions.
 
 ## Publications using it
+
+9 . Campus C., Sandini G., Amadeo M.B., Gori M., Stronger responses in the visual cortex of sighted compared to blind individuals during auditory space representation, Scientific Reports, vol. 9, (no. 1), 2019, 10.1038/s41598-018-37821-y
+
+8 . Marini F., Zenzeri J., Pippo V., Morasso P., Campus C., Neural correlates of proprioceptive upper limb position matching, Human Brain Mapping, pp. 1-14, 2019, 10.1002/hbm.24739
+ 
+7 . Amadeo M.B., Stormer V.S., Campus C., Gori M., Peripheral sounds elicit stronger activity in contralateral occipital cortex in blind than sighted individuals, Scientific Reports, vol. 9, (no. 1), 2019, 10.1038/s41598-019-48079-3
+
+6 . Amadeo M.B., Campus C., Gori M., Impact of years of blindness on neural circuits underlying auditory spatial representation, NeuroImage, vol. 191, pp. 140-149, 2019, 10.1016/j.neuroimage.2019.01.073
+
 5 . Deloglu F, Brunetti R, Inuggi A, Campus C, Del Gatto C, D'Ausilio A. That does not sound right: Sounds affect visual ERPs during a piano sight-reading task. Behavioural Brain Research, 2019. (ERP + source analysis)
 
 4 . Inuggi A, Campus C, Vastano R, Keuroghlanian A, Saunier G, Pozzo T.  Locomotion observation induces motor resonance only when explicitly represented; An EEG source analysis study. Frontiers in Psychology, 2018.    (ERP + source analysis)
