@@ -35,13 +35,13 @@ for t=1:length(project.brainstorm.postprocess.tag_list)
     tag         = project.brainstorm.postprocess.tag_list{t};
     input_file  = [project.brainstorm.average_file_name '.mat'];   .... e.g. 'data_average.mat'
         
-for cond=1:project.brainstorm.numcond
-    cond_files = brainstorm_results_get_from_subjectslist_by_tag(list_select_subjects, condition_names{cond}, input_file, tag);
-    for s=1:length(cond_files)
-        result_file = fullfile(project.paths.project, project.brainstorm.db_name, 'data', cond_files{s});
-        brainstorm_result_uncontrained2flat(project.brainstorm.db_name, result_file, project.brainstorm.sources.flatting_method);
+    for cond=1:project.brainstorm.numcond
+        cond_files = brainstorm_results_get_from_subjectslist_by_tag(list_select_subjects, condition_names{cond}, input_file, tag);
+        for s=1:length(cond_files)
+            result_file = fullfile(project.paths.project, project.brainstorm.db_name, 'data', cond_files{s});
+            brainstorm_result_uncontrained2flat(project.brainstorm.db_name, result_file, project.brainstorm.sources.flatting_method);
+        end
     end
-end
 end
 end
 

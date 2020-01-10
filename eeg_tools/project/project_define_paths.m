@@ -148,6 +148,11 @@ addpath(project.paths.script.project);
     project.paths.output_epochs                 = fullfile(project.paths.project, 'epochs', project.analysis_name, '');
     if ~exist(project.paths.output_epochs, 'dir'), mkdir(project.paths.output_epochs); end
 
+     % exported eeglab epochs files 
+    project.paths.output_segments                 = fullfile(project.paths.project, 'segments', project.analysis_name, '');
+    if ~exist(project.paths.output_epochs, 'dir'), mkdir(project.paths.output_segments); end
+
+    
     % results files path
     project.paths.results                       = fullfile(project.paths.project, 'results', project.analysis_name, '');
     if ~exist(project.paths.results, 'dir'), mkdir(project.paths.results); end

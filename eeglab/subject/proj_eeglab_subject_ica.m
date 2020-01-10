@@ -11,7 +11,7 @@ function EEG = proj_eeglab_subject_ica(project, varargin)
 			if isfield(project.ica,'do_pca')
 				do_pca = project.ica.do_pca;
 			else
-				do_pca = 1;
+				do_pca = 0;
             end
 
             if isfield(project.ica,'do_subsample')

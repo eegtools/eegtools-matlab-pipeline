@@ -17,13 +17,16 @@ if isfield(project, 'external_xls')
             sub_col = RAW(2:end,sel_sub_col);
             sel_nf = find(not(sel_sub_col));
             new_fields = col_names(sel_nf);
+            
+            sub_intersect = intersect(sub_col,{project.subjects.data.name});
+            
 %             project = project;
             % project.subjects.data = setfield(project.subjects.data,new_fields{2},cell( 1, length(project.subjects.data )));
             tf = length(new_fields);
-            ts = length(sub_col);
+            ts = length(sub_intersect);
             
             for ns = 1:ts
-                current_subject = sub_col{ns};
+                current_subject = sub_intersect{ns};
                 sel_sub = ismember({project.subjects.data.name},current_subject);
                 inds = sel_sub(ns)+1;
                 for nf = 1:tf

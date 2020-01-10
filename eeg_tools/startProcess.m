@@ -51,7 +51,11 @@ switch action_name
     case 'do_import_collect'
         proj_eeglab_subject_import_data_collect(project, 'list_select_subjects', list_select_subjects);
     
+    case 'do_filter_events'
+        proj_eeglab_subject_filter_events(project, 'list_select_subjects', list_select_subjects);
    
+        
+        
     case 'do_remove_segments'
         % remove ics
         result = proj_eeglab_subject_remove_segments(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
@@ -139,6 +143,8 @@ switch action_name
         
     case 'do_subject_spectra'
         result = proj_eeglab_subject_spectra(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
+    
+   
         
     case 'do_subject_replot_spectra'
         result = proj_eeglab_subject_replot_spectra(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
@@ -164,6 +170,14 @@ switch action_name
         % do preprocessing up to epochs: avgref, epochs, rmbase: create one trails dataset for each condition
         result = proj_eeglab_subject_epoching(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
     
+    case 'do_segments'
+        result = proj_eeglab_subject_segmenting(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
+   
+      case 'do_subject_spectra_cond'
+        result = proj_eeglab_subject_spectra_cond(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
+      
+        
+        
     case 'mark_badepochs'
         EEG = proj_eeglab_subject_mark_badepochs(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
          

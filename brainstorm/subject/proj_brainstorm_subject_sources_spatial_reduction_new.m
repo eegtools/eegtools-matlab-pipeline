@@ -5,7 +5,7 @@
 
 function  proj_brainstorm_subject_sources_spatial_reduction_new(project,  varargin)
 
-iProtocol               = brainstorm_protocol_open(protocol_name);
+iProtocol               = brainstorm_protocol_open(project.brainstorm.db_name);
 protocol                = bst_get('ProtocolInfo');
 brainstorm_data_path    = protocol.STUDIES;
 
@@ -26,16 +26,27 @@ end
 
 
 
-condition_names             = project.epoching.condition_names;    cond_length = length(condition_names);
-for t=1:length(project.brainstorm.postprocess.tag_list)
-    tag         = project.brainstorm.postprocess.tag_list{t};
+condition_names             = project.epoching.condition_names;   
+cond_length = length(condition_names);
+for t=1:length(project.brainstorm.postprocess.space_reduction_tag_list)
+    tag         = project.brainstorm.postprocess.space_reduction_tag_list{t};
     input_file  = [project.brainstorm.average_file_name '.mat'];   .... e.g. 'data_average.mat'
         
 for cond=1:project.epoching.numcond
-    cond_files = brainstorm_results_get_from_subjectslist_by_tag(list_select_subjects, condition_names{cond}, input_file, tag);
+    cond_files = brainstorm_results_get_from_subjectslist_by_tag(...
+        list_select_subjects,...
+        condition_names{cond}, input_file, tag...
+        );
     for s=1:length(cond_files)
-        result_file = fullfile(project.paths.project, project.brainstorm.db_name, 'data', cond_files{s});
-        brainstorm_results_downsample(project.brainstorm.db_name, result_file, downsample_atlasname);
+        result_file = fullfile(...
+            project.paths.project,...
+            project.brainstorm.db_name,...
+            'data', cond_files{s}...
+        );
+        brainstorm_results_downsample(...
+            project.brainstorm.db_name, ...
+            result_file,...
+            project.brainstorm.postprocess.downsample_atlasname);
     end
 end
 

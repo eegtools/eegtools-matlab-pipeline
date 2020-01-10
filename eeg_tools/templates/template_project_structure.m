@@ -217,7 +217,6 @@ tot_ch = length(complete_montage);
 %   Highpass : Transition band for the initial high-pass filter in Hz. This is formatted as
 %              [transition-start, transition-end]. Default: [0.25 0.75].
 %
-%
 %   NOTE: The following are detail parameters that may be tuned if one of the criteria does
 %   not seem to be doing the right thing. These basically amount to side assumptions about the
 %   data that usually do not change much across recordings, but sometimes do.
@@ -256,7 +255,10 @@ tot_ch = length(complete_montage);
 %                                 bound). Together with the previous parameter this determines how
 %                                 ASR calibration data is be extracted from a recording. Can also be
 %                                 specified as 'off' to achieve the same effect as in the previous
-%                                 parameter. Default: [-3.5 5.5].
+%                                 parameter. Default: [-Inf 5.5].
+%
+%   BurstRejection : 'on' or 'off'. If 'on' reject portions of data containing burst instead of 
+%                    correcting them using ASR. Default is 'off'.
 %
 %   WindowCriterionTolerances : These are the power tolerances outside of which a channel in the final
 %                               output data is considered "bad", in standard deviations relative
@@ -267,7 +269,7 @@ tot_ch = length(complete_montage);
 %                               repaired and will be removed from the output. This last stage can be
 %                               skipped either by setting the WindowCriterion to 'off' or by taking
 %                               the third output of this processing function (which does not include
-%                               the last stage). Default: [-3.5 7].
+%                               the last stage). Default: [-Inf 7].
 %
 %   FlatlineCriterion : Maximum tolerated flatline duration. In seconds. If a channel has a longer
 %                       flatline than this, it will be considered abnormal. Default: 5
@@ -287,13 +289,43 @@ tot_ch = length(complete_montage);
 %                                    note that increasing this value requires the ChannelCriterion
 %                                    to be relaxed in order to maintain the same overall amount of
 %                                    removed channels. Default: 0.1.
+%
+%   MaxMem : The maximum amount of memory in MB used by the algorithm when processing. 
+%            See function asr_processf for more information. Default is 64.
+%
+% Out:
+%   EEG : Final cleaned EEG recording.
+%
+%   HP : Optionally just the high-pass filtered data.
+%
+%   BUR : Optionally the data without final removal of "irrecoverable" windows.
+%
+% Examples:
+%   % Load a recording, clean it, and visualize the difference (using the defaults)
+%   raw = pop_loadset(...);
+%   clean = clean_artifacts(raw);
+%   vis_artifacts(clean,raw);
+%
+%   % Use a more aggressive threshold (passing the parameters in by position)
+%   raw = pop_loadset(...);
+%   clean = clean_artifacts(raw,[],2.5);
+%   vis_artifacts(clean,raw);
+%
+%   % Passing some parameter by name (here making the WindowCriterion setting less picky)
+%   raw = pop_loadset(...);
+%   clean = clean_artifacts(raw,'WindowCriterion',0.25);
+%
+%   % Disabling the WindowCriterion and ChannelCriterion altogether
+%   raw = pop_loadset(...);
+%   clean = clean_artifacts(raw,'WindowCriterion','off','ChannelCriterion','off');
 
 project.testart.FlatlineCriterion = 4;
 project.testart.Highpass = 'off';
 project.testart.ChannelCriterion = 0.85;
 project.testart.LineNoiseCriterion = 4;
 project.testart.BurstCriterion = 5;
-project.testart.WindowCriterion = 0.25;
+project.testart.WindowCriterion = 'off';
+project.testart.BurstRejection = 'off';
 
 %% ======================================================================================================
 % E:    FINAL EEGDATA
@@ -2015,6 +2047,9 @@ project.brainstorm.study.channels_file_name                   = 'brainstorm_chan
 project.brainstorm.study.channels_file_type                   = 'BST';
 project.brainstorm.study.channels_file_path                   = ''; ... later set by define_paths
     
+
+
+
 %% SENSORS
 
 project.brainstorm.sensors.name_maineffects    = {'M' 'MM' '300' '100'};
@@ -2025,6 +2060,14 @@ project.brainstorm.sensors.pairwise_comparisons = { ...
                                                     {'M-100', 'MM-100'}; ...
                                                     {'M-300', 'MM-300'}; ...
                                                    };
+
+                                               
+
+
+
+
+                            
+
 
 %% SOURCES
 
@@ -2109,11 +2152,46 @@ project.brainstorm.postprocess.window_samples_halfwidth     = 2;        % number
 
 
 % SPATIAL
-project.brainstorm.postprocess.downsample_atlasname         = 's3000';  % name of the atlas defined in BST GUI
+project.brainstorm.postprocess.downsample.standard_atlas(1).atlasname = 'Desikan-Killiany';
+project.brainstorm.postprocess.downsample.standard_atlas(1).scouts_names = {...
+    'bankssts L', 'bankssts R', ...
+    'caudalanteriorcingulate L', 'caudalanteriorcingulate R', 'caudalmiddlefrontal L', 'caudalmiddlefrontal R',...
+    'cuneus L', 'cuneus R', 'entorhinal L', 'entorhinal R',...
+    'frontalpole L', 'frontalpole R', 'fusiform L', 'fusiform R',...
+    'inferiorparietal L', 'inferiorparietal R', 'inferiortemporal L', ...
+    'inferiortemporal R', 'insula L', 'insula R', ...
+    'isthmuscingulate L', 'isthmuscingulate R', 'lateraloccipital L', 'lateraloccipital R',...
+    'lateralorbitofrontal L', 'lateralorbitofrontal R', 'lingual L', 'lingual R',...
+    'medialorbitofrontal L', 'medialorbitofrontal R', 'middletemporal L', 'middletemporal R', ...
+    'paracentral L', 'paracentral R', 'parahippocampal L', 'parahippocampal R',...
+    'parsopercularis L', 'parsopercularis R', 'parsorbitalis L', 'parsorbitalis R', 'parstriangularis L',...
+    'parstriangularis R', 'pericalcarine L', 'pericalcarine R', ...
+    'postcentral L', 'postcentral R', 'posteriorcingulate L', 'posteriorcingulate R', ...
+    'precentral L', 'precentral R', 'precuneus L', 'precuneus R',...
+    'rostralanteriorcingulate L', 'rostralanteriorcingulate R', ...
+    'rostralmiddlefrontal L', 'rostralmiddlefrontal R', ...
+    'superiorfrontal L', 'superiorfrontal R', 'superiorparietal L', 'superiorparietal R', ...
+    'superiortemporal L', 'superiortemporal R', 'supramarginal L', 'supramarginal R', ...
+    'temporalpole L', 'temporalpole R', 'transversetemporal L', 'transversetemporal R'};
 
-project.brainstorm.postprocess.scouts_names             = {'r_ACC','r_MCC','r_IFG'};
+project.brainstorm.postprocess.downsample.standard_atlas(2).atlasname = 'Brodmann-thresh';
+project.brainstorm.postprocess.downsample.standard_atlas(2).scouts_names =...
+{...
+    'BA1 L', 'BA1 R', 'BA2 L', 'BA2 R', ...
+    'BA3a L', 'BA3a R', 'BA3b L', 'BA3b R', ...
+    'BA44 L', 'BA44 R', 'BA45 L', 'BA45 R', ...
+    'BA4a L', 'BA4a R', 'BA4p L', 'BA4p R',...
+    'BA6 L', 'BA6 R',...
+    'MT L', 'MT R',...
+    'V1 L', 'V1 R', 'V2 L', 'V2 R'...
+};
+
+project.brainstorm.postprocess.downsample_atlasname         = ...
+    project.brainstorm.postprocess.downsample.standard_atlas(1).atlasname;...'s3000';  % name of the atlas defined in BST GUI
+project.brainstorm.postprocess.scouts_names             = ...
+    project.brainstorm.postprocess.downsample.standard_atlas(1).scouts_names;...{'r_ACC','r_MCC','r_IFG'};
 project.brainstorm.postprocess.numscouts                = length(project.brainstorm.postprocess.scouts_names);
-
+project.brainstorm.postprocess.scoutfunc_str            = 'mean'; % 'mean'|'max'|'pca'|'std'|'all'
 
 % SPECTRAL
 project.brainstorm.postprocess.analysis_bands={{ ...
@@ -2122,7 +2200,235 @@ project.brainstorm.postprocess.analysis_bands={{ ...
                     project.postprocess.ersp.frequency_bands(3).name, [num2str(project.postprocess.ersp.frequency_bands(3).min) ', ' num2str(project.postprocess.ersp.frequency_bands(3).max)], 'mean'; ...
 %                     project.postprocess.ersp.frequency_bands(4).name, [num2str(project.postprocess.ersp.frequency_bands(4).min) ', ' num2str(project.postprocess.ersp.frequency_bands(4).max)], 'mean' ...
                                   }};
-                                  
+ 
+                              
+%% TIME FREQUENCY ANALYSIS
+
+% Morlet wavelet
+
+project.brainstorm.tf.scout_tag_list                = {'sloreta | free | surf',...
+                                        };
+project.brainstorm.tf.Freqs = project.study.ersp.freqout_analysis_interval;
+project.brainstorm.tf.MorletFc = 1;% central frequency of Morlet wavelet function (Hz)
+project.brainstorm.tf.MorletFwhmTc = 3; % time resolution (FWHM) (sec)
+project.brainstorm.tf.RemoveEvoked = 1;
+project.brainstorm.tf.normalize = 'none'; % 'none' | 'multiply':1/f compensation: Multiply output values by frequency
+project.brainstorm.tf.measure = 'power';% %'magnitude' | 'power'
+project.brainstorm.tf.output  = 'average'; % 'average' recommended | 'all' save alla files, requires uge amount of space 
+project.brainstorm.tf.ClusterFuncTime = 'after'; % 'after' | 'before' compute tf with respect to cluter sources
+
+
+% baseline correction
+project.brainstorm.tf.bc.baseline = [project.epoching.bc_st.s, project.epoching.bc_end.s];
+project.brainstorm.tf.bc.method = 'db'; 
+% possible baseline corrections
+% 'zscore', ...  % Z-score transformation:    x_std = (x - &mu;) / &sigma;
+% 'ersd', ...  % Event-related perturbation (ERS/ERD):    x_std = (x - &mu;) / &mu; * 100
+% 'bl', ...  % DC offset correction:    x_std = x - &mu;
+% 'divmean', ...  % Scale with the mean:    x_std = x / &mu;
+% 'db', ...  % Scale with the mean (dB):    x_std = 10 * log10(x / &mu;)
+% 'contrast', ...  % Contrast with the mean:    x_std = (x - &mu;) / (x + &mu;)
+
+
+
+
+
+
+
+
+project.brainstorm.tf.gb.aggregate_func = 'mean';
+project.brainstorm.tf.gb.isfreqbands = 1;% enable group frequency bands
+
+% project.brainstorm.tf.gb.freqbands = {'delta', '2, 4', 'mean'; 'theta', '5, 7', 'mean'; 'alpha', '8, 12', 'mean'; 'beta', '15, 29', 'mean'};
+tb = length(project.postprocess.ersp.frequency_bands);
+tc = 3; % colums: name, timits, aggregate function
+project.brainstorm.tf.gb.freqbands = cell(tb,tc);
+for nb = 1:tb
+    project.brainstorm.tf.gb.freqbands{nb,1} = project.postprocess.ersp.frequency_bands(nb).name;
+    project.brainstorm.tf.gb.freqbands{nb,2} = [num2str(project.postprocess.ersp.frequency_bands(nb).min),', ' , num2str(project.postprocess.ersp.frequency_bands(nb).max)];
+    project.brainstorm.tf.gb.freqbands{nb,3} = project.brainstorm.tf.gb.aggregate_func;    
+end
+
+
+project.brainstorm.tf.gb.istimebands = 1; % enable group time bands
+
+
+%project.brainstorm.tf.gb.timebands = {'t0', '-200, 0', 'mean'; 't1', '0, 100', 'mean'; 't2', '100, 200', 'mean'; 't3', '200, 300', 'mean'; 't4', '15, 29', 'mean'};
+tb = length(project.postprocess.ersp.design(1).group_time_windows);
+tc = 3; % colums: name, timits,aggregate function
+project.brainstorm.tf.gb.timebands = cell(tb,tc);
+for nb = 1:tb
+    project.brainstorm.tf.gb.timebands{nb,1} = project.postprocess.ersp.design(1).group_time_windows(nb).name;
+    project.brainstorm.tf.gb.timebands{nb,2} = [num2str(project.postprocess.ersp.design(1).group_time_windows(nb).min),', ' , num2str(project.postprocess.ersp.design(1).group_time_windows(nb).max)];
+    project.brainstorm.tf.gb.timebands{nb,3} = project.brainstorm.tf.gb.aggregate_func;    
+end
+
+
+
+%% TIME FREQUENCY ANALYSIS
+
+% Morlet wavelet
+project.brainstorm.tf.Freqs = project.study.ersp.freqout_analysis_interval;
+project.brainstorm.tf.MorletFc = 1;% central frequency of Morlet wavelet function (Hz)
+project.brainstorm.tf.MorletFwhmTc = 3; % time resolution (FWHM) (sec)
+project.brainstorm.tf.RemoveEvoked = 1;
+project.brainstorm.tf.normalize = 'none'; % 'none' | 'multiply':1/f compensation: Multiply output values by frequency
+project.brainstorm.tf.measure = 'power';% %'magnitude' | 'power'
+project.brainstorm.tf.output  = 'average'; % 'average' recommended | 'all' save alla files, requires uge amount of space 
+project.brainstorm.tf.ClusterFuncTime = 'after'; % 'after' | 'before' compute tf with respect to cluter sources
+
+% baseline correction
+project.brainstorm.tf.bc.baseline = [project.epoching.bc_st.s, project.epoching.bc_end.s];
+project.brainstorm.tf.bc.method = 'db';
+
+% % group time and frequenncy bands
+% project.brainstorm.tf.gb.isfreqbands = 1;% enable group frequency bands
+% project.brainstorm.tf.gb.freqbands = {'delta', '2, 4', 'mean'; 'theta', '5, 7', 'mean'; 'alpha', '8, 12', 'mean'; 'beta', '15, 29', 'mean'};
+% project.brainstorm.tf.gb.istimebands = 1; % enable group time bands
+% project.brainstorm.tf.gb.timebands = {'t0', '-200, 0', 'mean'; 't1', '0, 100', 'mean'; 't2', '100, 200', 'mean'};
+
+project.brainstorm.tf.gb.aggregate_func = 'mean';
+project.brainstorm.tf.gb.isfreqbands = 1;% enable group frequency bands
+
+% project.brainstorm.tf.gb.freqbands = {'delta', '2, 4', 'mean'; 'theta', '5, 7', 'mean'; 'alpha', '8, 12', 'mean'; 'beta', '15, 29', 'mean'};
+tb = length(project.postprocess.ersp.frequency_bands);
+tc = 3; % colums: name, timits, aggregate function
+project.brainstorm.tf.gb.freqbands = cell(tb,tc);
+for nb = 1:tb
+    project.brainstorm.tf.gb.freqbands{nb,1} = project.postprocess.ersp.frequency_bands(nb).name;
+    project.brainstorm.tf.gb.freqbands{nb,2} = [num2str(project.postprocess.ersp.frequency_bands(nb).min),', ' , num2str(project.postprocess.ersp.frequency_bands(nb).max)];
+    project.brainstorm.tf.gb.freqbands{nb,3} = project.brainstorm.tf.gb.aggregate_func;    
+end
+
+
+project.brainstorm.tf.gb.istimebands = 1; % enable group time bands
+
+
+%project.brainstorm.tf.gb.timebands = {'t0', '-200, 0', 'mean'; 't1', '0, 100', 'mean'; 't2', '100, 200', 'mean'; 't3', '200, 300', 'mean'; 't4', '15, 29', 'mean'};
+tb = length(project.postprocess.ersp.design(1).group_time_windows);
+tc = 3; % colums: name, timits,aggregate function
+project.brainstorm.tf.gb.timebands = cell(tb,tc);
+for nb = 1:tb
+    project.brainstorm.tf.gb.timebands{nb,1} = project.postprocess.ersp.design(1).group_time_windows(nb).name;
+    project.brainstorm.tf.gb.timebands{nb,2} = [num2str(project.postprocess.ersp.design(1).group_time_windows(nb).min),', ' , num2str(project.postprocess.ersp.design(1).group_time_windows(nb).max)];
+    project.brainstorm.tf.gb.timebands{nb,3} = project.brainstorm.tf.gb.aggregate_func;    
+end
+
+
+project.brainstorm.tf.scout_tag_list                = {'sloreta | free | surf',...
+                                        };
+ 
+
+                                    
+ %% FUNCTIONAL CONNECTIVITY
+
+project.brainstorm.fc.scout_tag_list                = {'sloreta | free | surf',...
+                                        };
+
+project.brainstorm.fc.standard_measure_list = {...
+    'corr1n',...                 % Process: Correlation NxN
+    'corr1n_time',...            % Process: Time-resolved correlation NxN [test]
+    'cohere1n',...               % Process: Coherence NxN
+    'cohere1n_time',...          % Process: Time-resolved coherence NxN [test]
+    'granger1n',...              % Process: Bivariate Granger causality NxN
+    'spgranger1n',...            % Process: Bivariate Granger causality (spectral) NxN
+    'plv1n',...                  % Process: Phase locking value NxN SUPPORTED ONLY FOR CONTRAINED SOURCES
+    'pte1n',...                  % Process: Phase Transfer Entropy NxN
+    'aec1n',...                  % Process: Amplitude Envelope Correlation NxN 
+    'pac',...                    % Process: Phase-amplitude coupling
+    'tpac',...                   % Process: tPAC 
+    'canoltymap',...             % Process: Canolty maps
+    };
+
+project.brainstorm.fc.selected_measure_list = ...
+    project.brainstorm.fc.standard_measure_list(5);
+
+% Process: Correlation NxN
+project.brainstorm.fc.corr1n.scouttime = 2; % 1 = compute before scout grouping  | 2 = After
+project.brainstorm.fc.corr1n.outputmode = 1; % Save individual results (one file per input file)
+project.brainstorm.fc.corr1n.scalarprod = 0; % 0 = Normalized
+
+% Process: Time-resolved correlation NxN [test]
+project.brainstorm.fc.corr1n.scouttime= 2; % 1 = compute before scout grouping  | 2 = After
+project.brainstorm.fc.corr1n.scalarprod = 0;% 0 = Normalized
+project.brainstorm.fc.corr1n.outputmode= 1; % Save individual results (one file per input file)
+
+
+
+% Process: Coherence NxN  
+project.brainstorm.fc.cohere1n.scouttime = 2; % 1 = compute before scout grouping  | 2 = After
+project.brainstorm.fc.cohere1n.removeevoked = 0; % 0 = compute without removing evoked response (ERP)| 1 = after removing ERP 
+project.brainstorm.fc.cohere1n.cohmeasure = 1; % 1 = Magnitude-squared
+project.brainstorm.fc.cohere1n.outputmode = 1; % Save individual results (one file per input file)
+
+% Process: Time-resolved coherence NxN [test]
+project.brainstorm.fc.cohere1n_time.scouttime = 2; % 1 = compute before scout grouping  | 2 = After
+project.brainstorm.fc.cohere1n_time.removeevoked = 0; % 0 = compute without removing evoked response (ERP)| 1 = after removing ERP 
+project.brainstorm.fc.cohere1n_time.cohmeasure = 1; % 1 = Magnitude-squared
+% project.brainstorm.fc.cohere1n_time.outputmode = 1; % Save individual results (one file per input file)
+project.brainstorm.fc.cohere1n_time.win = 0.1;
+project.brainstorm.fc.cohere1n_time.overlap = 50;
+
+
+% Process: Bivariate Granger causality NxN
+project.brainstorm.fc.granger1n.scouttime = 2; % 1 = compute before scout grouping  | 2 = After
+project.brainstorm.fc.granger1n.removeevoked = 0; % 0 = compute without removing evoked response (ERP)| 1 = after removing ERP 
+project.brainstorm.fc.granger1n.outputmode = 1; % Save individual results (one file per input file)
+
+% Process: Bivariate Granger causality (spectral) NxN
+project.brainstorm.fc.spgranger1n.scouttime = 2; % 1 = compute before scout grouping  | 2 = After
+project.brainstorm.fc.spgranger1n.removeevoked = 0; % 0 = compute without removing evoked response (ERP)| 1 = after removing ERP 
+project.brainstorm.fc.spgranger1n.outputmode = 1; % Save individual results (one file per input file)
+                                    
+% Process: Phase locking value NxN                                    
+project.brainstorm.fc.plv1n.scouttime = 2; % 1 = compute before scout grouping  | 2 = After
+project.brainstorm.fc.plv1n.freqbands = project.brainstorm.tf.gb.freqbands;
+project.study.fc.plv1n.mirror = 0;
+project.study.fc.plv1n.keeptime = 1;
+project.study.fc.plv1n.plvmeasure = 2;
+project.brainstorm.fc.plv1n.outputmode = 1; % Save individual results (one file per input file)
+    
+% Process: Phase Transfer Entropy NxN
+project.brainstorm.fc.pte1n.scouttime = 2; % 1 = compute before scout grouping  | 2 = After
+project.brainstorm.fc.pte1n.freqbands = project.brainstorm.tf.gb.freqbands;
+project.study.fc.pte1n.mirror = 0;
+project.study.fc.pte1n.normalized = 1;
+project.brainstorm.fc.pte1n.outputmode = 1; % Save individual results (one file per input file)
+
+
+
+% Process: Amplitude Envelope Correlation NxN
+project.brainstorm.fc.aec1n.scouttime = 2; % 1 = compute before scout grouping  | 2 = After
+project.brainstorm.fc.aec1n.freqbands = project.brainstorm.tf.gb.freqbands;
+project.brainstorm.fc.aec1n.isorth = 0;
+project.brainstorm.fc.aec1n.outputmode = 1; % Save individual results (one file per input file)
+
+
+% Process: Phase-amplitude coupling
+project.brainstorm.fc.pac.scouttime = 2; % 1 = compute before scout grouping  | 2 = After
+project.brainstorm.fc.pac.outputmode = 1; % Save individual results (one file per input file)
+project.brainstorm.fc.pac.scalarprod = 0; % 0 = Normalized
+project.brainstorm.fc.pac.nesting = [2, 30];
+project.brainstorm.fc.pac.nested =  [40, 150];
+project.brainstorm.fc.pac.numfreqs = 0;
+project.brainstorm.fc.pac.parallel = 0;
+project.brainstorm.fc.pac.ismex = 1;
+project.brainstorm.fc.pac.max_block_size = 1;
+project.brainstorm.fc.pac.avgoutput = 0;
+project.brainstorm.fc.pac.savemax = 0;
+    
+% Process: tPAC
+project.brainstorm.fc.tpac.scouttime = 2; % 1 = compute before scout grouping  | 2 = After
+project.brainstorm.fc.tpac.outputmode = 1; % Save individual results (one file per input file)
+project.brainstorm.fc.tpac.scalarprod = 0; % 0 = Normalized
+project.brainstorm.fc.tpac.nesting = [2, 30];
+project.brainstorm.fc.tpac.nested =  [40, 150];
+project.brainstorm.fc.tpac.fa_type = 2;
+project.brainstorm.fc.tpac.winLen = 1.1;
+project.brainstorm.fc.tpac.target_res = '';
+project.brainstorm.fc.tpac.max_block_size = 1;
+project.brainstorm.fc.tpac.avgoutput = 0;
+project.brainstorm.fc.tpac.margin = 1;
 
 %%
 %--------------------------------------------------------------------------------------------------------------------------------------------------------------------

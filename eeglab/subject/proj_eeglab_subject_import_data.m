@@ -222,6 +222,23 @@ for subj=1:numsubj
                 end
                 EEG=pop_chanedit(EEG, 'lookup',eeglab_channels_file);
                 EEG = eeg_checkset( EEG );
+                
+                % gestione eventi/annotazioni edf usando fieldtrip
+                addpath(project.paths.plugin.fieldtrip);
+                
+                
+                event = ft_read_event(input_file_name, 'detect flank', []);
+                evelab = {event.value};
+                emptylab=cellfun(@isempty, evelab);
+                event2 = event(not(emptylab));                
+                evelab2 = {event2.value};                
+                evelatpt = [event.timestamp];
+                
+                for neve = 1:length(EEG.event)
+                    EEG.event(neve).type = evelab2{neve};
+                end
+                eeglab redraw
+                
 
 
         otherwise

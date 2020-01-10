@@ -62,7 +62,6 @@ function EEG = proj_eeglab_subject_testart(project, varargin)
 %   Highpass : Transition band for the initial high-pass filter in Hz. This is formatted as
 %              [transition-start, transition-end]. Default: [0.25 0.75].
 %
-%
 %   NOTE: The following are detail parameters that may be tuned if one of the criteria does
 %   not seem to be doing the right thing. These basically amount to side assumptions about the
 %   data that usually do not change much across recordings, but sometimes do.
@@ -101,7 +100,10 @@ function EEG = proj_eeglab_subject_testart(project, varargin)
 %                                 bound). Together with the previous parameter this determines how
 %                                 ASR calibration data is be extracted from a recording. Can also be
 %                                 specified as 'off' to achieve the same effect as in the previous
-%                                 parameter. Default: [-3.5 5.5].
+%                                 parameter. Default: [-Inf 5.5].
+%
+%   BurstRejection : 'on' or 'off'. If 'on' reject portions of data containing burst instead of 
+%                    correcting them using ASR. Default is 'off'.
 %
 %   WindowCriterionTolerances : These are the power tolerances outside of which a channel in the final
 %                               output data is considered "bad", in standard deviations relative
@@ -112,7 +114,7 @@ function EEG = proj_eeglab_subject_testart(project, varargin)
 %                               repaired and will be removed from the output. This last stage can be
 %                               skipped either by setting the WindowCriterion to 'off' or by taking
 %                               the third output of this processing function (which does not include
-%                               the last stage). Default: [-3.5 7].
+%                               the last stage). Default: [-Inf 7].
 %
 %   FlatlineCriterion : Maximum tolerated flatline duration. In seconds. If a channel has a longer
 %                       flatline than this, it will be considered abnormal. Default: 5
@@ -132,6 +134,35 @@ function EEG = proj_eeglab_subject_testart(project, varargin)
 %                                    note that increasing this value requires the ChannelCriterion
 %                                    to be relaxed in order to maintain the same overall amount of
 %                                    removed channels. Default: 0.1.
+%
+%   MaxMem : The maximum amount of memory in MB used by the algorithm when processing. 
+%            See function asr_processf for more information. Default is 64.
+%
+% Out:
+%   EEG : Final cleaned EEG recording.
+%
+%   HP : Optionally just the high-pass filtered data.
+%
+%   BUR : Optionally the data without final removal of "irrecoverable" windows.
+%
+% Examples:
+%   % Load a recording, clean it, and visualize the difference (using the defaults)
+%   raw = pop_loadset(...);
+%   clean = clean_artifacts(raw);
+%   vis_artifacts(clean,raw);
+%
+%   % Use a more aggressive threshold (passing the parameters in by position)
+%   raw = pop_loadset(...);
+%   clean = clean_artifacts(raw,[],2.5);
+%   vis_artifacts(clean,raw);
+%
+%   % Passing some parameter by name (here making the WindowCriterion setting less picky)
+%   raw = pop_loadset(...);
+%   clean = clean_artifacts(raw,'WindowCriterion',0.25);
+%
+%   % Disabling the WindowCriterion and ChannelCriterion altogether
+%   raw = pop_loadset(...);
+%   clean = clean_artifacts(raw,'WindowCriterion','off','ChannelCriterion','off');
 
 if not(isfield(project, 'testart'))
     project.testart.FlatlineCriterion = 4;
@@ -139,7 +170,8 @@ if not(isfield(project, 'testart'))
     project.testart.ChannelCriterion = 0.85;
     project.testart.LineNoiseCriterion = 4;
     project.testart.BurstCriterion = 3;
-    project.testart.WindowCriterion = 0.25;
+    project.testart.WindowCriterion = 'off';
+    project.testart.BurstRejection = 'off';
     
 end
 
@@ -149,7 +181,7 @@ ChannelCriterion = project.testart.ChannelCriterion;
 LineNoiseCriterion = project.testart.LineNoiseCriterion;
 BurstCriterion = project.testart.BurstCriterion;
 WindowCriterion = project.testart.WindowCriterion;
-
+BurstRejection = project.testart.BurstRejection;
 
 
 
@@ -198,7 +230,7 @@ WindowCriterion = project.testart.WindowCriterion;
         input_testart.LineNoiseCriterion = LineNoiseCriterion;
         input_testart.BurstCriterion = BurstCriterion;
         input_testart.WindowCriterion = WindowCriterion;
-        
+        input_testart.BurstRejection = BurstRejection;
         
         EEG         = eeglab_subject_testart(input_testart);
     
