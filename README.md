@@ -10,7 +10,7 @@ It implement all the analysis steps relying on the EEGLab (https://sccn.ucsd.edu
 
 ## Why use it
 
-Every huge analysis pipeline has a learning curve which must be matched with the advantages it provides to the user.
+Every analysis framework has a learning curve which must be matched with the advantages it provides to the user.
 eegtools offer several features (see next paragraph), most of them can be found in many other software packages. Its unicity is the possibility to model all the characteristics of a huge and complex EEG project and perform automatic analysis. All the analysis steps (but for artefact removal) can be performed in batch mode (code, start, go home and find everything processed next morning). Once you create your clean continuous files, you can concatenate all the steps from epoching to group stats, plotting and results export. This is granted by compiling a huge project_structure.m file, where you can define eeg data characteristics, preprocessing params, participants details, statistical models, electrodes cluster, time window, frequency bands, analysis types and many other features.
 Moreover, it eases the integration between EEGLab and Brainstorm and allows calling the latter methods, and many others custom methods, from matlab command line using the same data structure used for ERP/ERSP analysis.
 
