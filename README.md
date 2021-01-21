@@ -94,13 +94,13 @@ The last params identify the project structure file, a huge (up to 1500 lines) f
 
 ## Publications using it
 
-13. Amadeo M.B., Campus C., Gori M., Years of Blindness Lead to Visualize Space Through Time, Frontiers in Neuroscience, vol. 14, 2020, 10.3389/fnins.2020.00812
+13 . Amadeo M.B., Campus C., Gori M., Years of Blindness Lead to Visualize Space Through Time, Frontiers in Neuroscience, vol. 14, 2020, 10.3389/fnins.2020.00812
 
-12. Amadeo M.B., Campus C., Gori M., Visual representations of time elicit early responses in human temporal cortex, NeuroImage, vol. 217, 2020, 10.1016/j.neuroimage.2020.116912
+12 . Amadeo M.B., Campus C., Gori M., Visual representations of time elicit early responses in human temporal cortex, NeuroImage, vol. 217, 2020, 10.1016/j.neuroimage.2020.116912
 
-11. Gori M., Amadeo M.B., Campus C., Temporal cues trick the visual and auditory cortices mimicking spatial cues in blind individuals, Human Brain Mapping, vol. 41, (no. 8), pp. 2077-2091, 2020, 10.1002/hbm.24931
+11 . Gori M., Amadeo M.B., Campus C., Temporal cues trick the visual and auditory cortices mimicking spatial cues in blind individuals, Human Brain Mapping, vol. 41, (no. 8), pp. 2077-2091, 2020, 10.1002/hbm.24931
 
-10. Maffongelli L., Ferrari E., Bartoli E., Campus C., Olivier E., Fadiga L., D'Ausilio A., Role of sensorimotor areas in early detection of motor errors: An EEG and TMS study, Behavioural Brain Research, vol. 378, 2020, 10.1016/j.bbr.2019.112248
+10 . Maffongelli L., Ferrari E., Bartoli E., Campus C., Olivier E., Fadiga L., D'Ausilio A., Role of sensorimotor areas in early detection of motor errors: An EEG and TMS study, Behavioural Brain Research, vol. 378, 2020, 10.1016/j.bbr.2019.112248
 
 9 . Campus C., Sandini G., Amadeo M.B., Gori M., Stronger responses in the visual cortex of sighted compared to blind individuals during auditory space representation, Scientific Reports, vol. 9, (no. 1), 2019, 10.1038/s41598-018-37821-y
 
