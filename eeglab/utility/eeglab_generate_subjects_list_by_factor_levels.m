@@ -6,7 +6,7 @@ subjects_list_by_factor_levels={};
 
 eeglab_version = eeg_getversion;
 
-if not(strcmp(eeglab_version,'development head'))
+if sum(strfind(eeglab_version,'14'))
     
     design_cases={STUDY.design(design_num).cell.case};
     

@@ -212,12 +212,17 @@ for design_num=design_num_vec
     ersp_tf_stat.roi_names      = roi_names;
     
     %% exctract names of the factores and the names of the corresponding levels for the selected design
-    name_f1                     = STUDY.design(design_num).variable(1).label;
-    name_f2                     = STUDY.design(design_num).variable(2).label;
     
+    name_f1                     = STUDY.design(design_num).variable(1).label;    
     levels_f1                   = STUDY.design(design_num).variable(1).value;
-    levels_f2                   = STUDY.design(design_num).variable(2).value;
+   
+    name_f2 = [];
+    levels_f2 = [];
     
+    if(length(STUDY.design(design_num).variable) > 1)
+        name_f2                     = STUDY.design(design_num).variable(2).label;
+        levels_f2                   = STUDY.design(design_num).variable(2).value;
+    end
     switch ersp_tf_resolution_mode
         
         %         if isempty(group_time_windows_list) && isempty(frequency_bands_list)
@@ -364,7 +369,8 @@ for design_num=design_num_vec
                     input_graph.group_time_windows_list       = group_time_windows_list;
                     input_graph.frequency_bands_list          = frequency_bands_list;
                     input_graph.display_pmode                 = display_pmode;
-                    
+                    input_graph.display_compact_plots         = display_compact_plots;
+
                     eeglab_study_roi_ersp_tf_graph(input_graph)
                 end
                 
@@ -438,7 +444,8 @@ for design_num=design_num_vec
                     input_graph.group_time_windows_list       = group_time_windows_list;
                     input_graph.frequency_bands_list          = frequency_bands_list;
                     input_graph.display_pmode                 = display_pmode;
-                    
+                    input_graph.display_compact_plots         = display_compact_plots;
+
                     eeglab_study_roi_ersp_tf_graph(input_graph)
                 end                
                 
@@ -511,7 +518,8 @@ for design_num=design_num_vec
                     input_graph.group_time_windows_list       = group_time_windows_list;
                     input_graph.frequency_bands_list          = frequency_bands_list;
                     input_graph.display_pmode                 = display_pmode;
-                    
+                    input_graph.display_compact_plots         = display_compact_plots;
+
                     eeglab_study_roi_ersp_tf_graph(input_graph)
                  end
                 
@@ -587,7 +595,8 @@ for design_num=design_num_vec
                     input_graph.display_only_significant_mode      = display_only_significant_mode;
                     input_graph.ersp_measure                       = ersp_measure;
                     input_graph.display_pmode                      = display_pmode;
-                    
+                    input_graph.display_compact_plots         = display_compact_plots;
+
                     eeglab_study_roi_ersp_tf_tw_fb_graph(input_graph)
                 end
                 

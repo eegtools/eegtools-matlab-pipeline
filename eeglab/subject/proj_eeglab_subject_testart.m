@@ -172,6 +172,7 @@ if not(isfield(project, 'testart'))
     project.testart.BurstCriterion = 3;
     project.testart.WindowCriterion = 'off';
     project.testart.BurstRejection = 'off';
+    project.testart.interpolate_channels = 'on';
     
 end
 
@@ -182,8 +183,7 @@ LineNoiseCriterion = project.testart.LineNoiseCriterion;
 BurstCriterion = project.testart.BurstCriterion;
 WindowCriterion = project.testart.WindowCriterion;
 BurstRejection = project.testart.BurstRejection;
-
-
+interpolate_channels = project.testart.interpolate_channels;
 
 
 
@@ -231,6 +231,7 @@ BurstRejection = project.testart.BurstRejection;
         input_testart.BurstCriterion = BurstCriterion;
         input_testart.WindowCriterion = WindowCriterion;
         input_testart.BurstRejection = BurstRejection;
+        input_testart.interpolate_channels = interpolate_channels;
         
         EEG         = eeglab_subject_testart(input_testart);
     

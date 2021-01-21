@@ -67,44 +67,49 @@ electrode2inspect               = 'C4';
 save_figure                     = 0;
 
 try
-    operations = {
-        'do_import'... import and create a backup _raw file
-        'do_import_collect',...import and merge different files of a single subject
-        'do_remove_upto_start_experiment',...
-        'do_remove_pauses',...
-        'do_testart',... automatic removal of artifacts using ASR and clean_rawdata
-        'do_preproc',...
-        'do_recover_raw',... to recover data from raw file
-        'do_epoch_catcond',... global epoching around experimental triggers (less data for ica but more specific for the experiment and without pauses etc)
-        'mark_badepochs_catcond',... automatically mark bad epochs in all epoched conditions based on quantitative criteria
-        'do_ica',... ica and save backup file _icabck with ica decomposition 
-        'do_remove_ica',... 
-        'do_recover_ica',...
-        'do_reref',... reref and create backup file _refbck
-        'do_recover_ref',...
-        'do_mark_trial', ...
-        'do_mark_baseline',...
-        'do_rectify',...
-        'do_epochs',...
-        'mark_badepochs',... automatically mark bad epochs in all epoched conditions based on quantitative criteria
-        'do_factors',...
-        'do_select_eeg_ch',...
-        'do_recover_allch',...
-        'do_align_montages',...
-        'do_export_ch4brainstorm',...
-        'do_microstates',...
-        'do_subject_spectra',...
-        'do_subject_replot_spectra',...
+      operations = {
+        'do_import'...                                                     1  import and create a backup _raw file
+        'do_import_collect',...                                            2  import and merge different files of a single subject
+        'do_remove_upto_start_experiment',...                              3
+        'do_remove_pauses',...                                             4
+        'do_interpolate_segments',...                                      5  interpolate segments based on selected triggers
+        'do_preproc',...                                                   6   
+        'do_testart',...                                                   7  automatic removal of artifacts using ASR and clean_rawdata
+        'do_recover_raw',...                                               8  to recover data from raw file
+        'do_epoch_catcond',...                                             9  global epoching around experimental triggers (less data for ica but more specific for the experiment and without pauses etc)
+        'mark_badepochs_catcond',...                                       10 automatically mark bad epochs in all epoched conditions based on quantitative criteria
+        'do_ica',...                                                       11 ica and save backup file _icabck with ica decomposition 
+        'do_remove_ica',...                                                12
+        'do_recover_ica',...                                               13
+        'do_reref',...                                                     14 reref and create backup file _refbck
+        'do_recover_ref',...                                               15 
+        'do_mark_trial', ...                                               16
+        'do_mark_baseline',...                                             17
+        'do_rectify',...                                                   18
+        'do_interpolate_channels',...                                      19                               
+        'do_epochs',...                                                    20
+        'mark_badepochs',...                                               21 automatically mark bad epochs in all epoched conditions based on quantitative criteria
+        'do_factors',...                                                   22
+        'do_select_eeg_ch',...                                             23  
+        'do_recover_allch',...                                             24   
+        'do_align_montages',...                                            25
+        'do_export_ch4brainstorm',...                                      26
+        'do_microstates',...                                               27
+        'do_subject_spectra',...                                           28
+        'do_subject_replot_spectra',...                                    29
         };
     
     for nop = 1:length(operations)
         
         operation = operations{nop};
+        disp(['Begin ' operation]);
+        
         project                                                 = project_init(project);
         
         result = startProcess(project, ...
             operation,  ...
             'list_select_subjects', list_select_subjects);
+        disp(['End ' operation]);
         
     end
 

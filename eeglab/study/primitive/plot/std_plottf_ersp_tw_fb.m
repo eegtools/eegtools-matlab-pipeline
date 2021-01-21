@@ -7,22 +7,22 @@
 %  times - [vector] latencies in ms of the data points.
 %  freqs - [vector] frequencies in Hz of the data points.
 %  data  -  [cell array] mean data for each subject group and/or data
-%           condition. For example, to plot mean ERPs from a STUDY 
-%           for epochs of 800 frames in two conditions from three groups 
+%           condition. For example, to plot mean ERPs from a STUDY
+%           for epochs of 800 frames in two conditions from three groups
 %           of 12 subjects:
 %
 %           >> data = { [800x12] [800x12] [800x12];... % 3 groups, cond 1
 %                       [800x12] [800x12] [800x12] };  % 3 groups, cond 2
 %           >> std_plottf(erp_ms,data);
 %
-%           By default, parametric statistics are computed across subjects 
-%           in the three groups. (group,condition) ERP averages are plotted. 
-%           See below and >> help statcond 
+%           By default, parametric statistics are computed across subjects
+%           in the three groups. (group,condition) ERP averages are plotted.
+%           See below and >> help statcond
 %           for more information about the statistical computations.
 %
 % Optional display parameters:
 %  'datatype'    - ['ersp'|'itc'] data type {default: 'ersp'}
-%  'titles'      - [cell array of string] titles for each of the subplots. 
+%  'titles'      - [cell array of string] titles for each of the subplots.
 %                  { default: none}
 %
 % Statistics options:
@@ -31,19 +31,19 @@
 %  'condstats'   - ['on'|'off'] Compute (or not) statistics across groups.
 %                  {default: 'off'}
 
-%  'threshold'   - [NaN|real<<1] Significance threshold. NaN -> plot the 
-%                  p-values themselves on a different figure. When possible, 
+%  'threshold'   - [NaN|real<<1] Significance threshold. NaN -> plot the
+%                  p-values themselves on a different figure. When possible,
 %                  significance regions are indicated below the data.
 %                  {default: NaN}
-%  'maskdata'    - ['on'|'off'] when threshold is non-NaN and not both 
-%                  condition and group statistics are computed, the user 
+%  'maskdata'    - ['on'|'off'] when threshold is non-NaN and not both
+%                  condition and group statistics are computed, the user
 %                  has the option to mask the data for significance.
 %                  {defualt: 'off'}
 %
 % Other plotting options:
 %  'plotmode'    - ['normal'|'condensed'] statistics plotting mode:
-%                  'condensed' -> plot statistics under the curves 
-%                  (when possible); 'normal' -> plot them in separate 
+%                  'condensed' -> plot statistics under the curves
+%                  (when possible); 'normal' -> plot them in separate
 %                  axes {default: 'normal'}
 %  'freqscale'   - ['log'|'linear'|'auto'] frequency plotting scale. This
 %                  will only change the ordinate not interpolate the data.
@@ -81,22 +81,22 @@
 
 function [pgroup, pcond, pinter] = std_plottf_ersp_tw_fb(input, varargin)
 
-times                                                                   = input.times; 
-freqs                                                                      = input.freqs; 
-data                                                                       = input.data; 
-time_windows_names                                                         = input.time_windows_names; 
-frequency_bands_names                                                      = input.frequency_bands_names; 
-plot_dir                                                                   = input.plot_dir; 
-roi_name                                                                   = input.roi_name; 
-name_f1                                                                    = input.name_f1; 
-name_f2                                                                    = input.name_f2; 
-levels_f1                                                                  = input.levels_f1; 
-levels_f2                                                                  = input.levels_f2; 
-pmaskcond                                                                  = input.pmaskcond; 
-pmaskgru                                                                   = input.pmaskgru; 
-pmaskinter                                                                 = input.pmaskinter; 
-ersp_mode                                                                  = input.ersp_measure; 
-display_pmode                                                              = input.display_pmode; 
+times                                                                   = input.times;
+freqs                                                                      = input.freqs;
+data                                                                       = input.data;
+time_windows_names                                                         = input.time_windows_names;
+frequency_bands_names                                                      = input.frequency_bands_names;
+plot_dir                                                                   = input.plot_dir;
+roi_name                                                                   = input.roi_name;
+name_f1                                                                    = input.name_f1;
+name_f2                                                                    = input.name_f2;
+levels_f1                                                                  = input.levels_f1;
+levels_f2                                                                  = input.levels_f2;
+pmaskcond                                                                  = input.pmaskcond;
+pmaskgru                                                                   = input.pmaskgru;
+pmaskinter                                                                 = input.pmaskinter;
+ersp_mode                                                                  = input.ersp_measure;
+display_pmode                                                              = input.display_pmode;
 
 
 strfname = char([ name_f1, '_', name_f2]);
@@ -112,22 +112,22 @@ if nargin < 2
 end;
 
 opt = finputcheck( varargin, { 'titles'         'cell'   []              cellfun(@num2str, cell(20,20), 'uniformoutput', false);
-                               'caxis'          'real'   []              [];
-                               'ersplim'        'real'   []              []; % same as above
-                               'itclim'         'real'   []              []; % same as above
-                               'ylim'           'real'   []              [];
-                               'tftopoopt'      'cell'   []              {};
-                               'threshold'      'real'   []              NaN;
-                               'unitx'          'string' []              'ms'; % just for titles
-                               'chanlocs'       'struct' []              struct('labels', {});
-                               'freqscale'      'string' { 'log','linear','auto' }  'auto';
-                               'events'         'cell'   []              {};
-                               'groupstats'     'cell'   []              {};
-                               'condstats'      'cell'   []              {};
-                               'interstats'     'cell'   []              {};                               
-                               'maskdata'       'string' { 'on','off' }   'off';
-                               'datatype'       'string' { 'ersp','itc' 'erpim' }    'ersp';
-                               'plotmode'       'string' { 'normal','condensed' }  'normal' }, 'std_plottf');
+    'caxis'          'real'   []              [];
+    'ersplim'        'real'   []              []; % same as above
+    'itclim'         'real'   []              []; % same as above
+    'ylim'           'real'   []              [];
+    'tftopoopt'      'cell'   []              {};
+    'threshold'      'real'   []              NaN;
+    'unitx'          'string' []              'ms'; % just for titles
+    'chanlocs'       'struct' []              struct('labels', {});
+    'freqscale'      'string' { 'log','linear','auto' }  'auto';
+    'events'         'cell'   []              {};
+    'groupstats'     'cell'   []              {};
+    'condstats'      'cell'   []              {};
+    'interstats'     'cell'   []              {};
+    'maskdata'       'string' { 'on','off' }   'off';
+    'datatype'       'string' { 'ersp','itc' 'erpim' }    'ersp';
+    'plotmode'       'string' { 'normal','condensed' }  'normal' }, 'std_plottf');
 if isstr(opt), error(opt); end;
 if all(all(cellfun('size', data, 3)==1))               opt.singlesubject = 'on'; end;
 
@@ -139,7 +139,7 @@ for g = size(data,2):-1:1, if sum(datapresent(:,g)) == 0, data(:,g) = []; opt.ti
 if ~isempty(opt.groupstats) & ~isempty(opt.condstats) & strcmpi(opt.maskdata, 'on')
     disp('Cannot use ''maskdata'' option with both condition stat. and group stat. on');
     disp('Disabling statistics');
-    opt.groupstats = {}; opt.condstats = {}; opt.maskdata = 'off'; 
+    opt.groupstats = {}; opt.condstats = {}; opt.maskdata = 'off';
 end;
 if ~isempty(opt.ersplim), opt.caxis = opt.ersplim; end;
 if ~isempty(opt.itclim), opt.caxis = opt.itclim; end;
@@ -153,9 +153,9 @@ else         opt.transpose = 'off';
 end;
 
 if strcmp(ersp_mode, 'Pfu')
-     ersp_measure = 'Delta %';
-    else
-     ersp_measure = 'dB';
+    ersp_measure = 'Delta %';
+else
+    ersp_measure = 'dB';
 end
 
 
@@ -171,7 +171,7 @@ end;
 
 % condensed plot
 % --------------
-if strcmpi(opt.plotmode, 'condensed') 
+if strcmpi(opt.plotmode, 'condensed')
     meanplot = zeros(size(data{1},1), size(data{1},2));
     count = 0;
     for c = 1:nc
@@ -184,20 +184,20 @@ if strcmpi(opt.plotmode, 'condensed')
     end;
     meanplot = meanplot/count;
     options = { 'chanlocs', opt.chanlocs, 'electrodes', 'off', 'cbar', 'on', ...
-            'cmode', 'separate', opt.tftopoopt{:} };       
-        
+        'cmode', 'separate', opt.tftopoopt{:} };
+    
     if strcmpi(opt.freqscale, 'log'), options = { options{:} 'logfreq', 'native' }; end;
-     fig=figure( 'color', 'w', 'Visible', 'off');
-   tftopo_tw_fb( meanplot', times, freqs, 'title', opt.titles{1}, options{:}); set(gcf, 'Visible', 'off');
+    fig=figure( 'color', 'w', 'Visible', 'off');
+    tftopo_tw_fb( meanplot', times, freqs, 'title', opt.titles{1}, options{:}); set(gcf, 'Visible', 'off');
     currentHangle = gca;
     if ~isempty( opt.caxis )
         caxis( currentHangle, opt.caxis )
     end
     colorbarHandle = cbar;
     title(colorbarHandle,ersp_measure);
-    axes(currentHangle); 
-
-    return; 
+    axes(currentHangle);
+    
+    return;
 end;
 
 % plotting paramters
@@ -211,29 +211,29 @@ if nc > 1 && ~isempty(opt.condstats  ), addr = 1; else addr = 0; end;
 
 % compute significance mask
 % --------------------------
-if ~isempty(opt.interstats), pinter = opt.interstats{3}; 
-
-%     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% CORREGGO BACO INTERAZIONE
-%     pinter_corr=[];    
-%     for ind = 1:length(opt.condstats)
-%         pinter_corr(:,:,ind)  = opt.condstats{ind};
-%     end;    
-%     for ind = 1:length(opt.groupstats)
-%         pinter_corr(:,:,(ind+length(opt.condstats))) = opt.groupstats{ind};         
-%     end;    
-%     if isnan(opt.threshold)
-%         pinter=min(pinter_corr,[],3);
-%     else
-%        pinter=max(pinter_corr,[],3); 
-%     end
+if ~isempty(opt.interstats), pinter = opt.interstats{3};
+    
+    %     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% CORREGGO BACO INTERAZIONE
+    %     pinter_corr=[];
+    %     for ind = 1:length(opt.condstats)
+    %         pinter_corr(:,:,ind)  = opt.condstats{ind};
+    %     end;
+    %     for ind = 1:length(opt.groupstats)
+    %         pinter_corr(:,:,(ind+length(opt.condstats))) = opt.groupstats{ind};
+    %     end;
+    %     if isnan(opt.threshold)
+    %         pinter=min(pinter_corr,[],3);
+    %     else
+    %        pinter=max(pinter_corr,[],3);
+    %     end
     
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+    
 end;
 
 
-if ~isnan(opt.threshold) && ( ~isempty(opt.groupstats) || ~isempty(opt.condstats) )    
+if ~isnan(opt.threshold) && ( ~isempty(opt.groupstats) || ~isempty(opt.condstats) )
     pcondplot  = opt.condstats;
     pgroupplot = opt.groupstats;
     pinterplot = pinter;
@@ -258,12 +258,12 @@ end;
 % plot time/frequency image
 % -------------------------
 options = { 'chanlocs', opt.chanlocs, 'electrodes', 'off', 'cbar', 'off', ...
-            'cmode', 'separate', opt.tftopoopt{:} };
+    'cmode', 'separate', opt.tftopoopt{:} };
 if strcmpi(opt.freqscale, 'log'), options = { options{:} 'logfreq', 'native' }; end;
 if strcmpi(opt.datatype, 'erpim'), options = { options{:} 'ylabel' 'Trials' }; end;
 
 
-mask_surface =~(isempty(pmaskgru) & isempty(pmaskcond));    
+mask_surface =~(isempty(pmaskgru) & isempty(pmaskcond));
 
 
 
@@ -272,7 +272,7 @@ mask_surface =~(isempty(pmaskgru) & isempty(pmaskcond));
 fig = figure('color', 'w', 'Visible', 'off');set(gcf, 'Visible', 'off');
 pos = get(fig, 'position');
 set(fig, 'position', [ pos(1)+15 pos(2)+15 pos(3)/2.5*(nc+addr), pos(4)/2*(ng+addc) ]);set(gcf, 'Visible', 'off');
-  
+
 pos = get(fig, 'position');
 if strcmpi(opt.transpose, 'off'), set(gcf, 'position', [ pos(1) pos(2) pos(4) pos(3)]);
 else                              set(gcf, 'position', pos);
@@ -285,18 +285,18 @@ for c = 1:nc
         if ~isempty(data{c,g})
             tmpplot = mean(data{c,g},3);
             if ~isreal(tmpplot(1)), tmpplot = abs(tmpplot); end;
-            if statmask, 
+            if statmask,
                 if ~isempty(opt.condstats), tmpplot(find(pcondplot{g}(:) == 0)) = 0;
                 else                        tmpplot(find(pgroupplot{c}(:) == 0)) = 0;
                 end;
             end;
             if ~isempty(opt.events)
-                 tmpevents = mean(opt.events{c,g},2);
+                tmpevents = mean(opt.events{c,g},2);
             else tmpevents = [];
             end;
             
             
-              if mask_surface
+            if mask_surface
                 p1=pmaskgru;
                 p2=pmaskcond;
                 if isempty(p1)
@@ -306,8 +306,8 @@ for c = 1:nc
                     p2{g}=zeros(size(p1{c}));
                 end
                 pthresh=p1{c}+p2{g};
-                tmpplot=tmpplot.*pthresh;                       
-              end
+                tmpplot=tmpplot.*pthresh;
+            end
             
             
             
@@ -317,7 +317,7 @@ for c = 1:nc
             
             set(gca,'XLim',[0.5 length(time_windows_names)+0.5]);
             set(gca,'YLim',[0.5 length(frequency_bands_names)+0.5]);
-
+            
             
             set(gca,'XTick',1:(length(time_windows_names)))
             set(gca,'XTickLabel',char(time_windows_names))
@@ -329,28 +329,28 @@ for c = 1:nc
                 warning off;
                 tmpc = [ min(min(tmpplot(:)), tmpc(1)) max(max(tmpplot(:)), tmpc(2)) ];
                 warning on;
-            else 
+            else
                 if ~isempty(opt.caxis)
                     caxis(opt.caxis);
                 end;
             end;
-
+            
             if c > 1
-                ylabel(''); 
+                ylabel('');
             end;
         end;
-    
+        
         % statistics accross groups
         % -------------------------
         if g == ng && ng > 1 && ~isempty(opt.groupstats) && ~isinf(pgroupplot{c}(1)) && ~statmask
             hdl(c,g+1) = mysubplot(nc+addr, ng+addc, g + 1 + (c-1)*(ng+addc), opt.transpose);
             
-             if ~isempty(pmaskgru)
+            if ~isempty(pmaskgru)
                 pgroupplot{c}(~pmaskgru{c})=0;
-             end
+            end
             
             
-           if ng == 2 && length(unique(pgroupplot{c}))<4  
+            if ng == 2 && length(unique(pgroupplot{c}))<4
                 if strcmp(display_pmode,'raw_diff')
                     pp = sign( (mean(data{c,1},3) - mean(data{c,2},3)) .* pgroupplot{c});
                     imagesc(times,freqs,pp)
@@ -358,32 +358,32 @@ for c = 1:nc
                     caxis([-2 2])
                     title(['P(',levels_f2{1},' - ',levels_f2{2},')'])
                     hold on
-%                     plot(zeros(length(freqs)),freqs,'-.')
+                    %                     plot(zeros(length(freqs)),freqs,'-.')
                     hold off
-                elseif strcmp(display_pmode,'abs_diff')                       
+                elseif strcmp(display_pmode,'abs_diff')
                     pp = sign( (abs(mean(data{c,1},3)) - abs(mean(data{c,2},3))) .* pgroupplot{c});
                     imagesc(times,freqs,pp)
                     set(gca,'YDir','normal')
                     caxis([-2 2])
                     title(['P(|',levels_f2{1},'| - |',levels_f2{2},'|)'])
                     hold on
-%                     plot(zeros(length(freqs)),freqs,'-.')
+                    %                     plot(zeros(length(freqs)),freqs,'-.')
                     hold off
-		else
-		        tftopo_tw_fb( pgroupplot{c}, times, freqs, 'title', opt.titles{c,g+1}, options{:});
-		        caxis([-maxplot maxplot]);
+                else
+                    tftopo_tw_fb( pgroupplot{c}, times, freqs, 'title', opt.titles{c,g+1}, options{:});
+                    caxis([-maxplot maxplot]);
                 end
             else
-               tftopo_tw_fb( pgroupplot{c}, times, freqs, 'title', opt.titles{c,g+1}, options{:});
+                tftopo_tw_fb( pgroupplot{c}, times, freqs, 'title', opt.titles{c,g+1}, options{:});
                 caxis([-maxplot maxplot]);
             end
-
+            
             xlabel('Time window','FontSize',12);
             ylabel('Frequency band','FontSize',12);
             
             set(gca,'XLim',[0.5 length(time_windows_names)+0.5]);
             set(gca,'YLim',[0.5 length(frequency_bands_names)+0.5]);
-
+            
             
             set(gca,'XTick',1:(length(time_windows_names)))
             set(gca,'XTickLabel',char(time_windows_names))
@@ -402,11 +402,11 @@ for g = 1:ng
         
         
         if ~isempty(pmaskcond)
-                pcondplot{g}(~pmaskcond{g})=0;            
+            pcondplot{g}(~pmaskcond{g})=0;
         end
         
-         
-        if nc == 2 && length(unique(pcondplot{g}))<4 
+        
+        if nc == 2 && length(unique(pcondplot{g}))<4
             if strcmp(display_pmode,'raw_diff')
                 pp = sign( (mean(data{1,g},3) - mean(data{2,g},3)) .*  pcondplot{g});
                 imagesc(times,freqs,pp)
@@ -414,37 +414,37 @@ for g = 1:ng
                 caxis([-2 2])
                 title(['P(',levels_f1{1},' - ',levels_f1{2},')'])
                 hold on
-%                 plot(zeros(length(freqs)),freqs,'-.')
+                %                 plot(zeros(length(freqs)),freqs,'-.')
                 hold off
-           elseif strcmp(display_pmode,'abs_diff')   
+            elseif strcmp(display_pmode,'abs_diff')
                 pp = sign( (abs(mean(data{g,1},3)) - abs(mean(data{g,2},3))) .*  pcondplot{g});
                 imagesc(times,freqs,pp)
                 set(gca,'YDir','normal')
                 caxis([-2 2])
                 title(['P(|',levels_f1{1},'| - |',levels_f1{2},'|)'])
                 hold on
-%                 plot(zeros(length(freqs)),freqs,'-.')
+                %                 plot(zeros(length(freqs)),freqs,'-.')
                 hold off
-		else
-				tftopo_tw_fb( pgroupplot{c}, times, freqs, 'title', opt.titles{c,g+1}, options{:});
-				caxis([-maxplot maxplot]);
+            else
+                tftopo_tw_fb( pgroupplot{c}, times, freqs, 'title', opt.titles{c,g+1}, options{:});
+                caxis([-maxplot maxplot]);
             end
         else
-           tftopo_tw_fb( pcondplot{g}, times, freqs, 'title', opt.titles{nc+1,g}, options{:});
+            tftopo_tw_fb( pcondplot{g}, times, freqs, 'title', opt.titles{nc+1,g}, options{:});
             caxis([-maxplot maxplot]);
         end
         xlabel('Time window','FontSize',12);
-            ylabel('Frequency band','FontSize',12);
-            
-            set(gca,'XLim',[0.5 length(time_windows_names)+0.5]);
-            set(gca,'YLim',[0.5 length(frequency_bands_names)+0.5]);
-
-            
-            set(gca,'XTick',1:(length(time_windows_names)))
-            set(gca,'XTickLabel',char(time_windows_names))
-            
-            set(gca,'YTick',[1:(length(frequency_bands_names))],'FontSize',10)
-            set(gca,'YTickLabel',char(frequency_bands_names),'FontSize',10)
+        ylabel('Frequency band','FontSize',12);
+        
+        set(gca,'XLim',[0.5 length(time_windows_names)+0.5]);
+        set(gca,'YLim',[0.5 length(frequency_bands_names)+0.5]);
+        
+        
+        set(gca,'XTick',1:(length(time_windows_names)))
+        set(gca,'XTickLabel',char(time_windows_names))
+        
+        set(gca,'YTick',[1:(length(frequency_bands_names))],'FontSize',10)
+        set(gca,'YTickLabel',char(frequency_bands_names),'FontSize',10)
     end;
 end;
 
@@ -476,22 +476,22 @@ if ~isempty(opt.groupstats) && ~isempty(opt.condstats) && ng > 1 && nc > 1
     %     ylabel('');
     xlabel('Time window','FontSize',12);
     ylabel('Frequency band','FontSize',12);
-
+    
     set(gca,'XLim',[0.5 length(time_windows_names)+0.5]);
     set(gca,'YLim',[0.5 length(frequency_bands_names)+0.5]);
-
-
+    
+    
     set(gca,'XTick',1:(length(time_windows_names)))
     set(gca,'XTickLabel',char(time_windows_names))
-
+    
     set(gca,'YTick',[1:(length(frequency_bands_names))],'FontSize',10)
     set(gca,'YTickLabel',char(frequency_bands_names),'FontSize',10)
-end;    
+end;
 
 % color bars
 % ----------
-axes(hdl(nc,ng)); 
-cbar_standard(opt.datatype, ng,ersp_measure); 
+axes(hdl(nc,ng));
+cbar_standard(opt.datatype, ng,ersp_measure);
 if isnan(opt.threshold) && (nc ~= size(hdl,1) || ng ~= size(hdl,2))
     ind = find(hdl(end:-1:1));
     axes(hdl(end-ind(1)+1));
@@ -500,7 +500,7 @@ end;
 
 
 tlf1=length(levels_f1);
-tlf2=length(levels_f2);   
+tlf2=length(levels_f2);
 
 if tlf1 > 1 && tlf2 <= 1
     suptitle(['ERSP in ' roi_name,': ', name_f1])
@@ -508,11 +508,11 @@ end
 if tlf1 <=1 && tlf2 > 1
     suptitle(['ERSP in ' roi_name,': ' name_f2 ])
 end
-if tlf1 > 1 && tlf2 > 1 
+if tlf1 > 1 && tlf2 > 1
     suptitle(['ERSP in ' roi_name,': ', name_f1 ' and ' name_f2 ])
 end
 
-% name_embed=fullfile(plot_dir,'ersp_tf'); 
+% name_embed=fullfile(plot_dir,'ersp_tf');
 % name_plot=[name_embed,'_', char(roi_name)];
 % set(fig, 'renderer', 'painter')
 % modify_plot(fig);
@@ -520,9 +520,9 @@ end
 % print([name_plot,'.eps'],'-depsc2','-r300');
 % plot2svg([name_plot,'.svg'])
 % os = system_dependent('getos');
-% if ~ strncmp(os,'Linux',2) 
+% if ~ strncmp(os,'Linux',2)
 %     print(fig,[name_embed,'.ps'],'-append','-dwinc')
-%     saveppt2(fullfile(plot_dir,'ersp_tf.ppt'),'f',fig);   
+%     saveppt2(fullfile(plot_dir,'ersp_tf.ppt'),'f',fig);
 % else
 %     print(fig,[name_embed,'.ps'],'-append','-painter','-r300')
 % end
@@ -541,51 +541,51 @@ save_figures( input_save_fig )
 % -------------------------------------------
 function hdl = mysubplot(nr,nc,ind,transp);
 
-    r = ceil(ind/nc);
-    c = ind -(r-1)*nc;
-    if strcmpi(transp, 'on'), hdl = subplot(nc,nr,(c-1)*nr+r);
-    else                      hdl = subplot(nr,nc,(r-1)*nc+c);
-    end;
+r = ceil(ind/nc);
+c = ind -(r-1)*nc;
+if strcmpi(transp, 'on'), hdl = subplot(nc,nr,(c-1)*nr+r);
+else                      hdl = subplot(nr,nc,(r-1)*nc+c);
+end;
 
 % colorbar for ERSP and scalp plot
 % --------------------------------
 function cbar_standard(datatype, ng,ersp_measure);
-    pos = get(gca, 'position');
-    tmpc = caxis;
-    fact = fastif(ng == 1, 40, 20);
-    tmp = axes('position', [ pos(1)+pos(3)+max(pos(3)/fact,0.006) pos(2) max(pos(3)/fact,0.01) pos(4) ]);  
-    set(gca, 'unit', 'normalized');
-    if strcmpi(datatype, 'itc')
-         cbar(tmp, 0, tmpc, 10); ylim([0.5 1]);
-         title('ITC');
-    elseif strcmpi(datatype, 'erpim')
-        cbar(tmp, 0, tmpc, 5);
-    else
-        cbar(tmp, 0, tmpc, 5);title(ersp_measure);
-    end;
-    
+pos = get(gca, 'position');
+tmpc = caxis;
+fact = fastif(ng == 1, 40, 20);
+tmp = axes('position', [ pos(1)+pos(3)+max(pos(3)/fact,0.006) pos(2) max(pos(3)/fact,0.01) pos(4) ]);
+set(gca, 'unit', 'normalized');
+if strcmpi(datatype, 'itc')
+    cbar(tmp, 0, tmpc, 10); ylim([0.5 1]);
+    title('ITC');
+elseif strcmpi(datatype, 'erpim')
+    cbar(tmp, 0, tmpc, 5);
+else
+    cbar(tmp, 0, tmpc, 5);title(ersp_measure);
+end;
+
 
 % colorbar for significance
 % -------------------------
 function cbar_signif(ng, maxplot);
-    pos = get(gca, 'position');
-    tmpc = caxis;
-    fact = fastif(ng == 1, 40, 20);
-    tmp = axes('position', [ pos(1)+pos(3)+max(pos(3)/fact,0.006) pos(2) max(pos(3)/fact,0.01) pos(4) ]);  
-    map = colormap;
-    n = size(map,1);
-    cols = [ceil(n/2):n]';
-    image([0 1],linspace(0,maxplot,length(cols)),[cols cols]);
-    %cbar(tmp, 0, tmpc, 5);
-    tick = linspace(0, maxplot, maxplot+1);
-    set(gca, 'ytickmode', 'manual', 'YAxisLocation', 'right', 'xtick', [], ...
-        'ytick', tick, 'yticklabel', round(10.^-tick*1000)/1000);
-    xlabel('');
+pos = get(gca, 'position');
+tmpc = caxis;
+fact = fastif(ng == 1, 40, 20);
+tmp = axes('position', [ pos(1)+pos(3)+max(pos(3)/fact,0.006) pos(2) max(pos(3)/fact,0.01) pos(4) ]);
+map = colormap;
+n = size(map,1);
+cols = [ceil(n/2):n]';
+image([0 1],linspace(0,maxplot,length(cols)),[cols cols]);
+%cbar(tmp, 0, tmpc, 5);
+tick = linspace(0, maxplot, maxplot+1);
+set(gca, 'ytickmode', 'manual', 'YAxisLocation', 'right', 'xtick', [], ...
+    'ytick', tick, 'yticklabel', round(10.^-tick*1000)/1000);
+xlabel('');
 
 % rapid filtering for ERP
 % -----------------------
 function tmpdata2 = myfilt(tmpdata, lowpass, highpass, factor, filtertype)
 
-    tmpdata2 = reshape(tmpdata, size(tmpdata,1), size(tmpdata,2)*size(tmpdata,3)*size(tmpdata,4));
-    tmpdata2 = eegfiltfft(tmpdata2',lowpass, highpass, factor, filtertype)';
-    tmpdata2 = reshape(tmpdata2, size(tmpdata,1), size(tmpdata,2), size(tmpdata,3), size(tmpdata,4));
+tmpdata2 = reshape(tmpdata, size(tmpdata,1), size(tmpdata,2)*size(tmpdata,3)*size(tmpdata,4));
+tmpdata2 = eegfiltfft(tmpdata2',lowpass, highpass, factor, filtertype)';
+tmpdata2 = reshape(tmpdata2, size(tmpdata,1), size(tmpdata,2), size(tmpdata,3), size(tmpdata,4));

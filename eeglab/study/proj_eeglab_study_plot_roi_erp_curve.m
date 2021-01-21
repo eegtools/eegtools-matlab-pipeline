@@ -86,7 +86,7 @@ function [STUDY, EEG] = proj_eeglab_study_plot_roi_erp_curve(project, analysis_n
 if nargin < 1
     help proj_eeglab_study_plot_roi_erp_curve;
     return;
-end;
+end
 
 study_path                  = fullfile(project.paths.output_epochs, project.study.filename);
 results_path                = project.paths.results;
@@ -216,7 +216,7 @@ for design_num=design_num_vec
     
     name_f1                            = STUDY.design(design_num).variable(1).label;
     eeglab_version = eeg_getversion;
-    if not(strcmp(eeglab_version,'development head'))
+    if sum(strfind(eeglab_version,'14'))
         name_f2                            = STUDY.design(design_num).variable(2).label;
     else
         name_f2 = [];
@@ -227,7 +227,7 @@ for design_num=design_num_vec
     
     levels_f1                          = STUDY.design(design_num).variable(1).value;
     
-    if not(strcmp(eeglab_version,'development head'))
+    if sum(strfind(eeglab_version,'14'))
         levels_f2                          = STUDY.design(design_num).variable(2).value;
     else
         levels_f2 = [];
@@ -546,7 +546,7 @@ for design_num=design_num_vec
         %         text_export_erp_resume_struct(erp_curve_roi_stat, [out_file_name '_resume_signif'], 'p_thresh', erp_curve_roi_stat.study_ls);
     end
     
-    if strcmp(which_method_find_extrema,'continuous') ;
+    if strcmp(which_method_find_extrema,'continuous') 
         [dataexpcols, dataexp] = text_export_erp_continuous_struct([out_file_name,'.txt'],erp_curve_roi_stat);
         %         text_export_erp_resume_struct(erp_curve_roi_stat, [out_file_name '_resume']);
         %         text_export_erp_resume_struct(erp_curve_roi_stat, [out_file_name '_resume_signif'], 'p_thresh', erp_curve_roi_stat.study_ls);

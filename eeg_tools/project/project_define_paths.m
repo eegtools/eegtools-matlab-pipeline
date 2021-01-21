@@ -55,7 +55,14 @@ function project = project_define_paths(project, varargin)
     project.paths.script.spm                = fullfile(project.paths.framework_root,'spm');                 addpath(genpath2(project.paths.script.spm));
 
     project.paths.script.eeg_tools          = fullfile(project.paths.framework_root,'eeg_tools');           addpath(project.paths.script.eeg_tools);
-    project.paths.script.resources          = fullfile(project.paths.script.eeg_tools, 'resources', '');    addpath(genpath2(project.paths.script.resources)); 
+    project.paths.script.resources          = fullfile(project.paths.script.eeg_tools, 'resources', '');    
+    % starting from matlab 2019 you cannot add to the path a folder named
+    % resources, change the name to supportfiles as adopted by eeglab
+    if(not(exist(project.paths.script.resources,'dir')))
+        project.paths.script.resources          = fullfile(project.paths.script.eeg_tools, 'supportfiles', '');    addpath(genpath2(project.paths.script.resources));
+    end    
+    addpath(genpath2(project.paths.script.resources));
+    
     project.paths.script.utilities          = fullfile(project.paths.script.eeg_tools, 'utilities', '');    addpath(genpath2(project.paths.script.utilities)); 
 
     if not(isfield(project.paths.script,'project'))

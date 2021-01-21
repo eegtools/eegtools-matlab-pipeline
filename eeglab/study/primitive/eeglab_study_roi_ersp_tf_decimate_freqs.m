@@ -28,7 +28,7 @@ function [output] = eeglab_study_roi_ersp_tf_decimate_freqs(input)
 % ersp_measure                                    = input.ersp_measure;
 % num_tails                                       = input.num_tails;
 % stat_freq_bands_list                            = input.stat_freq_bands_list;
-% mask_coef                                       = input.mask_coef;                              
+% mask_coef                                       = input.mask_coef;
 %
 % output.ersp_tf    = ersp_tf;
 % output.times      = times;
@@ -85,21 +85,36 @@ if strcmp(ersp_measure, 'Pfu')
 end
 
 
+if isempty(levels_f2)
+    
+    for nf1=1:length(levels_f1)
+%         M=squeeze(mean(ersp_tf{nf1,1},3));
+        M=ersp_tf{nf1,1};
 
-
-for nf1=1:length(levels_f1)
-    for nf2=1:length(levels_f2)
-        M=squeeze(mean(ersp_tf{nf1,nf2},3));
         [total_freqs, total_times, total_subjects]= size(M);
         final_freqs_mat=fix(total_freqs/decimation_factor_freqs);
         fixed_freqs=decimation_factor_freqs*final_freqs_mat;
         M=M(1:fixed_freqs,:,:);
         tmp_freqs_mat = reshape(M, [decimation_factor_freqs final_freqs_mat  total_times total_subjects]);
         tmp_freqs_mat = squeeze(mean(tmp_freqs_mat));
-        ersp_tf{nf1,nf2} = reshape(tmp_freqs_mat, [final_freqs_mat total_times total_subjects]);
+        ersp_tf{nf1,1} = reshape(tmp_freqs_mat, [final_freqs_mat total_times total_subjects]);
+    end
+    
+else
+    
+    for nf1=1:length(levels_f1)
+        for nf2=1:length(levels_f2)
+            M=squeeze(mean(ersp_tf{nf1,nf2},3));
+            [total_freqs, total_times, total_subjects]= size(M);
+            final_freqs_mat=fix(total_freqs/decimation_factor_freqs);
+            fixed_freqs=decimation_factor_freqs*final_freqs_mat;
+            M=M(1:fixed_freqs,:,:);
+            tmp_freqs_mat = reshape(M, [decimation_factor_freqs final_freqs_mat  total_times total_subjects]);
+            tmp_freqs_mat = squeeze(mean(tmp_freqs_mat));
+            ersp_tf{nf1,nf2} = reshape(tmp_freqs_mat, [final_freqs_mat total_times total_subjects]);
+        end
     end
 end
-
 
 tmp_freqs_vec=reshape(freqs(1:fixed_freqs),decimation_factor_freqs, final_freqs_mat);
 freqs= mean(tmp_freqs_vec);
@@ -112,7 +127,7 @@ for ind = 1:length(pinter),  pinter{ind}  =  abs(pinter{ind}) ; end;
 
 % if ~ isempty(stat_time_windows_list)
 %     [pcond, pgroup, pinter] = eeglab_study_roi_tf_maskp(pcond, pgroup, pinter,times, stat_time_windows_list);
-%     
+%
 % end
 if ~ isempty(stat_freq_bands_list)
     [pcond, pgroup, pinter] = eeglab_study_roi_tf_maskp_f(pcond, pgroup, pinter,freqs, stat_freq_bands_list,mask_coef);

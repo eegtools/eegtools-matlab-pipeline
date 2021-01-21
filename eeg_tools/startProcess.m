@@ -57,10 +57,14 @@ switch action_name
         
         
     case 'do_remove_segments'
-        % remove ics
+        % 
         result = proj_eeglab_subject_remove_segments(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
        
-    
+     case 'do_interpolate_segments'
+        % interpolate segments based on selected triggers
+        result = proj_eeglab_subject_interpolate_segments(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
+       
+  
     
     case 'do_recover_raw'
         proj_eeglab_subject_recover_raw(project, 'list_select_subjects', list_select_subjects);
@@ -165,6 +169,12 @@ switch action_name
     case 'do_rectify'
         % do preprocessing up to epochs: avgref, epochs, rmbase: create one trails dataset for each condition
         result = proj_eeglab_subject_rectify_ch(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);    
+       
+        
+    case 'do_interpolate_channels'
+        % do preprocessing up to epochs: avgref, epochs, rmbase: create one trails dataset for each condition
+        result = proj_eeglab_subject_interpolate_channels(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
+       
         
     case 'do_epochs'
         % do preprocessing up to epochs: avgref, epochs, rmbase: create one trails dataset for each condition

@@ -81,16 +81,16 @@ for subj=1:numsubj
     
     
     EEG2 = pop_epoch_bc(EEG, [mark_cond_code{1:length(mark_cond_code)}], [epoch_start         epoch_end], 'newname', 'all_conditions', 'epochinfo', 'yes');
-    EEG2 = eeg_checkset(EEG);
+    EEG2 = eeg_checkset(EEG2);
     
     disp(EEG2.filename)
     EEG2 = pop_saveset( EEG2, 'filename',[name_noext,ext],'filepath',EEG2.filepath);
     EEG = pop_saveset( EEG, 'filename',[name_noext,'_catcondbck',ext],'filepath',EEG.filepath);
     
     
-    output_file_name    = proj_eeglab_subject_get_filename(project, subj_name, 'output_epoching', 'cond_name', mark_cond_names{cond},'custom_suffix', custom_suffix);
-    [path, out]         = fileparts(output_file_name);
-    EEG2                = pop_saveset(EEG2, 'filename', out, 'filepath', path);
+%     output_file_name    = proj_eeglab_subject_get_filename(project, subj_name, 'output_epoching', 'cond_name', mark_cond_names{cond},'custom_suffix', custom_suffix);
+%     [path, out]         = fileparts(output_file_name);
+%     EEG2                = pop_saveset(EEG2, 'filename', out, 'filepath', path);
     clear EEG2
 end
 end

@@ -173,7 +173,7 @@ LineNoiseCriterion = input.LineNoiseCriterion;
 BurstCriterion     = input.BurstCriterion;
 WindowCriterion = input.WindowCriterion;
 BurstRejection = input.BurstRejection;
-
+interpolate_channels = input.interpolate_channels;
 
 [path,name_noext,ext] = fileparts(input_file_name);
 [path2,name_noext2,ext] = fileparts(output_file_name);
@@ -194,14 +194,14 @@ EEG2    = pop_select(EEG,'channel',1:nch_eeg);
 %
 %     EEG3 = clean_rawdata(EEG2, 4, 'off', 0.85, 4, 5, 0.25); % rimuovendo le tw
 
-%   EEG : Final cleaned EEG recording.
+%   EEGcat : Final cleaned EEG recording.
 %
 %   HP : Optionally just the high-pass filtered data.
 %
-%   BUR : Optionally the data without final removal of "irrecoverable" windows.
+%   EEG3 : Optionally the data without final removal of "irrecoverable" windows.
 
 if strcmp(WindowCriterion, 'off') || strcmp(BurstRejection, 'off')
-   [EEG3,HP,BUR] = clean_artifacts(...
+   [EEG3cat,HP,EEG3] = clean_artifacts(...
        EEG2, ...
        'FlatlineCriterion', FlatlineCriterion,...
        'Highpass',          Highpass,...
@@ -224,17 +224,33 @@ if strcmp(WindowCriterion, 'off') || strcmp(BurstRejection, 'off')
 % 'BurstRejection','off',...
 % 'Distance','Euclidian');
 
-    
-    EEG2 = pop_interp(BUR, EEG.chanlocs(1:nch_eeg), 'spherical');
+if strcmp(interpolate_channels, 'on')
+    EEG3 = pop_interp(EEG3, EEG.chanlocs(1:nch_eeg), 'spherical');
+end
     
     ss = size(EEG.data,1);
+    nch_eeg_cleaned = size(EEG3.data,1);
+    nch_poly = ss - nch_eeg;
+        
     
-    if ss > nch_eeg      
-        EEG2.data((nch_eeg+1):ss,:) = EEG.data((nch_eeg+1):end, :);
-        EEG2.chanlocs = EEG.chanlocs;
-        EEG2 = eeg_checkset( EEG2 );
+    if ss > nch_eeg
+        
+        for nch = 1:nch_poly
+            EEG3.data(nch_eeg_cleaned + nch,:) = EEG.data(nch_eeg + nch, :);
+            equalfields = length(fieldnames(EEG3.chanlocs)) == length(fieldnames(EEG.chanlocs));
+           
+            if not(equalfields)
+                for nc = 1:EEG3.nbchan
+                    EEG3.chanlocs(nc).sph_theta_besa = [];
+                    EEG3.chanlocs(nc).sph_phi_besa   = [];
+                end
+            end
+            EEG3.chanlocs(nch_eeg_cleaned + nch) = EEG.chanlocs(nch_eeg + nch);
+        end
+        EEG3 = eeg_checkset( EEG3 );
     end
-    
+        EEGOUT = EEG3;
+
 else
     [EEG3,HP,BUR] = clean_artifacts(EEG2, 'FlatlineCriterion', FlatlineCriterion,...
         'Highpass',          Highpass,...
@@ -277,25 +293,43 @@ else
     EEG2 = eeg_eegrej( BUR, rej_tw_lim_mat);
     
     EEG2 = eeg_checkset( EEG2 );
-    
-    
-    EEG2 = pop_interp(EEG2, EEG.chanlocs(1:nch_eeg), 'spherical');
+    if strcmp(interpolate_channels, 'on')        
+        EEG2 = pop_interp(EEG2, EEG.chanlocs(1:nch_eeg), 'spherical');
+    end
     
     ss = size(EEG.data,1);
+    nch_eeg_cleaned = size(EEG2.data,1);
+    
+    nch_poly = ss - nch_eeg;
     
     if ss > nch_eeg
         EEG4 = eeg_eegrej( EEG, rej_tw_lim_mat);
-        EEG2.data((nch_eeg+1):ss,:) = EEG4.data((nch_eeg+1):end, :);
-        EEG2.chanlocs = EEG.chanlocs;
+        
+        for nch = 1:nch_poly
+            EEG2.data(nch_eeg_cleaned + nch,:) = EEG4.data(nch_eeg + nch, :);
+            
+             equalfields = length(fieldnames(EEG2.chanlocs)) == length(fieldnames(EEG4.chanlocs));
+           
+            if not(equalfields)
+                for nc = 1:EEG4.nbchan
+                    EEG4.chanlocs(nc).sph_theta_besa = [];
+                    EEG4.chanlocs(nc).sph_phi_besa   = [];
+                end
+            end
+            
+            EEG2.chanlocs(nch_eeg_cleaned + nch) = EEG4.chanlocs(nch_eeg + nch);
+        end
         EEG2 = eeg_checkset( EEG2 );
+
     end
     
+    EEGOUT = EEG2;
     %     EEG.data(1:64,:) = EEG2.data;
     
 end
 
 
-EEG = pop_saveset( EEG2, 'filename',name_noext2,'filepath',path2);
+EEG = pop_saveset( EEGOUT, 'filename',name_noext2,'filepath',path2);
 
 %     EEG = pop_autobssemg( EEG, [], [], 'sobi', {'eigratio', 1000000}, 'emg_psd', {'ratio', 50,'fs', EEG.srate,'femg', [15],'estimator',spectrum.welch,'range', [0  30]});
 %     EEG = pop_autobssemg( EEG, [], [], 'sobi', {'eigratio', 1000000}, 'emg_psd', {'ratio',50,'fs', EEG.srate,'femg', [15],'estimator',spectrum.welch,'range', [0  45]});

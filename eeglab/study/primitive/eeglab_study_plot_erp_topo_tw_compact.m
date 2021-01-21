@@ -149,11 +149,15 @@ for design_num=design_num_vec
     
     
     name_f1                                    = STUDY.design(design_num).variable(1).label;
-    name_f2                                    = STUDY.design(design_num).variable(2).label;
-    
     levels_f1                                  = STUDY.design(design_num).variable(1).value;
-    levels_f2                                  = STUDY.design(design_num).variable(2).value;
     
+    name_f2 = [];
+    levels_f2 = [];
+    
+    if (length(STUDY.design(design_num).variable) > 1    )
+        name_f2                                    = STUDY.design(design_num).variable(2).label;
+        levels_f2                                  = STUDY.design(design_num).variable(2).value;
+    end
     erp_topo_stat.study_des                    = STUDY.design(design_num);
     erp_topo_stat.study_des.num                = design_num;
     erp_topo_stat.group_time_windows_names     = group_time_windows_names;
@@ -222,7 +226,7 @@ for design_num=design_num_vec
         which_extrema_design            = project.postprocess.erp.design(design_num).which_extrema_curve;
         which_extrema_design_roi        = which_extrema_design{nroi};
         
-      
+        
         
         input_find_extrema.which_method_find_extrema             = which_method_find_extrema;
         input_find_extrema.design_num                            = design_num;
@@ -400,10 +404,14 @@ for design_num=design_num_vec
         
         %% exctract names of the factores and the names of the corresponding levels for the selected design
         name_f1=STUDY.design(design_num).variable(1).label;
-        name_f2=STUDY.design(design_num).variable(2).label;
-        
         levels_f1=STUDY.design(design_num).variable(1).value;
-        levels_f2=STUDY.design(design_num).variable(2).value;
+        
+        name_f2 = [];
+        levels_f2 =[];
+        if(length(STUDY.design(design_num).variable) > 1)
+            name_f2=STUDY.design(design_num).variable(2).label;
+            levels_f2=STUDY.design(design_num).variable(2).value;
+        end
         
         tlf1=length(levels_f1);
         tlf2=length(levels_f2);
@@ -477,10 +485,15 @@ for design_num=design_num_vec
             
             erp_topo_tw_roi_avg=[];
             erp_topo_tw_sub_avg=[];
-            
-            for nf1=1:length(levels_f1)
-                for nf2=1:length(levels_f2)
-                    erp_topo_tw_roi_avg{nf1,nf2}=erp_topo_tw{nf1,nf2};
+            if not(isempty(levels_f2))
+                for nf1=1:length(levels_f1)
+                    for nf2=1:length(levels_f2)
+                        erp_topo_tw_roi_avg{nf1,nf2}=erp_topo_tw{nf1,nf2};
+                    end
+                end
+            else
+                for nf1=1:length(levels_f1)
+                    erp_topo_tw_roi_avg{nf1,1}=erp_topo_tw{nf1,1};
                 end
             end
             
@@ -493,18 +506,24 @@ for design_num=design_num_vec
                     erp_topo_tw_roi_avg=erp_topo_tw_roi_avg(reorder_lev,:);
                     %                           erp_topo_tw_sub_avg=erp_topo_tw_sub_avg(reorder_lev,:);
                 end
-                
-                if ~ isempty(design_factors_ordered_levels{design_num}{2})
-                    levels_f2=STUDY.design(design_num).variable(2).value;
-                    [match_lev reorder_lev]=ismember(design_factors_ordered_levels{design_num}{2},levels_f2);
-                    levels_f2=levels_f2(reorder_lev);
-                    erp_topo_tw_roi_avg=erp_topo_tw_roi_avg{:,reorder_lev};
-                    %                           erp_topo_tw_sub_avg=erp_topo_tw_sub_avg{:,reorder_lev};
+                if not(isempty(levels_f2))
+                    if ~ isempty(design_factors_ordered_levels{design_num}{2})
+                        levels_f2=STUDY.design(design_num).variable(2).value;
+                        [match_lev reorder_lev]=ismember(design_factors_ordered_levels{design_num}{2},levels_f2);
+                        levels_f2=levels_f2(reorder_lev);
+                        erp_topo_tw_roi_avg=erp_topo_tw_roi_avg{:,reorder_lev};
+                        %                           erp_topo_tw_sub_avg=erp_topo_tw_sub_avg{:,reorder_lev};
+                    end
                 end
             end
+            eeglab_version = eeg_getversion;
             
-            [stats.anova.stats_anova, stats.anova.stats.df_anova , stats.anova.p_anova]=statcond_corr(erp_topo_tw_roi_avg, num_tails, 'method', stat_method, 'naccu', num_permutations);
-            
+            if sum(strfind(eeglab_version,'14'))
+                [stats.anova.stats_anova, stats.anova.stats.df_anova , stats.anova.p_anova]=statcond_corr(erp_topo_tw_roi_avg, num_tails, 'method', stat_method, 'naccu', num_permutations);
+            else
+                [stats.anova.stats_anova, stats.anova.stats.df_anova , stats.anova.p_anova]=statcond(erp_topo_tw_roi_avg, 'method', stat_method, 'naccu', num_permutations);
+                stats.anova.p_anova = stats.anova.p_anova / num_tails;
+            end
             
             %% calculate statistics for each pairwise comparison
             % of each factor
@@ -564,7 +583,7 @@ for design_num=design_num_vec
         end
     end
     
-
+    
     
     
     %          %% EXPORTING DATA AND RESULTS OF ANALYSIS

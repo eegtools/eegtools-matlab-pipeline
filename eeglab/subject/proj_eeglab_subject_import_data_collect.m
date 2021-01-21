@@ -95,7 +95,7 @@ for subj=1:numsubj
         end
         
         
-        if  exist(input_file_name,'file') && not(exist(input_file_name,'dir')) 
+        if  exist(input_file_name,'file') && not(exist(input_file_name,'dir'))
             
             disp(input_file_name);
             
@@ -117,10 +117,8 @@ for subj=1:numsubj
                     
                     EEG=pop_chanedit(EEG, 'lookup',eeglab_channels_file);
                     
-                case 'BIOSEMI'
-                    %                 EEG = pop_biosig(input_file_name, 'importannot','off');
-                    EEG = pop_biosig(input_file_name);
-                    
+                case 'BIOSEMI'                   
+                    EEG = pop_biosig(input_file_name, 'importannot','off');                    
                     % EVENT SELECTING
                     % convert events type to string & remove blanks from events' labels
                     for ev=1:size(EEG.event,2)
@@ -171,7 +169,11 @@ for subj=1:numsubj
                     end
                     
                 case 'EDF'
-                    EEG = pop_biosig(input_file_name);
+                    try
+                        EEG = pop_biosig(input_file_name);
+                    catch
+                        EEG = pop_fileio(input_file_name);
+                    end
                     old_chan = {EEG.chanlocs.labels};
                     
                     unique_old_chan = unique(old_chan);

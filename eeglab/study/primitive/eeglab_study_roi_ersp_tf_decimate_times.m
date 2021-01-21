@@ -29,7 +29,7 @@ function [output] = eeglab_study_roi_ersp_tf_decimate_times(input)
 % num_tails                       = input.num_tails;
 % stat_freq_bands_list            = input.stat_freq_bands_list;
 % mask_coef                       = input.mask_coef;
-                              
+
 %
 % output.ersp_tf    = ersp_tf;
 % output.times      = times;
@@ -83,21 +83,35 @@ if strcmp(ersp_measure, 'Pfu')
 end
 
 
-
-% averaging channels in the roi
-for nf1=1:length(levels_f1)
-    for nf2=1:length(levels_f2)
-        M=squeeze(mean(ersp_tf{nf1,nf2},3));
+if isempty(levels_f2)
+    % averaging channels in the roi
+    for nf1=1:length(levels_f1)
+%         M=squeeze(mean(ersp_tf{nf1,1},3));
+        M=ersp_tf{nf1,1};
         [total_freqs, total_times, total_subjects]= size(M);
         final_times_mat=fix(total_times/decimation_factor_times);
         fixed_times=decimation_factor_times*final_times_mat;
         M=M(:,1:fixed_times,:);
         tmp_times_mat =  reshape(M, [total_freqs decimation_factor_times final_times_mat total_subjects]);
         tmp_times_mat = squeeze(mean(tmp_times_mat,2));
-        ersp_tf{nf1,nf2} = reshape(tmp_times_mat, [total_freqs final_times_mat total_subjects]);
+        ersp_tf{nf1,1} = reshape(tmp_times_mat, [total_freqs final_times_mat total_subjects]);
+        
+    end
+else
+    % averaging channels in the roi
+    for nf1=1:length(levels_f1)
+        for nf2=1:length(levels_f2)
+            M=squeeze(mean(ersp_tf{nf1,nf2},3));
+            [total_freqs, total_times, total_subjects]= size(M);
+            final_times_mat=fix(total_times/decimation_factor_times);
+            fixed_times=decimation_factor_times*final_times_mat;
+            M=M(:,1:fixed_times,:);
+            tmp_times_mat =  reshape(M, [total_freqs decimation_factor_times final_times_mat total_subjects]);
+            tmp_times_mat = squeeze(mean(tmp_times_mat,2));
+            ersp_tf{nf1,nf2} = reshape(tmp_times_mat, [total_freqs final_times_mat total_subjects]);
+        end
     end
 end
-
 
 tmp_times_vec=reshape(times(1:fixed_times),decimation_factor_times, final_times_mat);
 times= mean(tmp_times_vec);
@@ -111,7 +125,7 @@ for ind = 1:length(pinter),  pinter{ind}  =  abs(pinter{ind}) ; end;
 
 % if ~ isempty(stat_time_windows_list)
 %     [pcond, pgroup, pinter] = eeglab_study_roi_tf_maskp(pcond, pgroup, pinter,times, stat_time_windows_list);
-%     
+%
 % end
 
 if ~ isempty(stat_freq_bands_list)

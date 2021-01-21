@@ -36,15 +36,13 @@ tf2         = length(levels_f2);
 output=[];
 
 
-
-
-%% calcolo onset-offset per singolo soggetto
-for nf1 =1:tf1
-    for nf2 =1:tf2
-        tsub = size(curve{nf1,nf2},2);
+if isempty(levels_f2)
+    %% calcolo onset-offset per singolo soggetto
+    for nf1 =1:tf1
+        tsub = size(curve{nf1},2);
         for nsub = 1:tsub
             
-            input_fcoo.curve                                           = curve{nf1,nf2}(:,nsub);
+            input_fcoo.curve                                           = curve{nf1}(:,nsub);
             input_fcoo.deflection_tw_list                              = group_time_windows_list_design;
             input_fcoo.base_tw                                         = base_tw;
             input_fcoo.times                                           = times;
@@ -55,16 +53,14 @@ for nf1 =1:tf1
             
             % calcolo misure legate ad onset/offset
             fcoo = find_curve_onset_offset(input_fcoo);
-            output.sub{nf1,nf2,nsub} = fcoo;
+            output.sub{nf1,nsub} = fcoo;
             
         end
     end
-end
-
-%% calcolo onset-offset per media tra soggetti
-for nf1 =1:tf1
-    for nf2 =1:tf2
-        input_fcoo.curve                                           = mean(curve{nf1,nf2},2);
+    
+    %% calcolo onset-offset per media tra soggetti
+    for nf1 =1:tf1
+        input_fcoo.curve                                           = mean(curve{nf1},2);
         input_fcoo.deflection_tw_list                              = group_time_windows_list_design;
         input_fcoo.base_tw                                         = base_tw;
         input_fcoo.times                                           = times;
@@ -75,15 +71,56 @@ for nf1 =1:tf1
         
         % calcolo misure legate ad onset/offset
         fcoo = find_curve_onset_offset(input_fcoo);
-        output.avgsub{nf1,nf2} = fcoo;
-        
-        
+        output.avgsub{nf1} = fcoo;
     end
+else
+    
+    %% calcolo onset-offset per singolo soggetto
+    for nf1 =1:tf1
+        for nf2 =1:tf2
+            tsub = size(curve{nf1,nf2},2);
+            for nsub = 1:tsub
+                
+                input_fcoo.curve                                           = curve{nf1,nf2}(:,nsub);
+                input_fcoo.deflection_tw_list                              = group_time_windows_list_design;
+                input_fcoo.base_tw                                         = base_tw;
+                input_fcoo.times                                           = times;
+                input_fcoo.deflection_polarity_list                        = deflection_polarity_list; % 'unknown', 'positive','negative'
+                input_fcoo.sig_th                                          = pvalue;
+                input_fcoo.min_duration                                    = min_duration; % minima durata di un segmento significativamente diverso dalla baseline, per evitare rumore
+                input_fcoo.correction                                      = correction;
+                
+                % calcolo misure legate ad onset/offset
+                fcoo = find_curve_onset_offset(input_fcoo);
+                output.sub{nf1,nf2,nsub} = fcoo;
+                
+            end
+        end
+    end
+    
+    %% calcolo onset-offset per media tra soggetti
+    for nf1 =1:tf1
+        for nf2 =1:tf2
+            input_fcoo.curve                                           = mean(curve{nf1,nf2},2);
+            input_fcoo.deflection_tw_list                              = group_time_windows_list_design;
+            input_fcoo.base_tw                                         = base_tw;
+            input_fcoo.times                                           = times;
+            input_fcoo.deflection_polarity_list                             = deflection_polarity_list; % 'unknown', 'positive','negative'
+            input_fcoo.sig_th                                          = pvalue;
+            input_fcoo.min_duration                                    = min_duration; % minima durata di un segmento significativamente diverso dalla baseline, per evitare rumore
+            input_fcoo.correction                                      = correction;
+            
+            % calcolo misure legate ad onset/offset
+            fcoo = find_curve_onset_offset(input_fcoo);
+            output.avgsub{nf1,nf2} = fcoo;
+            
+            
+        end
+    end
+    
+    
+    
 end
-
-
-
-
 
 
 

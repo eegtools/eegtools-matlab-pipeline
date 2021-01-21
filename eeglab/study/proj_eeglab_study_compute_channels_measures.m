@@ -30,7 +30,7 @@ function [STUDY, EEG] = proj_eeglab_study_compute_channels_measures(project, var
 if nargin < 1
     help proj_eeglab_study_compute_channels_measures;
     return;
-end;
+end
 
 % possibile passare da un recompute globale ad uno specifico di una misura
 erp                     = project.study.precompute.erp;
@@ -106,18 +106,23 @@ for ndes=1:length(design_num_vec)
     design_name2                          = ['design',num2str(design_num)];
     list_design_subjects               = eeglab_generate_subjects_list_by_factor_levels(project,STUDY, design_num);
     name_f1                            = STUDY.design(design_num).variable(1).label;
-    name_f2                            = STUDY.design(design_num).variable(2).label;
+    name_f2                            = [];%STUDY.design(design_num).variable(2).label;
     
     levels_f1                          = STUDY.design(design_num).variable(1).value;
-    levels_f2                          = STUDY.design(design_num).variable(2).value;
+    levels_f2                          = [];%STUDY.design(design_num).variable(2).value;
 
+    num_var_des = length(STUDY.design(design_num).variable);
+    if(num_var_des > 1)
+        name_f2                            = STUDY.design(design_num).variable(2).label;
+        levels_f2                          = STUDY.design(design_num).variable(2).value;
+    end
     
 %     if exist('parpool')
 %         parpool(4);
 %     end
     eeglab_version = eeg_getversion;
                 
-    if not(strcmp(eeglab_version,'development head'))
+    if sum(strfind(eeglab_version,'14'))
         list_cell_design={STUDY.design(design_num).cell.filebase};
 
         vec_sel_cell = [];

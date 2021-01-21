@@ -18,11 +18,11 @@ mst_dif(mst_dif_raw >= 0)=nan;
 
 idx0 = min(abs(mst_dif(:,1:size(mst_dif,2))));
 [a,idx] = min(abs(mst_dif(:,1:size(mst_dif,2))));
-
-vec2_previous = vec2(idx);
-
-vec2_previous(isnan(idx0)) = nan;
-
+vec2_previous = [];
+if idx <= length(vec2)
+    vec2_previous = vec2(idx);    
+    vec2_previous(isnan(idx0)) = nan;
+end
 out.mst_dif_raw   = mst_dif_raw;                                           % matrix. crossed differences between vector 1 and vector 2 
 out.mst_dif       = mst_dif;                                               % matrix. crossed differences between vector 1 and vector 2 with positive differences set to nan
 out.vec1          = vec1;                                                  % vector 1

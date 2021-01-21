@@ -49,7 +49,9 @@ if not(iscell(project.preproc.insert_end_baseline.target_event_types)), project.
 
 switch project.epoching.baseline_replace.mode
     
-    case 'none'
+    case 'none'       
+        OUTEEG = [];
+        warning('no baseline has been marked');
         return
         
     case 'trial'

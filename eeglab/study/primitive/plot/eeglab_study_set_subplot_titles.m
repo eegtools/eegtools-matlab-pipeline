@@ -7,10 +7,16 @@ function [titles] = eeglab_study_set_subplot_titles(STUDY,design_num)
 
 % exctract names of the factores and the names of the corresponding levels for the selected design 
     name_f1=STUDY.design(design_num).variable(1).label;
-    name_f2=STUDY.design(design_num).variable(2).label;
-
+    name_f2 = [];
+    
     levels_f1=STUDY.design(design_num).variable(1).value;
-    levels_f2=STUDY.design(design_num).variable(2).value;
+    levels_f2 = [];
+    num_var_des = length(STUDY.design(design_num).variable);
+    if(num_var_des > 1)
+        name_f2                            = STUDY.design(design_num).variable(2).label;
+        levels_f2                          = STUDY.design(design_num).variable(2).value;
+    end
+    
 
     tlf1=length(levels_f1);
     tlf2=length(levels_f2);

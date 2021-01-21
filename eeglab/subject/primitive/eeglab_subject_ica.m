@@ -1,4 +1,4 @@
-function [name_noext, rr2,ica_type,duration, EEG] = eeglab_subject_ica(input_file_name, output_path, eeg_ch_list, ch_ref, ica_type, do_pca, ica_sr, do_subsample,varargin)
+function [name_noext, rr2,ica_type,duration, EEG] = eeglab_subject_ica(input,varargin)
 %
 %    function EEG = eeglab_subject_ica(input_file_name, settings_path,  output_path, ica_type)%
 %    computes ica decompositions and saves the data with the decomposition
@@ -8,6 +8,23 @@ function [name_noext, rr2,ica_type,duration, EEG] = eeglab_subject_ica(input_fil
 %    eeg_ch_list is the list of EEG channels id
 %    ica_type is the algorithm employed to peform ica decomposition (see EEGLab manua, eg. 'runica'). The cuda implementation of ica ('cudaica')
 %    is only available on linux or mac and only if the PC has been previously properly configured
+
+
+input_file_name             = input.input_file_name;
+output_path                 = input.output_path;
+eeg_ch_list                 = input.eeg_ch_list;
+ch_ref                      = input.ch_ref;
+ica_type                    = input.ica_type;
+do_pca                      = input.do_pca;
+ica_sr                      = input.ica_sr;
+do_subsample                = input.do_subsample;
+acquisition_system          = input.acquisition_system;
+montage_list                = input.montage_list;
+montage_names               = input.montage_names;
+
+select_montage         = ismember(montage_names,acquisition_system);
+ch_montage             = montage_list{select_montage};
+
 
 [~, name_noext, ext] = fileparts(input_file_name);
 
@@ -40,13 +57,13 @@ try
     mm = repmat(mean(EEG.data,2),1,EEG.pnts);    
     EEG.data = EEG.data - mm;
     
-    
-    
-    
+    dataset_ch_lab = {EEG.chanlocs.labels};
+    dataset_eeg_ch_lab = intersect(dataset_ch_lab,ch_montage);
+    dataset_eeg_ch_list = 1:length(dataset_eeg_ch_lab);
     
     
     ll1 = length(eeg_ch_list);
-    ll2 = length({EEG.chanlocs.labels});
+    ll2 = length(dataset_eeg_ch_list);
     ll = min(ll1,ll2);
     
     % if ll < length(eeg_ch_list)

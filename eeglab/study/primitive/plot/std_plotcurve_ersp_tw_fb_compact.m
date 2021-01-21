@@ -103,10 +103,12 @@ if tlf1 < 2 || tlf2 < 2
             plot(times, mm,'col',list_col(:,nc),'LineWidth',2,'LineStyle',list_stiles{ns})
             
             hold on
-            
+            ns = ns+1;
+            nc = nc+1;
+
         end
         
-        l = legend(levels_f,'box','off', 'FontSize', 15,'EdgeColor',[1 1 1],[1 1 1],'Location','NorthEastOutside'); %,'YColor',[1 1 1],'XColor'
+        l = legend(levels_f,'box','off', 'FontSize', 15,'EdgeColor',[1 1 1],'Location','NorthEastOutside'); %,'YColor',[1 1 1],'XColor'
     end
     
     

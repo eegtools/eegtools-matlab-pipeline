@@ -98,12 +98,18 @@ for design_num=design_num_vec
     
     erp_headplot.study_des               = STUDY.design(design_num);
     
-    
-    name_f1                                    = STUDY.design(design_num).variable(1).label;
-    name_f2                                    = STUDY.design(design_num).variable(2).label;
-    
+    name_f1                                    = STUDY.design(design_num).variable(1).label;    
     levels_f1                                  = STUDY.design(design_num).variable(1).value;
-    levels_f2                                  = STUDY.design(design_num).variable(2).value;
+    
+    
+    name_f2 = [];
+    levels_f2 = [];
+    
+    if (length(STUDY.design(design_num).variable) > 1)
+        name_f2                                    = STUDY.design(design_num).variable(2).label;
+        levels_f2                                  = STUDY.design(design_num).variable(2).value;
+    end
+    
     
     erp_headplot.study_des                    = STUDY.design(design_num);
     erp_headplot.study_des.num                = design_num;
@@ -136,18 +142,20 @@ for design_num=design_num_vec
         STUDY = pop_statparams(STUDY, 'groupstats','off','condstats','off');
         
 %         calculate erp in the channels corresponding to the selected roi
-if not(strcmp(eeglab_version,'development head'))
-        [STUDY, erp_headplot_tw, ~]=std_erpplot_corr(STUDY,ALLEEG,'channels',locs_labels,'noplot','on');
-else
-        [STUDY, erp_headplot_tw, ~]=std_erpplot(STUDY,ALLEEG,'channels',locs_labels,'noplot','on');
-end
+ eeglab_version = eeg_getversion;
+                
+ if sum(strfind(eeglab_version,'14'))
+     [STUDY, erp_headplot_tw, ~]=std_erpplot_corr(STUDY,ALLEEG,'channels',locs_labels,'noplot','on');
+ else
+     [STUDY, erp_headplot_tw, ~]=std_erpplot(STUDY,ALLEEG,'channels',locs_labels,'noplot','on');
+ end
         
         for nf1=1:length(levels_f1)
             for nf2=1:length(levels_f2)
                 if ~isempty(list_select_subjects)
                     vec_select_subjects=ismember(list_design_subjects{nf1,nf2},list_select_subjects);
                     if ~sum(vec_select_subjects)
-                        dis('Error: the selected subjects are not represented in the selected design')
+                        disp('Error: the selected subjects are not represented in the selected design')
                         return;
                     end
                     erp_headplot_tw{nf1,nf2}=erp_headplot_tw{nf1,nf2}(:,:,vec_select_subjects);
@@ -180,7 +188,7 @@ end
             
             input_graph.file_spline                                    =  file_spline;%'/home/campus/behaviourPlatform/VisuoHaptic/ABBI_EEG/ABBI_EEG_st/af_AS_mc_s-s1-1sc-1tc.spl';
             input_graph.view_list                                      =  view_list;
-%             input_graph.chlocs                                         = locs;
+            input_graph.project                                         = project;
             
             eeglab_study_erp_headplot_graph(input_graph);
             

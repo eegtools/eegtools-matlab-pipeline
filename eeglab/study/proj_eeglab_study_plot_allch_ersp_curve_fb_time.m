@@ -115,7 +115,7 @@ do_plots                    = project.results_display.ersp.do_plots;
 num_tails                   = project.stats.ersp.num_tails;
 
 % do_narrowband               = project.stats.ersp.do_narrowband;
-% 
+%
 % group_tmin                  = project.stats.ersp.narrowband.group_tmin;
 % group_tmax                  = project.stats.ersp.narrowband.group_tmax;
 % group_dfmin                 = project.stats.ersp.narrowband.dfmin;
@@ -142,7 +142,7 @@ num_tails                   = project.stats.ersp.num_tails;
 % tw_stat_estimator           = mode.tw_stat_estimator;       ... mean, extremum
 %     time_resolution_mode        = mode.time_resolution_mode;    ... continous, tw
 %     sel_extrema                 = project.postprocess.ersp.sel_extrema;
-% 
+%
 % for par=1:2:length(varargin)
 %     switch varargin{par}
 %         case {'design_num_vec', 'analysis_name', 'allch_list', 'allch_names', 'study_ls', 'num_permutations', 'correction', 'stat_method', 'filter', 'masked_times_max', ...
@@ -205,10 +205,16 @@ for design_num=design_num_vec
     ersp_curve_allch_fb_stat.study_des.num   = design_num;
     
     name_f1                                = STUDY.design(design_num).variable(1).label;
-    name_f2                                = STUDY.design(design_num).variable(2).label;
-    
     levels_f1                              = STUDY.design(design_num).variable(1).value;
-    levels_f2                              = STUDY.design(design_num).variable(2).value;
+    levels_f2 = [];
+    name_f2 = [];
+    
+    if(length(STUDY.design(design_num).variable) > 1 )
+        levels_f2                              = STUDY.design(design_num).variable(2).value;
+        name_f2                                = STUDY.design(design_num).variable(2).label;
+    end
+    
+    
     str                                    = datestr(now, 'dd-mmm-yyyy-HH-MM-SS');
     
     
@@ -219,7 +225,7 @@ for design_num=design_num_vec
 
 
 %% set representation to time-frequency representation
-STUDY = pop_erspparams(STUDY, 'topotime',[] ,'plotgroups','apart' ,'plotconditions','apart','averagechan','on','method', stat_method);
+STUDY = pop_erspparams(STUDY, 'topotime',[] ,'plotgroups','apart' ,'plotconditions','apart','averagechan','off','method', stat_method);
 
 %% for each allch in the list
 %         for nallch = 1:length(allch_list)
@@ -233,28 +239,53 @@ STUDY = pop_statparams(STUDY, 'groupstats','off','condstats','off','method', sta
 [STUDY ersp times freqs]=std_erspplot(STUDY,ALLEEG,'channels',allch,'noplot','on');
 % ersp: [freqs,times,channels,subjects]
 
-if strcmp(ersp_measure, 'Pfu')
-    for nf1=1:length(levels_f1)
-        for nf2=1:length(levels_f2)
-            ersp{nf1,nf2}=(10.^(ersp{nf1,nf2}/10)-1)*100;
-        end
-    end
-end
+
 
 %% select subjects
-for nf1=1:length(levels_f1)
-    for nf2=1:length(levels_f2)
-        if ~isempty(list_select_subjects)
-            vec_select_subjects=ismember(original_list_design_subjects{nf1,nf2},list_select_subjects);
-            if ~sum(vec_select_subjects)
-                disp('Error: the selected subjects are not represented in the selected design')
-                return;
+if isempty(levels_f2)
+    if strcmp(ersp_measure, 'Pfu')
+        for nf1=1:length(levels_f1)
+                ersp{nf1,1}=(10.^(ersp{nf1,1}/10)-1)*100;
+            
+        end
+    end
+    
+    for nf1=1:length(levels_f1)
+            if ~isempty(list_select_subjects)
+                vec_select_subjects=ismember(original_list_design_subjects{nf1,1},list_select_subjects);
+                if ~sum(vec_select_subjects)
+                    disp('Error: the selected subjects are not represented in the selected design')
+                    return;
+                end
+                ersp{nf1,1}=ersp{nf1,1}(:,:,sel_cheeg,vec_select_subjects);
+                individual_fb_bands{nf1,1} = {original_individual_fb_bands{nf1,1}{vec_select_subjects}};
+                list_design_subjects{nf1,1} = {original_list_design_subjects{nf1,1}{vec_select_subjects}};
+            else
+                individual_fb_bands{nf1,1} = original_individual_fb_bands{nf1,1};
             end
-            ersp{nf1,nf2}=ersp{nf1,nf2}(:,:,sel_cheeg,vec_select_subjects);
-            individual_fb_bands{nf1,nf2} = {original_individual_fb_bands{nf1,nf2}{vec_select_subjects}};
-            list_design_subjects{nf1,nf2} = {original_list_design_subjects{nf1,nf2}{vec_select_subjects}};
-        else
-            individual_fb_bands{nf1,nf2} = original_individual_fb_bands{nf1,nf2};
+    end
+else
+    if strcmp(ersp_measure, 'Pfu')
+        for nf1=1:length(levels_f1)
+            for nf2=1:length(levels_f2)
+                ersp{nf1,nf2}=(10.^(ersp{nf1,nf2}/10)-1)*100;
+            end
+        end
+    end
+    for nf1=1:length(levels_f1)
+        for nf2=1:length(levels_f2)
+            if ~isempty(list_select_subjects)
+                vec_select_subjects=ismember(original_list_design_subjects{nf1,nf2},list_select_subjects);
+                if ~sum(vec_select_subjects)
+                    disp('Error: the selected subjects are not represented in the selected design')
+                    return;
+                end
+                ersp{nf1,nf2}=ersp{nf1,nf2}(:,:,sel_cheeg,vec_select_subjects);
+                individual_fb_bands{nf1,nf2} = {original_individual_fb_bands{nf1,nf2}{vec_select_subjects}};
+                list_design_subjects{nf1,nf2} = {original_list_design_subjects{nf1,nf2}{vec_select_subjects}};
+            else
+                individual_fb_bands{nf1,nf2} = original_individual_fb_bands{nf1,nf2};
+            end
         end
     end
 end
@@ -270,22 +301,35 @@ for nband=1:length(frequency_bands_list)
     dfcond     = [];
     dfinter    = [];
     
-    
-    ersp_curve_allch_fb=[];
-    for nf1=1:length(levels_f1)
-        for nf2=1:length(levels_f2)
-            subjs = length(individual_fb_bands{nf1,nf2});
+    if isempty(levels_f2)
+        ersp_curve_allch_fb=[];
+        for nf1=1:length(levels_f1)
+            subjs = length(individual_fb_bands{nf1,1});
             for nsub=1:subjs
                 
-                fmin = individual_fb_bands{nf1,nf2}{nsub}{nband}(1);
-                fmax = individual_fb_bands{nf1,nf2}{nsub}{nband}(2);
+                fmin = individual_fb_bands{nf1,1}{nsub}{nband}(1);
+                fmax = individual_fb_bands{nf1,1}{nsub}{nband}(2);
                 
                 sel_freqs = freqs >= fmin & freqs <= fmax;
-                ersp_curve_allch_fb{nf1,nf2}(:,:,nsub)  = squeeze(mean(ersp{nf1,nf2}(sel_freqs,:,:,nsub),1));
+                ersp_curve_allch_fb{nf1,1}(:,:,nsub)  = squeeze(mean(ersp{nf1,1}(sel_freqs,:,:,nsub),1));
+            end
+        end
+    else
+        ersp_curve_allch_fb=[];
+        for nf1=1:length(levels_f1)
+            for nf2=1:length(levels_f2)
+                subjs = length(individual_fb_bands{nf1,nf2});
+                for nsub=1:subjs
+                    
+                    fmin = individual_fb_bands{nf1,nf2}{nsub}{nband}(1);
+                    fmax = individual_fb_bands{nf1,nf2}{nsub}{nband}(2);
+                    
+                    sel_freqs = freqs >= fmin & freqs <= fmax;
+                    ersp_curve_allch_fb{nf1,nf2}(:,:,nsub)  = squeeze(mean(ersp{nf1,nf2}(sel_freqs,:,:,nsub),1));
+                end
             end
         end
     end
-    
     
     times_plot=times;
     
@@ -307,24 +351,24 @@ for nband=1:length(frequency_bands_list)
         %                     display_compact_plots, compact_display_h0,compact_display_v0,compact_display_sem,compact_display_stats,...
         %                     display_single_subjects,compact_display_xlim,compact_display_ylim,ersp_measure
         
-      
+        
         %                         ersp_curve_allch_fb_stat.STUDY                                           = STUDY;
-%         ersp_curve_allch_fb_stat.design_num                                      = design_num;
+        %         ersp_curve_allch_fb_stat.design_num                                      = design_num;
         %                         ersp_curve_allch_fb_stat.allch_name                                        = allch_name;
         %                         ersp_curve_allch_fb_stat.name_f1                                         = name_f1;
         %                         ersp_curve_allch_fb_stat.name_f2                                         = name_f2;
         ersp_curve_allch_fb_stat.ersp_curve_fb                                   = ersp_curve_allch_fb;
         ersp_curve_allch_fb_stat.study_ls                                        = study_ls;
-         ersp_curve_allch_fb_stat.allch = allch_eeg;
+        ersp_curve_allch_fb_stat.allch = allch_eeg;
         ersp_curve_allch_fb_stat.amplim                                         = project.results_display.erp.compact_display_ylim;
-         ersp_curve_allch_fb_stat.times                                           = times_plot;
-       
+        ersp_curve_allch_fb_stat.times                                           = times_plot;
+        
         
         ersp_curve_allch_fb_stat.levels_f1                                       = levels_f1;
         ersp_curve_allch_fb_stat.levels_f2                                       = levels_f2;
-   
-     
-       
+        
+        
+        
         ersp_curve_allch_fb_stat.frequency_band_name                             = frequency_bands_names{nband};
         ersp_curve_allch_fb_stat.pcond_corr                                           = pcond_corr;
         ersp_curve_allch_fb_stat.pgroup_corr                                          = pgroup_corr;
@@ -355,35 +399,35 @@ for nband=1:length(frequency_bands_list)
     ersp_curve_allch_fb_stat.databand(nband).frequency_band        = frequency_bands_list{nband};
     ersp_curve_allch_fb_stat.databand(nband).ersp_curve_allch_fb     = ersp_curve_allch_fb;
     
-%     ersp_curve_allch_fb_stat.datach(nallch).databand(nband).pcond                 = pcond;
-%     ersp_curve_allch_fb_stat.datach(nallch).databand(nband).pgroup                = pgroup;
-%     ersp_curve_allch_fb_stat.datach(nallch).databand(nband).pinter                = pinter;
-%     
-%     ersp_curve_allch_fb_stat.datach(nallch).databand(nband).statscond             = statscond;
-%     ersp_curve_allch_fb_stat.datach(nallch).databand(nband).statsgroup            = statsgroup;
-%     ersp_curve_allch_fb_stat.datach(nallch).databand(nband).statsinter            = statsinter;
-%     
-%     ersp_curve_allch_fb_stat.datach(nallch).databand(nband).pcond_corr            = pcond_corr;
-%     ersp_curve_allch_fb_stat.datach(nallch).databand(nband).pgroup_corr           = pgroup_corr;
-%     ersp_curve_allch_fb_stat.datach(nallch).databand(nband).pinter_corr           = pinter_corr;
-%     
-%     ersp_curve_allch_fb_stat.datach(nallch).databand(nband).dfcond                = dfcond;
-%     ersp_curve_allch_fb_stat.datach(nallch).databand(nband).dfgroup               = dfgroup;
-%     ersp_curve_allch_fb_stat.datach(nallch).databand(nband).dfinter               = dfinter;
+    %     ersp_curve_allch_fb_stat.datach(nallch).databand(nband).pcond                 = pcond;
+    %     ersp_curve_allch_fb_stat.datach(nallch).databand(nband).pgroup                = pgroup;
+    %     ersp_curve_allch_fb_stat.datach(nallch).databand(nband).pinter                = pinter;
+    %
+    %     ersp_curve_allch_fb_stat.datach(nallch).databand(nband).statscond             = statscond;
+    %     ersp_curve_allch_fb_stat.datach(nallch).databand(nband).statsgroup            = statsgroup;
+    %     ersp_curve_allch_fb_stat.datach(nallch).databand(nband).statsinter            = statsinter;
+    %
+    %     ersp_curve_allch_fb_stat.datach(nallch).databand(nband).pcond_corr            = pcond_corr;
+    %     ersp_curve_allch_fb_stat.datach(nallch).databand(nband).pgroup_corr           = pgroup_corr;
+    %     ersp_curve_allch_fb_stat.datach(nallch).databand(nband).pinter_corr           = pinter_corr;
+    %
+    %     ersp_curve_allch_fb_stat.datach(nallch).databand(nband).dfcond                = dfcond;
+    %     ersp_curve_allch_fb_stat.datach(nallch).databand(nband).dfgroup               = dfgroup;
+    %     ersp_curve_allch_fb_stat.datach(nallch).databand(nband).dfinter               = dfinter;
     
     
     %         ersp_curve_allch_fb_stat.datach(nallch).databand(nband).narrowband            = narrowband;
     
-%% EXPORTING DATA AND RESULTS OF ANALYSIS
-out_file_name = fullfile(plot_dir,'ersp_curve_allch_fb-stat')
-save([out_file_name,'.mat'],'ersp_curve_allch_fb_stat','project');
-
+    %% EXPORTING DATA AND RESULTS OF ANALYSIS
+    out_file_name = fullfile(plot_dir,'ersp_curve_allch_fb-stat')
+    save([out_file_name,'.mat'],'ersp_curve_allch_fb_stat','project');
+    
 end
 
 % ersp_curve_allch_fb_stat.datach(nallch).allch_channels=allch_channels;
 % ersp_curve_allch_fb_stat.datach(nallch).allch_name=allch_name;
-% 
-% 
+%
+%
 % ersp_curve_allch_fb_stat.times=times_plot;
 
 
@@ -392,7 +436,7 @@ end
 %     ersp_curve_allch_fb_stat.group_time_windows_names                = group_time_windows_names_design;
 %     ersp_curve_allch_fb_stat.which_extrema_design                    = which_extrema_design_tw;
 %     ersp_curve_allch_fb_stat.sel_extrema                             = sel_extrema;
-%     
+%
 %     if strcmp(mode.peak_type,'individual')
 %         ersp_curve_allch_fb_stat.subject_time_windows_list = subject_time_windows_list;
 %     end
@@ -400,7 +444,7 @@ end
 
 % ersp_curve_allch_fb_stat.list_select_subjects = list_select_subjects;
 ersp_curve_allch_fb_stat.list_design_subjects = list_design_subjects;
-% 
+%
 % ersp_curve_allch_fb_stat.study_ls             = study_ls;
 % ersp_curve_allch_fb_stat.num_permutations     = num_permutations;
 % ersp_curve_allch_fb_stat.correction           = correction;
@@ -416,17 +460,17 @@ ersp_curve_allch_fb_stat.list_design_subjects = list_design_subjects;
 %     [dataexpcols, dataexp]=text_export_ersp_struct([out_file_name,'.txt'],ersp_curve_allch_fb_stat);
 %     text_export_ersp_resume_struct(ersp_curve_allch_fb_stat, [out_file_name '_resume']);
 %     text_export_ersp_resume_struct(ersp_curve_allch_fb_stat, [out_file_name '_resume_signif'], 'p_thresh', ersp_curve_allch_fb_stat.study_ls);
-%     
+%
 % end
 
 % if  strcmp(which_method_find_extrema,'continuous') ;
-    [dataexpcols, dataexp]=text_export_ersp_allch_sub_continuous_struct(plot_dir,ersp_curve_allch_fb_stat);
+[dataexpcols, dataexp]=text_export_ersp_allch_sub_continuous_struct(plot_dir,ersp_curve_allch_fb_stat);
 % end
 
 % if strcmp(time_resolution_mode,'tw')
 %     [dataexpcols, dataexp] = text_export_ersp_onset_offset_sub_struct([out_file_name,'_sub_onset_offset.txt'],ersp_curve_allch_fb_stat);
 %     [dataexpcols, dataexp] = text_export_ersp_onset_offset_avgsub_struct([out_file_name,'_avgsub_onset_offset.txt'],ersp_curve_allch_fb_stat);
-%     
+%
 %     [dataexpcols, dataexp] = text_export_ersp_onset_offset_sub_continuous_struct([out_file_name,'_sub_onset_offset_continuous.txt'],ersp_curve_allch_fb_stat);
 %     [dataexpcols, dataexp] = text_export_ersp_onset_offset_avgsub_continuous_struct([out_file_name,'_avgsub_onset_offset_continuous.txt'],ersp_curve_allch_fb_stat);
 % end

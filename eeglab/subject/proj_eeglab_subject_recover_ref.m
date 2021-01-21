@@ -40,7 +40,7 @@ for subj=1:numsubj
     
     if exist(bckfile)
         EEG         = pop_loadset(bckfile);
-        EEG = pop_saveset( EEG, 'filename',[name_noext,'_rerefbck',ext],'filepath',EEG.filepath);
+        EEG = pop_saveset( EEG, 'filename',[name_noext,ext],'filepath',EEG.filepath);
     else
         disp('no backup reference file!!')
     end

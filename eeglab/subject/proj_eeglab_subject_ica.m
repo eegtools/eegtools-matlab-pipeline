@@ -76,8 +76,25 @@ function EEG = proj_eeglab_subject_ica(project, varargin)
         
         subj_name   = list_select_subjects{subj}; 
         inputfile   = proj_eeglab_subject_get_filename(project, subj_name, get_filename_step, 'custom_suffix', custom_suffix, 'custom_input_folder', custom_input_folder);
-                     
-        [names{subj},ranks{subj},ica_types{subj},durations{subj}, EEG]         = eeglab_subject_ica(inputfile, project.paths.output_preprocessing, project.eegdata.eeg_channels_list, project.import.reference_channels, ica_type,do_pca,ica_sr,do_subsample);    
+            
+        input.input_file_name       = inputfile; 
+        input.output_path           = project.paths.output_preprocessing;
+        input.eeg_ch_list           = project.eegdata.eeg_channels_list;
+        input.ch_ref                = project.import.reference_channels;
+        input.ica_type              = ica_type;
+        input.do_pca                = do_pca;
+        input.ica_sr                = ica_sr;
+        input.do_subsample          = do_subsample;
+        input.acquisition_system    = project.import.acquisition_system;
+        input.montage_list          = project.preproc.montage_list;
+        input.montage_names         = project.preproc.montage_names;
+        
+%         [names{subj},ranks{subj},ica_types{subj},durations{subj}, EEG] ...
+%             = eeglab_subject_ica(inputfile, project.paths.output_preprocessing, project.eegdata.eeg_channels_list, project.import.reference_channels, ica_type,do_pca,ica_sr,do_subsample);    
+%    
+
+ [names{subj},ranks{subj},ica_types{subj},durations{subj}, EEG] ...
+            = eeglab_subject_ica(input);    
    
     end
     

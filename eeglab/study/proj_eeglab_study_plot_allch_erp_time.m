@@ -97,7 +97,7 @@ STUDY = []; CURRENTSTUDY = 0; ALLEEG = []; EEG=[]; CURRENTSET=[];
 
 chanlocs = eeg_mergelocs(ALLEEG.chanlocs);
 allch         = {chanlocs.labels};
-
+allch = allch(project.eegdata.eeg_channels_list);
 
 for design_num=design_num_vec
     
@@ -110,12 +110,14 @@ for design_num=design_num_vec
     erp_curve_allch_stat.study_des.num   = design_num;
 %     erp_curve_allch_stat.allch_names       = allch_names;
     
-    name_f1                            = STUDY.design(design_num).variable(1).label;
-    name_f2                            = STUDY.design(design_num).variable(2).label;
-    
+    name_f1                            = STUDY.design(design_num).variable(1).label;    
     levels_f1                          = STUDY.design(design_num).variable(1).value;
-    levels_f2                          = STUDY.design(design_num).variable(2).value;
-    
+    name_f2 = [];
+    levels_f2 = [];
+    if (length(STUDY.design(design_num).variable) > 1)
+        name_f2                            = STUDY.design(design_num).variable(2).label;
+        levels_f2                          = STUDY.design(design_num).variable(2).value;
+    end
     str                                = datestr(now, 'dd-mmm-yyyy-HH-MM-SS');
     plot_dir                           = fullfile(results_path,analysis_name,[STUDY.design(design_num).name,'-erp_allch-',str]);
     mkdir(plot_dir);

@@ -56,21 +56,35 @@ STUDY = pop_statparams(STUDY, 'groupstats','off','condstats','off');
 
 [STUDY ersp_tf times freqs]=std_erspplot(STUDY,ALLEEG,'channels',channels_list,'noplot','on');
 
-
-for nf1=1:length(levels_f1)
-    for nf2=1:length(levels_f2)
-        if ~isempty(list_select_subjects)
-            vec_select_subjects=ismember(list_design_subjects{nf1,nf2},list_select_subjects);
-            if ~sum(vec_select_subjects)
-                dis('Error: the selected subjects are not represented in the selected design')
-                return;
+if isempty(levels_f2)
+    
+    for nf1=1:length(levels_f1)
+            if ~isempty(list_select_subjects)
+                vec_select_subjects=ismember(list_design_subjects{nf1,1},list_select_subjects);
+                if ~sum(vec_select_subjects)
+                    dis('Error: the selected subjects are not represented in the selected design')
+                    return;
+                end
+                ersp_tf{nf1,1}=ersp_tf{nf1,1}(:,:,vec_select_subjects);
+                list_design_subjects{nf1,1}=list_design_subjects{nf1,1}(vec_select_subjects);
             end
-            ersp_tf{nf1,nf2}=ersp_tf{nf1,nf2}(:,:,:,vec_select_subjects);
-            list_design_subjects{nf1,nf2}=list_design_subjects{nf1,nf2}(vec_select_subjects);
+    end
+else
+    
+    for nf1=1:length(levels_f1)
+        for nf2=1:length(levels_f2)
+            if ~isempty(list_select_subjects)
+                vec_select_subjects=ismember(list_design_subjects{nf1,nf2},list_select_subjects);
+                if ~sum(vec_select_subjects)
+                    dis('Error: the selected subjects are not represented in the selected design')
+                    return;
+                end
+                ersp_tf{nf1,nf2}=ersp_tf{nf1,nf2}(:,:,:,vec_select_subjects);
+                list_design_subjects{nf1,nf2}=list_design_subjects{nf1,nf2}(vec_select_subjects);
+            end
         end
     end
 end
-
 
 if strcmp(ersp_measure, 'Pfu')
     for nf1=1:length(levels_f1)
@@ -81,10 +95,11 @@ if strcmp(ersp_measure, 'Pfu')
 end
 
 
+if isempty(levels_f2)
+    for nf1=1:length(levels_f1)
+%         M=squeeze(mean(ersp_tf{nf1,1},3));
+        M=ersp_tf{nf1,1};
 
-for nf1=1:length(levels_f1)
-    for nf2=1:length(levels_f2)
-        M=squeeze(mean(ersp_tf{nf1,nf2},3));
         [total_freqs, total_times, total_subjects]= size(M);
         final_freqs_mat=length(frequency_bands_list);
         final_times_mat=length(time_windows_list);
@@ -97,11 +112,30 @@ for nf1=1:length(levels_f1)
                 M2(nfb,ntw,:) = mean(mean(M(sel_f ,sel_t,:)));
             end %for each time window
         end %for each frequency band
-        ersp_tf{nf1,nf2}=M2;
+        ersp_tf{nf1,1}=M2;
+        
     end
-    
+else
+    for nf1=1:length(levels_f1)
+        for nf2=1:length(levels_f2)
+            M=squeeze(mean(ersp_tf{nf1,nf2},3));
+            [total_freqs, total_times, total_subjects]= size(M);
+            final_freqs_mat=length(frequency_bands_list);
+            final_times_mat=length(time_windows_list);
+            M2=zeros(final_freqs_mat, final_times_mat , total_subjects);
+            
+            for nfb=1:final_freqs_mat %for each frequency band
+                for ntw=1:final_times_mat %for each time window
+                    sel_f = freqs >= frequency_bands_list{nfb}(1) & freqs <= frequency_bands_list{nfb}(2);
+                    sel_t = times >= time_windows_list{ntw}(1) & times <= time_windows_list{ntw}(2);
+                    M2(nfb,ntw,:) = mean(mean(M(sel_f ,sel_t,:)));
+                end %for each time window
+            end %for each frequency band
+            ersp_tf{nf1,nf2}=M2;
+        end
+        
+    end
 end
-
 times=1:final_times_mat;
 freqs=1:final_freqs_mat;
 

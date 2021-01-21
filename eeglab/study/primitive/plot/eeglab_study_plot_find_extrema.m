@@ -58,7 +58,7 @@ which_extrema_design_roi                                                   = inp
 sel_extrema                                                                = input.sel_extrema;
 
 
-if ~eeglab_check_tw_compliancy(group_time_windows_list_design, times);
+if ~eeglab_check_tw_compliancy(group_time_windows_list_design, times)
     disp('Failed: eeglab_check_tw_compliancy(group_time_windows_list_design, times)')
     return;
 end

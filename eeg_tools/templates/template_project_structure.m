@@ -31,12 +31,12 @@
 ...project.name                                     % A3: set in main : must correspond to 'project.paths.local_projects_data' subfolder name
 
 project.study_suffix                                = '';                   % A4: sub name used to create a different STUDY name (fianl file will be called: [project.name project.study_suffix '.study'])
-project.analysis_name                               = 'raw_observation';    % A5: epoching output folder name, subfolder containing the condition files of the current analysis type
+project.analysis_name                               = 'test';    % A5: epoching output folder name, subfolder containing the condition files of the current analysis type
 
-project.operations.do_source_analysis               = 1;                    % A6:  
-project.operations.do_emg_analysis                  = 1;                    % A7:
-project.operations.do_cluster_analysis              = 1;                    % A8:
-project.operations.do_fieldtrip_analysis            = 1;                    % A8:
+project.operations.do_source_analysis               = 0;                    % A6:  
+project.operations.do_emg_analysis                  = 0;                    % A7:
+project.operations.do_cluster_analysis              = 0;                    % A8:
+project.operations.do_fieldtrip_analysis            = 0;                    % A8:
 
 %% ======================================================================================================
 % B:    PATHS  
@@ -101,13 +101,13 @@ project.task.events.import_marker                   = [{'1' '2' '3' '4' '5' '6' 
 % output file name = [original_data_prefix subj_name original_data_suffix project.import.output_suffix . set]
 
 % input
-project.import.acquisition_system       = 'BIOSEMI';                    % D1:   EEG hardware type: BIOSEMI | BRAINAMP
-project.import.original_data_extension  = 'bdf';                        % D2:   original data file extension BDF | vhdr
-project.import.original_data_folder     = '';            % D3:   original data file subfolder
-project.import.original_data_suffix     = '';                       % D4:   string after subject name in original EEG file name....often empty
-project.import.original_data_prefix     = '';                           % D5:   string before subject name in original EEG file name....often empty
+project.import.acquisition_system       = 'BIOSEMI';                       % D1:   EEG hardware type: BIOSEMI | BRAINAMP
+project.import.original_data_extension  = 'bdf';                           % D2:   original data file extension BDF | vhdr
+project.import.original_data_folder     = '';                              % D3:   original data file subfolder
+project.import.original_data_suffix     = '';                              % D4:   string after subject name in original EEG file name....often empty
+project.import.original_data_prefix     = '';                              % D5:   string before subject name in original EEG file name....often empty
 
-
+% do_import_collect
 % possibilità di caricare diversi file per ogni soggetto e marcare i
 % trigger di ogni file per distinguerli
 project.import.file_label = {};
@@ -157,6 +157,27 @@ project.import.montage_list = {...
 
 complete_montage = unique([project.import.montage_list{:}]);
 tot_ch = length(complete_montage);
+
+
+
+
+
+
+%% INTERPOLATE SEGMENTS OF DATA AROUND SELECTED TRIGGERS (E.G. ELECTROSTIMULATOR)
+project.interpolate_segments.list_trigger_artifact = project.task.events.valid_marker  ;
+project.interpolate_segments.cutlimits=[-2, 8];% limits of the segment to remove expressed in ms
+project.interpolate_segments.window_smooth=[-4, 6];
+project.interpolate_segments.method_smooth='moving';
+project.interpolate_segments.n_smooth=5;
+
+
+
+% enable filtering in import 
+% GLOBAL FILTER 
+project.import.do_global_bandpass      = 0; 
+% NOTCH
+project.import.do_global_notch      = 0;  
+
 
 %% TESTART
 % All-in-one function for artifact removal, including ASR.
@@ -319,18 +340,19 @@ tot_ch = length(complete_montage);
 %   raw = pop_loadset(...);
 %   clean = clean_artifacts(raw,'WindowCriterion','off','ChannelCriterion','off');
 
-project.testart.FlatlineCriterion = 4;
-project.testart.Highpass = 'off';
-project.testart.ChannelCriterion = 0.85;
-project.testart.LineNoiseCriterion = 4;
-project.testart.BurstCriterion = 5;
-project.testart.WindowCriterion = 'off';
-project.testart.BurstRejection = 'off';
+project.testart.FlatlineCriterion = 4;          % 'off' disable
+project.testart.Highpass = 'off';               % 'off' disable
+project.testart.ChannelCriterion = 0.85;        % 'off' disable
+project.testart.LineNoiseCriterion = 4;         % 'off' disable
+project.testart.BurstCriterion = 5;             % 'off' disable
+project.testart.WindowCriterion = 'off';        % 'off' disable
+project.testart.BurstRejection = 'off';         % 'off' disable
+project.testart.interpolate_channels = 'off';   % 'off' disable
 
 %% ======================================================================================================
 % E:    FINAL EEGDATA
 % ======================================================================================================
-project.eegdata.nch                         = 64;                           % E1:   final channels_number after electrode removal and polygraphic transformation
+project.eegdata.nch                         = 66;                           % E1:   final channels_number after electrode removal and polygraphic transformation eg for 64 eeg + 2 eog it is 66 in the final file 
 project.eegdata.nch_eeg                     = 64;                           % E2:   EEG channels_number
 project.eegdata.fs                          = 256;                          % E3:   final sampling frequency in Hz, if original is higher, then downsample it during pre-processing
 project.eegdata.eeglab_channels_file_name   = 'standard-10-5-cap385.elp';   % E4:   universal channels file name containing the position of 385 channels
@@ -369,12 +391,24 @@ project.eegdata.no_eeg_channels_list = [project.eegdata.emg_channels_list projec
 % during import
 project.preproc.output_folder   = project.import.output_folder;     % F1:   string appended to fullfile(project.paths.project,'epochs', ...) , determining where to write imported file
 
+
+
+% enable filtering in preproc
+%notch
+project.preproc.do_global_notch      = 1;  
+%bandpass
+project.preproc.do_global_bandpass = 0;
+project.preproc.do_specific_bandpass = 1;
+
+
+
+
 % FILTER ALGORITHM (FOR ALL FILTERS IN THE PROJECT)
 % the _12 suffix indicate filetrs of EEGLab 12; the _13 suffix indicate filetrs of EEGLab 13
-project.preproc.filter_algorithm = 'pop_basicfilter';     % F2:   
+project.filter.filter_algorithm = 'pop_basicfilter';%'pop_eegfiltnew_12';     % F2:   
     % * 'pop_eegfiltnew_12'                     = pop_eegfiltnew without the causal/non-causal option. is the default filter of EEGLab, 
     %                                             allows to set the band also for notch, so it's more flexible than pop_basicfilter of erplab 
-    % * 'pop_basicfilter'                       = erplab filters (best solution)  
+    % * 'pop_basicfilter'                       = erplab filters (version erplab_1.0.0.33: more recent presented many bugs)  
     % * 'causal_pop_iirfilt_12'                 = causal version of iirfilt
     % * 'noncausal_pop_iirfilt_12'              = noncausal version of iirfilt
     % * 'causal_pop_eegfilt_12'                 = causal pop_eegfilt (old version of EEGLab filters)
@@ -383,26 +417,67 @@ project.preproc.filter_algorithm = 'pop_basicfilter';     % F2:
     % * 'noncausal_pop_eegfiltnew_13'           = noncausal pop_eegfiltnew
 
 % GLOBAL FILTER
-project.preproc.ff1_global    = 0.16;                       % F3:   lower frequency in Hz of the preliminar filtering applied during data import
-project.preproc.ff2_global    = 100;                        % F4:   higher frequency in Hz of the preliminar filtering applied during data import
+project.filter.ff1_global    = 0.16;                       % F3:   lower frequency in Hz of the preliminar filtering applied during data import
+project.filter.ff2_global    = 100;                        % F4:   higher frequency in Hz of the preliminar filtering applied during data import
 
-% NOTCH
-project.preproc.do_notch      = 1;                          % F5:   define if apply the notch filter at 50 Hz
-project.preproc.notch_fcenter = 50;                         % F6:   center frequency of the notch filter 50 Hz or 60 Hz
-project.preproc.notch_fspan   = 5;                          % F7:   halved frequency range of the notch filters  
-project.preproc.notch_remove_armonics = 'first';            % F8:   'all' | 'first' reemove all or only the first harmonic(s) of the line current
+%NOTCH
+project.filter.notch_fcenter = 50;                         % F6:   center frequency of the notch filter 50 Hz or 60 Hz
+project.filter.notch_fspan   = 5;                          % F7:   halved frequency range of the notch filters  
+project.filter.notch_remove_armonics = 'first';            % F8:   'all' | 'first' reemove all or only the first harmonic(s) of the line current
 % during pre-processing
 %FURTHER EEG FILTER
-project.preproc.ff1_eeg     = 0.16;                         % F9:   lower frequency in Hz of the EEG filtering applied during preprocessing
-project.preproc.ff2_eeg     = 45;                           % F10:  higher frequency in Hz of the EEG filtering applied during preprocessing
+project.filter.ff1_eeg     = 0.16;                         % F9:   lower frequency in Hz of the EEG filtering applied during filteressing
+project.filter.ff2_eeg     = 100;                           % F10:  higher frequency in Hz of the EEG filtering applied during filteressing
 
 %FURTHER EOG FILTER
-project.preproc.ff1_eog     = 0.16;                         % F11:  lower frequency in Hz of the EOG filtering applied during preprocessing
-project.preproc.ff2_eog     = 8;                            % F12:  higher frequency in Hz of the EEG filtering applied during preprocessing
+project.filter.ff1_eog     = 0.16;                         % F11:  lower frequency in Hz of the EOG filtering applied during preprocessing
+project.filter.ff2_eog     = 10;                            % F12:  higher frequency in Hz of the EEG filtering applied during preprocessing
 
 %FURTHER EMG FILTER
-project.preproc.ff1_emg     = 5;                            % F13:   lower frequency in Hz of the EMG filtering applied during preprocessing
-project.preproc.ff2_emg     = 100;                          % F14:   higher frequency in Hz of the EMG filtering applied during preprocessing
+project.filter.ff1_emg     = 5;                            % F13:   lower frequency in Hz of the EMG filtering applied during preprocessing
+project.filter.ff2_emg     = 100;                          % F14:   higher frequency in Hz of the EMG filtering applied during preprocessing
+
+
+% % FILTER ALGORITHM (FOR ALL FILTERS IN THE PROJECT)
+% % the _12 suffix indicate filetrs of EEGLab 12; the _13 suffix indicate filetrs of EEGLab 13
+% project.preproc.filter_algorithm = 'pop_basicfilter';     % F2:   
+%     % * 'pop_eegfiltnew_12'                     = pop_eegfiltnew without the causal/non-causal option. is the default filter of EEGLab, 
+%     %                                             allows to set the band also for notch, so it's more flexible than pop_basicfilter of erplab 
+%     % * 'pop_basicfilter'                       = erplab filters (best solution)  
+%     % * 'causal_pop_iirfilt_12'                 = causal version of iirfilt
+%     % * 'noncausal_pop_iirfilt_12'              = noncausal version of iirfilt
+%     % * 'causal_pop_eegfilt_12'                 = causal pop_eegfilt (old version of EEGLab filters)
+%     % * 'noncausal_pop_eegfilt_12'              = noncausal pop_eegfilt
+%     % * 'causal_pop_eegfiltnew_13'              = causal pop_eegfiltnew
+%     % * 'noncausal_pop_eegfiltnew_13'           = noncausal pop_eegfiltnew
+% 
+% % GLOBAL FILTER
+% project.preproc.ff1_global    = 0.16;                       % F3:   lower frequency in Hz of the preliminar filtering applied during data import
+% project.preproc.ff2_global    = 100;                        % F4:   higher frequency in Hz of the preliminar filtering applied during data import
+% 
+% % NOTCH
+% project.preproc.do_notch      = 1;                          % F5:   define if apply the notch filter at 50 Hz
+% project.preproc.notch_fcenter = 50;                         % F6:   center frequency of the notch filter 50 Hz or 60 Hz
+% project.preproc.notch_fspan   = 5;                          % F7:   halved frequency range of the notch filters  
+% project.preproc.notch_remove_armonics = 'first';            % F8:   'all' | 'first' reemove all or only the first harmonic(s) of the line current
+% % during pre-processing
+% %FURTHER EEG FILTER
+% project.preproc.ff1_eeg     = 0.16;                         % F9:   lower frequency in Hz of the EEG filtering applied during preprocessing
+% project.preproc.ff2_eeg     = 45;                           % F10:  higher frequency in Hz of the EEG filtering applied during preprocessing
+% 
+% %FURTHER EOG FILTER
+% project.preproc.ff1_eog     = 0.16;                         % F11:  lower frequency in Hz of the EOG filtering applied during preprocessing
+% project.preproc.ff2_eog     = 8;                            % F12:  higher frequency in Hz of the EEG filtering applied during preprocessing
+% 
+% %FURTHER EMG FILTER
+% project.preproc.ff1_emg     = 5;                            % F13:   lower frequency in Hz of the EMG filtering applied during preprocessing
+% project.preproc.ff2_emg     = 100;                          % F14:   higher frequency in Hz of the EMG filtering applied during preprocessing
+
+
+
+
+
+
 
 % CALCULATE RT
 project.preproc.rt.eve1_type                = 'eve1_type';  % F15:
@@ -437,9 +512,9 @@ project.preproc.montage_list = {...
 };
 
 
+project.preproc.montage_names = { 'BRAINAMP','BIOSEMI','GEODESIC'};
 
-
-
+project.preproc.interpolate_channels = 'off';   % 'off' disable
 
                                                                                                
 % INSERT BLOCK MARKERS (only if
@@ -1276,7 +1351,7 @@ project.postprocess.datadriven.erp.ga.recompute                = 'on';
 project.postprocess.datadriven.erp.ga.levels_f1 = {project.design.factor1_levels};
 project.postprocess.datadriven.erp.ga.levels_f2 = {project.design.factor2_levels};
 % project.postprocess.datadriven.erp.ga.levels_f2{3} = project.postprocess.datadriven.erp.ga.levels_f2{3}(1); 
-project.postprocess.datadriven.erp.ga.levels_f2{3} = project.postprocess.datadriven.erp.ga.levels_f2{3}(3); 
+% project.postprocess.datadriven.erp.ga.levels_f2{3} = project.postprocess.datadriven.erp.ga.levels_f2{3}(3); 
 
 
 % cell  array di dimensione pari al numero di disegni. ogni cella è un cell
@@ -1353,7 +1428,7 @@ project.postprocess.datadriven.ersp.ga.recompute                = 'on';
 project.postprocess.datadriven.ersp.ga.levels_f1 = {project.design.factor1_levels};
 project.postprocess.datadriven.ersp.ga.levels_f2 = {project.design.factor2_levels};
 % project.postprocess.datadriven.ersp.ga.levels_f2{3} = project.postprocess.datadriven.ersp.ga.levels_f2{3}(4:end); 
- project.postprocess.datadriven.ersp.ga.levels_f2{3} = project.postprocess.datadriven.ersp.ga.levels_f2{3}(3); 
+%  project.postprocess.datadriven.ersp.ga.levels_f2{3} = project.postprocess.datadriven.ersp.ga.levels_f2{3}(3); 
 
 
 % cell  array di dimensione pari al numero di disegni. ogni cella è un cell
@@ -1409,8 +1484,6 @@ for ndes = 1:tot_des
 
 end
 project.postprocess.datadriven.ersp.gf.select_tw_des_plot = select_tw_des_plot;
-
-
 %==============================================================
 % NARROW BAND
 %==============================================================

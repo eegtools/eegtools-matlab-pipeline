@@ -53,7 +53,7 @@ display_compact_plots           = input.display_compact_plots;
 
 
 pmaskcond=[];
-pmaskgru=[];
+pmaskgroup=[];
 pmaskinter=[];
 % do_compact = 1;
 
@@ -105,7 +105,7 @@ input_graph.set_caxis                                                      = set
 input_graph.study_ls                                                       = study_ls;
 
 % plot ersp and statistics
-if display_compact_plots
+if strcmp(display_compact_plots, 'on')
     std_plottf_ersp_compact(input_graph);
     
 else

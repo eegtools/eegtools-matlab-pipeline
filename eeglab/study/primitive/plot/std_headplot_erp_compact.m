@@ -59,7 +59,7 @@ clim                                                                       = inp
 z_transform                                                                = input.z_transform;
 file_spline                                                                = input.file_spline; % '/home/campus/behaviourPlatform/VisuoHaptic/ABBI_EEG/ABBI_EEG_st/af_AS_mc_s-s1-1sc-1tc.spl'
 view_list                                                                  = input.view_list; %[0 45]
-% chlocs                                                                     = input.chlocs;      
+project                                                                     = input.project;
 
 totviews = size(view_list,1);
 
@@ -102,68 +102,146 @@ end
 [tlf1 tlf2]=size(erp_headplot_tw);
 
 close all
-
-for nlf1 = 1:tlf1
-    for nlf2 = 1:tlf2
-        if tlf2
-            str = char([ name_f1, '_', levels_f1{nlf1},'__', name_f2, '_',levels_f2{nlf2}]);
-        else
-            str = char([ name_f1, '_', levels_f1{nlf1}]);
-        end
-        
-        erp_mat = squeeze(erp_headplot_tw{nlf1,nlf2});
-        
-        [tch, tsub] = size(erp_mat);
-        
-        if strcmp(z_transform,'on')
-            for nsub = 1:tsub
-                erp_mat(:,nsub) = (erp_mat(:,nsub) - mean(erp_mat(:,nsub)))/std(erp_mat(:,nsub));
-            end
-        end
-        
-        erp_vec= mean(erp_mat,2);
-        
-        for nview = 1:totviews
-            
-            view = view_list(nview,:);
-            
-            strv = char(num2str(view));
-            sel_spaces = ismember(strv, ' ');
-            strv(sel_spaces) = '_';
-            
-            tot_str = [char(time_window_name),'_', str,'_',strv];
-            
-            
-            fig=figure( 'Visible', 'off');
-            
-            if isempty(clim)
-                headplot(erp_vec, file_spline, 'electrodes','off','view',view, 'cbar',0,'title',tot_str);
+if tlf2 > 1
+    for nlf1 = 1:tlf1
+        for nlf2 = 1:tlf2
+            if tlf2
+                str = char([ name_f1, '_', levels_f1{nlf1},'__', name_f2, '_',levels_f2{nlf2}]);
             else
-                
-                headplot(erp_vec, file_spline, 'electrodes','off','view',view, 'maplimits',clim,'cbar',0,'title',tot_str);
+                str = char([ name_f1, '_', levels_f1{nlf1}]);
             end
             
+            erp_mat = squeeze(erp_headplot_tw{nlf1,nlf2});
             
+            [tch, tsub] = size(erp_mat);
             
+            if strcmp(z_transform,'on')
+                for nsub = 1:tsub
+                    erp_mat(:,nsub) = (erp_mat(:,nsub) - mean(erp_mat(:,nsub)))/std(erp_mat(:,nsub));
+                end
+            end
             
-%               'view'       - Camera viewpoint in deg. [azimuth elevation]
-%                    'back'|'b'=[  0 30]; 'front'|'f'=[180 30] 
-%                    'left'|'l'=[-90 30]; 'right'|'r'=[ 90 30];
-%                    'frontleft'|'bl','backright'|'br', etc.,
-%                    'top'=[0 90],  Can rotate with mouse {default [143 18]}
+            erp_vec= mean(erp_mat,2);
             
+            for nview = 1:totviews
+                
+                view = view_list(nview,:);
+                
+                strv = char(num2str(view));
+                sel_spaces = ismember(strv, ' ');
+                strv(sel_spaces) = '_';
+                
+                tot_str = [char(time_window_name),'_', str,'_',strv];
+                
+                
+                fig=figure( 'Visible', 'off');
+                meshfile = fullfile(project.paths.eeglab,'functions','resources','mheadnew.mat');
+                
+                if not(exist(meshfile))
+                    meshfile = fullfile(project.paths.eeglab,'functions','supportfiles','mheadnew.mat');
+                end
+                
+                
+                if isempty(clim)
+                    %                 figure; EEG = pop_headplot(EEG, 1, 60, 'ERP scalp maps of dataset:t-s2-1sl-1tl', [1  1], 'setup',{'C:\\behaviourPlatform\\VisuoHaptic\\claudio\\bisezione_lb\\mp_lb_13_t-s2-1sl-1tl.spl' 'meshfile' 'C:\\work\\work-matlab\\matlab_toolbox\\eeglab\\functions\\resources\\mheadnew.mat' 'transform' [-0.35579 -6.3369 12.3705 0.053324 0.018746 -1.5526 1.0637 0.98772 0.93269] });
+                    % spline_file_path = fullfile(EEG.filepath,'spline_file_montage.spl');
+                    %         headplot('setup', EEG.chanlocs, spline_file_path);
+                    %
+                    headplot(erp_vec, file_spline, 'electrodes','off','view',view, 'cbar',0,'title',tot_str,'meshfile', meshfile);
+                else
+                    
+                    headplot(erp_vec, file_spline, 'electrodes','off','view',view, 'maplimits',clim,'cbar',0,'title',tot_str,'meshfile', meshfile);
+                end
+                
+                
+                
+                
+                %               'view'       - Camera viewpoint in deg. [azimuth elevation]
+                %                    'back'|'b'=[  0 30]; 'front'|'f'=[180 30]
+                %                    'left'|'l'=[-90 30]; 'right'|'r'=[ 90 30];
+                %                    'frontleft'|'bl','backright'|'br', etc.,
+                %                    'top'=[0 90],  Can rotate with mouse {default [143 18]}
+                
+                
+                input_save_fig.plot_dir               = plot_dir;
+                input_save_fig.fig                    = fig;
+                input_save_fig.name_embed             = [strfname,'_','erp_headplot_tw'];
+                input_save_fig.suffix_plot            = tot_str;
+                
+                save_figures( input_save_fig ,'do_ps',0)
+            end
             
-            input_save_fig.plot_dir               = plot_dir;
-            input_save_fig.fig                    = fig;
-            input_save_fig.name_embed             = [strfname,'_','erp_headplot_tw'];
-            input_save_fig.suffix_plot            = tot_str;
-            
-            save_figures( input_save_fig ,'do_ps',0)
         end
-        
     end
+else
+    for nlf1 = 1:tlf1
+       
+                str = char([ name_f1, '_', levels_f1{nlf1}]);
+            
+            
+            erp_mat = squeeze(erp_headplot_tw{nlf1,1});
+            
+            [tch, tsub] = size(erp_mat);
+            
+            if strcmp(z_transform,'on')
+                for nsub = 1:tsub
+                    erp_mat(:,nsub) = (erp_mat(:,nsub) - mean(erp_mat(:,nsub)))/std(erp_mat(:,nsub));
+                end
+            end
+            
+            erp_vec= mean(erp_mat,2);
+            
+            for nview = 1:totviews
+                
+                view = view_list(nview,:);
+                
+                strv = char(num2str(view));
+                sel_spaces = ismember(strv, ' ');
+                strv(sel_spaces) = '_';
+                
+                tot_str = [char(time_window_name),'_', str,'_',strv];
+                
+                
+                fig=figure( 'Visible', 'off');
+                meshfile = fullfile(project.paths.eeglab,'functions','resources','mheadnew.mat');
+                
+                if not(exist(meshfile))
+                    meshfile = fullfile(project.paths.eeglab,'functions','supportfiles','mheadnew.mat');
+                end
+                
+                
+                if isempty(clim)
+                    %                 figure; EEG = pop_headplot(EEG, 1, 60, 'ERP scalp maps of dataset:t-s2-1sl-1tl', [1  1], 'setup',{'C:\\behaviourPlatform\\VisuoHaptic\\claudio\\bisezione_lb\\mp_lb_13_t-s2-1sl-1tl.spl' 'meshfile' 'C:\\work\\work-matlab\\matlab_toolbox\\eeglab\\functions\\resources\\mheadnew.mat' 'transform' [-0.35579 -6.3369 12.3705 0.053324 0.018746 -1.5526 1.0637 0.98772 0.93269] });
+                    % spline_file_path = fullfile(EEG.filepath,'spline_file_montage.spl');
+                    %         headplot('setup', EEG.chanlocs, spline_file_path);
+                    %
+                    headplot(erp_vec, file_spline, 'electrodes','off','view',view, 'cbar',0,'title',tot_str,'meshfile', meshfile);
+                else
+                    
+                    headplot(erp_vec, file_spline, 'electrodes','off','view',view, 'maplimits',clim,'cbar',0,'title',tot_str,'meshfile', meshfile);
+                end
+                
+                
+                
+                
+                %               'view'       - Camera viewpoint in deg. [azimuth elevation]
+                %                    'back'|'b'=[  0 30]; 'front'|'f'=[180 30]
+                %                    'left'|'l'=[-90 30]; 'right'|'r'=[ 90 30];
+                %                    'frontleft'|'bl','backright'|'br', etc.,
+                %                    'top'=[0 90],  Can rotate with mouse {default [143 18]}
+                
+                
+                input_save_fig.plot_dir               = plot_dir;
+                input_save_fig.fig                    = fig;
+                input_save_fig.name_embed             = [strfname,'_','erp_headplot_tw'];
+                input_save_fig.suffix_plot            = tot_str;
+                
+                save_figures( input_save_fig ,'do_ps',0)
+            end
+            
+        end
+    
 end
-
 
 
 

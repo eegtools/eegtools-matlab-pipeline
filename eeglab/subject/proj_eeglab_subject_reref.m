@@ -37,6 +37,25 @@ for subj=1:numsubj
     EEG         = pop_loadset(inputfile);
     
     
+    
+    acquisition_system    = project.import.acquisition_system;
+    montage_list          = project.preproc.montage_list;
+    montage_names         = project.preproc.montage_names;
+    
+    
+    select_montage         = ismember(montage_names,acquisition_system);
+    ch_montage             = montage_list{select_montage};
+    
+    
+      
+    dataset_ch_lab = {EEG.chanlocs.labels};
+    dataset_eeg_ch_lab = intersect(dataset_ch_lab,ch_montage);
+    nch_eeg_dataset = length(dataset_eeg_ch_lab);
+    exclude = [];    
+    if EEG.nbchan > nch_eeg_dataset 
+        exclude = (nch_eeg_dataset+1) : EEG.nbchan;
+    end
+    
     if not(isfield(EEG,'reref'))
         
         
@@ -62,10 +81,11 @@ for subj=1:numsubj
             reference   = refvec;
         end
         
-        exclude = find(channels_ind > project.eegdata.nch_eeg);
+%         exclude = find(channels_ind > project.eegdata.nch_eeg);
         
         EEG = pop_reref(EEG, [reference], 'keepref', 'on','exclude',[exclude]);
-        
+%         EEG = pop_reref( EEG, [16 50] ,'exclude',[60 61] ,'keepref','on');
+
         
         EEG = eeg_checkset( EEG );
         EEG = pop_saveset( EEG, 'filename', [name_noext,ext],'filepath',EEG.filepath);

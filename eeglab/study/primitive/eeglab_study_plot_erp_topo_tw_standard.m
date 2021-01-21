@@ -113,11 +113,17 @@ for design_num=design_num_vec
             erp_topo_tw_stat.study_des.num  = design_num;
             erp_topo_tw_stat.chanlocs       = chanlocs;
             
-            name_f1                         = STUDY.design(design_num).variable(1).label;
-            name_f2                         = STUDY.design(design_num).variable(2).label;
             
+            
+            name_f1                         = STUDY.design(design_num).variable(1).label;            
             levels_f1                       = STUDY.design(design_num).variable(1).value;
-            levels_f2                       = STUDY.design(design_num).variable(2).value;
+            name_f2  = [];
+            levels_f2 = [];
+            
+            if (length(STUDY.design(design_num).variable(1)) > 1)                
+                name_f2                         = STUDY.design(design_num).variable(2).label;
+                levels_f2                       = STUDY.design(design_num).variable(2).value;
+            end
             
             tlf1                            = length(levels_f1);
             tlf2                            = length(levels_f2);
@@ -145,10 +151,15 @@ for design_num=design_num_vec
                 time_window_name=group_time_windows_names_design{nwin};
                 
                 STUDY = pop_statparams(STUDY, 'groupstats','off','condstats','off');
-                
-                % calculate erp in the channels corresponding to the selected roi
-                [STUDY erp_topo_tw times]=std_erpplot_corr(STUDY,ALLEEG,'channels',roi_ch,'noplot','on');
-                
+                eeglab_version = eeg_getversion;
+
+                if sum(strfind(eeglab_version,'14'))
+                    % calculate erp in the channels corresponding to the selected roi
+                    [STUDY erp_topo_tw times]=std_erpplot_corr(STUDY,ALLEEG,'channels',roi_ch,'noplot','on');
+                else
+                    [STUDY erp_topo_tw times]=std_erpplot(STUDY,ALLEEG,'channels',roi_ch,'noplot','on');
+                    
+                end
                 for nf1=1:length(levels_f1)
                     for nf2=1:length(levels_f2)
                         if ~isempty(list_select_subjects)

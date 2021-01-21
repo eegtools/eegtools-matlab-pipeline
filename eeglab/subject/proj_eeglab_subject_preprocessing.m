@@ -38,6 +38,18 @@ if not(iscell(list_select_subjects)), list_select_subjects = {list_select_subjec
 numsubj = length(list_select_subjects);
 % -------------------------------------------------------------------------------------------------------------------------------------
 
+
+acquisition_system    = project.import.acquisition_system;
+montage_list          = project.preproc.montage_list;
+montage_names         = project.preproc.montage_names;
+        
+
+select_montage         = ismember(montage_names,acquisition_system);
+ch_montage             = montage_list{select_montage};
+
+
+    
+    
 eog_channels_list           = project.eegdata.eog_channels_list;
 emg_channels_list           = project.eegdata.emg_channels_list;
 
@@ -47,10 +59,19 @@ for subj=1:numsubj
     input_file_name         = proj_eeglab_subject_get_filename(project, subj_name, get_filename_step, 'custom_suffix', custom_suffix, 'custom_input_folder', custom_input_folder);
     EEG                     = pop_loadset(input_file_name);
     
+    dataset_ch_lab = {EEG.chanlocs.labels};
+    dataset_eeg_ch_lab = intersect(dataset_ch_lab,ch_montage);
+    nch_eeg_dataset = length(dataset_eeg_ch_lab);
+%     dataset_eeg_ch_list = 1:length(nch_eeg_dataset);
+    
     %===============================================================================================
     % CHANNELS TRANSFORMATION
     %===============================================================================================
     num_ch2transform = length(project.import.ch2transform);
+    
+    missing_ch = project.eegdata.nch_eeg - nch_eeg_dataset;
+    
+    
     
     if num_ch2transform
         
@@ -64,7 +85,13 @@ for subj=1:numsubj
         ch2discard          = [];
         chpos2copy          = [];   % used to store from which channel get the position information
         for nb=1:num_ch2transform
+            
+          
+            
             transf = project.import.ch2transform(nb);
+            transf.ch1 = transf.ch1 - missing_ch;
+            transf.ch2 = transf.ch2 - missing_ch;
+            
             if ~isempty(transf.new_label)
                 ... new ch
                     num_new_ch  = num_new_ch + 1;
@@ -123,32 +150,31 @@ for subj=1:numsubj
     %===============================================================================================
     % INTERPOLATION
     %===============================================================================================
-    for ns=1:length(project.subjects.data)
-        if (strcmp(project.subjects.data(ns).name, subj_name))
-            ch2interpolate=project.subjects.data(ns).bad_ch;
+    
+    if(strcmp(project.preproc.interpolate_channels, 'on'))
+        
+        for ns=1:length(project.subjects.data)
+            if (strcmp(project.subjects.data(ns).name, subj_name))
+                ch2interpolate=project.subjects.data(ns).bad_ch;
+            end
+        end
+        
+        if not(isempty(ch2interpolate))
+            tchanint        = length(ch2interpolate);
+            channels_list   = {EEG.chanlocs.labels};
+            for nchint=1:tchanint
+                match_int(nchint, :) = strcmpi(channels_list,ch2interpolate(nchint));
+            end
+            intvec          = find(sum(match_int,1) > 0);
+            interpolation   = intvec;
+            disp(['interpolating channels ' ch2interpolate])
+            EEG             = pop_interp(EEG, [interpolation], 'spherical');
+            EEG             = eeg_checkset( EEG );
         end
     end
     
-    if not(isempty(ch2interpolate))
-        tchanint        = length(ch2interpolate);
-        channels_list   = {EEG.chanlocs.labels};
-        for nchint=1:tchanint;
-            match_int(nchint, :) = strcmpi(channels_list,ch2interpolate(nchint));
-        end
-        intvec          = find(sum(match_int,1) > 0);
-        interpolation   = intvec;
-        disp(['interpolating channels ' ch2interpolate])
-        EEG             = pop_interp(EEG, [interpolation], 'spherical');
-        EEG             = eeg_checkset( EEG );
-    end
     
-    % create a spline file only once for possible headplots with the right
-    % montage
     
-    if subj == 1
-        spline_file_path = fullfile(EEG.filepath,'spline_file_montage.spl');
-        headplot('setup', EEG.chanlocs, spline_file_path);
-    end
     
     
     %===============================================================================================
@@ -165,34 +191,45 @@ for subj=1:numsubj
     %===============================================================================================
     % SPECIFIC FILTERING
     %===============================================================================================
-    % filter for EEG channels
-    EEG = proj_eeglab_subject_filter(EEG, project,'eeg','bandpass');
-    EEG = eeg_checkset( EEG );
-    
-    % filter for EOG channels
-    if not(isempty(eog_channels_list))
-        EEG = proj_eeglab_subject_filter(EEG, project,'eog','bandpass');
+    if project.preproc.do_global_notch
+        EEG = proj_eeglab_subject_filter(EEG, project, 'global', 'bandstop');
         EEG = eeg_checkset( EEG );
     end
     
-    % filter for EMG channels
-    if not(isempty(emg_channels_list))
-        EEG = proj_eeglab_subject_filter(EEG, project,'emg','bandpass');
+     if project.preproc.do_global_bandpass
+        EEG = proj_eeglab_subject_filter(EEG, project, 'global', 'bandpass');
         EEG = eeg_checkset( EEG );
     end
     
+    if project.preproc.do_specific_bandpass
+        % filter for EEG channels
+        EEG = proj_eeglab_subject_filter(EEG, project,'eeg','bandpass');
+        EEG = eeg_checkset( EEG );
+        
+        % filter for EOG channels
+        if not(isempty(eog_channels_list))
+            EEG = proj_eeglab_subject_filter(EEG, project,'eog','bandpass');
+            EEG = eeg_checkset( EEG );
+        end
+        
+        % filter for EMG channels
+        if not(isempty(emg_channels_list))
+            EEG = proj_eeglab_subject_filter(EEG, project,'emg','bandpass');
+            EEG = eeg_checkset( EEG );
+        end
+    end
     %===============================================================================================
     % check if SUBSAMPLING
     %===============================================================================================
     if (EEG.srate > project.eegdata.fs)
         disp(['subsampling to ' num2str(project.eegdata.fs)]);
-        
-        if strcmp(project.preproc.filter_algorithm, project.preproc.filter_algorithm)
-                        EEG = pop_resample( EEG, project.eegdata.fs);
-
-        else
-            EEG = pop_resample( EEG, project.eegdata.fs);
-        end
+         EEG = pop_resample( EEG, project.eegdata.fs);
+%         if strcmp(project.preproc.filter_algorithm, project.preproc.filter_algorithm)
+%                        
+% 
+%         else
+%             EEG = pop_resample( EEG, project.eegdata.fs);
+%         end
         EEG = eeg_checkset( EEG );
     end
     
