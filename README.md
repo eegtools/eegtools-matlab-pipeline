@@ -17,7 +17,7 @@ Moreover, it eases the integration between EEGLab and Brainstorm and allows call
 ## Features
 
 * Subject level
-  * Import raw files (BrainVision, Biosemi, Geodesic)
+  * Import raw files (BrainVision, Biosemi, Geodesic, XDF, EDF)
   * Filtering
   * Referencing
   * Channel transformation
