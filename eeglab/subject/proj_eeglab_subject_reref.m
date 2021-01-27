@@ -29,7 +29,7 @@ numsubj = length(list_select_subjects);
 % -------------------------------------------------------------------------------------------------------------------------------------
 
 for subj=1:numsubj
-    
+    match_ref = [];
     subj_name   = list_select_subjects{subj};
     inputfile   = proj_eeglab_subject_get_filename(project, subj_name, get_filename_step, 'custom_suffix', custom_suffix, 'custom_input_folder', custom_input_folder);
     [folder, name_noext, ext] = fileparts(inputfile );

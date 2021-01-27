@@ -228,7 +228,7 @@ for subj=1:numsubj
             EEG = eeg_checkset( EEG );
             
             % gestione eventi/annotazioni edf usando fieldtrip
-            addpath(project.paths.plugin.fieldtrip);
+            addpath(genpath(project.paths.plugin.fieldtrip));
             
             
             event = ft_read_event(input_file_name, 'detect flank', []);
