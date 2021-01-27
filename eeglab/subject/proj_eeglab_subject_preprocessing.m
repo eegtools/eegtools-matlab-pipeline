@@ -57,8 +57,12 @@ for subj=1:numsubj
     
     subj_name               = list_select_subjects{subj};
     input_file_name         = proj_eeglab_subject_get_filename(project, subj_name, get_filename_step, 'custom_suffix', custom_suffix, 'custom_input_folder', custom_input_folder);
-    EEG                     = pop_loadset(input_file_name);
-    
+    try
+        EEG                     = pop_loadset(input_file_name);
+    catch
+        [fpath,fname] = fileparts(input_file_name);
+        EEG = pop_loadset('filename',fname,'filepath',fpath);
+    end
     dataset_ch_lab = {EEG.chanlocs.labels};
     dataset_eeg_ch_lab = intersect(dataset_ch_lab,ch_montage);
     nch_eeg_dataset = length(dataset_eeg_ch_lab);
