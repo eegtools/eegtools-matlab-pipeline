@@ -52,10 +52,11 @@ missing_ch = project.eegdata.nch - EEG.nbchan ;
 
 %% remove temporarily boundaries to filter and put them back after that
 eve_bck = EEG.event;
-all_eve_type = {EEG.event.type};
-rm_boundary =  not(ismember(all_eve_type,'boundary'));
-EEG.event = EEG.event(rm_boundary);
-
+if not(isempty(eve_bck))
+    all_eve_type = {EEG.event.type};
+    rm_boundary =  not(ismember(all_eve_type,'boundary'));
+    EEG.event = EEG.event(rm_boundary);
+end
 EEG = eeg_checkset(EEG);
 
 %% set specific parameters of each channel type (modular, so easy to extend)
