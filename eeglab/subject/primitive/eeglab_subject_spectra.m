@@ -75,7 +75,15 @@ end
 try
     
     
-    EEG = pop_loadset(input_file_name);
+%     EEG = pop_loadset(input_file_name);
+
+
+    try
+        EEG                     = pop_loadset(input_file_name);
+    catch
+        [fpath,fname,fext] = fileparts(input_file_name);
+        EEG = pop_loadset('filename',[fname,fext],'filepath',fpath);
+    end
     
     spectra_sub.chanlocs = EEG.chanlocs;
     spectra_sub.duration = EEG.xmax;

@@ -3,7 +3,14 @@ function [EEG] = eeglab_subject_interpolate_segments(input_file_name,list_trigge
 
 
 [file_path, name_noext, ext] = fileparts(input_file_name);
-EEG = pop_loadset(input_file_name);
+% EEG = pop_loadset(input_file_name);
+
+try
+    EEG                     = pop_loadset(input_file_name);
+catch
+    [fpath,fname,fext] = fileparts(input_file_name);
+    EEG = pop_loadset('filename',[fname,fext],'filepath',fpath);
+end
 
 
 EEG = pop_saveset( EEG, 'filename',[name_noext,'_nointerp', ext],'filepath',EEG.filepath);

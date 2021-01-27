@@ -3,7 +3,15 @@ function [EEG] = eeglab_subject_segmenting(input_file_name,input)
 
 % if not(isempty(segm2remove_sec))
     [file_path, name_noext, ext] = fileparts(input_file_name);
-    EEG = pop_loadset(input_file_name);
+%     EEG = pop_loadset(input_file_name);
+
+    try
+        EEG                     = pop_loadset(input_file_name);
+    catch
+        [fpath,fname,fext] = fileparts(input_file_name);
+        EEG = pop_loadset('filename',[fname,fext],'filepath',fpath);
+    end
+
     
     all_eve_labels = {EEG.event.type};
     all_eve_latencies = [EEG.event.latency];

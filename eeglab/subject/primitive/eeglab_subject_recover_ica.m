@@ -19,7 +19,15 @@ function [EEG] = eeglab_subject_recover_ica(input_file_name)
 full_path_bck = fullfile(file_path,[name_noext,'_icabck', ext]); 
 
 
-EEG = pop_loadset(full_path_bck);
+% EEG = pop_loadset(full_path_bck);
+
+
+try
+    EEG                     = pop_loadset(full_path_bck);
+catch
+    [fpath,fname,fext] = fileparts(full_path_bck);
+    EEG = pop_loadset('filename',[fname,fext],'filepath',fpath);
+end
 
 % EEG.icaweights = out_ica.icaweights;
 % EEG.icasphere  = out_ica.icasphere;

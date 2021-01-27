@@ -13,7 +13,16 @@ EEG = [];
 
 if not(isempty(ic2remove))    
     [file_path, name_noext, ext] = fileparts(input_file_name);
-    EEG = pop_loadset(input_file_name);
+%     EEG = pop_loadset(input_file_name);
+
+    try
+        EEG                     = pop_loadset(input_file_name);
+    catch
+        [fpath,fname,fext] = fileparts(input_file_name);
+        EEG = pop_loadset('filename',[fname,fext],'filepath',fpath);
+    end
+
+
     EEG = pop_subcomp( EEG, ic2remove, 0);
     EEG = pop_saveset( EEG, 'filename',[name_noext, ext],'filepath',EEG.filepath);    
 end

@@ -32,7 +32,13 @@ all_template_labels = {all_template_locs.labels};
 OUTEEG              = [];
 EEG_poly            = [];
 
-EEG                 = pop_loadset(input_file_name);
+% EEG                 = pop_loadset(input_file_name);
+try
+    EEG                     = pop_loadset(input_file_name);
+catch
+    [fpath,fname,fext] = fileparts(input_file_name);
+    EEG = pop_loadset('filename',[fname,fext],'filepath',fpath);
+end
 
 % list of channels in the current dataset
 ch_set              = {EEG.chanlocs.labels};

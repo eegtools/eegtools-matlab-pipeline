@@ -70,7 +70,14 @@ cfg.opts.FontSize  = 14;
 try
     
     
-    EEG = pop_loadset(input_file_name);
+%     EEG = pop_loadset(input_file_name);
+
+try
+    EEG                     = pop_loadset(input_file_name);
+catch
+    [fpath,fname,fext] = fileparts(input_file_name);
+    EEG = pop_loadset('filename',[fname,fext],'filepath',fpath);
+end
     
     
     if sum(ismember({EEG.chanlocs.labels},'vEOG')     )
