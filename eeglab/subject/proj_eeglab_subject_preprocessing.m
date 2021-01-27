@@ -60,8 +60,8 @@ for subj=1:numsubj
     try
         EEG                     = pop_loadset(input_file_name);
     catch
-        [fpath,fname] = fileparts(input_file_name);
-        EEG = pop_loadset('filename',fname,'filepath',fpath);
+        [fpath,fname,fext] = fileparts(input_file_name);
+        EEG = pop_loadset('filename',[fname,fext],'filepath',fpath);
     end
     dataset_ch_lab = {EEG.chanlocs.labels};
     dataset_eeg_ch_lab = intersect(dataset_ch_lab,ch_montage);
