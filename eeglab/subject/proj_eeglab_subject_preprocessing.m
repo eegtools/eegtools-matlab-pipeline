@@ -60,7 +60,7 @@ for subj=1:numsubj
     try
         EEG                     = pop_loadset(input_file_name);
     catch
-        [fname,fpath] = fileparts(input_file_name);
+        [fpath,fname] = fileparts(input_file_name);
         EEG = pop_loadset('filename',fname,'filepath',fpath);
     end
     dataset_ch_lab = {EEG.chanlocs.labels};
