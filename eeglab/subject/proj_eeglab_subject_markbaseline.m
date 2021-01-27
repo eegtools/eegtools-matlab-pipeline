@@ -58,7 +58,13 @@ switch project.epoching.baseline_replace.mode
         for subj=1:numsubj
             subj_name           = list_select_subjects{subj};
             baseline_file       = proj_eeglab_subject_get_filename(project, subj_name, get_filename_step, 'custom_suffix', custom_suffix, 'custom_input_folder', custom_input_folder);
-            EEG                 = pop_loadset(baseline_file);
+%             EEG                 = pop_loadset(baseline_file);
+            try
+                EEG                     = pop_loadset(baseline_file);
+            catch
+                [fpath,fname,fext] = fileparts(baseline_file);
+                EEG = pop_loadset('filename',[fname,fext],'filepath',fpath);
+            end
             
             aeve = {EEG.event.type};
             sel_nb = not(ismember(aeve,{project.preproc.marker_type.begin_baseline,project.preproc.marker_type.end_baseline}));
@@ -79,8 +85,20 @@ switch project.epoching.baseline_replace.mode
                 baseline_file   = target_events_file;
             end
             
-            EEG_target          = pop_loadset(target_events_file);
-            EEG_baseline        = pop_loadset(baseline_file);
+%             EEG_target          = pop_loadset(target_events_file);
+%             EEG_baseline        = pop_loadset(baseline_file);
+            
+            try
+                EEG_target          = pop_loadset(target_events_file);
+                EEG_baseline        = pop_loadset(baseline_file);
+            catch
+                [fpath,fname,fext] = fileparts(target_events_file);
+                EEG_target = pop_loadset('filename',[fname,fext],'filepath',fpath);
+                [fpath,fname,fext] = fileparts(baseline_file);
+                EEG_baseline = pop_loadset('filename',[fname,fext],'filepath',fpath);
+            end
+            
+            
             if not(isempty(project.subjects.data(subj_index).baseline_file))
                 if isstruct(EEG_baseline.event)
                     aeve = {EEG_baseline.event.type};

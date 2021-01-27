@@ -84,7 +84,16 @@ for subj=1:numsubj
                 EEG.event(ev).type = num2str(EEG.event(ev).type);
             end
             EEG=pop_chanedit(EEG, 'lookup',eeglab_channels_file);
-            
+        
+        case 'BIOSEMI128'
+            EEG = pop_biosig(input_file_name, 'importannot','off');
+            % EVENT SELECTING
+            % convert events type to string & remove blanks from events' labels
+            for ev=1:size(EEG.event,2)
+                EEG.event(ev).type = num2str(EEG.event(ev).type);
+            end
+            % https://sccn.ucsd.edu/pipermail/eeglablist/2013/006968.html
+            pop_chanedit(readlocs('biosemi128_eloc.txt', 'format', { 'labels' 'sph_theta_besa' 'sph_phi_besa' }, 'skiplines', 1));
             
         case 'GEODESIC'
             %             EEG = pop_readegi(input_file_name, [],[],'auto');
@@ -243,7 +252,10 @@ for subj=1:numsubj
             end
             eeglab redraw
             
-            
+        case 'SMARTING'
+            EEG = pop_loadxdf(input_file_name, 'streamtype', 'EEG', 'exclude_markerstreams', {});
+            EEG=pop_chanedit(EEG, 'lookup',eeglab_channels_file);
+            EEG = eeg_checkset( EEG );
             
         otherwise
             error(['unrecognized device (' project.import.acquisition_system ')']);

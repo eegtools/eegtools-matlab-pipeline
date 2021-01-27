@@ -34,9 +34,14 @@ for subj=1:numsubj
     inputfile   = proj_eeglab_subject_get_filename(project, subj_name, get_filename_step, 'custom_suffix', custom_suffix, 'custom_input_folder', custom_input_folder);
     [folder, name_noext, ext] = fileparts(inputfile );
     
-    EEG         = pop_loadset(inputfile);
+    %     EEG         = pop_loadset(inputfile);
     
-    
+    try
+        EEG                     = pop_loadset(inputfile);
+    catch
+        [fpath,fname,fext] = fileparts(inputfile);
+        EEG = pop_loadset('filename',[fname,fext],'filepath',fpath);
+    end
     
     acquisition_system    = project.import.acquisition_system;
     montage_list          = project.preproc.montage_list;
@@ -47,12 +52,12 @@ for subj=1:numsubj
     ch_montage             = montage_list{select_montage};
     
     
-      
+    
     dataset_ch_lab = {EEG.chanlocs.labels};
     dataset_eeg_ch_lab = intersect(dataset_ch_lab,ch_montage);
     nch_eeg_dataset = length(dataset_eeg_ch_lab);
-    exclude = [];    
-    if EEG.nbchan > nch_eeg_dataset 
+    exclude = [];
+    if EEG.nbchan > nch_eeg_dataset
         exclude = (nch_eeg_dataset+1) : EEG.nbchan;
     end
     
@@ -62,7 +67,7 @@ for subj=1:numsubj
         EEG = pop_saveset( EEG, 'filename',[name_noext,'_rerefbck',ext],'filepath',EEG.filepath);
         
         EEG.reref = 1;
-
+        
         reference   = [];
         
         tchanref = length(project.import.reference_channels);
@@ -81,11 +86,11 @@ for subj=1:numsubj
             reference   = refvec;
         end
         
-%         exclude = find(channels_ind > project.eegdata.nch_eeg);
+        %         exclude = find(channels_ind > project.eegdata.nch_eeg);
         
         EEG = pop_reref(EEG, [reference], 'keepref', 'on','exclude',[exclude]);
-%         EEG = pop_reref( EEG, [16 50] ,'exclude',[60 61] ,'keepref','on');
-
+        %         EEG = pop_reref( EEG, [16 50] ,'exclude',[60 61] ,'keepref','on');
+        
         
         EEG = eeg_checkset( EEG );
         EEG = pop_saveset( EEG, 'filename', [name_noext,ext],'filepath',EEG.filepath);

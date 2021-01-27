@@ -39,7 +39,15 @@ for subj=1:numsubj
     bckfile = fullfile(folder,name_noext_bck);
     
     if exist(bckfile)
-        EEG         = pop_loadset(bckfile);
+%         EEG         = pop_loadset(bckfile);
+
+        try
+            EEG                     = pop_loadset(bckfile);
+        catch
+            [fpath,fname,fext] = fileparts(bckfile);
+            EEG = pop_loadset('filename',[fname,fext],'filepath',fpath);
+        end
+
         EEG = pop_saveset( EEG, 'filename',[name_noext,ext],'filepath',EEG.filepath);
     else
         disp('no backup reference file!!')

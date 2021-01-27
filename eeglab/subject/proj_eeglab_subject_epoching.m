@@ -60,7 +60,14 @@ for subj=1:numsubj
     subj_name                   = list_select_subjects{subj};
     
     input_file_name             = proj_eeglab_subject_get_filename(project, subj_name, get_filename_step, 'custom_suffix', custom_suffix, 'custom_input_folder', custom_input_folder);
-    EEG                         = pop_loadset(input_file_name);
+%     EEG                         = pop_loadset(input_file_name);
+
+    try
+        EEG                     = pop_loadset(input_file_name);
+    catch
+        [fpath,fname,fext] = fileparts(input_file_name);
+        EEG = pop_loadset('filename',[fname,fext],'filepath',fpath);
+    end
     
     
     %      aal_eve = ({EEG.event.type});
