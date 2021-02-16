@@ -26,6 +26,7 @@ Moreover, it eases the integration between EEGLab and Brainstorm and allows call
   * Epoching & Baseline correction
   * Triggers manipulation
   * ICA & CUDAICA
+  * ASR
   * Merge different montages
   * Microstates
   * Data driven selection of regions of interest and times
@@ -46,6 +47,13 @@ Moreover, it eases the integration between EEGLab and Brainstorm and allows call
   * Source results export to SPM8/12
   * Stats (2-samples paired t-test, scouts stats, TF stats)
   * Results export
+  
+* Sleep analysis
+  * Import files in Hume toolbox for sleep staging/analyses
+  * Import Hume staging into EEGLab and Hume analyses for futher processing
+  * Insert custom marks (e.g. spindles, k-complexes) and sleep staging (alternative to Hume)
+  * Convert sleep marks into EEGLab events (for a better integration in EEGLab processing)
+  * Add a sleep stage field to the EEG.event structure to label the sleep stage of each event
   
 ## First-time Installation
 

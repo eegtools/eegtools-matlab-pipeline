@@ -117,8 +117,8 @@ for subj=1:numsubj
                     
                     EEG=pop_chanedit(EEG, 'lookup',eeglab_channels_file);
                     
-                case 'BIOSEMI'                   
-                    EEG = pop_biosig(input_file_name, 'importannot','off');                    
+                case 'BIOSEMI'
+                    EEG = pop_biosig(input_file_name, 'importannot','off');
                     % EVENT SELECTING
                     % convert events type to string & remove blanks from events' labels
                     for ev=1:size(EEG.event,2)
@@ -169,121 +169,235 @@ for subj=1:numsubj
                     end
                     
                 case 'EDF'
+                    %                     try
+                    %                         EEG = pop_biosig(input_file_name);
+                    %                     catch
+                    %                         EEG = pop_fileio(input_file_name);
+                    %                     end
+                    %                     old_chan = {EEG.chanlocs.labels};
+                    %
+                    %                     unique_old_chan = unique(old_chan);
+                    %                     tch = length(unique_old_chan);
+                    %
+                    %                     ind_nodub = [];
+                    %                     for nch = 1:tch
+                    %                         sel_ind = find(ismember(old_chan,unique_old_chan(nch)));
+                    %                         ind_nodub(nch) = sel_ind(1);
+                    %                     end
+                    %
+                    %                     EEG = pop_select(EEG,'channel',ind_nodub);
+                    %                     old_chan = {EEG.chanlocs.labels};
+                    %
+                    %
+                    %                     chan_match = unique([project.import.montage_list{:}]);
+                    %                     rr = length(chan_match);
+                    %                     cc = length(old_chan);
+                    %
+                    %                     mat_ch = false(rr,cc);
+                    %
+                    %
+                    %                     for nr = 1:rr
+                    %                         selch = strfind_index(old_chan, chan_match{nr});
+                    %                         if not(isempty(selch))
+                    %                             mat_ch(nr, selch) = true;
+                    %                         end
+                    %                     end
+                    %
+                    %
+                    %                     new_chan = old_chan;
+                    %
+                    %                     for nc = 1:cc
+                    %                         cr = mat_ch(:,nc);
+                    %                         tcr0 = sum(cr);
+                    %
+                    %                         if tcr0
+                    %                             strxx = unique(chan_match(cr));
+                    %                             tcrx = length(strxx);
+                    %
+                    %                             if tcrx > 1
+                    %                                 ll = cellfun(@length,strxx);
+                    %                                 ss = ll == max(ll);
+                    %                                 zz = ll(ss);
+                    %                                 strxx = strxx(zz);
+                    %                             end
+                    %                             new_chan(nc) = strxx;
+                    %                             %
+                    %
+                    %                         end
+                    %
+                    %                     end
+                    %
+                    %                     for nc = 1:cc
+                    %                         EEG.chanlocs(nc).labels = new_chan{nc};
+                    %                     end
+                    %
+                    %
+                    %
+                    %                     missing_ch = find(not(ismember(chan_match, {EEG.chanlocs.labels})));
+                    %
+                    %
+                    %                     if not(isempty(missing_ch))
+                    %
+                    %                         num_new_ch = length(missing_ch);
+                    %                         ch2add = chan_match(missing_ch);
+                    %
+                    %                         for nb=1:num_new_ch
+                    %                             EEG.data((EEG.nbchan+nb), :)        = 0;
+                    %                             EEG.chanlocs(EEG.nbchan+nb)         = EEG.chanlocs(1);
+                    %                             EEG.chanlocs(EEG.nbchan+nb).labels  = ch2add{nb};
+                    %                         end
+                    %
+                    %                         EEG=pop_chanedit(EEG, 'lookup',eeglab_channels_file);
+                    %                         EEG = eeg_checkset( EEG );
+                    %
+                    %                         eegch = {EEG.chanlocs.labels};
+                    %
+                    %                         [eegch_sorted ind_eegch] = sort(eegch);
+                    %                         %                     [allch_sorted ind_allch] = sort(allch);
+                    %                         %
+                    %                         %                     [ind_eegch_sorted ind_ind_eegch] = sort(ind_eegch);
+                    %                         %                     [ind_allch_sorted ind_ind_allch] = sort(ind_allch);
+                    %
+                    %
+                    %                         %                     mapping = ind_eegch(ind_ind_allch);
+                    %                         %                     EEG.data = EEG.data(mapping,:);
+                    %                         %                     EEG.chanlocs = EEG.chanlocs(mapping,:);
+                    %
+                    %                         EEG.data = EEG.data(ind_eegch,:);
+                    %                         EEG.chanlocs = EEG.chanlocs(ind_eegch,:);
+                    %
+                    %                         EEG=pop_chanedit(EEG, 'lookup',eeglab_channels_file);
+                    %                         EEG = eeg_checkset( EEG );
+                    %
+                    %                         interpolation = find(ismember({EEG.chanlocs.labels},ch2add));
+                    %                         EEG             = pop_interp(EEG, [interpolation], 'spherical');
+                    %                         EEG=pop_chanedit(EEG, 'lookup',eeglab_channels_file);
+                    %                         EEG = eeg_checkset( EEG );
+                    %
+                    %                         ch2discard = find(not(ismember({EEG.chanlocs.labels}, chan_match)));
+                    %                         EEG             = pop_select(EEG, 'nochannel', ch2discard);
+                    %                         EEG=pop_chanedit(EEG, 'lookup',eeglab_channels_file);
+                    %                         EEG = eeg_checkset( EEG );
+                    %
+                    %                     end
+                    %                     EEG=pop_chanedit(EEG, 'lookup',eeglab_channels_file);
+                    %                     EEG = eeg_checkset( EEG );
+                    
                     try
                         EEG = pop_biosig(input_file_name);
+                        EEG_eve = pop_fileio(input_file_name, 'dataformat','edf');
+                        allevelab={EEG_eve.event.type};
+                        rm_fake_eve = not(ismember(allevelab,'empty'));
+                        EEG_eve.event = EEG_eve.event(rm_fake_eve);
+                        EEG.event = EEG_eve.event;
+                        EEG = eeg_checkset( EEG );
+                        
                     catch
-                        EEG = pop_fileio(input_file_name);
-                    end
-                    old_chan = {EEG.chanlocs.labels};
-                    
-                    unique_old_chan = unique(old_chan);
-                    tch = length(unique_old_chan);
-                    
-                    ind_nodub = [];
-                    for nch = 1:tch
-                        sel_ind = find(ismember(old_chan,unique_old_chan(nch)));
-                        ind_nodub(nch) = sel_ind(1);
-                    end
-                    
-                    EEG = pop_select(EEG,'channel',ind_nodub);
-                    old_chan = {EEG.chanlocs.labels};
-                    
-                    
-                    chan_match = unique([project.import.montage_list{:}]);
-                    rr = length(chan_match);
-                    cc = length(old_chan);
-                    
-                    mat_ch = false(rr,cc);
-                    
-                    
-                    for nr = 1:rr
-                        selch = strfind_index(old_chan, chan_match{nr});
-                        if not(isempty(selch))
-                            mat_ch(nr, selch) = true;
-                        end
+                        EEG = pop_biosig(input_file_name);
                     end
                     
                     
-                    new_chan = old_chan;
-                    
-                    for nc = 1:cc
-                        cr = mat_ch(:,nc);
-                        tcr0 = sum(cr);
-                        
-                        if tcr0
-                            strxx = unique(chan_match(cr));
-                            tcrx = length(strxx);
-                            
-                            if tcrx > 1
-                                ll = cellfun(@length,strxx);
-                                ss = ll == max(ll);
-                                zz = ll(ss);
-                                strxx = strxx(zz);
-                            end
-                            new_chan(nc) = strxx;
-                            %
-                            
-                        end
-                        
-                    end
-                    
-                    for nc = 1:cc
-                        EEG.chanlocs(nc).labels = new_chan{nc};
-                    end
-                    
-                    
-                    
-                    missing_ch = find(not(ismember(chan_match, {EEG.chanlocs.labels})));
-                    
-                    
-                    if not(isempty(missing_ch))
-                        
-                        num_new_ch = length(missing_ch);
-                        ch2add = chan_match(missing_ch);
-                        
-                        for nb=1:num_new_ch
-                            EEG.data((EEG.nbchan+nb), :)        = 0;
-                            EEG.chanlocs(EEG.nbchan+nb)         = EEG.chanlocs(1);
-                            EEG.chanlocs(EEG.nbchan+nb).labels  = ch2add{nb};
-                        end
-                        
-                        EEG=pop_chanedit(EEG, 'lookup',eeglab_channels_file);
-                        EEG = eeg_checkset( EEG );
-                        
-                        eegch = {EEG.chanlocs.labels};
-                        
-                        [eegch_sorted ind_eegch] = sort(eegch);
-                        %                     [allch_sorted ind_allch] = sort(allch);
-                        %
-                        %                     [ind_eegch_sorted ind_ind_eegch] = sort(ind_eegch);
-                        %                     [ind_allch_sorted ind_ind_allch] = sort(ind_allch);
-                        
-                        
-                        %                     mapping = ind_eegch(ind_ind_allch);
-                        %                     EEG.data = EEG.data(mapping,:);
-                        %                     EEG.chanlocs = EEG.chanlocs(mapping,:);
-                        
-                        EEG.data = EEG.data(ind_eegch,:);
-                        EEG.chanlocs = EEG.chanlocs(ind_eegch,:);
-                        
-                        EEG=pop_chanedit(EEG, 'lookup',eeglab_channels_file);
-                        EEG = eeg_checkset( EEG );
-                        
-                        interpolation = find(ismember({EEG.chanlocs.labels},ch2add));
-                        EEG             = pop_interp(EEG, [interpolation], 'spherical');
-                        EEG=pop_chanedit(EEG, 'lookup',eeglab_channels_file);
-                        EEG = eeg_checkset( EEG );
-                        
-                        ch2discard = find(not(ismember({EEG.chanlocs.labels}, chan_match)));
-                        EEG             = pop_select(EEG, 'nochannel', ch2discard);
-                        EEG=pop_chanedit(EEG, 'lookup',eeglab_channels_file);
-                        EEG = eeg_checkset( EEG );
-                        
-                    end
-                    EEG=pop_chanedit(EEG, 'lookup',eeglab_channels_file);
-                    EEG = eeg_checkset( EEG );
-                    
-                    
+                    eeglab redraw
+                    %             try
+                    %                 EEG = pop_biosig(input_file_name);
+                    %             catch
+                    %                 EEG = pop_fileio(input_file_name);
+                    %             end
+                    %% gestione canali
+                    %             old_chan = {EEG.chanlocs.labels};
+                    %             chan_match = unique([project.import.montage_list{:}]);
+                    %             rr = length(chan_match);
+                    %             cc = length(old_chan);
+                    %
+                    %             mat_ch = false(rr,cc);
+                    %
+                    %
+                    %             for nr = 1:rr
+                    %                 selch = strfind_index(old_chan, chan_match{nr});
+                    %                 if not(isempty(selch))
+                    %                     mat_ch(nr, selch) = true;
+                    %                 end
+                    %             end
+                    %
+                    %
+                    %             new_chan = old_chan;
+                    %
+                    %             for nc = 1:cc
+                    %                 cr = mat_ch(:,nc);
+                    %                 tcr0 = sum(cr);
+                    %
+                    %                 if tcr0
+                    %                     strxx = unique(chan_match(cr));
+                    %                     tcrx = length(strxx);
+                    %
+                    %                     if tcrx > 1
+                    %                         ll = cellfun(@length,strxx);
+                    %                         ss = ll == max(ll);
+                    %                         zz = ll(ss);
+                    %                         strxx = strxx(zz);
+                    %                     end
+                    %                     new_chan(nc) = strxx;
+                    %                     %
+                    %
+                    %                 end
+                    %
+                    %             end
+                    %
+                    %             for nc = 1:cc
+                    %                 EEG.chanlocs(nc).labels = new_chan{nc};
+                    %             end
+                    %
+                    %
+                    %
+                    %             missing_ch = find(not(ismember(chan_match, {EEG.chanlocs.labels})));
+                    %
+                    %
+                    %             if not(isempty(missing_ch))
+                    %
+                    %                 num_new_ch = length(missing_ch);
+                    %                 ch2add = chan_match(missing_ch);
+                    %
+                    %                 for nb=1:num_new_ch
+                    %                     EEG.data((EEG.nbchan+nb), :)        = 0;
+                    %                     EEG.chanlocs(EEG.nbchan+nb)         = EEG.chanlocs(1);
+                    %                     EEG.chanlocs(EEG.nbchan+nb).labels  = ch2add{nb};
+                    %                 end
+                    %
+                    %                 EEG=pop_chanedit(EEG, 'lookup',eeglab_channels_file);
+                    %                 EEG = eeg_checkset( EEG );
+                    %
+                    %                 eegch = {EEG.chanlocs.labels};
+                    %
+                    %                 [eegch_sorted ind_eegch] = sort(eegch);
+                    %                 %                     [allch_sorted ind_allch] = sort(allch);
+                    %                 %
+                    %                 %                     [ind_eegch_sorted ind_ind_eegch] = sort(ind_eegch);
+                    %                 %                     [ind_allch_sorted ind_ind_allch] = sort(ind_allch);
+                    %
+                    %
+                    %                 %                     mapping = ind_eegch(ind_ind_allch);
+                    %                 %                     EEG.data = EEG.data(mapping,:);
+                    %                 %                     EEG.chanlocs = EEG.chanlocs(mapping,:);
+                    %
+                    %                 EEG.data = EEG.data(ind_eegch,:);
+                    %                 EEG.chanlocs = EEG.chanlocs(ind_eegch,:);
+                    %
+                    %                 EEG=pop_chanedit(EEG, 'lookup',eeglab_channels_file);
+                    %                 EEG = eeg_checkset( EEG );
+                    %
+                    %                 interpolation = find(ismember({EEG.chanlocs.labels},ch2add));
+                    %                 EEG             = pop_interp(EEG, [interpolation], 'spherical');
+                    %                 EEG=pop_chanedit(EEG, 'lookup',eeglab_channels_file);
+                    %                 EEG = eeg_checkset( EEG );
+                    %
+                    %                 ch2discard = find(not(ismember({EEG.chanlocs.labels}, chan_match)));
+                    %                 EEG             = pop_select(EEG, 'nochannel', ch2discard);
+                    %                 EEG=pop_chanedit(EEG, 'lookup',eeglab_channels_file);
+                    %                 EEG = eeg_checkset( EEG );
+                    %
+                    %             end
+                    %             EEG=pop_chanedit(EEG, 'lookup',eeglab_channels_file);
+                    %             EEG = eeg_checkset( EEG );
                     
                 otherwise
                     error(['unrecognized device (' project.import.acquisition_system ')']);

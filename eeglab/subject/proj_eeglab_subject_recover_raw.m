@@ -53,7 +53,13 @@ function EEG = proj_eeglab_subject_recover_raw(project, varargin)
         
         disp(['recovering ' bckfile])
                      
-        EEG = pop_loadset(bckfile);
+%         EEG = pop_loadset(bckfile);
+        try
+            EEG                     = pop_loadset(bckfile);
+        catch
+            [fpath,fname,fext] = fileparts(bckfile);
+            EEG = pop_loadset('filename',[fname,fext],'filepath',fpath);
+        end
         
         EEG = pop_saveset( EEG, 'filename',[name_noext, ext],'filepath',EEG.filepath);
 

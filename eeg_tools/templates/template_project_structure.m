@@ -1337,153 +1337,153 @@ project.postprocess.ersp.frequency_bands_names      = {project.postprocess.ersp.
 
 
 
-%% data driven
-
-
-% ERP
-% data driven selection of tw-roi based on grand average
-project.postprocess.datadriven.erp.recompute_precompute                   = 'off';
-project.postprocess.datadriven.erp.precompute_folder = '';
-
-
-% grand average
-project.postprocess.datadriven.erp.ga.recompute                = 'on';
-project.postprocess.datadriven.erp.ga.levels_f1 = {project.design.factor1_levels};
-project.postprocess.datadriven.erp.ga.levels_f2 = {project.design.factor2_levels};
-% project.postprocess.datadriven.erp.ga.levels_f2{3} = project.postprocess.datadriven.erp.ga.levels_f2{3}(1); 
-% project.postprocess.datadriven.erp.ga.levels_f2{3} = project.postprocess.datadriven.erp.ga.levels_f2{3}(3); 
-
-
-% cell  array di dimensione pari al numero di disegni. ogni cella è un cell
-% array a sua volta, corrispondente a ogni interazione tra grouping factor
-% e comparing fatcor
-
-project.postprocess.datadriven.erp.select_tw_des_stat = [0 520];
-
-project.postprocess.datadriven.erp.ga.select_tw_des_plot = {};
-select_tw_plot = [0,2000];
-tot_des = length(project.postprocess.datadriven.erp.ga.levels_f1);
-select_tw_des_plot = {};
-for ndes = 1:tot_des
-    select_tw_s1_s2_plot = {};
-
-    for ns1 = 1:length(project.postprocess.datadriven.erp.ga.levels_f1{ndes})
-        for ns2 = 1:length(project.postprocess.datadriven.erp.ga.levels_f2{ndes})
-            
-           select_tw_s1_s2_plot{ns1, ns2}  = select_tw_plot;
-           
-        end
-    end
-               select_tw_des_plot{ndes} = select_tw_s1_s2_plot;
-
-end
-project.postprocess.datadriven.erp.ga.select_tw_des_plot = select_tw_des_plot;
-
-
-% grouping factor
-
-project.postprocess.datadriven.erp.gf.recompute                 = 'on';
-project.postprocess.datadriven.erp.gf.levels_f1 = {project.design.factor1_levels};
-project.postprocess.datadriven.erp.gf.levels_f2 = {project.design.factor2_levels};
-
-% cell  array di dimensione pari al numero di disegni. ogni cella è un cell
-% array a sua volta, corrispondente a ogni interazione tra grouping factor
-% e comparing fatcor
-
-project.postprocess.datadriven.erp.gf.select_tw_des_plot = {};
-select_tw_plot = [0,2000];
-tot_des = length(project.postprocess.datadriven.erp.gf.levels_f1);
-select_tw_des_plot = {};
-for ndes = 1:tot_des
-    select_tw_s1_s2_plot = {};
-
-    for ns1 = 1:length(project.postprocess.datadriven.erp.gf.levels_f1{ndes})
-        for ns2 = 1:length(project.postprocess.datadriven.erp.gf.levels_f2{ndes})
-            
-           select_tw_s1_s2_plot{ns1, ns2}  = select_tw_plot;
-           
-        end
-    end
-               select_tw_des_plot{ndes} = select_tw_s1_s2_plot;
-
-end
-project.postprocess.datadriven.erp.gf.select_tw_des_plot = select_tw_des_plot;
-
-
-
-
-
-
-
-
-
-% ERSP
-% data driven selection of tw-roi based on grand average
-project.postprocess.datadriven.ersp.recompute_precompute                   = 'off';
-project.postprocess.datadriven.ersp.precompute_folder = '';
-
-
-% grand average
-project.postprocess.datadriven.ersp.ga.recompute                = 'on';
-project.postprocess.datadriven.ersp.ga.levels_f1 = {project.design.factor1_levels};
-project.postprocess.datadriven.ersp.ga.levels_f2 = {project.design.factor2_levels};
-% project.postprocess.datadriven.ersp.ga.levels_f2{3} = project.postprocess.datadriven.ersp.ga.levels_f2{3}(4:end); 
-%  project.postprocess.datadriven.ersp.ga.levels_f2{3} = project.postprocess.datadriven.ersp.ga.levels_f2{3}(3); 
-
-
-% cell  array di dimensione pari al numero di disegni. ogni cella è un cell
-% array a sua volta, corrispondente a ogni interazione tra grouping factor
-% e comparing fatcor
-
-project.postprocess.datadriven.ersp.select_tw_des_stat = [0 520];
-project.postprocess.datadriven.ersp.ga.select_tw_des_plot = {};
-select_tw_plot = [0,2000];
-tot_des = length(project.postprocess.datadriven.ersp.ga.levels_f1);
-select_tw_des_plot = {};
-for ndes = 1:tot_des
-    select_tw_s1_s2_plot = {};
-
-    for ns1 = 1:length(project.postprocess.datadriven.ersp.ga.levels_f1{ndes})
-        for ns2 = 1:length(project.postprocess.datadriven.ersp.ga.levels_f2{ndes})
-            
-           select_tw_s1_s2_plot{ns1, ns2}  = select_tw_plot;
-           
-        end
-    end
-               select_tw_des_plot{ndes} = select_tw_s1_s2_plot;
-
-end
-project.postprocess.datadriven.ersp.ga.select_tw_des_plot = select_tw_des_plot;
-
-
-% grouping factor
-
-project.postprocess.datadriven.ersp.gf.recompute                 = 'on';
-project.postprocess.datadriven.ersp.gf.levels_f1 = {project.design.factor1_levels};
-project.postprocess.datadriven.ersp.gf.levels_f2 = {project.design.factor2_levels};
-
-% cell  array di dimensione pari al numero di disegni. ogni cella è un cell
-% array a sua volta, corrispondente a ogni interazione tra grouping factor
-% e comparing fatcor
-
-project.postprocess.datadriven.ersp.gf.select_tw_des_plot = {};
-select_tw_plot = [0,2000];
-tot_des = length(project.postprocess.datadriven.ersp.gf.levels_f1);
-select_tw_des_plot = {};
-for ndes = 1:tot_des
-    select_tw_s1_s2_plot = {};
-
-    for ns1 = 1:length(project.postprocess.datadriven.ersp.gf.levels_f1{ndes})
-        for ns2 = 1:length(project.postprocess.datadriven.ersp.gf.levels_f2{ndes})
-            
-           select_tw_s1_s2_plot{ns1, ns2}  = select_tw_plot;
-           
-        end
-    end
-               select_tw_des_plot{ndes} = select_tw_s1_s2_plot;
-
-end
-project.postprocess.datadriven.ersp.gf.select_tw_des_plot = select_tw_des_plot;
+% %% data driven
+% 
+% 
+% % ERP
+% % data driven selection of tw-roi based on grand average
+% project.postprocess.datadriven.erp.recompute_precompute                   = 'off';
+% project.postprocess.datadriven.erp.precompute_folder = '';
+% 
+% 
+% % grand average
+% project.postprocess.datadriven.erp.ga.recompute                = 'on';
+% project.postprocess.datadriven.erp.ga.levels_f1 = {project.design.factor1_levels};
+% project.postprocess.datadriven.erp.ga.levels_f2 = {project.design.factor2_levels};
+% % project.postprocess.datadriven.erp.ga.levels_f2{3} = project.postprocess.datadriven.erp.ga.levels_f2{3}(1); 
+% % project.postprocess.datadriven.erp.ga.levels_f2{3} = project.postprocess.datadriven.erp.ga.levels_f2{3}(3); 
+% 
+% 
+% % cell  array di dimensione pari al numero di disegni. ogni cella è un cell
+% % array a sua volta, corrispondente a ogni interazione tra grouping factor
+% % e comparing fatcor
+% 
+% project.postprocess.datadriven.erp.select_tw_des_stat = [0 520];
+% 
+% project.postprocess.datadriven.erp.ga.select_tw_des_plot = {};
+% select_tw_plot = [0,2000];
+% tot_des = length(project.postprocess.datadriven.erp.ga.levels_f1);
+% select_tw_des_plot = {};
+% for ndes = 1:tot_des
+%     select_tw_s1_s2_plot = {};
+% 
+%     for ns1 = 1:length(project.postprocess.datadriven.erp.ga.levels_f1{ndes})
+%         for ns2 = 1:length(project.postprocess.datadriven.erp.ga.levels_f2{ndes})
+%             
+%            select_tw_s1_s2_plot{ns1, ns2}  = select_tw_plot;
+%            
+%         end
+%     end
+%                select_tw_des_plot{ndes} = select_tw_s1_s2_plot;
+% 
+% end
+% project.postprocess.datadriven.erp.ga.select_tw_des_plot = select_tw_des_plot;
+% 
+% 
+% % grouping factor
+% 
+% project.postprocess.datadriven.erp.gf.recompute                 = 'on';
+% project.postprocess.datadriven.erp.gf.levels_f1 = {project.design.factor1_levels};
+% project.postprocess.datadriven.erp.gf.levels_f2 = {project.design.factor2_levels};
+% 
+% % cell  array di dimensione pari al numero di disegni. ogni cella è un cell
+% % array a sua volta, corrispondente a ogni interazione tra grouping factor
+% % e comparing fatcor
+% 
+% project.postprocess.datadriven.erp.gf.select_tw_des_plot = {};
+% select_tw_plot = [0,2000];
+% tot_des = length(project.postprocess.datadriven.erp.gf.levels_f1);
+% select_tw_des_plot = {};
+% for ndes = 1:tot_des
+%     select_tw_s1_s2_plot = {};
+% 
+%     for ns1 = 1:length(project.postprocess.datadriven.erp.gf.levels_f1{ndes})
+%         for ns2 = 1:length(project.postprocess.datadriven.erp.gf.levels_f2{ndes})
+%             
+%            select_tw_s1_s2_plot{ns1, ns2}  = select_tw_plot;
+%            
+%         end
+%     end
+%                select_tw_des_plot{ndes} = select_tw_s1_s2_plot;
+% 
+% end
+% project.postprocess.datadriven.erp.gf.select_tw_des_plot = select_tw_des_plot;
+% 
+% 
+% 
+% 
+% 
+% 
+% 
+% 
+% 
+% % ERSP
+% % data driven selection of tw-roi based on grand average
+% project.postprocess.datadriven.ersp.recompute_precompute                   = 'off';
+% project.postprocess.datadriven.ersp.precompute_folder = '';
+% 
+% 
+% % grand average
+% project.postprocess.datadriven.ersp.ga.recompute                = 'on';
+% project.postprocess.datadriven.ersp.ga.levels_f1 = {project.design.factor1_levels};
+% project.postprocess.datadriven.ersp.ga.levels_f2 = {project.design.factor2_levels};
+% % project.postprocess.datadriven.ersp.ga.levels_f2{3} = project.postprocess.datadriven.ersp.ga.levels_f2{3}(4:end); 
+% %  project.postprocess.datadriven.ersp.ga.levels_f2{3} = project.postprocess.datadriven.ersp.ga.levels_f2{3}(3); 
+% 
+% 
+% % cell  array di dimensione pari al numero di disegni. ogni cella è un cell
+% % array a sua volta, corrispondente a ogni interazione tra grouping factor
+% % e comparing fatcor
+% 
+% project.postprocess.datadriven.ersp.select_tw_des_stat = [0 520];
+% project.postprocess.datadriven.ersp.ga.select_tw_des_plot = {};
+% select_tw_plot = [0,2000];
+% tot_des = length(project.postprocess.datadriven.ersp.ga.levels_f1);
+% select_tw_des_plot = {};
+% for ndes = 1:tot_des
+%     select_tw_s1_s2_plot = {};
+% 
+%     for ns1 = 1:length(project.postprocess.datadriven.ersp.ga.levels_f1{ndes})
+%         for ns2 = 1:length(project.postprocess.datadriven.ersp.ga.levels_f2{ndes})
+%             
+%            select_tw_s1_s2_plot{ns1, ns2}  = select_tw_plot;
+%            
+%         end
+%     end
+%                select_tw_des_plot{ndes} = select_tw_s1_s2_plot;
+% 
+% end
+% project.postprocess.datadriven.ersp.ga.select_tw_des_plot = select_tw_des_plot;
+% 
+% 
+% % grouping factor
+% 
+% project.postprocess.datadriven.ersp.gf.recompute                 = 'on';
+% project.postprocess.datadriven.ersp.gf.levels_f1 = {project.design.factor1_levels};
+% project.postprocess.datadriven.ersp.gf.levels_f2 = {project.design.factor2_levels};
+% 
+% % cell  array di dimensione pari al numero di disegni. ogni cella è un cell
+% % array a sua volta, corrispondente a ogni interazione tra grouping factor
+% % e comparing fatcor
+% 
+% project.postprocess.datadriven.ersp.gf.select_tw_des_plot = {};
+% select_tw_plot = [0,2000];
+% tot_des = length(project.postprocess.datadriven.ersp.gf.levels_f1);
+% select_tw_des_plot = {};
+% for ndes = 1:tot_des
+%     select_tw_s1_s2_plot = {};
+% 
+%     for ns1 = 1:length(project.postprocess.datadriven.ersp.gf.levels_f1{ndes})
+%         for ns2 = 1:length(project.postprocess.datadriven.ersp.gf.levels_f2{ndes})
+%             
+%            select_tw_s1_s2_plot{ns1, ns2}  = select_tw_plot;
+%            
+%         end
+%     end
+%                select_tw_des_plot{ndes} = select_tw_s1_s2_plot;
+% 
+% end
+% project.postprocess.datadriven.ersp.gf.select_tw_des_plot = select_tw_des_plot;
 %==============================================================
 % NARROW BAND
 %==============================================================
@@ -1961,7 +1961,62 @@ project.postprocess.design_factors_ordered_levels={...
                               {{} {}};...
 };
 
+%% sleep EEG analysis
 
+project.sleep.sleep_stages.markers = {'W','N1','N2','N3','N4','REM'};
+project.sleep.sleep_stages.colors = {[1 0 0],[0 1 0],[0 0 1],[0 1 1],[1 0 1],[1 1 0]};
+project.sleep.channels_colors = 'off'; % 'on'|'off' when on plot channels with different colors 
+project.sleep.reset_marks = 0; % reset or initialize the marks structure 
+
+project.sleep.marks(1).label = 's';%spindle
+project.sleep.marks(1).color = [1 0.5 0.5];
+
+project.sleep.marks(2).label = 'k';%k-complex
+project.sleep.marks(2).color = [0.5 1 0.5];
+
+% set the vised commands for insert sleep marks and stages, see
+% https://bucanl.github.io/SDC-VISED-MARKS/02-options/index.html
+ 
+project.sleep.vised.marks_y_loc = 0.15; % y of the makers in the scoring figure
+
+project.sleep.vised.keyselectcommand=...
+    {...
+    't,ve_eegplot(''topoplot'',gcbf)';...
+    'r,ve_eegplot(''drawp'',0)';...
+    'm,ve_edit(''awm'',''manual'')';...
+    'M,ve_edit(''rwm'',''manual'')';...
+    's,ve_edit(''awm'',''s'')';... insert SPINDLE
+    'S,ve_edit(''rwm'',''s'')';... remove spindle
+    'k,ve_edit(''awm'',''k'')';... insert K-COMPLEX
+    'K,ve_edit(''rwm'',''k'')';... remove k complex
+    'a,ve_edit(''apm'',''W'')';...
+    'A,ve_edit(''rwm'',''W'')';...
+    'b,ve_edit(''apm'',''N1'')';... insert all page stage n1
+    'B,ve_edit(''rwm'',''N1'')';... remove selected area n1 (select by drag cursor)
+    'c,ve_edit(''apm'',''N2'')';...
+    'C,ve_edit(''rwm'',''N2'')';...
+    'd,ve_edit(''apm'',''N3'')';...
+    'D,ve_edit(''rwm'',''N3'')';...
+    'e,ve_edit(''apm'',''N4'')';...
+    'E,ve_edit(''rwm'',''N4'')';...
+    'f,ve_edit(''apm'',''REM'')';...
+    'F,ve_edit(''rwm'',''REM'')';...   
+    };...
+
+
+%% HUME SLEEP SCORING
+ % cc commentare
+project.sleep.hume.stageData.stageNames = {'W'; 'N1'; 'N2'; 'N3'; 'N4'; 'REM'; 'MT'}; % DO NOT EDIT: sleep stage coding for HUME
+project.sleep.hume.reset_stageData = 1; % reset sleep staging data
+% creo campi custom per gestire parametri
+project.sleep.hume.stageData.Flims_global = [.05 20];%[.05 20];
+project.sleep.hume.stageData.Flims_delta = [.5 4];%[.5 4.75];
+project.sleep.hume.stageData.Flims_sigma = [10 14];%[.05 20];
+project.sleep.hume.stageData.project = project;
+project.sleep.hume.stageData.spect_win = 2;% window length for spectrogram calculation, default 5 secs
+
+
+% 
 
 %% ===============================================
 % BRAINSTORM 

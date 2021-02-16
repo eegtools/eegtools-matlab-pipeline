@@ -51,6 +51,28 @@ switch action_name
     case 'do_import_collect'
         proj_eeglab_subject_import_data_collect(project, 'list_select_subjects', list_select_subjects);
     
+    case 'do_edf_clean_ch'
+        proj_eeglab_subject_edf_clean_ch(project, 'list_select_subjects', list_select_subjects);
+    
+    case 'do_uniform_edf_montage'
+        proj_eeglab_subject_uniform_edf_montage(project, 'list_select_subjects', list_select_subjects);
+   
+    case 'do_sleep_staging_hume'
+        proj_eeglab_subject_sleep_staging_hume(project, 'list_select_subjects', list_select_subjects);
+    
+    case 'do_import_sleep_staging_hume'
+        proj_eeglab_subject_import_sleep_staging_hume(project, 'list_select_subjects', list_select_subjects);
+        
+    case 'do_mark_sleep_events_vised'
+        proj_eeglab_subject_mark_sleep_events(project, 'list_select_subjects', list_select_subjects);
+        
+    case 'do_mark_sleep_mark2eve_vised'
+        proj_eeglab_subject_sleep_mark2eve(project, 'list_select_subjects', list_select_subjects);
+        
+    case 'do_mark_sleep_eve_ss'
+        proj_eeglab_subject_sleep_eve_ss(project, 'list_select_subjects', list_select_subjects);
+        
+        
     case 'do_filter_events'
         proj_eeglab_subject_filter_events(project, 'list_select_subjects', list_select_subjects);
    

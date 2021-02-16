@@ -22,6 +22,8 @@ else
     project.paths.projects_scripts_root = 'd:\\data\behavior_lab_svn\behaviourPlatform';
     project.paths.plugins_root          = 'd:\\data\matlab_toolbox';
     project.paths.framework_root        = 'd:\\data\matlab_toolbox\eegtools-matlab-pipeline';
+    project.paths.script.project       = '/home/campus/behaviourPlatform/VisuoHaptic/claudio/bisezione_lb/';%'/media/workingdir/VisuoHaptic/mariabianca_amadeo/bisezione_sordi/processing/matlab/'; 
+
 end
 %% ==================================================================================
 %  PROJECT DATA 
@@ -58,7 +60,7 @@ numsubj                         = length(list_select_subjects);
 project.subjects.curr_list      = list_select_subjects;
 
 
-custom_suffix = '_raw_er2';   ... 16/12/14 CLA: it's NOT an override but, apparently, a mandatory parameter file name suffix used for non-standard operations (second ica, patch triggers, etc...)
+custom_suffix = '';%'_raw_er2';   ... 16/12/14 CLA: it's NOT an override but, apparently, a mandatory parameter file name suffix used for non-standard operations (second ica, patch triggers, etc...)
 % it's first _raw and then do ica. then open by hand _raw, clean segments, save as _raw_er, then do another ica, and save again as raw_er (overwrite). then reopen the ra_er and remove components and save as raw_mc.  
 
 
@@ -70,33 +72,40 @@ try
       operations = {
         'do_import'...                                                     1  import and create a backup _raw file
         'do_import_collect',...                                            2  import and merge different files of a single subject
-        'do_remove_upto_start_experiment',...                              3
-        'do_remove_pauses',...                                             4
-        'do_interpolate_segments',...                                      5  interpolate segments based on selected triggers
-        'do_preproc',...                                                   6   
-        'do_testart',...                                                   7  automatic removal of artifacts using ASR and clean_rawdata
-        'do_recover_raw',...                                               8  to recover data from raw file
-        'do_epoch_catcond',...                                             9  global epoching around experimental triggers (less data for ica but more specific for the experiment and without pauses etc)
-        'mark_badepochs_catcond',...                                       10 automatically mark bad epochs in all epoched conditions based on quantitative criteria
-        'do_ica',...                                                       11 ica and save backup file _icabck with ica decomposition 
-        'do_remove_ica',...                                                12
-        'do_recover_ica',...                                               13
-        'do_reref',...                                                     14 reref and create backup file _refbck
-        'do_recover_ref',...                                               15 
-        'do_mark_trial', ...                                               16
-        'do_mark_baseline',...                                             17
-        'do_rectify',...                                                   18
-        'do_interpolate_channels',...                                      19                               
-        'do_epochs',...                                                    20
-        'mark_badepochs',...                                               21 automatically mark bad epochs in all epoched conditions based on quantitative criteria
-        'do_factors',...                                                   22
-        'do_select_eeg_ch',...                                             23  
-        'do_recover_allch',...                                             24   
-        'do_align_montages',...                                            25
-        'do_export_ch4brainstorm',...                                      26
-        'do_microstates',...                                               27
-        'do_subject_spectra',...                                           28
-        'do_subject_replot_spectra',...                                    29
+        'do_uniform_edf_montage',...                                       3  uniform edf file montage to a templte given by one standard seto a merge of more standard sets
+        'do_edf_clean_ch',...                                              4  remove from channel raw channel labels of edf files spurious strings (e.g from EEG Fp1-AV to Fp1 so channel location is recognized by eeglab)
+        'do_sleep_staging_hume',...                                        5  import dataset to hume toolbox for sleep staging and spectral analysis of sleep EEG, the configuration file and all the paths of hume is preset so are usable from the pipeline in a integrated way (hume must be in matlab toolbox folder)
+        'do_import_sleep_staging_hume',...                                 6  import the sleep staging info from hume to the eeglab set file adding a dedicated SS (SLEEP STAGING) channel 
+        'do_mark_sleep_events_vised',...                                   7  mark custom sleep patterns (spindles,k-comples) and sleep stages (alternative to hume staging) using the vised and the vised-marks plugins (both are required in the plugin folder of eeglab) 
+        'do_mark_sleep_mark2eve_vised',...                                 8  convert sleep pattern marks to eeglab event for a more integrated later processing 
+        'do_mark_sleep_eve_ss',...                                         9  for each event insert a field with the corresponding sleep stage
+        'do_remove_upto_start_experiment',...                              10 remove the recording upu to the trigger denoting the start of experiment
+        'do_remove_pauses',...                                             11 remove recording between triggers denoting start of pauses and triggers denoting the end of pauses
+        'do_interpolate_segments',...                                      12  interpolate segments based on selected triggers
+        'do_preproc',...                                                   13  preprocessing of data (creating bipolar channels, removing non used channels, specific filters for eeg, eog and emg)   
+        'do_testart',...                                                   14  automatic removal of artifacts using ASR and clean_rawdata
+        'do_recover_raw',...                                               15  to recover data from raw file
+        'do_epoch_catcond',...                                             16  global epoching around experimental triggers (less data for ica but more specific for the experiment and without pauses etc)
+        'mark_badepochs_catcond',...                                       17 automatically mark bad epochs in all epoched conditions based on quantitative criteria
+        'do_ica',...                                                       18 ica and save backup file _icabck with ica decomposition 
+        'do_remove_ica',...                                                19
+        'do_recover_ica',...                                               20
+        'do_reref',...                                                     21 reref and create backup file _refbck
+        'do_recover_ref',...                                               22 recover file without reference
+        'do_mark_trial', ...                                               23 mark trial begin and end with triggers
+        'do_mark_baseline',...                                             24 mark baseline begin and end with triggers
+        'do_rectify',...                                                   25 
+        'do_interpolate_channels',...                                      26                               
+        'do_epochs',...                                                    27
+        'mark_badepochs',...                                               28 automatically mark bad epochs in all epoched conditions based on quantitative criteria
+        'do_factors',...                                                   29
+        'do_select_eeg_ch',...                                             30  
+        'do_recover_allch',...                                             31   
+        'do_align_montages',...                                            32
+        'do_export_ch4brainstorm',...                                      33
+        'do_microstates',...                                               34
+        'do_subject_spectra',...                                           35
+        'do_subject_replot_spectra',...                                    36
         };
     
     for nop = 1:length(operations)

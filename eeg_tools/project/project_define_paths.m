@@ -119,6 +119,9 @@ addpath(project.paths.script.project);
     if isempty(strfind(strpath, project.paths.plugin.fieldtrip)) && exist(project.paths.plugin.fieldtrip, 'dir')
         addpath(genpath2(project.paths.plugin.fieldtrip));      
     end
+    
+    
+    
 
     %% ================================================================================================================================
     %  PROJECT PATHS 
