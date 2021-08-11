@@ -93,9 +93,12 @@ for subj=1:numsubj
                 EEG.event(ev).type = num2str(EEG.event(ev).type);
             end
             % https://sccn.ucsd.edu/pipermail/eeglablist/2013/006968.html
-            pop_chanedit(readlocs('biosemi128_eloc.txt', 'format', { 'labels' 'sph_theta_besa' 'sph_phi_besa' }, 'skiplines', 1));
-            
+            EEG = pop_chanedit(readlocs('biosemi128_eloc.txt', 'format', { 'labels' 'sph_theta_besa' 'sph_phi_besa' }, 'skiplines', 1));
+        
         case 'GEODESIC'
+            EEG = pop_mffimport({input_file_name},{'label'});% nuovo
+
+        case 'GEODESIC_OLD'
             %             EEG = pop_readegi(input_file_name, [],[],'auto');
             %             EEG = eeg_checkset( EEG );
             % read the file using the copied file for the locations
