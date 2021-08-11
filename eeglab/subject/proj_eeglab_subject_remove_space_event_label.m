@@ -56,7 +56,7 @@ for subj=1:numsubj
         rm_space = not(ismember(lab_old, ' '));
         lab_new = lab_old(rm_space);
     end
-  EEG = pop_saveset( EEG, 'filename',[name_noext ,ext],'filepath',EEG.filepath);  
+  EEG = pop_saveset( EEG, 'filename',[fname ,ext],'filepath',EEG.filepath);  
 end
 %     summary = [names; ranks; ica_types; durations]';
 %     disp(summary);
