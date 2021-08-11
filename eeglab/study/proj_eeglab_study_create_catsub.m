@@ -25,7 +25,7 @@ function [STUDY, EEG] = proj_eeglab_study_create_catsub(project)
 if nargin < 1
     help proj_eeglab_study_create;
     return;
-end;
+end
 
 study_name          = project.study.filename;
 epochs_path         = project.paths.output_epochs;
@@ -68,7 +68,9 @@ if project.study.catsub.reconcatenate
                 
                 if exist(fullsetname,'file')
                     
-                    EEG = pop_loadset(fullsetname);
+                     EEG = pop_loadset('filepath',epochs_path,'filename',setname);
+                    
+%                     EEG = pop_loadset(fullsetname);
                     
                     
                     if EEG.trials>1 && not(isempty(EEG.epoch))

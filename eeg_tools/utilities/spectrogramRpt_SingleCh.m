@@ -257,9 +257,64 @@ specdata.delta            = delta;
 specdata.sigma            = sigma;
 
 
-specdatafile = fullfile(stageData.project.paths.project, 'hume',EEG.filename(1:end-4),[EEG.filename(1:end-4),'_specdata.mat']);
+specdatafile = fullfile(stageData.project.paths.project, 'hume',EEG.filename(1:end-4),[EEG.filename(1:end-4),'_',ch,'_specdata.mat']);
 
 save(specdatafile,'specdata');
+
+specfigfile = fullfile(stageData.project.paths.project, 'hume',EEG.filename(1:end-4),[EEG.filename(1:end-4),'_',ch,'_specdata.png']);
+saveas(h, specfigfile);
+
+% export band and single frequency data
+% band
+table_band.power = [specdata.delta,specdata.sigma]';
+table_band.band  = [repmat({'delta'},length(specdata.delta),1);repmat({'sigma'},length(specdata.sigma),1)];
+
+stages_ind = stageStats.stageData.stages;
+stages_label = repmat({'none'},length(stages_ind),1);
+
+stage_ind_list = [0:5,7];
+stage_label_list = stageStats.stageData.stageNames;
+
+for ns = 1:length(stageStats.stageData.stageNames)
+    current_stage_ind = stage_ind_list(ns);
+    current_stage_label = stage_label_list(ns);
+    
+    sel_ind_label = stages_ind == current_stage_ind;
+    stages_label(sel_ind_label) = current_stage_label;
+end
+sel_stages = not(stages_ind == 7);
+cleaned_stages = stages_label(sel_stages);
+table_band.sleep_stage = repmat(cleaned_stages,2,1);
+table_band.normized_time = repmat(specdata.plot_spect.x,1,2)';
+table_band = struct2table(table_band);
+table_band_file = fullfile(stageData.project.paths.project, 'hume',EEG.filename(1:end-4),[EEG.filename(1:end-4),'_',ch,'_table_band.txt']);
+writetable(table_band,table_band_file,'Delimiter','\t');
+
+% frenquency
+times_spect = specdata.plot_spect.x;
+freqs_spect = specdata.plot_spect.y;
+pow_spect = specdata.plot_spect.z;
+
+pow_table = [];
+times_table = [];
+stages_tabel = [];
+freqs_table = [];
+
+for nf = 1:length(freqs_spect)
+    current_freq = freqs_spect(nf);
+    pow_table = [pow_table,pow_spect(nf,:)];
+    times_table = [times_table,times_spect];
+    stages_tabel = [stages_tabel;cleaned_stages];
+    freqs_table = [freqs_table;repmat(current_freq,length(times_spect),1)];
+end
+
+table_frequency.frequency = freqs_table;
+table_frequency.sleep_stage = stages_tabel;
+table_frequency.normized_time = times_table';
+table_frequency = struct2table(table_frequency);
+table_frequency_file = fullfile(stageData.project.paths.project, 'hume',EEG.filename(1:end-4),[EEG.filename(1:end-4),'_',ch,'_table_frequency.txt']);
+writetable(table_frequency,table_frequency_file,'Delimiter','\t');
+
 
 end
 

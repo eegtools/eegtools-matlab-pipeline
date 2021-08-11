@@ -232,6 +232,10 @@ interpolate_channels = project.testart.interpolate_channels;
         input_testart.WindowCriterion = WindowCriterion;
         input_testart.BurstRejection = BurstRejection;
         input_testart.interpolate_channels = interpolate_channels;
+        input_testart.acquisition_system    = project.import.acquisition_system;
+        input_testart.montage_list          = project.preproc.montage_list;
+        input_testart.montage_names         = project.preproc.montage_names;
+        
         
         EEG         = eeglab_subject_testart(input_testart);
     

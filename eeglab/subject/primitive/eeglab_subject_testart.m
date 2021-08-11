@@ -175,6 +175,16 @@ WindowCriterion = input.WindowCriterion;
 BurstRejection = input.BurstRejection;
 interpolate_channels = input.interpolate_channels;
 
+
+acquisition_system          = input.acquisition_system;
+montage_list                = input.montage_list;
+montage_names               = input.montage_names;
+
+select_montage         = ismember(montage_names,acquisition_system);
+ch_montage             = montage_list{select_montage};
+
+
+
 [path,name_noext,ext] = fileparts(input_file_name);
 [path2,name_noext2,ext] = fileparts(output_file_name);
 
@@ -188,7 +198,24 @@ catch
     EEG = pop_loadset('filename',[fname,fext],'filepath',fpath);
 end
 
-EEG2    = pop_select(EEG,'channel',1:nch_eeg);
+EEG = pop_saveset( EEG, 'filename',[name_noext,'_asrbck',ext],'filepath',path);
+
+dataset_ch_lab = {EEG.chanlocs.labels};
+dataset_eeg_ch_lab = intersect(dataset_ch_lab,ch_montage);
+dataset_eeg_ch_list = 1:length(dataset_eeg_ch_lab);
+
+
+%     ll1 = length(eeg_ch_list);
+ll = length(dataset_eeg_ch_list);
+%     ll = min(ll1,ll2);
+
+% if ll < length(eeg_ch_list)
+eeg_ch_list = 1:ll;
+% end
+
+
+
+EEG2    = pop_select(EEG,'channel',1:ll);
 % EEG     = pop_eegfiltnew( EEG,1, 45, [], 0, [], 0);
 
 % try
@@ -209,56 +236,56 @@ EEG2    = pop_select(EEG,'channel',1:nch_eeg);
 %   EEG3 : Optionally the data without final removal of "irrecoverable" windows.
 
 if strcmp(WindowCriterion, 'off') || strcmp(BurstRejection, 'off')
-   [EEG3cat,HP,EEG3] = clean_artifacts(...
-       EEG2, ...
-       'FlatlineCriterion', FlatlineCriterion,...
-       'Highpass',          Highpass,...
-       'ChannelCriterion',  ChannelCriterion,...
-       'LineNoiseCriterion',  LineNoiseCriterion,...
-       'BurstCriterion',    BurstCriterion,...
-       'WindowCriterion',   WindowCriterion,...
-       'BurstRejection',BurstRejection,...
-       'Distance','Euclidian'...
-       );
-
-% EEG2 = clean_artifacts(...
-% EEG2, ...
-% 'FlatlineCriterion',5,...
-% 'ChannelCriterion',0.8,...
-% 'LineNoiseCriterion',4,...
-% 'Highpass','off',...
-% 'BurstCriterion','off',...
-% 'WindowCriterion','off',...
-% 'BurstRejection','off',...
-% 'Distance','Euclidian');
-
-if strcmp(interpolate_channels, 'on')
-    EEG3 = pop_interp(EEG3, EEG.chanlocs(1:nch_eeg), 'spherical');
-end
+    [EEG3cat,HP,EEG3] = clean_artifacts(...
+        EEG2, ...
+        'FlatlineCriterion', FlatlineCriterion,...
+        'Highpass',          Highpass,...
+        'ChannelCriterion',  ChannelCriterion,...
+        'LineNoiseCriterion',  LineNoiseCriterion,...
+        'BurstCriterion',    BurstCriterion,...
+        'WindowCriterion',   WindowCriterion,...
+        'BurstRejection',BurstRejection,...
+        'Distance','Euclidian'...
+        );
+    
+    % EEG2 = clean_artifacts(...
+    % EEG2, ...
+    % 'FlatlineCriterion',5,...
+    % 'ChannelCriterion',0.8,...
+    % 'LineNoiseCriterion',4,...
+    % 'Highpass','off',...
+    % 'BurstCriterion','off',...
+    % 'WindowCriterion','off',...
+    % 'BurstRejection','off',...
+    % 'Distance','Euclidian');
+    
+    if strcmp(interpolate_channels, 'on')
+        EEG3 = pop_interp(EEG3, EEG.chanlocs(1:ll), 'spherical');
+    end
     
     ss = size(EEG.data,1);
     nch_eeg_cleaned = size(EEG3.data,1);
-    nch_poly = ss - nch_eeg;
-        
+    nch_poly = ss - ll;
     
-    if ss > nch_eeg
+    
+    if ss > ll
         
         for nch = 1:nch_poly
-            EEG3.data(nch_eeg_cleaned + nch,:) = EEG.data(nch_eeg + nch, :);
+            EEG3.data(nch_eeg_cleaned + nch,:) = EEG.data(ll + nch, :);
             equalfields = length(fieldnames(EEG3.chanlocs)) == length(fieldnames(EEG.chanlocs));
-           
+            
             if not(equalfields)
                 for nc = 1:EEG3.nbchan
                     EEG3.chanlocs(nc).sph_theta_besa = [];
                     EEG3.chanlocs(nc).sph_phi_besa   = [];
                 end
             end
-            EEG3.chanlocs(nch_eeg_cleaned + nch) = EEG.chanlocs(nch_eeg + nch);
+            EEG3.chanlocs(nch_eeg_cleaned + nch) = EEG.chanlocs(ll + nch);
         end
         EEG3 = eeg_checkset( EEG3 );
     end
-        EEGOUT = EEG3;
-
+    EEGOUT = EEG3;
+    
 else
     [EEG3,HP,BUR] = clean_artifacts(EEG2, 'FlatlineCriterion', FlatlineCriterion,...
         'Highpass',          Highpass,...
@@ -301,8 +328,8 @@ else
     EEG2 = eeg_eegrej( BUR, rej_tw_lim_mat);
     
     EEG2 = eeg_checkset( EEG2 );
-    if strcmp(interpolate_channels, 'on')        
-        EEG2 = pop_interp(EEG2, EEG.chanlocs(1:nch_eeg), 'spherical');
+    if strcmp(interpolate_channels, 'on')
+        EEG2 = pop_interp(EEG2, EEG.chanlocs(1:ll), 'spherical');
     end
     
     ss = size(EEG.data,1);
@@ -314,10 +341,10 @@ else
         EEG4 = eeg_eegrej( EEG, rej_tw_lim_mat);
         
         for nch = 1:nch_poly
-            EEG2.data(nch_eeg_cleaned + nch,:) = EEG4.data(nch_eeg + nch, :);
+            EEG2.data(nch_eeg_cleaned + nch,:) = EEG4.data(ll + nch, :);
             
-             equalfields = length(fieldnames(EEG2.chanlocs)) == length(fieldnames(EEG4.chanlocs));
-           
+            equalfields = length(fieldnames(EEG2.chanlocs)) == length(fieldnames(EEG4.chanlocs));
+            
             if not(equalfields)
                 for nc = 1:EEG4.nbchan
                     EEG4.chanlocs(nc).sph_theta_besa = [];
@@ -325,10 +352,10 @@ else
                 end
             end
             
-            EEG2.chanlocs(nch_eeg_cleaned + nch) = EEG4.chanlocs(nch_eeg + nch);
+            EEG2.chanlocs(nch_eeg_cleaned + nch) = EEG4.chanlocs(ll + nch);
         end
         EEG2 = eeg_checkset( EEG2 );
-
+        
     end
     
     EEGOUT = EEG2;

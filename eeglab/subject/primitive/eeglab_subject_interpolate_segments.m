@@ -13,7 +13,7 @@ catch
 end
 
 
-EEG = pop_saveset( EEG, 'filename',[name_noext,'_nointerp', ext],'filepath',EEG.filepath);
+EEG = pop_saveset( EEG, 'filename',[name_noext,'_nointerp_segments', ext],'filepath',EEG.filepath);
 
 
 all_triggers_type = {EEG.event.type};

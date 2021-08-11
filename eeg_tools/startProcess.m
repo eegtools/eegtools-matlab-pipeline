@@ -60,8 +60,13 @@ switch action_name
     case 'do_sleep_staging_hume'
         proj_eeglab_subject_sleep_staging_hume(project, 'list_select_subjects', list_select_subjects);
     
+   case 'do_sleep_analysis_hume'
+        proj_eeglab_subject_sleep_analysis_hume(project, 'list_select_subjects', list_select_subjects);
+       
     case 'do_import_sleep_staging_hume'
         proj_eeglab_subject_import_sleep_staging_hume(project, 'list_select_subjects', list_select_subjects);
+        
+       
         
     case 'do_mark_sleep_events_vised'
         proj_eeglab_subject_mark_sleep_events(project, 'list_select_subjects', list_select_subjects);
@@ -72,7 +77,21 @@ switch action_name
     case 'do_mark_sleep_eve_ss'
         proj_eeglab_subject_sleep_eve_ss(project, 'list_select_subjects', list_select_subjects);
         
+    case 'do_extract_event_spindler'
+        proj_eeglab_subject_extract_event_spindler(project, 'list_select_subjects', list_select_subjects);
+      
+    case 'do_detect_spindle_spindler'
+        proj_eeglab_subject_detect_spindle_spindler(project, 'list_select_subjects', list_select_subjects);
+    
+    case 'do_detect_spindle_eeglab'
+        proj_eeglab_subject_detect_spindle_eeglab(project, 'list_select_subjects', list_select_subjects);
         
+        
+    case 'csv_staging_spindle_eeglab'
+        proj_eeglab_subject_csv_staging_spindle_eeglab(project, 'list_select_subjects', list_select_subjects);
+        
+        
+       
     case 'do_filter_events'
         proj_eeglab_subject_filter_events(project, 'list_select_subjects', list_select_subjects);
    
@@ -246,8 +265,11 @@ switch action_name
     case 'do_microstates'
         result = proj_eeglab_subject_microstates(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);        
        
-        
-        
+       %% export erp single trial
+    case 'export_trial_erp_mean'
+       
+       result = proj_eeglab_subject_export_trial_erp_mean(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
+
         
         %% ===================================================================================================================================================================
         % STUDY CREATION & DESIGN
@@ -473,6 +495,14 @@ switch action_name
     case 'study_plot_roi_ersp_tf_tw_fb'
         % time-frequency distribution freely binned in the frequency and/or in the time domain
         proj_eeglab_study_plot_roi_ersp_tf(project, stat_analysis_suffix,'ersp_tf_resolution_mode','tw_fb' , 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
+       
+        
+        
+        case 'study_plot_ersp_tf_fb_baseline'
+        % continuous
+        proj_eeglab_study_plot_ersp_tf_fb_baseline(project, stat_analysis_suffix,'ersp_tf_resolution_mode','continuous' , 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
+   
+        
         
         %% ------------------------------------------------------------------------------------------
         % ERSP_CURVE, evaluate and represent standard EEGLab statistics on the curve of ERSP in a selected frequency, plot together levels of design factors
@@ -653,6 +683,9 @@ switch action_name
         
     case 'study_plot_allch_ersp_curve_fb_time'
         proj_eeglab_study_plot_allch_ersp_curve_fb_time(project, stat_analysis_suffix, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
+    
+    case 'study_plot_allch_ersp_curve_fb_baseline'
+        proj_eeglab_study_plot_allch_ersp_curve_fb_baseline(project, stat_analysis_suffix, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
         
    
 end

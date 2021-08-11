@@ -151,6 +151,18 @@ for subj=1:numsubj
         end
     end
     
+    %% REMOVE BAD CHANNELS (IF NOT EMPTY LIST FOR THE CURRENT SUBJECT)    
+    for ns=1:length(project.subjects.data)
+        if (strcmp(project.subjects.data(ns).name, subj_name))
+            ch2remove=project.subjects.data(ns).bad_ch;
+        end
+    end    
+    
+    if not(isempty(ch2remove))
+          EEG = pop_select( EEG, 'nochannel',ch2remove);
+    end
+    
+    
     %===============================================================================================
     % INTERPOLATION
     %===============================================================================================

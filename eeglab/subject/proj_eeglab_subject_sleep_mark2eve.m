@@ -60,6 +60,11 @@ for subj=1:numsubj
         disp('no such file!');
     end
     
+    %% clean EEG event
+    alleve = {EEG.event.type};
+    cleaneve = not(ismember(alleve,{EEG.marks.time_info.label}));
+    EEG.event = EEG.event(cleaneve);
+    
     
     tot_marks = length(EEG.marks.time_info);
     

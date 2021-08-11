@@ -80,7 +80,9 @@ function OUTEEG = proj_eeglab_subject_marktrial( project, varargin)
         subj_name   = list_select_subjects{subj};
         input_file  = proj_eeglab_subject_get_filename(project, subj_name, get_filename_step, 'custom_suffix', custom_suffix, 'custom_input_folder', custom_input_folder);
 
-        EEG         = pop_loadset(input_file);
+%         EEG         = pop_loadset(input_file);
+        [fpath,fname,fext] = fileparts(input_file);EEG = pop_loadset('filepath',fpath,'filename',[fname,fext]);
+        
         
         aeve = {EEG.event.type};
         sel_nb = not(ismember(aeve,{project.preproc.marker_type.begin_trial,project.preproc.marker_type.end_trial}));

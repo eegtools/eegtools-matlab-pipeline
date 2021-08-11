@@ -76,6 +76,22 @@ for subj=1:numsubj
         end
         [stagedata_path] = create_stagedata_hume(input_file_name,stagedatadir,reset_stageData, project);
         
+        
+        if exist(stagedata_path)
+            load(stagedata_path);
+            if isfield(stageData,'rectEvents')
+%                 if isempty(stageData.rectEvents)
+                    stageData=rmfield(stageData,'rectEvents');
+                    save(stagedata_path,'stageData');
+%                 end
+            end
+            
+            if isfield(stageData,'eventMat')
+                stageData.eventMat = [];
+                save(stagedata_path,'stageData');
+            end
+        end
+        
         cd(project.paths.plugin.hume);
         %         hume_pipeline(project,subj_name,input_file_name);
         

@@ -119,6 +119,8 @@ for subj=1:numsubj
                     
                 case 'BIOSEMI'
                     EEG = pop_biosig(input_file_name, 'importannot','off');
+                    %                     EEG = pop_readbdf(input_file_name, [] ,73,[]);
+                    
                     % EVENT SELECTING
                     % convert events type to string & remove blanks from events' labels
                     for ev=1:size(EEG.event,2)
@@ -291,12 +293,19 @@ for subj=1:numsubj
                         EEG_eve.event = EEG_eve.event(rm_fake_eve);
                         EEG.event = EEG_eve.event;
                         EEG = eeg_checkset( EEG );
-                        
-                    catch
-                        EEG = pop_biosig(input_file_name);
+                    catch ME
+                        if (strcmp(ME.identifier,'MATLAB:indexed_matrix_cannot_be_resized'))
+                            EEG = pop_fileio(input_file_name, 'dataformat','edf');
+                            EEG_eve = EEG;
+                            allevelab={EEG_eve.event.type};
+                            rm_fake_eve = not(ismember(allevelab,'empty'));
+                            EEG_eve.event = EEG_eve.event(rm_fake_eve);
+                            EEG.event = EEG_eve.event;
+                            EEG = eeg_checkset( EEG );
+                        else
+                            EEG = pop_biosig(input_file_name);
+                        end
                     end
-                    
-                    
                     eeglab redraw
                     %             try
                     %                 EEG = pop_biosig(input_file_name);
@@ -458,12 +467,23 @@ for subj=1:numsubj
     end
     
     % global filtering
+    if project.import.do_global_notch
+        EEG = proj_eeglab_subject_filter(EEG, project, 'global', 'bandstop');
+        EEG = eeg_checkset( EEG );
+    end
     
-    OUTEEG = proj_eeglab_subject_filter(OUTEEG, project, 'global', 'bandstop');
-    OUTEEG = eeg_checkset( OUTEEG );
+    if project.import.do_global_bandpass
+        EEG = proj_eeglab_subject_filter(EEG, project, 'global', 'bandpass');
+        EEG = eeg_checkset( EEG );
+    end
     
-    OUTEEG = proj_eeglab_subject_filter(OUTEEG, project, 'global', 'bandpass');
-    OUTEEG = eeg_checkset( OUTEEG );
+    %     % global filtering
+    %
+    %     OUTEEG = proj_eeglab_subject_filter(OUTEEG, project, 'global', 'bandstop');
+    %     OUTEEG = eeg_checkset( OUTEEG );
+    %
+    %     OUTEEG = proj_eeglab_subject_filter(OUTEEG, project, 'global', 'bandpass');
+    %     OUTEEG = eeg_checkset( OUTEEG );
     %===============================================================================================
     % CHECK & SAVE
     %===============================================================================================

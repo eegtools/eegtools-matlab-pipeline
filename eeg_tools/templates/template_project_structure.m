@@ -1968,11 +1968,19 @@ project.sleep.sleep_stages.colors = {[1 0 0],[0 1 0],[0 0 1],[0 1 1],[1 0 1],[1 
 project.sleep.channels_colors = 'off'; % 'on'|'off' when on plot channels with different colors 
 project.sleep.reset_marks = 0; % reset or initialize the marks structure 
 
+project.sleep.sleep_stages.markers = {'W','N1','N2','N3','N4','REM'};
+project.sleep.sleep_stages.colors = {[1 0 0],[0 1 0],[0 0 1],[0 1 1],[1 0 1],[1 1 0]};
+project.sleep.channels_colors = 'off'; % 'on'|'off' when on plot channels with different colors 
+project.sleep.reset_marks = 0; % reset or initialize the marks structure 
+
 project.sleep.marks(1).label = 's';%spindle
 project.sleep.marks(1).color = [1 0.5 0.5];
+project.sleep.marks(1).description = 'spindle';
+
 
 project.sleep.marks(2).label = 'k';%k-complex
 project.sleep.marks(2).color = [0.5 1 0.5];
+project.sleep.marks(2).description = 'k-complex';
 
 % set the vised commands for insert sleep marks and stages, see
 % https://bucanl.github.io/SDC-VISED-MARKS/02-options/index.html
@@ -2007,6 +2015,8 @@ project.sleep.vised.keyselectcommand=...
 %% HUME SLEEP SCORING
  % cc commentare
 project.sleep.hume.stageData.stageNames = {'W'; 'N1'; 'N2'; 'N3'; 'N4'; 'REM'; 'MT'}; % DO NOT EDIT: sleep stage coding for HUME
+project.sleep.hume.stageData.stageNames_spindles = {'N2'; 'N3'; 'N4'}; % DO NOT EDIT: sleep stage coding for HUME
+
 project.sleep.hume.reset_stageData = 1; % reset sleep staging data
 % creo campi custom per gestire parametri
 project.sleep.hume.stageData.Flims_global = [.05 20];%[.05 20];

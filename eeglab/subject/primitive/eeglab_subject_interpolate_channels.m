@@ -137,7 +137,7 @@ if not(isempty(EEG_poly))
     
 end
 OUTEEG  = pop_saveset( OUTEEG, 'filename', name_noext, 'filepath', path);
-EEG = pop_saveset( EEG, 'filename', [name_noext,'_nointerp'], 'filepath', backup_path);
+EEG = pop_saveset( EEG, 'filename', [name_noext,'_nointerp_channels'], 'filepath', backup_path);
 
 
 end

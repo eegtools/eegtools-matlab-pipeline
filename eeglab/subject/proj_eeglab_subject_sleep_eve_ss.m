@@ -65,14 +65,15 @@ for subj=1:numsubj
     vec_lab_ss = vec_ind_ss - 1;
     nchstad = ismember(allch, 'SS');% mi facciod are indice canale con la stadiazione
     for ne =1:length(EEG.event)
+        EEG.event(ne).latency = round(EEG.event(ne).latency);
         evelat = EEG.event(ne).latency;
         stad_ss_eve = EEG.data(nchstad,evelat);% 0 is wake, 1:4 n1:n4, 5 rem, 6 mt, 7 nan
         if isnan(stad_ss_eve)
-            evestad = [];
+            evestad = 'MT';
         else
             sel_stad = vec_lab_ss == stad_ss_eve;
             ind_ss = vec_ind_ss(sel_stad);
-            evestad = EEG.sleep_stages(ind_ss);
+            evestad = EEG.sleep_stages{ind_ss};
         end
         EEG.event(ne).SleepStage = evestad;
     end

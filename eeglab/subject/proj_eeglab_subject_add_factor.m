@@ -55,12 +55,12 @@ for subj=1:numsubj
     if not(isempty(add_factor_list))
         for nc=1:project.epoching.numcond
             cond_name                               = project.epoching.condition_names{nc};
-            input_file_name                         = proj_eeglab_subject_get_filename(project, subj_name, get_filename_step, 'cond_name', cond_name, 'custom_suffix', custom_suffix, 'custom_input_folder', custom_input_folder);
-            [input_path,input_name_noext,input_ext] = fileparts(input_file_name);
+            input_file                         = proj_eeglab_subject_get_filename(project, subj_name, get_filename_step, 'cond_name', cond_name, 'custom_suffix', custom_suffix, 'custom_input_folder', custom_input_folder);
+            [input_path,input_name_noext,input_ext] = fileparts(input_file);
             
-            if exist(input_file_name, 'file')
+            if exist(input_file, 'file')
                 
-                EEG             = pop_loadset(input_file_name);
+                [fpath,fname,fext] = fileparts(input_file);EEG = pop_loadset('filepath',fpath,'filename',[fname,fext]);
                 
                 
                 % remove factor condition which is reserved

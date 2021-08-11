@@ -116,6 +116,8 @@ for subj=1:numsubj
             EEG.marks.time_info(tot_ss + nm + 1).label = project.sleep.marks(nm).label;
             EEG.marks.time_info(tot_ss + nm + 1).color = project.sleep.marks(nm).color;
             EEG.marks.time_info(tot_ss + nm + 1).flags = zeros(1,ttpts);
+            EEG.marks.time_info(tot_ss + nm + 1).description =  project.sleep.marks(nm).description;
+            
         end
         
         
@@ -135,7 +137,14 @@ for subj=1:numsubj
     
     EEG = eeg_checkset( EEG );
     
-    
+% str = 'vised_config.marks_col_alpha = 0.7;';
+% evalin('base',str);
+
+vised_config_file = fullfile(project.paths.framework_root,'eeg_tools','utilities',['vised_config.cfg']);
+
+str = ['vised_config=text2struct_ve(','''',vised_config_file,'''',');'];
+evalin('base',str);
+
     EEG = pop_vised(EEG,'pop_gui','off',...
         'data_type','EEG',...
         'winrej_marks_labels',{'manual'},...

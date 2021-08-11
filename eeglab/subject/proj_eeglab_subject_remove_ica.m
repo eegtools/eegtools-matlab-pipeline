@@ -7,58 +7,62 @@
 %%
 function EEG = proj_eeglab_subject_remove_ica(project, varargin)
 
-		
 
-    list_select_subjects    = project.subjects.list;
-    get_filename_step       = 'custom_pre_epochs';
-    custom_suffix           = '';
-    custom_input_folder     = '';
-    
-    for par=1:2:length(varargin)
-        switch varargin{par}
-            case {  ...
-                    'list_select_subjects', ...
-                    'get_filename_step',    ... 
-                    'custom_input_folder',  ...
-                    'custom_suffix' ...
-                    };
 
-                if isempty(varargin{par+1})
-                    continue;
-                else
-                    assign(varargin{par}, varargin{par+1});
-                end
-        end
+list_select_subjects    = project.subjects.list;
+get_filename_step       = 'custom_pre_epochs';
+custom_suffix           = '';
+custom_input_folder     = '';
+
+for par=1:2:length(varargin)
+    switch varargin{par}
+        case {  ...
+                'list_select_subjects', ...
+                'get_filename_step',    ...
+                'custom_input_folder',  ...
+                'custom_suffix' ...
+                };
+            
+            if isempty(varargin{par+1})
+                continue;
+            else
+                assign(varargin{par}, varargin{par+1});
+            end
     end
+end
 
-    if not(iscell(list_select_subjects)), list_select_subjects = {list_select_subjects}; end
-    
-    numsubj = length(list_select_subjects);
-    vsel_sub = find(ismember(project.subjects.list,list_select_subjects));
-    
-    % -------------------------------------------------------------------------------------------------------------------------------------
+if not(iscell(list_select_subjects)), list_select_subjects = {list_select_subjects}; end
+
+numsubj = length(list_select_subjects);
+vsel_sub = find(ismember(project.subjects.list,list_select_subjects));
+
+% -------------------------------------------------------------------------------------------------------------------------------------
 
 %     names = {};
 %     durations = {};
 %     ranks = {};
 %     ica_types ={};
-    
-    for subj=1:numsubj
-        sel_sub = vsel_sub(subj);
-        subj_name   = list_select_subjects{subj}; 
-        inputfile   = proj_eeglab_subject_get_filename(project, subj_name, get_filename_step, 'custom_suffix', custom_suffix, 'custom_input_folder', custom_input_folder);
-        ic2remove = [project.subjects.data(sel_sub).bad_ic{:}];
 
-        if isempty(ic2remove)
-            EEG = [];
-            disp(['not removing any ic ','from',  inputfile])
+for subj=1:numsubj
+    sel_sub = vsel_sub(subj);
+    subj_name   = list_select_subjects{subj};
+    inputfile   = proj_eeglab_subject_get_filename(project, subj_name, get_filename_step, 'custom_suffix', custom_suffix, 'custom_input_folder', custom_input_folder);
+    EEG = [];
+    if(exist(inputfile))
+        if isfield(project.subjects.data,'bad_ic')
+            
+            if isempty(project.subjects.data(sel_sub).bad_ic) 
+                disp(['not removing any ic ','from',  inputfile])
+            else
+                 ic2remove = [project.subjects.data(sel_sub).bad_ic{:}];
+                disp(['removing ic ' ,num2str(ic2remove) ,' from',  inputfile])
+                EEG         = eeglab_subject_remove_ica(inputfile,ic2remove);
+            end
         else
-            disp(['removing ic ' ,num2str(ic2remove) ,' from',  inputfile])
-            EEG         = eeglab_subject_remove_ica(inputfile,ic2remove);
+            disp('no bad ic marked!!!')
         end
-   
     end
-    
+end
 %     summary = [names; ranks; ica_types; durations]';
 %     disp(summary);
 end
