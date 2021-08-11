@@ -72,6 +72,7 @@ try
       operations = {
         'do_import'...                                                     1  import and create a backup _raw file
         'do_import_collect',...                                            2  import and merge different files of a single subject
+        'remove_space_event_label',...
         'do_uniform_edf_montage',...                                       3  uniform edf file montage to a templte given by one standard seto a merge of more standard sets
         'do_edf_clean_ch',...                                              4  remove from channel raw channel labels of edf files spurious strings (e.g from EEG Fp1-AV to Fp1 so channel location is recognized by eeglab)
         'do_sleep_staging_hume',...                                        5  import dataset to hume toolbox for sleep staging and spectral analysis of sleep EEG, the configuration file and all the paths of hume is preset so are usable from the pipeline in a integrated way (hume must be in matlab toolbox folder)

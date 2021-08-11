@@ -109,7 +109,11 @@ switch action_name
     
     case 'do_recover_raw'
         proj_eeglab_subject_recover_raw(project, 'list_select_subjects', list_select_subjects);
-      
+     
+        
+    case 'remove_space_event_label'        
+        result = proj_eeglab_subject_remove_space_event_label(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
+
         
     case 'do_testart'
         % allow testing some semi-automatic aritfact removal algorhithms
