@@ -80,74 +80,86 @@ project.subjects.curr_list      = list_select_subjects;
 %=====================================================================================================================================================================
 
 
-operations = {
-    'do_study',...                                                         1
-    'do_study_catsub',...                                                  2 before creating the study cat for each subject all epochs of all conditions (less files, lighter study, faster computations)
-    'do_design',...                                                        3
-    'do_study_compute_channels_measures',...                               4
-    'study_plot_roi_erp_curve_continous',...                               5
-    'study_plot_roi_erp_curve_tw_group_noalign',...                        6
-    'study_plot_roi_erp_curve_tw_individual_noalign',...                   7
-    'study_plot_roi_erp_curve_tw_individual_align',...                     8
-    'study_plot_roieog_erp_curve_continous',...                            9
-    'study_plot_roi_erpeog_curve_tw_group_noalign',...                     10
-    'study_plot_roi_erpeog_curve_tw_individual_noalign',...                11
-    'study_plot_roi_erpeog_curve_tw_individual_align',...                  12
-    'study_plot_roi_erpemg_curve_continous',...                            13
-    'study_plot_roi_erpemg_curve_tw_group_noalign',...                     14
-    'study_plot_roi_erpemg_curve_tw_individual_noalign',...                15
-    'study_plot_roi_erpemg_curve_tw_individual_align',...                  16
-    'study_erp_define_roi_tw_datadriven',...                               17
-    'study_ersp_define_roi_tw_datadriven',...                              18
-    'study_plot_erp_topo_tw_group_noalign',...                             19
-    'study_plot_erp_topo_tw_individual_noalign',...                        20
-    'study_plot_erp_topo_tw_individual_align',...                          21
-    'study_plot_erp_topo_tw_individual_align',...                          22
-    'study_plot_erp_topo_compact_tw_group_noalign',...                     23
-    'study_plot_erp_topo_compact_tw_individual_noalign',...                24
-    'study_plot_erp_topo_compact_tw_individual_align',...                  25
-    'plot_erp_headplot_tw',...                                             26
-    'study_plot_allch_erp_time',...                                        27
-    'study_plot_roi_ersp_tf_continuous',...                                28
-    'study_plot_roi_ersp_tf_decimate_times',...                            29
-    'study_plot_roi_ersp_tf_decimate_freqs',...                            30
-    'study_plot_roi_ersp_tf_decimate_times_freqs',...                      31
-    'study_plot_roi_ersp_tf_tw_fb',...                                     32
-    'study_plot_roi_ersp_curve_continous',...                              33
-    'study_plot_roi_ersp_curve_tw_individual_noalign',...                  34
-    'study_plot_roi_ersp_curve_continous_standard',...                     35
-    'study_plot_roi_ersp_curve_tw_group_noalign_standard',...              36
-    'study_plot_roi_ersp_curve_tw_individual_noalign_standard',...         27
-    'study_plot_roi_ersp_curve_tw_individual_align_standard',...           38
-    'study_plot_roi_ersp_curve_continous_compact',...                      39
-    'study_plot_roi_ersp_curve_tw_group_align_compact',...                 40 STILL MISSING
-    'study_plot_roi_ersp_curve_tw_individual_noalign_compact',...          41
-    'study_plot_roi_ersp_curve_tw_individual_align_compact',...            42
-    'study_plot_ersp_topo_tw_fb_group_noalign',...                         43
-    'study_plot_ersp_topo_tw_fb_individual_noalign',...                    44
-    'study_plot_ersp_topo_tw_fb_individual_align',...                      45
-    'study_plot_ersp_topo_tw_fb_group_noalign_compact',...                 46
-    'study_plot_ersp_topo_tw_fb_individual_noalign_compact',...            47
-    'study_plot_ersp_topo_tw_fb_individual_align_compact',...              48
-    'study_plot_allch_ersp_curve_fb_time',...                              49
-    };
+% operations = {
+%     'do_study',...                                                         1
+%     'do_study_catsub',...                                                  2 before creating the study cat for each subject all epochs of all conditions (less files, lighter study, faster computations)
+%     'do_design',...                                                        3
+%     'do_study_compute_channels_measures',...                               4
+%     'study_plot_roi_erp_curve_continous',...                               5
+%     'study_plot_roi_erp_curve_tw_group_noalign',...                        6
+%     'study_plot_roi_erp_curve_tw_individual_noalign',...                   7
+%     'study_plot_roi_erp_curve_tw_individual_align',...                     8
+%     'study_plot_roieog_erp_curve_continous',...                            9
+%     'study_plot_roi_erpeog_curve_tw_group_noalign',...                     10
+%     'study_plot_roi_erpeog_curve_tw_individual_noalign',...                11
+%     'study_plot_roi_erpeog_curve_tw_individual_align',...                  12
+%     'study_plot_roi_erpemg_curve_continous',...                            13
+%     'study_plot_roi_erpemg_curve_tw_group_noalign',...                     14
+%     'study_plot_roi_erpemg_curve_tw_individual_noalign',...                15
+%     'study_plot_roi_erpemg_curve_tw_individual_align',...                  16
+%     'study_erp_define_roi_tw_datadriven',...                               17
+%     'study_ersp_define_roi_tw_datadriven',...                              18
+%     'study_plot_erp_topo_tw_group_noalign',...                             19
+%     'study_plot_erp_topo_tw_individual_noalign',...                        20
+%     'study_plot_erp_topo_tw_individual_align',...                          21
+%     'study_plot_erp_topo_tw_individual_align',...                          22
+%     'study_plot_erp_topo_compact_tw_group_noalign',...                     23
+%     'study_plot_erp_topo_compact_tw_individual_noalign',...                24
+%     'study_plot_erp_topo_compact_tw_individual_align',...                  25
+%     'plot_erp_headplot_tw',...                                             26
+%     'study_plot_allch_erp_time',...                                        27
+%     'study_plot_roi_ersp_tf_continuous',...                                28
+%     'study_plot_roi_ersp_tf_decimate_times',...                            29
+%     'study_plot_roi_ersp_tf_decimate_freqs',...                            30
+%     'study_plot_roi_ersp_tf_decimate_times_freqs',...                      31
+%     'study_plot_roi_ersp_tf_tw_fb',...                                     32
+%     'study_plot_roi_ersp_curve_continous',...                              33
+%     'study_plot_roi_ersp_curve_tw_individual_noalign',...                  34
+%     'study_plot_roi_ersp_curve_continous_standard',...                     35
+%     'study_plot_roi_ersp_curve_tw_group_noalign_standard',...              36
+%     'study_plot_roi_ersp_curve_tw_individual_noalign_standard',...         27
+%     'study_plot_roi_ersp_curve_tw_individual_align_standard',...           38
+%     'study_plot_roi_ersp_curve_continous_compact',...                      39
+%     'study_plot_roi_ersp_curve_tw_group_align_compact',...                 40 STILL MISSING
+%     'study_plot_roi_ersp_curve_tw_individual_noalign_compact',...          41
+%     'study_plot_roi_ersp_curve_tw_individual_align_compact',...            42
+%     'study_plot_ersp_topo_tw_fb_group_noalign',...                         43
+%     'study_plot_ersp_topo_tw_fb_individual_noalign',...                    44
+%     'study_plot_ersp_topo_tw_fb_individual_align',...                      45
+%     'study_plot_ersp_topo_tw_fb_group_noalign_compact',...                 46
+%     'study_plot_ersp_topo_tw_fb_individual_noalign_compact',...            47
+%     'study_plot_ersp_topo_tw_fb_individual_align_compact',...              48
+%     'study_plot_allch_ersp_curve_fb_time',...                              49
+%     };
 
-for nop = 1:2%1:length(operations)
-    
-    operation = operations{nop};
-    
-    disp(['Begin ' operation]);
-    
-    
-    project                                                 = project_init(project);
-    
-    result = startProcess(project, ...
-        operation,  ...
-        'list_select_subjects', list_select_subjects);
-    
-    disp(['End ' operation]);
-    
-    
+operations_file_path = fullfile(project.paths.script.eeg_tools,'operations.xlsx');
+[ndata, text, menu_operations] =  xlsread(operations_file_path,'group');
+indices = alldata(:,1);
+operations = alldata(:,2);
+descriptions = alldata(:,3);
+
+get_menu = 1;
+if get_menu
+    disp(operations_file_path);
+    disp(menu_operations);
+else    
+    for nop = 1:2%1:length(operations)
+        
+        operation = operations{nop};
+        
+        disp(['Begin ' operation]);
+        
+        
+        project                                                 = project_init(project);
+        
+        result = startProcess(project, ...
+            operation,  ...
+            'list_select_subjects', list_select_subjects);
+        
+        disp(['End ' operation]);
+        
+        
+    end
 end
 
 % project.stats.eeglab.erp.correction                     = 'fdr';

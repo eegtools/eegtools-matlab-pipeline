@@ -55,6 +55,7 @@ for subj=1:numsubj
         lab_old = EEG.event(neve).type;
         rm_space = not(ismember(lab_old, ' '));
         lab_new = lab_old(rm_space);
+        EEG.event(neve).type = lab_new;
     end
   EEG = pop_saveset( EEG, 'filename',[fname ,fext],'filepath',EEG.filepath);  
 end
