@@ -172,6 +172,10 @@ switch action_name
         % remove ics
         result = proj_eeglab_subject_remove_ica(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
         
+    case 'do_iclabel'
+        % remove ics
+        result = proj_eeglab_subject_iclabel(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
+   
         
     case 'do_recover_ica'
         % do recover all ics

@@ -574,7 +574,35 @@ project.ica.ica_sr = 125; % deve essere almeno il doppio della max frequenza che
 % the latency information is stored internally in data samples (points or EEGLAB 'pnts')
 % relative to the beginning of the continuous data matrix (EEG.data).
 
-                                                                                           
+   
+%% ICLABEL
+
+%  pop_icflag - Flag components as atifacts
+%  
+%   Usage:
+%     EEG = pop_icflag(EEG, thresh)
+%  
+%   Input
+%     EEG    - EEGLAB dataset
+%     thresh - [7x2 float] array with threshold values with limits to include
+%              for selection as artifacts. The 6 categories are (in order) Brain, Muscle,
+%              Eye, Heart, Line Noise, Channel Noise, Other.
+
+project.iclabel.enable = 1; 
+project.icflag.enable = 1;
+project.icflag.autoremove = 0;
+project.icflag.threshold.Brain = [0,0];
+project.icflag.threshold.Muscle = [0,0];
+project.icflag.threshold.Eye = [0.9,1];
+project.icflag.threshold.Heart = [0,0];
+project.icflag.threshold.LineNoise = [0,0];
+project.icflag.threshold.ChannelNoise = [0,0];
+project.icflag.threshold.Other = [0,0];
+
+% RECTIFY
+project.rectify.ch_list = {'LEOG'};
+
+
 %% ======================================================================================================
 % G:    EPOCHING
 % =======================================================================================================
