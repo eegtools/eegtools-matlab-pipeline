@@ -25,11 +25,15 @@ Moreover, it eases the integration between EEGLab and Brainstorm and allows call
   * Subsampling
   * Epoching & Baseline correction
   * Triggers manipulation
+  * Trigger extraction from deflection on analog channel using absolute or statistical threshold (possibly distinguihing triggers based on deflection durations)
   * ICA & CUDAICA
   * ASR
   * Merge different montages
   * Microstates
   * Data driven selection of regions of interest and times
+  * Export to EDF format
+  * Comparing conditions (ERP/ERSP) at subject level
+  
   
 * Group level
   * EEGLab Study creation, design and compute measure
