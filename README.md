@@ -20,19 +20,23 @@ Moreover, it eases the integration between EEGLab and Brainstorm and allows call
   * Import raw files (BrainVision, Biosemi, Geodesic, XDF, EDF)
   * Filtering
   * Referencing
-  * Channel transformation
+  * Channel transformation (e.g. bipolar creation)
+  * Channel rectification
+  * HR calculation from EKG channel
   * Channel interpolation
   * Subsampling
   * Epoching & Baseline correction
   * Triggers manipulation
   * Trigger extraction from deflection on analog channel using absolute or statistical threshold (possibly distinguihing triggers based on deflection durations)
-  * ICA & CUDAICA
+  * ICA & CUDAICA 
+  * ICLABEL classification
   * ASR
   * Merge different montages
   * Microstates
   * Data driven selection of regions of interest and times
   * Export to EDF format
   * Comparing conditions (ERP/ERSP) at subject level
+  * Export to RAGU and preprocessing using RAGU, e.g. TAN(C)OVA, microstates.
   
   
 * Group level
@@ -58,6 +62,8 @@ Moreover, it eases the integration between EEGLab and Brainstorm and allows call
   * Insert custom marks (e.g. spindles, k-complexes) and sleep staging (alternative to Hume)
   * Convert sleep marks into EEGLab events (for a better integration in EEGLab processing)
   * Add a sleep stage field to the EEG.event structure to label the sleep stage of each event
+  * Computation of spectrogram and sleep statistics
+  * Automatic detection of sleep spindles and k-complexes (using HUME and/or EEGLab toolbox) and export of related features (e.g. duration) in textual format 
   
 ## First-time Installation
 
