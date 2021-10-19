@@ -113,11 +113,11 @@ try
     %
     operations_file_path = fullfile(project.paths.script.eeg_tools,'operations.xlsx');
     [ndata, text, menu_operations] =  xlsread(operations_file_path,'subject');
-    indices = alldata(:,1);
-    operations = alldata(:,2);
-    descriptions = alldata(:,3);
+    indices = menu_operations(:,1);
+    operations = menu_operations(:,2);
+    descriptions = menu_operations(:,3);
     
-    get_menu = 1;
+    get_menu = 0;
     if get_menu
         disp(operations_file_path);
         disp(menu_operations);

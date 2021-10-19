@@ -22,6 +22,7 @@ else
 end
 %cc
 % if A == 1
+try
     was_single = strcmp(class(X),'single');
     w = length(B); t = size(X,1);    
     % extrapolate
@@ -33,7 +34,10 @@ end
     % remove extrapolated pieces
     X([1:w t+w+(1:w)],:) = [];
     if was_single
-        X = single(X); end    
+        X = single(X); end   
+catch
+     X = filtfilt(B,A,X);
+end
 %cc
 % else    
 %     % fall back to filtfilt for the IIR case

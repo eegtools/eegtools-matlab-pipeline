@@ -1,0 +1,126 @@
+%% EEG = proj_eeglab_subject_add_factor(project, varargin)
+%
+%%
+function EEG = proj_eeglab_subject_erp_curve(project, varargin)
+
+if sum(ismember({project.study.factors.factor},'condition'))
+    disp('the factor name condition is reserved by eeglab: please change name e.g. to cond')
+    return
+end
+
+if not(isfield(project.epoching, 'custom_suffix') )
+    project.epoching.custom_suffix = '';
+end
+
+if not(isfield(project.epoching, 'custom_input_folder') )
+    project.epoching.custom_input_folder = '';
+end
+
+custom_suffix = project.epoching.custom_suffix;
+custom_input_folder     = project.epoching.custom_input_folder;
+
+
+list_select_subjects    = project.subjects.list;
+get_filename_step       = 'subject_erp_curve';
+% custom_suffix           = '';
+% custom_input_folder     = '';
+
+for par=1:2:length(varargin)
+    switch varargin{par}
+        case {  ...
+                'list_select_subjects', ...
+                'get_filename_step',    ...
+                'custom_input_folder',  ...
+                'custom_suffix' ...
+                }
+            
+            if isempty(varargin{par+1})
+                continue;
+            else
+                assign(varargin{par}, varargin{par+1});
+            end
+    end
+end
+
+if not(iscell(list_select_subjects)), list_select_subjects = {list_select_subjects}; end
+numsubj = length(list_select_subjects);
+
+troi = length(project.postprocess.erp.roi_list);
+
+% project.subject_compare_cond.ch = ...
+%     {...
+%     {'E65','E66','E59'},... OCCIPITALE SX
+%     {'E90','E84','E91'},... OCCIPITALE SX
+%     };
+%
+% project.subject_compare_cond.cond = ...
+%     {...
+%     {'c-ar-tn-1','u-ar-tn-1'};...
+%     {'c-an-tr-1','u-an-tr-1'};...
+%     };
+%
+% -------------------------------------------------------------------------------------------------------------------------------------
+if not(isempty(project.proj_eeglab_subject_erp_curve.cond))
+    tcomp = length(project.proj_eeglab_subject_erp_curve.cond);
+    
+    for ncomp = 1:tcomp
+        current_comparison = project.proj_eeglab_subject_erp_curve.cond{ncomp};
+        tcond = length(current_comparison);
+       
+            
+            for nroi = 1:troi
+                current_roi = project.postprocess.erp.roi_list{nroi};
+                current_roi_name = project.postprocess.erp.roi_names{nroi};
+                
+                for subj=1:numsubj
+                    subj_name       = list_select_subjects{subj};
+                    
+                    eeg_input_path  = project.paths.output_epochs;
+                    %     add_factor_list = project.study.factors;
+                    figure;
+                    for nc=1:tcond
+                        cond_name                               = current_comparison{nc};
+                        
+                    % ----------------------------------------------------------------------------------------------------------------------------
+                    
+                    input_file                         = proj_eeglab_subject_get_filename(project, subj_name, get_filename_step, 'cond_name', cond_name, 'custom_suffix', custom_suffix, 'custom_input_folder', custom_input_folder);
+                    [input_path,input_name_noext,input_ext] = fileparts(input_file);
+                    
+                    if exist(input_file, 'file')
+                        [fpath,fname,fext] = fileparts(input_file);
+                        EEG = pop_loadset('filepath',fpath,'filename',[fname,fext]);
+                        allch = {EEG.chanlocs.labels};
+                        erp_curve_allch = squeeze(mean(EEG.data,3));
+                        sel_ch = ismember(allch,current_roi);
+                        erp_curve_roi = squeeze(mean(erp_curve_allch(sel_ch,:),1));
+                        
+                        plot(EEG_label.times,erp_curve_roi);
+                        hold on
+                        
+                    else
+                        disp(['error: condition file name (' input_name_noext ') not found!!!! exiting .....']);
+                        %                 return;
+                    end
+                    end
+                    if not(isempty(project.results_display.erp.compact_display_ylim))
+                        ylim(project.results_display.erp.compact_display_ylim);
+                    end
+                    legend(current_comparison)
+                    title_string = [current_roi];
+                    title(project.extract_triggers.chplot{nchp});
+
+            end
+        end
+    end
+end
+end
+% ====================================================================================================
+% ====================================================================================================
+% CHANGE LOG
+% ====================================================================================================
+% ====================================================================================================
+% 29/12/2014
+% the function now accept also a cell array of subject names, instead of a single subject name
+% utilization of proj_eeglab_subject_get_filename function to define IO file name
+
+

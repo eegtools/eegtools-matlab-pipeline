@@ -48,15 +48,18 @@ switch analysis_step
     case 'custom_pre_epochs'
         file_name = fullfile(project.paths.output_preprocessing, ...
             [project.import.original_data_prefix subj_name project.import.original_data_suffix project.import.output_suffix custom_suffix '.set']);
-    case {'uniform_montage', 'input_epoching'}
+    case {'uniform_montage', 'input_epoching','microstates_spontaneous'}
         file_name = fullfile(project.paths.input_epochs, ...
             [project.import.original_data_prefix subj_name project.import.original_data_suffix project.import.output_suffix project.epoching.input_suffix custom_suffix '.set']);
-    case {'output_epoching', 'add_factor', 'extract_narrowband','microstates'}
+    case {'output_epoching', 'add_factor', 'extract_narrowband','microstates_ERPavg','darbeliai_export2ragu','ragu','subject_erp_curve','subject_erp_topo','subject_ersp_tf'}
         file_name = fullfile(project.paths.output_epochs, ...
             [project.import.original_data_prefix subj_name project.import.original_data_suffix project.import.output_suffix project.epoching.input_suffix custom_suffix '_' cond_name '.set']);
     case {'output_segmenting'}
         file_name = fullfile(project.paths.output_segments, ...
             [project.import.original_data_prefix subj_name project.import.original_data_suffix project.import.output_suffix project.epoching.input_suffix custom_suffix '_' cond_name '.set']);
+     case {'export_data'}
+         file_name = fullfile(project.paths.input_epochs, ...
+            [project.import.original_data_prefix subj_name  project.export_data.suffix  '.set']);
     case {'custom_step'}
         if strcmp(custom_input_folder, '')
             error('proj_eeglab_subject_get_filename.... you selected a custom_step without specifying a custom input folder');

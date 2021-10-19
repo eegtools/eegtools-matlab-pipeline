@@ -52,8 +52,8 @@ for subj=1:numsubj
     if(exist(inputfile))
         disp(inputfile); 
         
-        EEG                     = pop_loadset(input_file_name);
-        [fpath,fname,fext] = fileparts(input_file_name);
+        EEG                     = pop_loadset(inputfile);
+        [fpath,fname,fext] = fileparts(inputfile);
 
 
         if project.iclabel.enable

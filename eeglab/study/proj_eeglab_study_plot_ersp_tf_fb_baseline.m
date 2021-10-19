@@ -275,17 +275,18 @@ for nroi = 1:length(roi_list)
         end
     end
     
+    tlf1 = max(length(levels_f1),1);
+    tlf2 = max(length(levels_f2),1);
     
-    
-    for nf1=1:length(levels_f1)
-        for nf2=1:length(levels_f2)
+    for nf1=1:tlf1
+        for nf2=1:tlf2
             ersp_tf{nf1,nf2} = squeeze(mean(ersp_tf{nf1,nf2},3));
         end
     end
     
     if strcmp(ersp_measure, 'Pfu')
-        for nf1=1:length(levels_f1)
-            for nf2=1:length(levels_f2)
+        for nf1=1:tlf1
+            for nf2=1:tlf2
                 ersp_tf{nf1,nf2}=(10.^(ersp_tf{nf1,nf2}/10)-1)*100;
                 
                 
@@ -294,9 +295,9 @@ for nroi = 1:length(roi_list)
         end
     end
     
-    tlf1 = max(length(levels_f1),1);
-    tlf2 = max(length(levels_f2),1);
-    
+%     tlf1 = max(length(levels_f1),1);
+%     tlf2 = max(length(levels_f2),1);
+%     
     
     
     
@@ -380,6 +381,7 @@ for nroi = 1:length(roi_list)
             strplot = [str1,'-' ,str2,'-' , roi_name];
             suptitle(strplot);
             cbar;
+            title('ERSP(dB)');
             
             
             input_save_fig.plot_dir = plot_dir;

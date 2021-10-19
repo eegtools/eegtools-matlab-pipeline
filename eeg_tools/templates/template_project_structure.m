@@ -93,7 +93,18 @@ project.task.events.mrkcode_cond                    = { ...
                                                  
 project.task.events.valid_marker                    = [project.task.events.mrkcode_cond{1:length(project.task.events.mrkcode_cond)}];
 project.task.events.import_marker                   = [{'1' '2' '3' '4' '5' '6' '7' '8' '9' '10'} project.task.events.valid_marker];  
-                                                 
+
+project.task.events.mrkcode_names={'control' 'AO' 'AOCS' 'AOIS'}; 
+
+project.subject_compare_cond = ...
+    {...
+    {'c-ar-tn-1','u-ar-tn-1'};...
+    {'c-an-tr-1','u-an-tr-1'};...
+    };
+
+
+
+
 %% ======================================================================================================
 % D:    IMPORT
 % ======================================================================================================
@@ -158,6 +169,39 @@ project.import.montage_list = {...
 complete_montage = unique([project.import.montage_list{:}]);
 tot_ch = length(complete_montage);
 
+
+%% EXTRACT TRIGGER FROM ONE CHANNEL
+% the triggers are not coded using events or labels but using a specific
+% channel with deflection onset/offset indicating stimulus.
+
+project.extract_trigger.channel_lab = 'EEG AUX1A-AUX1R';
+
+% two modes avalilable: 
+% 1) apply an absolute (arbitrary, empirical) threshold
+% 2) apply a stuatistical threshold: consider a baseline period, compute its mean and sd and considering
+% points exceding the CI givel by mean+-n*sd
+project.extract_trigger.mode = 'abs_th';% abs_th | stat_th
+project.extract_trigger.do_rectification = 'off'; % 'on'|'off', if on rectify channel: remove mean and compute abs
+project.extract_trigger.abs_th.th_amplitude = 20; % in uV
+project.extract_trigger.stat_th.baseline.nsd = 3; % number of sd from the mean of the baseline period, 3 corrsponds rawly to 99% CI, 2 to 95% CI
+project.extract_trigger.stat_th.baseline.limits_s = [1,5]; % baseline begin/end in seconds 
+project.extract_trigger.stat_th.side = 'both'; % 'neg'|'pos'|'both' to consider only negative/positive or both deflections
+
+
+% using deflection durations: each trigger has the same (theoretical) amplitude but a different duration 
+project.extract_trigger.duration.trigger_lab = {'common','uncommon'};
+project.extract_trigger.duration.ranges_duration_ms = ...
+    [...
+    27,35;...
+    57,65;...
+    ];
+
+
+% evaluate trigger delays:
+% estimate deflections from an analog channel, trigger are bound between pairs trigger 1 / trigger 2
+project.extract_trigger.evaluate.trigger1 = 100; % code of trigger 1
+project.extract_trigger.evaluate.trigger2 = 200; % code of trigger 1
+project.extract_trigger.evaluate.lag.min = -15; % minimum lag in ms to remove false positives
 
 
 
@@ -599,8 +643,16 @@ project.icflag.threshold.LineNoise = [0,0];
 project.icflag.threshold.ChannelNoise = [0,0];
 project.icflag.threshold.Other = [0,0];
 
-% RECTIFY
+%% RECTIFY
 project.rectify.ch_list = {'LEOG'};
+
+%% HEART RATE
+project.hr.ecg_channel = {'EKG','ECG'};
+project.hr.method = 1;
+
+%% export data in srtandard formats
+project.export_data.format = 'EDF';
+project.export_data.suffix = []; %'_raw'
 
 
 %% ======================================================================================================
@@ -643,7 +695,7 @@ project.epoching.baseline_replace.replace                    = 'part';          
                                                                                                              
 
 % EEG
-project.epoching.input_suffix           = '_mc';                        % G1:   final file name before epoching : default is '_raw_mc'
+project.epoching.input_suffix           = '';                        % G1:   final file name before epoching : default is '_raw_mc'
 project.epoching.input_folder           = project.preproc.output_folder;% G2:   input epoch folder, by default the preprocessing output folder
 project.epoching.bc_type                = 'event';                     % G3:   type of baseline correction: global: considering all the trials, 'condition': by condition, 'event': event-by-event
 
@@ -672,8 +724,8 @@ project.epoching.emg_bc_end_point       = round((project.epoching.emg_bc_end.s-p
 project.epoching.mrkcode_cond       = project.task.events.mrkcode_cond;
 project.epoching.numcond            = length(project.epoching.mrkcode_cond);       % G16: conditions' number 
 project.epoching.valid_marker       = [project.epoching.mrkcode_cond{1:length(project.epoching.mrkcode_cond)}];
-
-project.epoching.condition_names={'control' 'AO' 'AOCS' 'AOIS'};        % G 17: conditions' labels
+project.epoching.condition_names=project.task.events.mrkcode_names; 
+% project.epoching.condition_names={'control' 'AO' 'AOCS' 'AOIS'};        % G 17: conditions' labels
 if length(project.epoching.condition_names) ~= project.epoching.numcond
     disp('ERROR in project_structure: number of conditions do not coincide !!! please verify')
 end
@@ -712,31 +764,31 @@ project.subjects.baseline_file_interval_s   = [];
 % project.subjects.narrowband_suffix_cell ={'baseline','ao','aois'}; 
 
 project.subjects.data(1)  = struct('name', 'CC_01_vittoria', 'group', 'CC', 'age', 13, 'gender', 'f', 'handedness', 'r', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
-project.subjects.data(2)  = struct('name', 'CC_02_fabio',    'group', 'CC', 'age', 12, 'gender', 'm', 'handedness', 'r', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
-project.subjects.data(3)  = struct('name', 'CC_03_anna',     'group', 'CC', 'age', 12, 'gender', 'f', 'handedness', 'r', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
-project.subjects.data(4)  = struct('name', 'CC_04_giacomo',  'group', 'CC', 'age', 8,  'gender', 'm', 'handedness', 'l', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
-project.subjects.data(5)  = struct('name', 'CC_05_stefano',  'group', 'CC', 'age', 9,  'gender', 'm', 'handedness', 'r', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
-project.subjects.data(6)  = struct('name', 'CC_06_giovanni', 'group', 'CC', 'age', 6,  'gender', 'm', 'handedness', 'r', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
-project.subjects.data(7)  = struct('name', 'CC_07_davide',   'group', 'CC', 'age', 11, 'gender', 'm', 'handedness', 'l', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
-project.subjects.data(8)  = struct('name', 'CC_08_jonathan', 'group', 'CC', 'age', 8,  'gender', 'm', 'handedness', 'r', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
-project.subjects.data(9)  = struct('name', 'CC_09_antonella','group', 'CC', 'age', 9,  'gender', 'f', 'handedness', 'r', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
-project.subjects.data(10) = struct('name', 'CC_10_chiara',   'group', 'CC', 'age', 11, 'gender', 'f', 'handedness', 'r', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
-
-
-project.subjects.data(11) = struct('name', 'CP_01_riccardo', 'group', 'CP', 'age', 6,  'gender', 'm', 'handedness', 'l', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
-project.subjects.data(12) = struct('name', 'CP_02_ester',    'group', 'CP', 'age', 8,  'gender', 'f', 'handedness', 'l', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
-project.subjects.data(13) = struct('name', 'CP_03_sara',     'group', 'CP', 'age', 11, 'gender', 'f', 'handedness', 'r', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
-project.subjects.data(14) = struct('name', 'CP_04_matteo',   'group', 'CP', 'age', 10, 'gender', 'm', 'handedness', 'l', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
-project.subjects.data(15) = struct('name', 'CP_05_gregorio', 'group', 'CP', 'age', 6,  'gender', 'm', 'handedness', 'r', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
-project.subjects.data(16) = struct('name', 'CP_06_fernando', 'group', 'CP', 'age', 8,  'gender', 'm', 'handedness', 'l', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
-project.subjects.data(17) = struct('name', 'CP_07_roberta',  'group', 'CP', 'age', 9,  'gender', 'f', 'handedness', 'l', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
-project.subjects.data(18) = struct('name', 'CP_08_mattia',   'group', 'CP', 'age', 7,  'gender', 'm', 'handedness', 'r', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
-project.subjects.data(19) = struct('name', 'CP_09_alessia',  'group', 'CP', 'age', 10, 'gender', 'f', 'handedness', 'l', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
-project.subjects.data(20) = struct('name', 'CP_10_livia',    'group', 'CP', 'age', 10, 'gender', 'm', 'handedness', 'l', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
-
+% project.subjects.data(2)  = struct('name', 'CC_02_fabio',    'group', 'CC', 'age', 12, 'gender', 'm', 'handedness', 'r', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
+% project.subjects.data(3)  = struct('name', 'CC_03_anna',     'group', 'CC', 'age', 12, 'gender', 'f', 'handedness', 'r', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
+% project.subjects.data(4)  = struct('name', 'CC_04_giacomo',  'group', 'CC', 'age', 8,  'gender', 'm', 'handedness', 'l', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
+% project.subjects.data(5)  = struct('name', 'CC_05_stefano',  'group', 'CC', 'age', 9,  'gender', 'm', 'handedness', 'r', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
+% project.subjects.data(6)  = struct('name', 'CC_06_giovanni', 'group', 'CC', 'age', 6,  'gender', 'm', 'handedness', 'r', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
+% project.subjects.data(7)  = struct('name', 'CC_07_davide',   'group', 'CC', 'age', 11, 'gender', 'm', 'handedness', 'l', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
+% project.subjects.data(8)  = struct('name', 'CC_08_jonathan', 'group', 'CC', 'age', 8,  'gender', 'm', 'handedness', 'r', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
+% project.subjects.data(9)  = struct('name', 'CC_09_antonella','group', 'CC', 'age', 9,  'gender', 'f', 'handedness', 'r', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
+% project.subjects.data(10) = struct('name', 'CC_10_chiara',   'group', 'CC', 'age', 11, 'gender', 'f', 'handedness', 'r', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
+% 
+% 
+% project.subjects.data(11) = struct('name', 'CP_01_riccardo', 'group', 'CP', 'age', 6,  'gender', 'm', 'handedness', 'l', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
+% project.subjects.data(12) = struct('name', 'CP_02_ester',    'group', 'CP', 'age', 8,  'gender', 'f', 'handedness', 'l', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
+% project.subjects.data(13) = struct('name', 'CP_03_sara',     'group', 'CP', 'age', 11, 'gender', 'f', 'handedness', 'r', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
+% project.subjects.data(14) = struct('name', 'CP_04_matteo',   'group', 'CP', 'age', 10, 'gender', 'm', 'handedness', 'l', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
+% project.subjects.data(15) = struct('name', 'CP_05_gregorio', 'group', 'CP', 'age', 6,  'gender', 'm', 'handedness', 'r', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
+% project.subjects.data(16) = struct('name', 'CP_06_fernando', 'group', 'CP', 'age', 8,  'gender', 'm', 'handedness', 'l', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
+% project.subjects.data(17) = struct('name', 'CP_07_roberta',  'group', 'CP', 'age', 9,  'gender', 'f', 'handedness', 'l', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
+% project.subjects.data(18) = struct('name', 'CP_08_mattia',   'group', 'CP', 'age', 7,  'gender', 'm', 'handedness', 'r', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
+% project.subjects.data(19) = struct('name', 'CP_09_alessia',  'group', 'CP', 'age', 10, 'gender', 'f', 'handedness', 'l', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
+% project.subjects.data(20) = struct('name', 'CP_10_livia',    'group', 'CP', 'age', 10, 'gender', 'm', 'handedness', 'l', 'bad_segm', [], 'bad_ch', [], 'bad_ic', [],'baseline_file',[],'baseline_file_interval_s',[],'frequency_bands_list',[]);
+% 
 
 % bad segments (begin and end in sec) to be removed and interpolated (visual inspection, no asr) in the preprocessing (do_preproc)
-project.subjects.data(16).bad_segm    = ...
+project.subjects.data(1).bad_segm    = ...
 {
     [...
     216157  216955;... 
@@ -747,12 +799,12 @@ project.subjects.data(16).bad_segm    = ...
 
 
 % bad channels to be removed and interpolated (visual inspection, no asr) in the preprocessing (do_preproc)
-project.subjects.data(16).bad_ch    = {'P1'};
-project.subjects.data(6).bad_ch     = {'PO3'};
+project.subjects.data(1).bad_ch    = {'P1'};
+% project.subjects.data(6).bad_ch     = {'PO3'};
 
 % bad independent components to be removed in the preprocessing (do_remove_ica)
-project.subjects.data(16).bad_ic    = {1,2,5};
-project.subjects.data(6).bad_ic     = {1:3};
+project.subjects.data(1).bad_ic    = {1,2,5};
+% project.subjects.data(6).bad_ic     = {1:3};
 
 
 ...project.subjects.data(1).frequency_bands_list = {[4,8];[5,9];[14,20];[20,32]};
@@ -797,20 +849,87 @@ project.mark_badepochs.jointprob.locthresh  = 5;
 project.mark_badepochs.jointprob.globthresh = 5;
 
                                 
+% %% MICROSTATES
+% project.microstates.group_list = { 'AS', 'AEB'};
+% 
+% project.microstates.suffix = 'controlli';
+% 
+% project.microstates.cond_list = {{'s-s2-1sc-1tc','s-s2-1sc-1tl','s-s2-1sl-1tc','s-s2-1sl-1tl'};... % condizioni epocate dall'epoching
+%                                  {'t-s2-1sc-1tc','t-s2-1sc-1tl','t-s2-1sl-1tc','t-s2-1sl-1tl'};...
+%                                   {'s-s2-1sc-1tc','s-s2-1sc-1tl','s-s2-1sl-1tc','s-s2-1sl-1tl','t-s2-1sc-1tc','t-s2-1sc-1tl','t-s2-1sl-1tc','t-s2-1sl-1tl'};...
+%                                 };
+% 
+% project.microstates.cond_names = {'space','time','space-time',};                            
+% project.microstates.micro_selectdata.datatype = 'Continuous';% 'ERPavg'|'Continuous'
+% project.microstates.micro_selectdata.avgref = 0;
+% project.microstates.micro_selectdata.normalise = 1;
+% 
+% project.microstates.micro_selectdata.MinPeakDist = 10;
+% project.microstates.micro_selectdata.Npeaks = 1000;
+% project.microstates.micro_selectdata.GFPthresh = 1;
+% 
+% 
+% project.microstates.micro_segment.algorithm = 'taahc';
+% project.microstates.micro_segment.sorting = 'Global explained variance';
+% project.microstates.micro_segment.normalise = 1;
+% project.microstates.micro_segment.Nmicrostates = 3:8;
+% project.microstates.micro_segment.verbose = 1;
+% project.microstates.micro_segment.determinism = 1;
+% project.microstates.micro_segment.polarity = 1;
+% 
+% project.microstates.selectNmicro.Nmicro = 5;
+% 
+% project.microstates.micro_fit.polarity = 0;
+% 
+% project.microstates.micro_smooth.label_type ='segmentation';
+% project.microstates.micro_smooth.smooth_type ='reject segments';
+% project.microstates.micro_smooth.minTime =10;
+% project.microstates.micro_smooth.polarity =1;
+% 
+% project.microstates.micro_stats.label_type ='segmentation';
+% project.microstates.micro_stats.polarity =0;
+% 
+% 
+% project.microstates.MicroPlotSegments.label_type ='segmentation';
+% project.microstates.MicroPlotSegments.plotsegnos ='all';
+% project.microstates.MicroPlotSegments.plot_time =[];
+% project.microstates.MicroPlotSegments.plottopos =1;
+% project.microstates.MicroPlotSegments.plot_ylim = [-1,1];
+
+
+
 %% MICROSTATES
-project.microstates.group_list = { 'AS', 'AEB'};
+project.microstates.do_spontaneous = 1;
+project.microstates.do_ERPavg = 1;
+
+
+
+project.microstates.do_selectdata = 1;
+project.microstates.do_segment = 1;
+project.microstates.do_viewNmicro = 0;
+project.microstates.do_selectNmicro = 1;
+project.microstates.do_fit = 1;
+project.microstates.do_smooth = 1;
+project.microstates.do_stats = 1;
+project.microstates.do_backfit = 1;
+
+
+project.microstates.group_list = { 'sighted'};
 
 project.microstates.suffix = 'controlli';
 
-project.microstates.cond_list = {{'s-s2-1sc-1tc','s-s2-1sc-1tl','s-s2-1sl-1tc','s-s2-1sl-1tl'};... % condizioni epocate dall'epoching
-                                 {'t-s2-1sc-1tc','t-s2-1sc-1tl','t-s2-1sl-1tc','t-s2-1sl-1tl'};...
-                                  {'s-s2-1sc-1tc','s-s2-1sc-1tl','s-s2-1sl-1tc','s-s2-1sl-1tl','t-s2-1sc-1tc','t-s2-1sc-1tl','t-s2-1sl-1tc','t-s2-1sl-1tl'};...
-                                };
+project.microstates.cond_list = {{'C'},{'S'}};
 
-project.microstates.cond_names = {'space','time','space-time',};                            
-project.microstates.micro_selectdata.datatype = 'ERPavg';
+
+project.microstates.cond_names = {'C','S'};                            
+% project.microstates.micro_selectdata.datatype = 'spontaneous';% 'ERPavg'|'Continuous'
 project.microstates.micro_selectdata.avgref = 0;
 project.microstates.micro_selectdata.normalise = 1;
+
+project.microstates.micro_selectdata.MinPeakDist = 10;
+project.microstates.micro_selectdata.Npeaks = 1000;
+project.microstates.micro_selectdata.GFPthresh = 1;
+
 
 project.microstates.micro_segment.algorithm = 'taahc';
 project.microstates.micro_segment.sorting = 'Global explained variance';
@@ -820,7 +939,11 @@ project.microstates.micro_segment.verbose = 1;
 project.microstates.micro_segment.determinism = 1;
 project.microstates.micro_segment.polarity = 1;
 
-project.microstates.selectNmicro.Nmicro = 5;
+% project.microstates.selectNmicro.Nmicro = 3;
+project.microstates.selectNmicro.Nmicro_spontaneous = 3;
+project.microstates.selectNmicro.Nmicro_ERPavg =...
+    repmat(project.microstates.selectNmicro.Nmicro_spontaneous,...
+    length(project.microstates.cond_names),1);%[3,5]
 
 project.microstates.micro_fit.polarity = 0;
 
@@ -840,8 +963,82 @@ project.microstates.MicroPlotSegments.plottopos =1;
 project.microstates.MicroPlotSegments.plot_ylim = [-1,1];
 
 
+%% RAGU
+project.ragu.do_SlurpData = 1;
+project.ragu.do_SetRandomizationOptions = 1;
+project.ragu.do_SetAnalysisWindow = 1;
+project.ragu.do_TCT = 1;
+project.ragu.do_TANOVA = 1;
+project.ragu.do_GFP = 1;
 
-% CALCULATE SUBJECT SPECTRA
+
+
+project.ragu.data_str = '*s-s2-1sc-1tl_PRE*';
+project.ragu.data_conds = {
+    's-s2-1sc-1tc_PRE';'s-s2-1sc-1tl_PRE';'s-s2-1sl-1tc_PRE';'s-s2-1sl-1tl_PRE';...
+    's-s2-1sc-1tc_POST';'s-s2-1sc-1tl_POST';'s-s2-1sl-1tc_POST';'s-s2-1sl-1tl_POST';...
+    };
+
+
+project.ragu.strF1 = 'session';
+project.ragu.strF2 = 'condition';
+
+project.ragu.DLabels1(1).Label = 'PRE';
+project.ragu.DLabels1(1).Level = 1;
+project.ragu.DLabels1(2).Label = 'POST';
+project.ragu.DLabels1(2).Level = 2;
+
+
+project.ragu.DLabels2(1).Label = '1sc-1tc';
+project.ragu.DLabels2(1).Level = 1;
+project.ragu.DLabels2(2).Label = '1sc-1tl';
+project.ragu.DLabels2(2).Level = 2;
+project.ragu.DLabels2(3).Label = '1sl-1tc';
+project.ragu.DLabels2(3).Level = 3;
+project.ragu.DLabels2(4).Label = '1sl-1tl';
+project.ragu.DLabels2(4).Level = 4;
+
+project.ragu.levels_f1 = [1;1;1;1;2;2;2;2];
+project.ragu.levels_f2 = [1;1;2;2;3;3;4;4];
+
+
+project.ragu.Design  = [project.ragu.levels_f1,project.ragu.levels_f2];
+
+project.ragu.Iterations = 5000;
+project.ragu.Threshold = 0.0500;
+
+
+%% Now, we set all the options for the randomization part
+%-------------------------------------------------------------------------
+project.ragu.nRuns      = 10;  % The number of randomization runs
+project.ragu.pThreshold = 0.05;  % The p-threshold (for display purposes only)
+project.ragu.Normalize  = false; % Whether to L2 normalize the data for the TANOVA
+project.ragu.NoFactXing = true;  % Set whether factor crossings are permitted when
+                    % the data is randomized
+
+
+
+                    
+%% Now we set the analysis time period
+%-------------------------------------------------------------------------
+project.ragu.StartTime = []; % This is the onset of the analysis window. An empty matrix 
+                % sets the start time to the beginning of the data
+
+project.ragu.EndTime   = []; % This is the ffset of the analysis window. An empty matrix 
+                % sets the end time to the end of the data
+
+project.ragu.DoAverage = false;  % Sets whether the computations shall be done on the
+                    % average of the time period, or time-point-wise
+
+% Ragu('SetAnalysisWindow',RaguHandle,StartTime,EndTime,DoAverage); 
+                    
+                    
+                    
+                    
+                    
+
+
+%% CALCULATE SUBJECT SPECTRA
 
 project.subject_spectra.do_group             = 'off';
 
@@ -1017,45 +1214,46 @@ project.study.precompute.ersp                   = {'interp','off' ,'allcomps','o
 if isfield(project, 'design')
     project = rmfield(project, 'design');
 end
+project.design(1)                   = struct('name',  'ao_control_ungrouped'   , 'factor1_name', 'condition', 'factor1_levels', [] , 'factor1_pairing', 'on', 'factor2_name', ''       , 'factor2_levels', [], 'factor2_pairing', 'off', 'grouping_factor',[],'comparing_factor',[]);
 
-project.design(2)                   = struct('name',  'ao_control_ungrouped'   , 'factor1_name', 'condition', 'factor1_levels', [] , 'factor1_pairing', 'on', 'factor2_name', ''       , 'factor2_levels', [], 'factor2_pairing', 'off', 'grouping_factor',[],'comparing_factor',[]);
-project.design(3)                   = struct('name',  'aocs_control_ungrouped' , 'factor1_name', 'condition', 'factor1_levels', [] , 'factor1_pairing', 'on', 'factor2_name', ''       , 'factor2_levels', [], 'factor2_pairing', 'off');
-project.design(4)                   = struct('name',  'aocs_ao_ungrouped'      , 'factor1_name', 'condition', 'factor1_levels', [] , 'factor1_pairing', 'on', 'factor2_name', ''       , 'factor2_levels', [], 'factor2_pairing', 'off');
-project.design(5)                   = struct('name',  'aois_ao_ungrouped'      , 'factor1_name', 'condition', 'factor1_levels', [] , 'factor1_pairing', 'on', 'factor2_name', ''       , 'factor2_levels', [], 'factor2_pairing', 'off');
-project.design(6)                   = struct('name',  'aocs_aois_ungrouped'    , 'factor1_name', 'condition', 'factor1_levels', [] , 'factor1_pairing', 'on', 'factor2_name', ''       , 'factor2_levels', [], 'factor2_pairing', 'off');
-project.design(7)                   = struct('name',  'sound_effect_ungrouped' , 'factor1_name', 'condition', 'factor1_levels', [] , 'factor1_pairing', 'on', 'factor2_name', ''       , 'factor2_levels', [], 'factor2_pairing', 'off');
-project.design(8)                   = struct('name',  'ao_control'             , 'factor1_name', 'condition', 'factor1_levels', [] , 'factor1_pairing', 'on', 'factor2_name', 'group'  , 'factor2_levels', [], 'factor2_pairing', 'off');
-project.design(9)                   = struct('name',  'aocs_control'           , 'factor1_name', 'condition', 'factor1_levels', [] , 'factor1_pairing', 'on', 'factor2_name', 'group'  , 'factor2_levels', [], 'factor2_pairing', 'off');
-project.design(10)                  = struct('name', 'aocs_ao'                 , 'factor1_name', 'condition', 'factor1_levels', [] , 'factor1_pairing', 'on', 'factor2_name', 'group'  , 'factor2_levels', [], 'factor2_pairing', 'off');
-project.design(11)                  = struct('name', 'aois_ao'                 , 'factor1_name', 'condition', 'factor1_levels', [] , 'factor1_pairing', 'on', 'factor2_name', 'group'  , 'factor2_levels', [], 'factor2_pairing', 'off');
-project.design(12)                  = struct('name', 'aocs_aois'               , 'factor1_name', 'condition', 'factor1_levels', [] , 'factor1_pairing', 'on', 'factor2_name', 'group'  , 'factor2_levels', [], 'factor2_pairing', 'off');
-project.design(13)                  = struct('name', 'sound_effect'            , 'factor1_name', 'condition', 'factor1_levels', [] , 'factor1_pairing', 'on', 'factor2_name', 'group'  , 'factor2_levels', [], 'factor2_pairing', 'off');
-
-project.design(2).factor1_levels    = {'AO','control'};
-project.design(3).factor1_levels    = {'AOCS','control'};
-project.design(4).factor1_levels    = {'AOCS','AO'};
-project.design(5).factor1_levels    = {'AOIS','AO'};
-project.design(6).factor1_levels    = {'AOCS','AOIS'};
-project.design(7).factor1_levels    = {'AOCS','AOIS','AO'};
-project.design(8).factor1_levels    = {'AO','control'};
-project.design(9).factor1_levels    = {'AOCS','control'};
-project.design(10).factor1_levels   = {'AOCS','AO'};
-project.design(11).factor1_levels   = {'AOIS','AO'};
-project.design(12).factor1_levels   = {'AOCS','AOIS'};
-project.design(13).factor1_levels   = {'AOCS','AOIS','AO'};
-
-project.design(8).factor2_levels    = {'CC','CP'};
-project.design(9).factor2_levels    = {'CC','CP'};
-project.design(10).factor2_levels   = {'CC','CP'};
-project.design(11).factor2_levels   = {'CC','CP'};
-project.design(12).factor2_levels   = {'CC','CP'};
-project.design(13).factor2_levels   = {'CC','CP'};
-
-project.design(1).factor1_levels    = {'cwalker' 'twalker' 'cscrambled' 'tscrambled'};
-project.design(2).factor1_levels    = {'centered','translating'};
-project.design(3).factor1_levels    = {'scrambled','walker'};
-project.design(4).factor1_levels    = {'scrambled','walker'};
-project.design(4).factor2_levels    = {'centered','translating'};
+% project.design(2)                   = struct('name',  'ao_control_ungrouped'   , 'factor1_name', 'condition', 'factor1_levels', [] , 'factor1_pairing', 'on', 'factor2_name', ''       , 'factor2_levels', [], 'factor2_pairing', 'off', 'grouping_factor',[],'comparing_factor',[]);
+% project.design(3)                   = struct('name',  'aocs_control_ungrouped' , 'factor1_name', 'condition', 'factor1_levels', [] , 'factor1_pairing', 'on', 'factor2_name', ''       , 'factor2_levels', [], 'factor2_pairing', 'off');
+% project.design(4)                   = struct('name',  'aocs_ao_ungrouped'      , 'factor1_name', 'condition', 'factor1_levels', [] , 'factor1_pairing', 'on', 'factor2_name', ''       , 'factor2_levels', [], 'factor2_pairing', 'off');
+% project.design(5)                   = struct('name',  'aois_ao_ungrouped'      , 'factor1_name', 'condition', 'factor1_levels', [] , 'factor1_pairing', 'on', 'factor2_name', ''       , 'factor2_levels', [], 'factor2_pairing', 'off');
+% project.design(6)                   = struct('name',  'aocs_aois_ungrouped'    , 'factor1_name', 'condition', 'factor1_levels', [] , 'factor1_pairing', 'on', 'factor2_name', ''       , 'factor2_levels', [], 'factor2_pairing', 'off');
+% project.design(7)                   = struct('name',  'sound_effect_ungrouped' , 'factor1_name', 'condition', 'factor1_levels', [] , 'factor1_pairing', 'on', 'factor2_name', ''       , 'factor2_levels', [], 'factor2_pairing', 'off');
+% project.design(8)                   = struct('name',  'ao_control'             , 'factor1_name', 'condition', 'factor1_levels', [] , 'factor1_pairing', 'on', 'factor2_name', 'group'  , 'factor2_levels', [], 'factor2_pairing', 'off');
+% project.design(9)                   = struct('name',  'aocs_control'           , 'factor1_name', 'condition', 'factor1_levels', [] , 'factor1_pairing', 'on', 'factor2_name', 'group'  , 'factor2_levels', [], 'factor2_pairing', 'off');
+% project.design(10)                  = struct('name', 'aocs_ao'                 , 'factor1_name', 'condition', 'factor1_levels', [] , 'factor1_pairing', 'on', 'factor2_name', 'group'  , 'factor2_levels', [], 'factor2_pairing', 'off');
+% project.design(11)                  = struct('name', 'aois_ao'                 , 'factor1_name', 'condition', 'factor1_levels', [] , 'factor1_pairing', 'on', 'factor2_name', 'group'  , 'factor2_levels', [], 'factor2_pairing', 'off');
+% project.design(12)                  = struct('name', 'aocs_aois'               , 'factor1_name', 'condition', 'factor1_levels', [] , 'factor1_pairing', 'on', 'factor2_name', 'group'  , 'factor2_levels', [], 'factor2_pairing', 'off');
+% project.design(13)                  = struct('name', 'sound_effect'            , 'factor1_name', 'condition', 'factor1_levels', [] , 'factor1_pairing', 'on', 'factor2_name', 'group'  , 'factor2_levels', [], 'factor2_pairing', 'off');
+% 
+% project.design(2).factor1_levels    = {'AO','control'};
+% project.design(3).factor1_levels    = {'AOCS','control'};
+% project.design(4).factor1_levels    = {'AOCS','AO'};
+% project.design(5).factor1_levels    = {'AOIS','AO'};
+% project.design(6).factor1_levels    = {'AOCS','AOIS'};
+% project.design(7).factor1_levels    = {'AOCS','AOIS','AO'};
+% project.design(8).factor1_levels    = {'AO','control'};
+% project.design(9).factor1_levels    = {'AOCS','control'};
+% project.design(10).factor1_levels   = {'AOCS','AO'};
+% project.design(11).factor1_levels   = {'AOIS','AO'};
+% project.design(12).factor1_levels   = {'AOCS','AOIS'};
+% project.design(13).factor1_levels   = {'AOCS','AOIS','AO'};
+% 
+% project.design(8).factor2_levels    = {'CC','CP'};
+% project.design(9).factor2_levels    = {'CC','CP'};
+% project.design(10).factor2_levels   = {'CC','CP'};
+% project.design(11).factor2_levels   = {'CC','CP'};
+% project.design(12).factor2_levels   = {'CC','CP'};
+% project.design(13).factor2_levels   = {'CC','CP'};
+% 
+% project.design(1).factor1_levels    = {'cwalker' 'twalker' 'cscrambled' 'tscrambled'};
+% project.design(2).factor1_levels    = {'centered','translating'};
+% project.design(3).factor1_levels    = {'scrambled','walker'};
+% project.design(4).factor1_levels    = {'scrambled','walker'};
+% project.design(4).factor2_levels    = {'centered','translating'};
 
 
 
@@ -1610,52 +1808,57 @@ project.postprocess.ersp.design(1).subject_time_windows(4)      = struct('min',-
 
 % semi-automatic (simplified) input mode: set values for the first roi/design and
 % other values will be automatically generated
-%  which_extrema_curve_roi = {{'max'};{'min'};{'min'};{'min'}};
-%     which_extrema_curve_design = cell(project.postprocess.ersp.numroi,1);
-%     for nr =1:project.postprocess.ersp.nroi
-%         which_extrema_curve_design{nr} = which_extrema_curve_roi;
-%     end
-%     project.postprocess.ersp.design(1).which_extrema_curve_continuous = which_extrema_curve_design;
+%  which_extrema_curve_roi = {{'max'};{'min'};{'min'};{'min'};{'min'};{'min'};{'min'}};
+ zz = {'max'};
+ which_extrema_curve_roi = cell(project.postprocess.ersp.nbands,1);
+ for nn =1:project.postprocess.ersp.nbands
+     which_extrema_curve_roi{nn} = zz;
+ end
+ 
+ for nr =1:project.postprocess.ersp.nroi
+     which_extrema_curve_design{nr} = which_extrema_curve_roi;
+ end
+ project.postprocess.ersp.design(1).which_extrema_curve_continuous = which_extrema_curve_design;
 
 % extreme to be searched in the continuous curve ( NON time-window mode)
-project.postprocess.ersp.design(1).which_extrema_curve_continuous = {     .... design x roi x freq band
-                                    {... roi
-                                        {'max'};... frequency band
-                                        {'min'};...
-                                        {'min'}; ...
-                                        {'min'}...
-                                    };
-                                    {... roi
-                                        {'max'};... frequency band
-                                        {'min'};...
-                                        {'min'}; ...
-                                        {'min'}...
-                                    };
-                                    {... roi
-                                        {'max'};... frequency band
-                                        {'min'};...
-                                        {'min'}; ...
-                                        {'min'}...
-                                    };                                    
-                                    {... roi
-                                        {'max'};... frequency band
-                                        {'min'};...
-                                        {'min'}; ...
-                                        {'min'}...
-                                    };
-                                    {... roi
-                                        {'max'};... frequency band
-                                        {'min'};...
-                                        {'min'}; ...
-                                        {'min'}...
-                                    };
-                                    {... roi
-                                        {'max'};... frequency band
-                                        {'min'};...
-                                        {'min'}; ...
-                                        {'min'}...
-                                    };
-};
+% project.postprocess.ersp.design(1).which_extrema_curve_continuous = {     .... design x roi x freq band
+%                                     {... roi
+%                                         {'max'};... frequency band
+%                                         {'min'};...
+%                                         {'min'}; ...
+%                                         {'min'}...
+%                                     };
+%                                     {... roi
+%                                         {'max'};... frequency band
+%                                         {'min'};...
+%                                         {'min'}; ...
+%                                         {'min'}...
+%                                     };
+%                                     {... roi
+%                                         {'max'};... frequency band
+%                                         {'min'};...
+%                                         {'min'}; ...
+%                                         {'min'}...
+%                                     };                                    
+%                                     {... roi
+%                                         {'max'};... frequency band
+%                                         {'min'};...
+%                                         {'min'}; ...
+%                                         {'min'}...
+%                                     };
+%                                     {... roi
+%                                         {'max'};... frequency band
+%                                         {'min'};...
+%                                         {'min'}; ...
+%                                         {'min'}...
+%                                     };
+%                                     {... roi
+%                                         {'max'};... frequency band
+%                                         {'min'};...
+%                                         {'min'}; ...
+%                                         {'min'}...
+%                                     };
+% };
 
 % % ****CHECK****
 % if size(project.postprocess.ersp.design(1).which_extrema_curve_continuous, 1) ~= project.postprocess.ersp.nroi
@@ -1669,68 +1872,74 @@ project.postprocess.ersp.design(1).which_extrema_curve_continuous = {     .... d
 
 % semi-automatic (simplified) input mode: set values for the first roi/design and
 % other values will be automatically generated
-% group_time_windows_continuous_roi = {{};{};{};{}};
-%     group_time_windows_continuous_design = cell(project.postprocess.ersp.numroi,1);
-%     for nr =1:project.postprocess.ersp.numroi
-%         group_time_windows_continuous_design{nr} = group_time_windows_continuous_roi;
-%     end
-%     project.postprocess.ersp.design(1).which_extrema_curve_continuous = group_time_windows_continuous_design;
+% group_time_windows_continuous_roi = {{};{};{};{};{};{};{}};
 
-
-% time interval for searching extreme in the continuous curve ( NON time-window mode)
-project.postprocess.ersp.design(1).group_time_windows_continuous = {     .... design x roi x freq band
-                                    {... roi
-                                        {};... frequency band
-                                        {};...
-                                        {}; ...
-                                        {}...
-                                    };
-                                    {... roi
-                                        {};... frequency band
-                                        {};...
-                                        {}; ...
-                                        {}...
-                                    };
-                                    {... roi
-                                        {};... frequency band
-                                        {};...
-                                        {}; ...
-                                        {}...
-                                    };                                    
-                                    {... roi
-                                        {};... frequency band
-                                        {};...
-                                        {}; ...
-                                        {}...
-                                    };
-                                     {... roi
-                                        {};... frequency band
-                                        {};...
-                                        {}; ...
-                                        {}...
-                                    };                                  
-                                     {... roi
-                                        {};... frequency band
-                                        {};...
-                                        {}; ...
-                                        {}...
-                                    };  
-                                     {... roi
-                                        {};... frequency band
-                                        {};...
-                                        {}; ...
-                                        {}...
-                                    };                                      
-};
-
-% ****CHECK****
-if size(project.postprocess.ersp.design(1).group_time_windows_continuous, 1) ~= project.postprocess.ersp.nroi
-   error(['number of roi in group_time_windows_continuous parameters (' num2str(size(project.postprocess.ersp.design(1).group_time_windows_continuous,1)) ') does not correspond to number of defined ROI (' num2str(project.postprocess.ersp.nroi) ')']); 
-else
-    if size(project.postprocess.ersp.design(1).group_time_windows_continuous{1}, 1) ~= project.postprocess.ersp.nbands
-        error(['number of bands in the first roi of group_time_windows_continuous parameters (' num2str(size(project.postprocess.ersp.design(1).group_time_windows_continuous{1},1)) ') does not correspond to number of defined frequency bands (' num2str(project.postprocess.ersp.nbands) ')']); 
+zz = {};
+ group_time_windows_continuous_roi = cell(project.postprocess.ersp.nbands,1);
+ for nn =1:project.postprocess.ersp.nbands
+     group_time_windows_continuous_roi{nn} = zz;
+ end
+    group_time_windows_continuous_design = cell(project.postprocess.ersp.numroi,1);
+    for nr =1:project.postprocess.ersp.numroi
+        group_time_windows_continuous_design{nr} = group_time_windows_continuous_roi;
     end
-end
+    project.postprocess.ersp.design(1).which_extrema_curve_continuous = group_time_windows_continuous_design;
+
+
+% % time interval for searching extreme in the continuous curve ( NON time-window mode)
+% project.postprocess.ersp.design(1).group_time_windows_continuous = {     .... design x roi x freq band
+%                                     {... roi
+%                                         {};... frequency band
+%                                         {};...
+%                                         {}; ...
+%                                         {}...
+%                                     };
+%                                     {... roi
+%                                         {};... frequency band
+%                                         {};...
+%                                         {}; ...
+%                                         {}...
+%                                     };
+%                                     {... roi
+%                                         {};... frequency band
+%                                         {};...
+%                                         {}; ...
+%                                         {}...
+%                                     };                                    
+%                                     {... roi
+%                                         {};... frequency band
+%                                         {};...
+%                                         {}; ...
+%                                         {}...
+%                                     };
+%                                      {... roi
+%                                         {};... frequency band
+%                                         {};...
+%                                         {}; ...
+%                                         {}...
+%                                     };                                  
+%                                      {... roi
+%                                         {};... frequency band
+%                                         {};...
+%                                         {}; ...
+%                                         {}...
+%                                     };  
+%                                      {... roi
+%                                         {};... frequency band
+%                                         {};...
+%                                         {}; ...
+%                                         {}...
+%                                     };                                      
+% };
+
+% % ****CHECK****
+% if size(project.postprocess.ersp.design(1).group_time_windows_continuous, 1) ~= project.postprocess.ersp.nroi
+%    error(['number of roi in group_time_windows_continuous parameters (' num2str(size(project.postprocess.ersp.design(1).group_time_windows_continuous,1)) ') does not correspond to number of defined ROI (' num2str(project.postprocess.ersp.nroi) ')']); 
+% else
+%     if size(project.postprocess.ersp.design(1).group_time_windows_continuous{1}, 1) ~= project.postprocess.ersp.nbands
+%         error(['number of bands in the first roi of group_time_windows_continuous parameters (' num2str(size(project.postprocess.ersp.design(1).group_time_windows_continuous{1},1)) ') does not correspond to number of defined frequency bands (' num2str(project.postprocess.ersp.nbands) ')']); 
+%     end
+% end
 %*************
 
 
@@ -1739,68 +1948,84 @@ end
 % other values will be automatically generated
 % group_which_extrema_curve_tw_roi =  {... roi 1
 %         %                                     ...  tw1    tw2   tw3   tw4   tw5
-%         {'max';'max';'max';'max';'max'}; ... frequency band 1
-%         {'min';'min';'min';'min';'min'}; ... frequency band 2
-%         {'min';'min';'min';'min';'min'}; ... frequency band 3
-%         {'min';'min';'min';'min';'min'}  ... frequency band 4
+%         {'max';'max';'max';'max';'max';'max';'max';'max';'max'}; ... frequency band 1
+%         {'min';'min';'min';'min';'min';'max';'max';'max';'max'}; ... frequency band 2
+%         {'min';'min';'min';'min';'min';'max';'max';'max';'max'}; ... frequency band 3
+%         {'min';'min';'min';'min';'min';'max';'max';'max';'max'}  ... frequency band 4
 %         };
-%     group_which_extrema_curve_tw_design = cell(project.postprocess.ersp.numroi,1);
-%     for nr =1:project.postprocess.ersp.numroi
-%         group_which_extrema_curve_tw_design{nr} = group_which_extrema_curve_tw_roi;
-%     end
-%     project.postprocess.ersp.design(1).which_extrema_curve_tw = group_which_extrema_curve_tw_design;
-%     
+    
+   tot_tw = length(project.postprocess.ersp.design(1).group_time_windows); 
+  zz = {'max'};
+  vv_tw = repmat(zz,tot_tw,1);
+%  vv_tw = cell(tot_tw,1);
+%  for nn =1:tot_tw
+%      vv_tw{nn} = zz;
+%  end
+
+   group_which_extrema_curve_tw_roi = cell(project.postprocess.ersp.nbands,1);
+   
+  for nn =1:project.postprocess.ersp.nbands
+     group_which_extrema_curve_tw_roi{nn} = vv_tw;
+ end
+    
+    
+    group_which_extrema_curve_tw_design = cell(project.postprocess.ersp.numroi,1);
+    for nr =1:project.postprocess.ersp.numroi
+        group_which_extrema_curve_tw_design{nr} = group_which_extrema_curve_tw_roi;
+    end
+    project.postprocess.ersp.design(1).which_extrema_curve_tw = group_which_extrema_curve_tw_design;
+    
 
 
 
-% extreme to be searched in each time window (time-window mode)
-project.postprocess.ersp.design(1).which_extrema_curve_tw = {     .... design x roi x freq band x time window
-                                    {... roi 1
-                                    ...  tw1    tw2   tw3   tw4   tw5                                 
-                                        {'max';'max';'max';'max';'max'}; ... frequency band 1
-                                        {'min';'min';'min';'min';'min'}; ... frequency band 2
-                                        {'min';'min';'min';'min';'min'}; ... frequency band 3
-                                        {'min';'min';'min';'min';'min'}  ... frequency band 4
-                                    };
-                                    {... roi 2
-                                        {'max';'max';'max';'max';'max'}; ... frequency band 1
-                                        {'min';'min';'min';'min';'min'}; ... frequency band 2
-                                        {'min';'min';'min';'min';'min'}; ... frequency band 3
-                                        {'min';'min';'min';'min';'min'}  ... frequency band 4
-                                    };
-                                    {... roi 3
-                                        {'max';'max';'max';'max';'max'}; ... frequency band 1
-                                        {'min';'min';'min';'min';'min'}; ... frequency band 2
-                                        {'min';'min';'min';'min';'min'}; ... frequency band 3
-                                        {'min';'min';'min';'min';'min'}  ... frequency band 4
-                                    };
-                                    {... roi 1
-                                    ...  tw1    tw2   tw3   tw4   tw5                                 
-                                        {'max';'max';'max';'max';'max'}; ... frequency band 1
-                                        {'min';'min';'min';'min';'min'}; ... frequency band 2
-                                        {'min';'min';'min';'min';'min'}; ... frequency band 3
-                                        {'min';'min';'min';'min';'min'}  ... frequency band 4
-                                    };
-                                    {... roi 2
-                                        {'max';'max';'max';'max';'max'}; ... frequency band 1
-                                        {'min';'min';'min';'min';'min'}; ... frequency band 2
-                                        {'min';'min';'min';'min';'min'}; ... frequency band 3
-                                        {'min';'min';'min';'min';'min'}  ... frequency band 4
-                                    };
-                                    {... roi 3
-                                        {'max';'max';'max';'max';'max'}; ... frequency band 1
-                                        {'min';'min';'min';'min';'min'}; ... frequency band 2
-                                        {'min';'min';'min';'min';'min'}; ... frequency band 3
-                                        {'min';'min';'min';'min';'min'}  ... frequency band 4
-                                    };                                    
-                                    {... roi 3
-                                        {'max';'max';'max';'max';'max'}; ... frequency band 1
-                                        {'min';'min';'min';'min';'min'}; ... frequency band 2
-                                        {'min';'min';'min';'min';'min'}; ... frequency band 3
-                                        {'min';'min';'min';'min';'min'}  ... frequency band 4
-                                    };                                    
-};
-
+% % extreme to be searched in each time window (time-window mode)
+% project.postprocess.ersp.design(1).which_extrema_curve_tw = {     .... design x roi x freq band x time window
+%                                     {... roi 1
+%                                     ...  tw1    tw2   tw3   tw4   tw5                                 
+%                                         {'max';'max';'max';'max';'max'}; ... frequency band 1
+%                                         {'min';'min';'min';'min';'min'}; ... frequency band 2
+%                                         {'min';'min';'min';'min';'min'}; ... frequency band 3
+%                                         {'min';'min';'min';'min';'min'}  ... frequency band 4
+%                                     };
+%                                     {... roi 2
+%                                         {'max';'max';'max';'max';'max'}; ... frequency band 1
+%                                         {'min';'min';'min';'min';'min'}; ... frequency band 2
+%                                         {'min';'min';'min';'min';'min'}; ... frequency band 3
+%                                         {'min';'min';'min';'min';'min'}  ... frequency band 4
+%                                     };
+%                                     {... roi 3
+%                                         {'max';'max';'max';'max';'max'}; ... frequency band 1
+%                                         {'min';'min';'min';'min';'min'}; ... frequency band 2
+%                                         {'min';'min';'min';'min';'min'}; ... frequency band 3
+%                                         {'min';'min';'min';'min';'min'}  ... frequency band 4
+%                                     };
+%                                     {... roi 1
+%                                     ...  tw1    tw2   tw3   tw4   tw5                                 
+%                                         {'max';'max';'max';'max';'max'}; ... frequency band 1
+%                                         {'min';'min';'min';'min';'min'}; ... frequency band 2
+%                                         {'min';'min';'min';'min';'min'}; ... frequency band 3
+%                                         {'min';'min';'min';'min';'min'}  ... frequency band 4
+%                                     };
+%                                     {... roi 2
+%                                         {'max';'max';'max';'max';'max'}; ... frequency band 1
+%                                         {'min';'min';'min';'min';'min'}; ... frequency band 2
+%                                         {'min';'min';'min';'min';'min'}; ... frequency band 3
+%                                         {'min';'min';'min';'min';'min'}  ... frequency band 4
+%                                     };
+%                                     {... roi 3
+%                                         {'max';'max';'max';'max';'max'}; ... frequency band 1
+%                                         {'min';'min';'min';'min';'min'}; ... frequency band 2
+%                                         {'min';'min';'min';'min';'min'}; ... frequency band 3
+%                                         {'min';'min';'min';'min';'min'}  ... frequency band 4
+%                                     };                                    
+%                                     {... roi 3
+%                                         {'max';'max';'max';'max';'max'}; ... frequency band 1
+%                                         {'min';'min';'min';'min';'min'}; ... frequency band 2
+%                                         {'min';'min';'min';'min';'min'}; ... frequency band 3
+%                                         {'min';'min';'min';'min';'min'}  ... frequency band 4
+%                                     };                                    
+% };
+% 
 
 
 
@@ -1853,62 +2078,88 @@ project.postprocess.ersp.eog.design(1).which_extrema_curve       = {  ... design
 
 
 
- project.postprocess.ersp.design(1).deflection_polarity_list = {  ... design x roi x frequency band x time_windows
-                               {...
-                                {'positive';'positive';'positive';'positive';'positive';'negative'}; ... frequency band
-                                {'positive';'positive';'positive';'positive';'positive';'negative'}; ... 
-                                {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
-                                {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
-                               };...
-                                 {...
-                                {'positive';'positive';'positive';'positive';'positive';'negative'}; ... frequency band
-                                {'positive';'positive';'positive';'positive';'positive';'negative'}; ... 
-                                {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
-                                {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
-                               };...
-                                {...
-                                {'positive';'positive';'positive';'positive';'positive';'negative'}; ... frequency band
-                                {'positive';'positive';'positive';'positive';'positive';'negative'}; ... 
-                                {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
-                                {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
-                               };...
-                                {...
-                                {'positive';'positive';'positive';'positive';'positive';'negative'}; ... frequency band
-                                {'positive';'positive';'positive';'positive';'positive';'negative'}; ... 
-                                {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
-                                {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
-                               };...
-                                {...
-                                {'positive';'positive';'positive';'positive';'positive';'negative'}; ... frequency band
-                                {'positive';'positive';'positive';'positive';'positive';'negative'}; ... 
-                                {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
-                                {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
-                               };...
-                                {...
-                                {'positive';'positive';'positive';'positive';'positive';'negative'}; ... frequency band
-                                {'positive';'positive';'positive';'positive';'positive';'negative'}; ... 
-                                {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
-                                {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
-                               };...
-                                {...
-                                {'positive';'positive';'positive';'positive';'positive';'negative'}; ... frequency band
-                                {'positive';'positive';'positive';'positive';'positive';'negative'}; ... 
-                                {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
-                                {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
-                               };...
-                                {...
-                                {'positive';'positive';'positive';'positive';'positive';'negative'}; ... frequency band
-                                {'positive';'positive';'positive';'positive';'positive';'negative'}; ... 
-                                {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
-                                {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
-                               };...
-                                {...
-                                {'positive';'positive';'positive';'positive';'positive';'negative'}; ... frequency band
-                                {'positive';'positive';'positive';'positive';'positive';'negative'}; ... 
-                                {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
-                                {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
-                               };...
-};
+
+ tot_tw = length(project.postprocess.ersp.design(1).group_time_windows); 
+  zz = {'positive'};
+  vv_tw = repmat(zz,tot_tw,1);
+%  vv_tw = cell(tot_tw,1);
+%  for nn =1:tot_tw
+%      vv_tw{nn} = zz;
+%  end
+
+   group_polarity = cell(project.postprocess.ersp.nbands,1);
+   
+  for nn =1:project.postprocess.ersp.nbands
+     group_polarity{nn} = vv_tw;
+ end
+    
+    
+    group_polarity_design = cell(project.postprocess.ersp.numroi,1);
+    for nr =1:project.postprocess.ersp.numroi
+        group_polarity_design{nr} = group_polarity;
+    end
+     project.postprocess.ersp.design(1).deflection_polarity_list = group_polarity_design;
+
+
+
+
+
+%  project.postprocess.ersp.design(1).deflection_polarity_list = {  ... design x roi x frequency band x time_windows
+%                                {...
+%                                 {'positive';'positive';'positive';'positive';'positive';'negative'}; ... frequency band
+%                                 {'positive';'positive';'positive';'positive';'positive';'negative'}; ... 
+%                                 {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
+%                                 {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
+%                                };...
+%                                  {...
+%                                 {'positive';'positive';'positive';'positive';'positive';'negative'}; ... frequency band
+%                                 {'positive';'positive';'positive';'positive';'positive';'negative'}; ... 
+%                                 {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
+%                                 {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
+%                                };...
+%                                 {...
+%                                 {'positive';'positive';'positive';'positive';'positive';'negative'}; ... frequency band
+%                                 {'positive';'positive';'positive';'positive';'positive';'negative'}; ... 
+%                                 {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
+%                                 {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
+%                                };...
+%                                 {...
+%                                 {'positive';'positive';'positive';'positive';'positive';'negative'}; ... frequency band
+%                                 {'positive';'positive';'positive';'positive';'positive';'negative'}; ... 
+%                                 {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
+%                                 {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
+%                                };...
+%                                 {...
+%                                 {'positive';'positive';'positive';'positive';'positive';'negative'}; ... frequency band
+%                                 {'positive';'positive';'positive';'positive';'positive';'negative'}; ... 
+%                                 {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
+%                                 {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
+%                                };...
+%                                 {...
+%                                 {'positive';'positive';'positive';'positive';'positive';'negative'}; ... frequency band
+%                                 {'positive';'positive';'positive';'positive';'positive';'negative'}; ... 
+%                                 {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
+%                                 {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
+%                                };...
+%                                 {...
+%                                 {'positive';'positive';'positive';'positive';'positive';'negative'}; ... frequency band
+%                                 {'positive';'positive';'positive';'positive';'positive';'negative'}; ... 
+%                                 {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
+%                                 {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
+%                                };...
+%                                 {...
+%                                 {'positive';'positive';'positive';'positive';'positive';'negative'}; ... frequency band
+%                                 {'positive';'positive';'positive';'positive';'positive';'negative'}; ... 
+%                                 {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
+%                                 {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
+%                                };...
+%                                 {...
+%                                 {'positive';'positive';'positive';'positive';'positive';'negative'}; ... frequency band
+%                                 {'positive';'positive';'positive';'positive';'positive';'negative'}; ... 
+%                                 {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
+%                                 {'positive';'positive';'positive';'positive';'positive';'positive'}; ... 
+%                                };...
+% };
 
 
 
@@ -1940,6 +2191,7 @@ project.postprocess.ersp.emg.design(1).deflection_polarity_list = {  ... design 
 project.postprocess.ersp.design(1).min_duration = 10;
 project.postprocess.ersp.eog.design(1).min_duration = 10;
 project.postprocess.ersp.emg.design(1).min_duration = 10;
+
 
 
 

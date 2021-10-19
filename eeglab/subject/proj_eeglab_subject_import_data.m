@@ -96,7 +96,11 @@ for subj=1:numsubj
             EEG = pop_chanedit(readlocs('biosemi128_eloc.txt', 'format', { 'labels' 'sph_theta_besa' 'sph_phi_besa' }, 'skiplines', 1));
         
         case 'GEODESIC'
+            try
             EEG = pop_mffimport({input_file_name},{'label'});% nuovo
+            catch
+                EEG = pop_mffimport({input_file_name});% nuovo
+            end
 
         case 'GEODESIC_OLD'
             %             EEG = pop_readegi(input_file_name, [],[],'auto');

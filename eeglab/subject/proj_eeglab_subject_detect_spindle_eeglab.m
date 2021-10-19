@@ -37,7 +37,8 @@ project.sleep.detect_spindle_eeglab.goodsleepstages = '';% keep empty!
 DS_export_Spindles_csv_m = fullfile(project.paths.framework_root,'eeg_tools','utilities',['DS_export_Spindles_csv.m']);
 
 eeglab_plugin_dir = fullfile(project.paths.eeglab, 'plugins');
-eeglab_plugin_list = {dir(eeglab_plugin_dir).name};
+dir_list = dir(eeglab_plugin_dir);
+eeglab_plugin_list = {dir_list.name};
 select_plugin = strfind_index(eeglab_plugin_list,'detect_spindles');
 detect_spindles_dir = eeglab_plugin_list{select_plugin};
 DS_export_Spindles_csv_dir = fullfile(project.paths.eeglab, 'plugins',detect_spindles_dir,'src');

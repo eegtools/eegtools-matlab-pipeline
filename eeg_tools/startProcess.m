@@ -50,23 +50,30 @@ switch action_name
         
     case 'do_import_collect'
         proj_eeglab_subject_import_data_collect(project, 'list_select_subjects', list_select_subjects);
-    
+        
+    case 'do_extract_trigger_duration'
+        proj_eeglab_subject_extract_trigger_duration(project, 'list_select_subjects', list_select_subjects);
+        
+    case 'do_extract_trigger_evaluate'
+        proj_eeglab_subject_extract_trigger_evaluate(project, 'list_select_subjects', list_select_subjects);
+        
+        
     case 'do_edf_clean_ch'
         proj_eeglab_subject_edf_clean_ch(project, 'list_select_subjects', list_select_subjects);
-    
+        
     case 'do_uniform_edf_montage'
         proj_eeglab_subject_uniform_edf_montage(project, 'list_select_subjects', list_select_subjects);
-   
+        
     case 'do_sleep_staging_hume'
         proj_eeglab_subject_sleep_staging_hume(project, 'list_select_subjects', list_select_subjects);
-    
-   case 'do_sleep_analysis_hume'
+        
+    case 'do_sleep_analysis_hume'
         proj_eeglab_subject_sleep_analysis_hume(project, 'list_select_subjects', list_select_subjects);
-       
+        
     case 'do_import_sleep_staging_hume'
         proj_eeglab_subject_import_sleep_staging_hume(project, 'list_select_subjects', list_select_subjects);
         
-       
+        
         
     case 'do_mark_sleep_events_vised'
         proj_eeglab_subject_mark_sleep_events(project, 'list_select_subjects', list_select_subjects);
@@ -79,10 +86,10 @@ switch action_name
         
     case 'do_extract_event_spindler'
         proj_eeglab_subject_extract_event_spindler(project, 'list_select_subjects', list_select_subjects);
-      
+        
     case 'do_detect_spindle_spindler'
         proj_eeglab_subject_detect_spindle_spindler(project, 'list_select_subjects', list_select_subjects);
-    
+        
     case 'do_detect_spindle_eeglab'
         proj_eeglab_subject_detect_spindle_eeglab(project, 'list_select_subjects', list_select_subjects);
         
@@ -91,33 +98,44 @@ switch action_name
         proj_eeglab_subject_csv_staging_spindle_eeglab(project, 'list_select_subjects', list_select_subjects);
         
         
-       
+        
     case 'do_filter_events'
         proj_eeglab_subject_filter_events(project, 'list_select_subjects', list_select_subjects);
-   
+        
         
         
     case 'do_remove_segments'
-        % 
+        %
         result = proj_eeglab_subject_remove_segments(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
-       
-     case 'do_interpolate_segments'
+        
+    case 'do_interpolate_segments'
         % interpolate segments based on selected triggers
         result = proj_eeglab_subject_interpolate_segments(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
-       
-  
-    
+        
+        
+        
     case 'do_recover_raw'
         proj_eeglab_subject_recover_raw(project, 'list_select_subjects', list_select_subjects);
-     
         
-    case 'remove_space_event_label'        
+        
+    case 'remove_space_event_label'
         result = proj_eeglab_subject_remove_space_event_label(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
-
+        
         
     case 'do_testart'
         % allow testing some semi-automatic aritfact removal algorhithms
         result = proj_eeglab_subject_testart(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
+        
+    case 'do_recover_asr'
+        % allow testing some semi-automatic aritfact removal algorhithms
+        result = proj_eeglab_subject_recover_asr(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
+        
+        
+        
+    case 'do_cleanline'
+        % allow testing some semi-automatic aritfact removal algorhithms
+        result = proj_eeglab_subject_cleanline(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
+        
         
     case 'do_preproc'
         proj_eeglab_subject_preprocessing(project, 'list_select_subjects', list_select_subjects);
@@ -153,16 +171,16 @@ switch action_name
                 pause_resume_errors;
             end
         end
-    
+        
     case 'do_epoch_catcond'
         % global epoching around all conditions to do ica, epochs removal
         % on less data but more related to the experiment (automatically removes pauses and works around the triggers).
         % note that NO baseline correction is applied
         EEG = proj_eeglab_subject_epoching_catcond(project, 'list_select_subjects', list_select_subjects);
         
-     case 'mark_badepochs_catcond'    
+    case 'mark_badepochs_catcond'
         EEG = proj_eeglab_subject_mark_badepochs_catcond(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
-      
+        
     case 'do_ica'
         % do ica
         result = proj_eeglab_subject_ica(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
@@ -175,7 +193,7 @@ switch action_name
     case 'do_iclabel'
         % remove ics
         result = proj_eeglab_subject_iclabel(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
-   
+        
         
     case 'do_recover_ica'
         % do recover all ics
@@ -188,20 +206,20 @@ switch action_name
         
     case 'do_reref'
         % rereferencing
-        result = proj_eeglab_subject_reref(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);        
+        result = proj_eeglab_subject_reref(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
         
     case 'do_recover_ref'
         % rereferencing
-        result = proj_eeglab_subject_recover_ref(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);        
+        result = proj_eeglab_subject_recover_ref(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
         
     case 'do_subject_spectra'
         result = proj_eeglab_subject_spectra(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
-    
-   
+        
+        
         
     case 'do_subject_replot_spectra'
         result = proj_eeglab_subject_replot_spectra(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
-   
+        
         
     case 'do_mark_trial'
         % mark trial begin and end
@@ -217,29 +235,36 @@ switch action_name
         
     case 'do_rectify'
         % do preprocessing up to epochs: avgref, epochs, rmbase: create one trails dataset for each condition
-        result = proj_eeglab_subject_rectify_ch(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);    
-       
+        result = proj_eeglab_subject_rectify_ch(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
+        
+    case 'do_compute_hr'
+        % do preprocessing up to epochs: avgref, epochs, rmbase: create one trails dataset for each condition
+        result = proj_eeglab_subject_compute_hr(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
         
     case 'do_interpolate_channels'
         % do preprocessing up to epochs: avgref, epochs, rmbase: create one trails dataset for each condition
         result = proj_eeglab_subject_interpolate_channels(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
-       
+        
+    case 'do_export_data'
+        % do preprocessing up to epochs: avgref, epochs, rmbase: create one trails dataset for each condition
+        result = proj_eeglab_subject_export_data(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
+        
         
     case 'do_epochs'
         % do preprocessing up to epochs: avgref, epochs, rmbase: create one trails dataset for each condition
         result = proj_eeglab_subject_epoching(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
-    
+        
     case 'do_segments'
         result = proj_eeglab_subject_segmenting(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
-   
-      case 'do_subject_spectra_cond'
+        
+    case 'do_subject_spectra_cond'
         result = proj_eeglab_subject_spectra_cond(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
-      
+        
         
         
     case 'mark_badepochs'
         EEG = proj_eeglab_subject_mark_badepochs(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
-         
+        
     case 'do_handedness_epochs'
         % swap data according to handedness and to epoching
         result = proj_eeglab_subject_handedness_epoching(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
@@ -252,32 +277,52 @@ switch action_name
         
     case 'do_select_eeg_ch'
         result = proj_eeglab_subject_select_eeg_ch(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
-      
+        
     case 'do_recover_allch'
         result = proj_eeglab_subject_recover_allch(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
-      
+        
     case 'do_align_montages'
         result = proj_eeglab_subject_align_montages(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
         
     case 'do_export_ch4brainstorm'
         result = proj_eeglab_save_montage4brainstorm(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
         
-       
+        
+        
+        
         
     case 'do_extract_narrowband'
         result = proj_eeglab_subject_extract_narrowband(project, stat_analysis_suffix, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix, 'custom_input_folder', custom_input_folder);
-     
+        
+        
+    case 'do_darbeliai_export2ragu'
+        result = proj_eeglab_subject_darbeliai_export2ragu(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
+        
+    case 'do_ragu'
+        result = proj_eeglab_subject_ragu(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
+        
+        
+    case 'do_subject_erp_curve'
+        result = proj_eeglab_subject_erp_curve(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
+        
+    case 'do_subject_erp_topo'
+        result = proj_eeglab_subject_erp_topo(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
+        
+    case 'do_subject_ersp_tf'
+        result = proj_eeglab_subject_ersp_tf(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
+        
+        
         %% ===================================================================================================================================================================
         % MICROSTATES
         %===================================================================================================================================================================
     case 'do_microstates'
-        result = proj_eeglab_subject_microstates(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);        
-       
-       %% export erp single trial
+        result = proj_eeglab_subject_microstates(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
+        
+        %% export erp single trial
     case 'export_trial_erp_mean'
-       
-       result = proj_eeglab_subject_export_trial_erp_mean(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
-
+        
+        result = proj_eeglab_subject_export_trial_erp_mean(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
+        
         
         %% ===================================================================================================================================================================
         % STUDY CREATION & DESIGN
@@ -390,16 +435,16 @@ switch action_name
         proj_eeglab_study_plot_roiemg_erp_curve(project, stat_analysis_suffix, project.postprocess.erp.mode.tw_individual_align, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
         
         
-%     case 'study_define_roi_tw_datadriven'
-%         proj_eeglab_study_define_roi_tw_datadriven(project, stat_analysis_suffix, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
-%         
+        %     case 'study_define_roi_tw_datadriven'
+        %         proj_eeglab_study_define_roi_tw_datadriven(project, stat_analysis_suffix, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
+        %
     case 'study_erp_define_roi_tw_datadriven'
         proj_eeglab_study_erp_define_roi_tw_datadriven(project, stat_analysis_suffix, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
-    
+        
     case 'study_ersp_define_roi_tw_datadriven'
         proj_eeglab_study_ersp_define_roi_tw_datadriven(project, stat_analysis_suffix, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
         
-    
+        
         %% -------------------------------------------------------------------------------------------
         % ERP_TOPO_TW
         %--------------------------------------------------------------------------------------------
@@ -448,7 +493,7 @@ switch action_name
         % perform (and save) additional statistics based on individual subjects within time windows,
         % adjusting the group time windows to time windws which are re-aligned to the latencies of time window extrema
         proj_eeglab_study_plot_erp_topo_tw(project, stat_analysis_suffix, project.postprocess.erp.mode.tw_individual_align, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects,'display_compact_topo','on' );
-      
+        
     case  'plot_erp_headplot_tw'
         % perform a topo plot in 3D
         proj_eeglab_study_plot_erp_headplot_tw(project, stat_analysis_suffix, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
@@ -503,13 +548,13 @@ switch action_name
     case 'study_plot_roi_ersp_tf_tw_fb'
         % time-frequency distribution freely binned in the frequency and/or in the time domain
         proj_eeglab_study_plot_roi_ersp_tf(project, stat_analysis_suffix,'ersp_tf_resolution_mode','tw_fb' , 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
-       
         
         
-        case 'study_plot_ersp_tf_fb_baseline'
+        
+    case 'study_plot_ersp_tf_fb_baseline'
         % continuous
         proj_eeglab_study_plot_ersp_tf_fb_baseline(project, stat_analysis_suffix,'ersp_tf_resolution_mode','continuous' , 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
-   
+        
         
         
         %% ------------------------------------------------------------------------------------------
@@ -524,15 +569,15 @@ switch action_name
         % continuous
         proj_eeglab_study_plot_roi_ersp_curve_fb(project, stat_analysis_suffix, project.postprocess.ersp.mode.continous, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
         
-%     case 'study_plot_roi_ersp_curve_continous_alignt0'
-%         % continuous
-%         proj_eeglab_study_plot_roi_ersp_curve_fb_alignt0(project, stat_analysis_suffix, project.postprocess.ersp.mode.continous, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
-
+        %     case 'study_plot_roi_ersp_curve_continous_alignt0'
+        %         % continuous
+        %         proj_eeglab_study_plot_roi_ersp_curve_fb_alignt0(project, stat_analysis_suffix, project.postprocess.ersp.mode.continous, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
+        
         
     case 'study_plot_roi_ersp_curve_tw_individual_noalign'
         % perform (and save) statistics based on individual subjects within time windows
         proj_eeglab_study_plot_roi_ersp_curve_fb(project, stat_analysis_suffix, project.postprocess.ersp.mode.tw_individual_noalign, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
-    
+        
         
         
     case 'study_plot_roi_ersp_curve_continous_standard'
@@ -691,11 +736,11 @@ switch action_name
         
     case 'study_plot_allch_ersp_curve_fb_time'
         proj_eeglab_study_plot_allch_ersp_curve_fb_time(project, stat_analysis_suffix, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
-    
+        
     case 'study_plot_allch_ersp_curve_fb_baseline'
         proj_eeglab_study_plot_allch_ersp_curve_fb_baseline(project, stat_analysis_suffix, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
         
-   
+        
 end
 %     catch err
 %         % This "catch" section executes in case of an error in the "try" section

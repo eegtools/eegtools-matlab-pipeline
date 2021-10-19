@@ -5,7 +5,7 @@
 % 2) '_sr' : it makes ICA over data after segments removal
 %
 %%
-function EEG = proj_eeglab_subject_iclabel(project, varargin)
+function EEG = proj_eeglab_subject_rectify_ch(project, varargin)
 
 
 
