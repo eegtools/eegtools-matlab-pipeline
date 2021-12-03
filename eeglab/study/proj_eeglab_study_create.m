@@ -43,36 +43,62 @@ STUDY = []; CURRENTSTUDY = 0; ALLEEG = []; EEG=[]; CURRENTSET=[];
 %% create the study with the epoched data of all subjects
 % load each epochs set file (subject and condition) into the study structure
 % of EEGLab
-for grp=1:length(group_list)
-    for subj=1:length(group_list{grp})
-        for cond=1:length(condition_names)
-            
-            setname=[project.import.original_data_prefix group_list{grp}{subj} project.import.original_data_suffix import_out_suffix project.epoching.input_suffix '_'  condition_names{cond} '.set'];
-            fullsetname=fullfile(epochs_path,setname,'');
-            
-            
-            if exist(fullsetname,'file')
+
+old = 0;
+
+if old
+    for grp=1:length(group_list)
+        for subj=1:length(group_list{grp})
+            for cond=1:length(condition_names)
                 
-%                 EEG = pop_loadset(fullsetname);
-%                 if EEG.trials>1 && not(isempty(EEG.epoch)) controllo
-%                 integrità, rimosso perchè imposto che vengano epocati e
-%                 salvati solo file con almenno 2 epoche (altrimenti per
-%                 eeglab quando costruisce lo studio sembrano dataset non
-%                 epocati ma continui, per cui impedisce di estrarre info
-%                 dagli eventi che bloccano la possibilità di creare design
-%                 definiti dall'add factor
+                setname=[project.import.original_data_prefix group_list{grp}{subj} project.import.original_data_suffix import_out_suffix project.epoching.input_suffix '_'  condition_names{cond} '.set'];
+                fullsetname=fullfile(epochs_path,setname,'');
+                
+                
+                if exist(fullsetname,'file')
+                    
+                    %                 EEG = pop_loadset(fullsetname);
+                    %                 if EEG.trials>1 && not(isempty(EEG.epoch)) controllo
+                    %                 integrità, rimosso perchè imposto che vengano epocati e
+                    %                 salvati solo file con almenno 2 epoche (altrimenti per
+                    %                 eeglab quando costruisce lo studio sembrano dataset non
+                    %                 epocati ma continui, per cui impedisce di estrarre info
+                    %                 dagli eventi che bloccano la possibilità di creare design
+                    %                 definiti dall'add factor
                     cmd={'index' nset 'load' fullsetname 'subject' group_list{grp}{subj} 'session' 1 'condition' condition_names{cond} 'group' group_names{grp}};
-                    commands=[commands, cmd];
+                    commands=[commands, {cmd}];
                     nset=nset+1;
-%                 end
+                    %                 end
+                end
             end
         end
     end
-end
-[STUDY, ALLEEG] = std_editset( STUDY, ALLEEG, 'name' ,study_name, 'commands',commands,'updatedat','on','savedat','on' );
-CURRENTSTUDY = 1; EEG = ALLEEG; CURRENTSET = [1:length(EEG)];
+    [STUDY, ALLEEG] = std_editset( STUDY, ALLEEG, 'name' ,study_name, 'commands',commands,'updatedat','on','savedat','on' );
+    CURRENTSTUDY = 1; EEG = ALLEEG; CURRENTSET = [1:length(EEG)];
+    
+    %% save study on file
+    [STUDY, ALLEEG] = std_checkset(STUDY, ALLEEG);
+    [STUDY, EEG] = pop_savestudy( STUDY, EEG, 'filename',[study_name_noext '.study'],'filepath',study_folder);
+    
+else
+    set_cell = {};
+    for grp=1:length(group_list)
+        for subj=1:length(group_list{grp})
+            for cond=1:length(condition_names)                
+                setname=[project.import.original_data_prefix group_list{grp}{subj} project.import.original_data_suffix import_out_suffix project.epoching.input_suffix '_'  condition_names{cond} '.set'];
+                fullsetname=fullfile(epochs_path,setname,'');    
+                if exist(fullsetname,'file')
+                    set_cell = [set_cell,setname];
+                end
+            end
+        end
+    end
+    STUDY = []; CURRENTSTUDY = 0; ALLEEG = []; EEG=[]; CURRENTSET=[];    
+    EEG = pop_loadset('filename',set_cell,'filepath',epochs_path);
+    [ALLEEG EEG CURRENTSET] = pop_newset(ALLEEG, EEG, 0,'study',0);
+    [STUDY ALLEEG] = std_editset( STUDY, ALLEEG, 'name',[study_name_noext '.study'],'updatedat','on','savedat','on','rmclust','off' );
+    [STUDY ALLEEG] = std_checkset(STUDY, ALLEEG);
+    [STUDY, EEG] = pop_savestudy( STUDY, EEG, 'filename',[study_name_noext '.study'],'filepath',study_folder);
 
-%% save study on file
-[STUDY, ALLEEG] = std_checkset(STUDY, ALLEEG);
-[STUDY, EEG] = pop_savestudy( STUDY, EEG, 'filename',[study_name_noext '.study'],'filepath',study_folder);
+end
 end

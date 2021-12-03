@@ -38,7 +38,8 @@ end
 if not(iscell(list_select_subjects)), list_select_subjects = {list_select_subjects}; end
 numsubj = length(list_select_subjects);
 
-
+allsub_groups =  {project.subjects.data.group};
+allsub_names = {project.subjects.data.name};
 eeglab_channels_file    = project.eegdata.eeglab_channels_file_path;
 % --------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -65,6 +66,8 @@ tlab = length(project.import.file_label);
 for subj=1:numsubj
     
     subj_name               = list_select_subjects{subj};
+    sel_group = ismember(allsub_names,subj_name);
+
     
     file_list = dir([project.paths.original_data,'/*.' project.import.original_data_extension]);
     
@@ -407,7 +410,12 @@ for subj=1:numsubj
                     %             end
                     %             EEG=pop_chanedit(EEG, 'lookup',eeglab_channels_file);
                     %             EEG = eeg_checkset( EEG );
-                    
+                   
+               case 'SMARTING'
+                   EEG = pop_loadxdf(input_file_name, 'streamtype', 'EEG', 'exclude_markerstreams', {});
+                   EEG=pop_chanedit(EEG, 'lookup',eeglab_channels_file);
+                   EEG = eeg_checkset( EEG );
+                                        
                 otherwise
                     error(['unrecognized device (' project.import.acquisition_system ')']);
             end
@@ -468,14 +476,19 @@ for subj=1:numsubj
     
     % global filtering
     if project.import.do_global_notch
-        EEG = proj_eeglab_subject_filter(EEG, project, 'global', 'bandstop');
-        EEG = eeg_checkset( EEG );
+        OUTEEG = proj_eeglab_subject_filter(OUTEEG, project, 'global', 'bandstop');
+        OUTEEG = eeg_checkset( OUTEEG );
     end
     
     if project.import.do_global_bandpass
-        EEG = proj_eeglab_subject_filter(EEG, project, 'global', 'bandpass');
-        EEG = eeg_checkset( EEG );
+        OUTEEG = proj_eeglab_subject_filter(OUTEEG, project, 'global', 'bandpass');
+        OUTEEG = eeg_checkset( OUTEEG );
     end
+    
+    
+    
+    
+    
     
     %     % global filtering
     %
@@ -487,9 +500,20 @@ for subj=1:numsubj
     %===============================================================================================
     % CHECK & SAVE
     %===============================================================================================
-    OUTEEG                     = eeg_checkset( OUTEEG );
     output_file_name        = proj_eeglab_subject_get_filename(project, subj_name, 'output_import_data');
     [path,name_noext,ext]   = fileparts(output_file_name);
+    
+    OUTEEG.setname = [name_noext];
+    OUTEEG.filename = [name_noext,ext];
+    OUTEEG.filepath = path;
+    OUTEEG.subject = subj_name;
+    OUTEEG.group = allsub_groups{sel_group};
+    OUTEEG.condition = 'unsegmented';
+    OUTEEG.session = 1;
+    
+    OUTEEG                     = eeg_checkset( OUTEEG );
+
+    
     OUTEEG                     = pop_saveset( OUTEEG, 'filename', name_noext, 'filepath', path);
     OUTEEG                     = pop_saveset( OUTEEG, 'filename', [name_noext,'_raw'], 'filepath', path);
     

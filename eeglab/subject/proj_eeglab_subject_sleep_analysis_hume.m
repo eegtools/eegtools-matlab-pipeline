@@ -90,6 +90,14 @@ for subj=1:numsubj
     load(stagedata_path);
     
     
+    % creo campi custom per gestire parametri
+    stageData.Flims_global = project.sleep.hume.stageData.Flims_global;%[.05 20];
+    stageData.Flims_delta = project.sleep.hume.stageData.Flims_delta;%[.5 4.75];
+    stageData.Flims_sigma = project.sleep.hume.stageData.Flims_sigma;%[.05 20];
+    stageData.project = project;
+    stageData.spect_win = project.sleep.hume.stageData.spect_win;% wi
+    
+    
     %% sleep analysis using hume functions
     all_output = [];
     if(not((project.sleep.hume.reset_detection)))
@@ -155,6 +163,18 @@ for subj=1:numsubj
     stageStatsdir = fullfile(project.paths.project, 'hume',EEG.filename(1:end-4));
     stageStats_path = fullfile(stageStatsdir,[EEG.filename(1:end-4),'_stats.mat']);
     load(stageStats_path);
+    
+    
+     % creo campi custom per gestire parametri
+    stageStats.stageData.Flims_global = project.sleep.hume.stageData.Flims_global;%[.05 20];
+    stageStats.stageData.Flims_delta = project.sleep.hume.stageData.Flims_delta;%[.5 4.75];
+    stageStats.stageData.Flims_sigma = project.sleep.hume.stageData.Flims_sigma;%[.05 20];
+    stageStats.stageData.project = project;
+    stageStats.stageData.spect_win = project.sleep.hume.stageData.spect_win;% wi
+    
+    save(stageStats_path,'stageStats');
+
+    
     
     tot_ch_spectrogram = length(project.sleep.hume.spectrogram.channelLabels);
     for nch = 1:tot_ch_spectrogram

@@ -51,13 +51,19 @@ for par=1:2:length(varargin)
     end
 end
 
+allsub_groups =  {project.subjects.data.group};
+allsub_names = {project.subjects.data.name};
+
+
 if not(iscell(list_select_subjects)), list_select_subjects = {list_select_subjects}; end
 numsubj = length(list_select_subjects);
 % -------------------------------------------------------------------------------------------------------------------------------------
 
 for subj=1:numsubj
     
-    subj_name                   = list_select_subjects{subj};
+    subj_name                   = list_select_subjects{subj};    
+    sel_group = ismember(allsub_names,subj_name);
+
     
     input_file_name             = proj_eeglab_subject_get_filename(project, subj_name, get_filename_step, 'custom_suffix', custom_suffix, 'custom_input_folder', custom_input_folder);
 %     EEG                         = pop_loadset(input_file_name);
@@ -138,6 +144,15 @@ for subj=1:numsubj
                     
                     output_file_name    = proj_eeglab_subject_get_filename(project, subj_name, 'output_epoching', 'cond_name', mark_cond_names{cond},'custom_suffix', custom_suffix);
                     [path, out]         = fileparts(output_file_name);
+                    
+                    EEG2.setname = out;
+                    EEG2.filename = out;
+                    EEG2.filepath = path;
+                    EEG2.subject = subj_name;
+                    EEG2.group = allsub_groups{sel_group};
+                    EEG2.condition = mark_cond_names{cond};
+                    EEG2.session = 1;
+                    
                     EEG2                = pop_saveset(EEG2, 'filename', out, 'filepath', path);
                     clear EEG2
                 end
@@ -156,6 +171,16 @@ for subj=1:numsubj
                     
                     output_file_name    = proj_eeglab_subject_get_filename(project, subj_name, 'output_epoching', 'cond_name', mark_cond_names{cond},'custom_suffix', custom_suffix);
                     [path, out]         = fileparts(output_file_name);
+                    
+                    
+                    EEG2.setname = out;
+                    EEG2.filename = out;
+                    EEG2.filepath = path;
+                    EEG2.subject = subj_name;
+                    EEG2.group = allsub_groups{sel_group};
+                    EEG2.condition = mark_cond_names{cond};
+                    EEG2.session = 1;
+                    
                     EEG2                = pop_saveset(EEG2, 'filename', out, 'filepath', path);
                     clear EEG2
                 end
@@ -224,6 +249,15 @@ for subj=1:numsubj
                     
                     output_file_name    = proj_eeglab_subject_get_filename(project, subj_name, 'output_epoching', 'cond_name', mark_cond_names{cond},'custom_suffix', custom_suffix);
                     [path, out]         = fileparts(output_file_name);
+                    
+                    EEG2.setname = out;
+                    EEG2.filename = out;
+                    EEG2.filepath = path;
+                    EEG2.subject = subj_name;
+                    EEG2.group = allsub_groups{sel_group};
+                    EEG2.condition = mark_cond_names{cond};
+                    EEG2.session = 1;
+                    
                     EEG2                = pop_saveset(EEG2, 'filename', out, 'filepath', path);
                     clear EEG2
                 end
@@ -258,6 +292,16 @@ for subj=1:numsubj
                     
                     output_file_name    = proj_eeglab_subject_get_filename(project, subj_name, 'output_epoching', 'cond_name', mark_cond_names{cond},'custom_suffix', custom_suffix);
                     [path, out]         = fileparts(output_file_name);
+                    
+                    
+                    EEG2.setname = out;
+                    EEG2.filename = out;
+                    EEG2.filepath = path;
+                    EEG2.subject = subj_name;
+                    EEG2.group = allsub_groups{sel_group};
+                    EEG2.condition = mark_cond_names{cond};
+                    EEG2.session = 1;
+                    
                     EEG2                = pop_saveset(EEG2, 'filename', out, 'filepath', path);
                     clear EEG2
                 end

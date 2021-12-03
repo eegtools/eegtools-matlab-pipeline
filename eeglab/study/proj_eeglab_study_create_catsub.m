@@ -27,6 +27,8 @@ if nargin < 1
     return;
 end
 
+old = 0;
+
 study_name          = project.study.filename;
 epochs_path         = project.paths.output_epochs;
 condition_names     = project.epoching.condition_names;
@@ -107,6 +109,14 @@ if project.study.catsub.reconcatenate
                 OUTEEG = pop_mergeset( ALLEEG2, 1:length(ALLEEG2), 1 );
                 OUTEEG.icaact=[];
                 
+                OUTEEG.setname = setname2(1:end-4);
+                OUTEEG.filename = setname2;
+                OUTEEG.filepath = epochs_path;
+                OUTEEG.subject = group_list{grp}{subj};
+                OUTEEG.group = group_names{grp};
+                OUTEEG.condition = 'all';
+                OUTEEG.session = 1;
+                
                 OUTEEG = eeg_checkset(OUTEEG);
                 OUTEEG = pop_saveset(OUTEEG, 'filename', setname2, 'filepath', epochs_path);
             else
@@ -125,30 +135,53 @@ end
 %% create the study with the epoched data of all subjects
 % load each epochs set file (subject and condition) into the study structure
 % of EEGLab
-for grp=1:length(group_list)
-    for subj=1:length(group_list{grp})
-        %         for cond=1:length(condition_names)
-        
-        setname2=[project.import.original_data_prefix group_list{grp}{subj} project.import.original_data_suffix import_out_suffix project.epoching.input_suffix '_catsub.set'];
-        fullsetname2=fullfile(epochs_path,setname2,'');
-        
-        if exist(fullsetname2,'file')
+
+if old
+    for grp=1:length(group_list)
+        for subj=1:length(group_list{grp})
+            %         for cond=1:length(condition_names)
             
-            cmd={'index' nset 'load' fullsetname2 'subject' group_list{grp}{subj} 'session' 1 'condition' 'all' 'group' group_names{grp}};
-            commands=[commands, cmd];
-            nset=nset+1;
+            setname2=[project.import.original_data_prefix group_list{grp}{subj} project.import.original_data_suffix import_out_suffix project.epoching.input_suffix '_catsub.set'];
+            fullsetname2=fullfile(epochs_path,setname2,'');
+            
+            if exist(fullsetname2,'file')
+                
+                cmd={'index' nset 'load' fullsetname2 'subject' group_list{grp}{subj} 'session' 1 'condition' 'all' 'group' group_names{grp}};
+                commands=[commands, {cmd}];
+                nset=nset+1;
+            end
+            %             end
         end
-        %             end
     end
+    [STUDY, ALLEEG] = std_editset( STUDY, ALLEEG, 'name' ,study_name, 'commands',commands,'updatedat','on','savedat','on' );
+    CURRENTSTUDY = 1; EEG = ALLEEG; CURRENTSET = [1:length(EEG)];
+    
+    %% save study on file
+    [STUDY, ALLEEG] = std_checkset(STUDY, ALLEEG);
+    % [STUDY, EEG] = pop_savestudy( STUDY, EEG, 'filename',[study_name_noext '_catsub.study'],'filepath',study_folder);
+    [STUDY, EEG] = pop_savestudy( STUDY, EEG, 'filename',[study_name_noext '.study'],'filepath',study_folder);
+
+    
+else
+    set_cell = {};
+    for grp=1:length(group_list)
+        for subj=1:length(group_list{grp})
+            setname2=[project.import.original_data_prefix group_list{grp}{subj} project.import.original_data_suffix import_out_suffix project.epoching.input_suffix '_catsub.set'];
+            fullsetname2=fullfile(epochs_path,setname2,'');
+            if exist(fullsetname2,'file')
+                set_cell = [set_cell,setname2];
+            end
+        end
+    end
+    
+    STUDY = []; CURRENTSTUDY = 0; ALLEEG = []; EEG=[]; CURRENTSET=[];    
+    EEG = pop_loadset('filename',set_cell,'filepath',epochs_path);
+    [ALLEEG EEG CURRENTSET] = pop_newset(ALLEEG, EEG, 0,'study',0);
+    [STUDY ALLEEG] = std_editset( STUDY, ALLEEG, 'name',[study_name_noext '.study'],'updatedat','on','savedat','on','rmclust','off' );
+    [STUDY ALLEEG] = std_checkset(STUDY, ALLEEG);
+    [STUDY, EEG] = pop_savestudy( STUDY, EEG, 'filename',[study_name_noext '.study'],'filepath',study_folder);
+
+
 end
-
-[STUDY, ALLEEG] = std_editset( STUDY, ALLEEG, 'name' ,study_name, 'commands',commands,'updatedat','on','savedat','on' );
-CURRENTSTUDY = 1; EEG = ALLEEG; CURRENTSET = [1:length(EEG)];
-
-%% save study on file
-[STUDY, ALLEEG] = std_checkset(STUDY, ALLEEG);
-% [STUDY, EEG] = pop_savestudy( STUDY, EEG, 'filename',[study_name_noext '_catsub.study'],'filepath',study_folder);
-[STUDY, EEG] = pop_savestudy( STUDY, EEG, 'filename',[study_name_noext '.study'],'filepath',study_folder);
-
 end
 

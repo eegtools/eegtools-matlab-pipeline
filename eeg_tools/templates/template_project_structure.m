@@ -619,6 +619,148 @@ project.ica.ica_sr = 125; % deve essere almeno il doppio della max frequenza che
 % relative to the beginning of the continuous data matrix (EEG.data).
 
    
+%% AMICA
+% https://sccn.ucsd.edu/githubwiki/files/eeg_nonstationarity_and_amica.pdf
+% https://sccn.ucsd.edu/~jason/amica_web.html
+% https://sccn.ucsd.edu/~jason/amica_help.html
+
+
+% Outputs: (if run locally)
+%
+%   weights        weights matrix (num_pcs x num_pcs)
+%   sphere         sphering matrix (num_pcs x chans)
+%   mods           output model data structure, see help loadmodout15()
+%
+% Optional keyword inputs:
+%
+%   outdir              name of directory to write output (does not have to exist), def=pwd/amicaouttmp/
+%   indir               optional input directory from which to load init
+%   num_chans           number of channels in data (only needed if dat input is a filename)
+%   num_models          number of models to learn, default = 1
+%   num_mix_comps       number of mixture components in source model, def=3
+%   max_iter            maximum number of iterations to perform, def=2000
+%   lrate               initial learning rate for natural gradient, def=0.1
+%   share_comps         flag to share components when num_models > 1, def=0
+%   comp_thresh         correlation threshold to share component, def=0.99
+%   share_start         iteration to start looking for shared components, def=100
+%   share_int           number of iterations between sharing checks, def=100
+%   do_history          save a record of the paramter values over iterations def=0
+%   histstep            iteration interval at which to save for history, def=10
+%   use_queue           name of queue to use, def=all.q. Use 'use_queue',0 to run locally
+%   numprocs            number or processors (slots) to use in qsub, def=8
+%   max_threads         maximum number of threads to use if run locally, def=4
+%   lratefact           multiplicative factor by which to decrease lrate, def=0.5
+%   minlrate            lrate after which to stop, def=1e-8
+%   rholrate            initial lrate for shape parameters, def=0.05
+%   rho0                initial shape parameter value, def=1.5
+%   minrho              minimum shape parameter value, def=1.0
+%   maxrho              maximum shape parameter value, def=2.0
+%   rholratefact        multiplicative factor by which to dec rholrate, def=0.5
+%   do_newton           flag for newton method, default = 1 (do newton)
+%   newt_start          for newton method, iter at which to start newton, def=50
+%   newtrate            for newton method, lrate for newton iterations, def=1.0
+%   newt_ramp           for newton method, number of iter to ramp up to newtrate, def=10
+%   writestep           iteration interval between output writes, def=10
+%   write_nd            flag to write history of component update norms, def=1
+%   write_llt           flag to write model log likelihoods of time points, def=1
+%   do_reject           flag for doing rejection of time points, def=0
+%   numrej              for rejection, number of rejections to perform, def=3
+%   rejsig              for rejection, number of standard dev of likelihood
+%                           below which to reject data
+%   rejstart            for rejection, iteration at which to start reject, def=3
+%   rejint              for rejection, iteration interval between reject, def=3
+%   kurt_start          for ext. infomax, iter to start kurtosis calc, def=3
+%   num_kurt            for ext. infomax, number of kurtosis calc, def=5
+%   kurt_int            for ext. infomax, iteration interval between calc, def=1
+%   decwindow           moving average window to detect likelihood decrease, def=1
+%   update_A            flag to update mixing matrices, def=1
+%   update_c            flag to update model centers, def=1
+%   update_gamma        flag to update model probabilities, def=1
+%   update_alpha        flag to update source mixture proportions, def=1
+%   update_mu           flag to update source mixture mixture locations, def=1
+%   update_sbeta        flag to update source mixture scales, def=1
+%   invsigmax           maximum value of inverse scale parameters, def=100.0
+%   invsigmin           minimum value of inverse scale parameters, def=0.00001
+%   do_rho              flag to update shape parameters, def=1
+%   load_comp_list      flag to load component assignment list, def=0
+%   load_rej            flag to load LLt to get rejections from, def=0
+%   load_param          flag to load parameters, def=0
+%   do_mean             flag to remove mean from data, def=1
+%   do_sphere           flag to sphere data before ica, def=1
+%   doPCA               flag to to PCA dimensionality reduction, def=1
+%   pcakeep             for PCA reduction, number of components to keep, def=chans
+%   doscaling           flag to rescale unmixing matrix rows to unit norm, def=1
+%   scalestep           iteration interval at which to rescale unmixing rows, def=1
+%
+% Outputs:
+%   
+%   To load output use the function loadmodout() after job ends:
+%                         
+%       mods = loadmodout15(outdir);
+%
+%   mods is a structure containing the output components and density models. mods.A(:,:,h) is the components for model h.
+%   mods.varord(:,h) is the index order of the components in variance order, mods.Lht is the likelihood of time
+%   points for each model (if set), mods.LL is the history of the log likelihood over iterations, mods.c(:,h)
+%   is the center for model h, mods.W(:,:,h) is the unmixing matrix for model h, and mods.S is the sphering matrix.
+%
+  project.amica.num_chans            = [];
+  project.amica.num_models           = [];
+  project.amica.num_mix_comps        = [];
+  project.amica.max_iter             = [];
+  project.amica.lrate                = [];
+  project.amica.share_comps          = [];
+  project.amica.comp_thresh          = [];
+  project.amica.share_start          = [];
+  project.amica.share_int            = [];
+  project.amica.do_history           = [];
+  project.amica.histstep             = [];
+  project.amica.use_queue            = [];
+  project.amica.numprocs             = [];
+  project.amica.max_threads          = [];
+  project.amica.lratefact            = [];
+  project.amica.minlrate             = [];
+  project.amica.rholrate             = [];
+  project.amica.rho0                 = [];
+  project.amica.minrho               = [];
+  project.amica.maxrho               = [];
+  project.amica.rholratefact         = [];
+  project.amica.do_newton            = [];
+  project.amica.newt_start           = [];
+  project.amica.newtrate             = [];
+  project.amica.newt_ramp            = [];
+  project.amica.writestep            = [];
+  project.amica.write_nd             = [];
+  project.amica.write_llt            = [];
+  project.amica.do_reject            = [];
+  project.amica.numrej               = [];
+  project.amica.rejsig               = [];                          
+  project.amica.rejstart             = [];
+  project.amica.rejint               = [];
+  project.amica.kurt_start           = [];
+  project.amica.num_kurt             = [];
+  project.amica.kurt_int             = [];
+  project.amica.decwindow            = [];
+  project.amica.update_A             = [];
+  project.amica.update_c             = [];
+  project.amica.update_gamma         = [];
+  project.amica.update_alpha         = [];
+  project.amica.update_mu            = [];
+  project.amica.update_sbeta         = [];
+  project.amica.invsigmax            = [];
+  project.amica.invsigmin            = [];
+  project.amica.do_rho               = [];
+  project.amica.load_comp_list       = [];
+  project.amica.load_rej             = [];
+  project.amica.load_param           = [];
+  project.amica.do_mean              = [];
+  project.amica.do_sphere            = [];
+  project.amica.doPCA                = [];
+  project.amica.pcakeep              = [];
+  project.amica.doscaling            = [];
+  project.amica.scalestep            = [];
+
+
+
 %% ICLABEL
 
 %  pop_icflag - Flag components as atifacts

@@ -46,8 +46,14 @@ function [SWMat] = massimimi_sw_detection(Cz,fs,stages, win)
 
 %% Bandpass filter from 11-15 Hz and rectify filtered signal
  BandFilteredData = bandpass_filter_massimimi(Cz,fs);
- data = BandFilteredData;
- pos_index=zeros(length(BandFilteredData),1);
+ data = BandFilteredData; % filtro inziale per togliere rumore sui ricerca picchi e valli (tipicamente filtro manendo banda delta)
+ 
+ % lavoro sia sul segnale, sia sulla derivata: 
+ % sui dati grezzi (segnale filtrato) cerco di individuare i punti di intersezione con zero, per iniziare a delimitare le onde 
+ % derviata: quando  zero vuol  dire che sono su un estremo, quando ho il
+ % primo valore positivo è inizio fronte di salita, primo valore negativo
+ % inizio fronte discesa
+    pos_index=zeros(length(BandFilteredData),1);
     pos_index(find(data>0))=1; %index of all positive points for EEG
     difference=diff(pos_index); poscross=find(difference==1) ; negcross=find(difference==-1); %find neg ZX and pos ZX
     EEGder=diff(data); %derivative to find peaks / depending on the filtering you may need to smooth with a moving average
@@ -60,6 +66,9 @@ function [SWMat] = massimimi_sw_detection(Cz,fs,stages, win)
     if start==2;poscross(1)=[];end
     lastpk=NaN; %way to look at Peak to Peak parameters if needed
     endx = length(negcross)-1;
+    
+    % inizio a ciclare sulle candidate SW
+    
 for wndx=start:endx
         wavest=negcross(wndx); %only used for neg/pos peaks
         wavend=negcross(wndx+1); %only used for neg/pos peaks
@@ -75,6 +84,12 @@ for wndx=start:endx
         wavend=wavend; %matrix(8)
         period=(wavend-wavest)/fs; %matrix(11) /Fs
         poszx=poscross(wndx); %matrix(10)
+        
+        % NOTA:qui colloco il picco/valle corrente nell'arco dell'intera
+        % notte, cioè identifico la sua collocazione temporale (latenza)
+        % sul perido della notte, NON cerco il picco più negativo della
+        % notte CHE NON SERVE A UN CAZZO!
+        
         b=min(data(negpeaks)); % matrix (12) most neg peak /abs for matrix
         bx=negpeaks(data(negpeaks)==b); %matrix (13) max neg peak location in entire night
         c=max(data(pospeaks)); % matrix (14) most pos peak
@@ -89,6 +104,10 @@ for wndx=start:endx
         p1x=pospeaks(1); %matrix(22) 1st pos peak location
         meanNegAmp=abs(mean(data(negpeaks))); %matrix(23)
         meanPosAmp=abs(mean(data(pospeaks)));
+        
+        % Half-waves were deﬁned as positive or negative deﬂections between consecutive zero crossings in the 0.5–2 Hz range of the band-pass ﬁltered EEG
+        % https://onlinelibrary.wiley.com/doi/epdf/10.1111/j.1365-2869.2009.00775.x       
+        
         nperiod=(poszx-wavest); %matrix (25)neghalfwave period
         mdpt=wavest+ceil(nperiod/2); %matrix(9)
         epoch=ceil(bx/(fs*win)); %matrix(1)
@@ -96,6 +115,8 @@ for wndx=start:endx
         p2p=(cx-lastpk)/fs; %matrix(26) 1st peak to last peak period
         lastpk=cx;
         
+        % identifico l'epoca (in epoche da 30 secondi) che contiene la SW
+        % corrente
         SW.epoch = epoch ;
         if max(epoch) > length(stages)
             sel_epoch = epoch <= length(stages);
@@ -103,7 +124,9 @@ for wndx=start:endx
 %             SWMat = [];
 %             return
         end
-            
+         
+        % identifico lo stadio dell'epoca corrente (la stadiazione viene
+        % fatta sulle epoche di 30 secondi)
         SW.stage = stages(epoch);
 %         SW.stage = reject_stage(epoch, 1);
 %         SW.cycle = nremp(epoch);
@@ -114,6 +137,9 @@ for wndx=start:endx
         SW.WaveStart = wavest;
         SW.WaveEnd = wavend;
         SW.p2pAmp = maxb2c;
+        
+        % Half-waves were deﬁned as positive or negative deﬂections between consecutive zero crossings in the 0.5–2 Hz range of the band-pass ﬁltered EEG
+        % https://onlinelibrary.wiley.com/doi/epdf/10.1111/j.1365-2869.2009.00775.x
         SW.negPeakAmp = b;
         SW.negPeakX = bx;
         SW.posPeakAmp = c;
@@ -122,11 +148,22 @@ for wndx=start:endx
         SW.downSlope = mxdn;
         SW.upSlope = mxup;
         SW.fs = fs;
+        
+        % imbelino la struttura con le caratteristiche di ogni SW in una
+        % struttura globale con tutte le SW
+        
         SWMat(wndx) = SW;
         
 end
 
+% pruning: sull'half period
 % select only SW with half-period .25s - 1 s
+
+% pruning su ampiezza: deflessioni negative più forti di -80uV, ampiezza
+% picco picco almeno 140 uV
+
+% pruning sullo stadio del sonno: 2:4
+
 SWMat([SWMat.period]./fs < .25) = [];
 SWMat([SWMat.period]./fs > 1) = [];
 SWMat([SWMat.negPeakAmp] >= -80) = [];
@@ -137,12 +174,12 @@ SWMat([SWMat.stage] > 4) = [];
 %% Functions
     function out = bandpass_filter_massimimi(in,Fs)
    
-        Wp=[.5 4]/(Fs/2);
-        Ws=[.1 10]/(Fs/2);
-        Rp=3;
-        Rs=40;
-        [n, Wn]=cheb2ord(Wp,Ws,Rp,Rs);
-        [bbp, abp]=cheby2(n,Rs,Wn);
+        Wp=[.5 4]/(Fs/2); % banda in Hz che vogliamo preservare
+        Ws=[.1 10]/(Fs/2); % banda in Hz che vogliamo uccidere
+        Rp=3; % massimo accettabile (ordini di grandezza, dB) che venga uccisa la banda da preservare
+        Rs=40; % minimo accettabile (ordini di grandezza, dB) che venga mantenuta la banda da uccidere
+        [n, Wn]=cheb2ord(Wp,Ws,Rp,Rs); % stima ordine filtro ottimale
+        [bbp, abp]=cheby2(n,Rs,Wn); % filtro con ordine stimato, minimo accettabile (ordini di grandezza, dB) che venga mantenuta la banda da uccidere e vettore da applicare ai dati grezzi per ottenere segnale filtrato
         out=filtfilt_fast_hume(bbp, abp, in);
 %         out = decimate(out, floor(Fs/100));
     end

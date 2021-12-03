@@ -53,11 +53,18 @@ if not(strcmp(folder_loc,project.paths.eeglab))
 end
 
 
+allsub_groups =  {project.subjects.data.group};
+allsub_names = {project.subjects.data.name};
+
+
 % -------------------------------------------------------------------------------------------------------------------------------------
 
 for subj=1:numsubj
     
     subj_name               = list_select_subjects{subj};
+    sel_group = ismemmber(allsub_names,subj_name);
+
+    
     input_file_name         = proj_eeglab_subject_get_filename(project, subj_name, get_filename_step, 'custom_suffix', custom_suffix, 'custom_input_folder', custom_input_folder);
     [path,name_noext,ext]   = fileparts(input_file_name);
     
@@ -310,9 +317,13 @@ for subj=1:numsubj
             %          EEG = pop_readegi(input_file_name, [],[],'auto');
             %                 EEG = eeg_checkset( EEG );
             
-            
-            
-            
+            EEG.setname = [name_noext];
+            EEG.filename = [name_noext,ext];
+            EEG.filepath = path;            
+            EEG.subject = subj_name;
+            EEG.group = allsub_groups{sel_group};
+            EEG.condition = 'unsegmented';
+            EEG.session = 1;
             
             % global filtering
             if project.import.do_global_notch

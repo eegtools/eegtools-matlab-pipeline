@@ -230,6 +230,13 @@ for design_num=design_num_vec
     plot_dir                               = fullfile(results_path, analysis_name,[STUDY.design(design_num).name,'-ersp_curve_roi_',which_method_find_extrema,'-',str]);
     mkdir(plot_dir);
     
+    
+       if strcmp(do_narrowband,'ref')||strcmp(do_narrowband,'auto')
+           narrowband_dir                               = fullfile(plot_dir, 'narrowband_output');
+           mkdir(narrowband_dir);
+       end
+    
+    
     % lista dei soggetti suddivisi per fattori
     original_list_design_subjects                   = eeglab_generate_subjects_list_by_factor_levels(project,STUDY, design_num);
     eeglab_version = eeg_getversion;
@@ -320,7 +327,7 @@ for design_num=design_num_vec
             end
         end
         
-        
+        list_design_subjects = original_individual_fb_bands;
         
         %% select subjects
         if isempty(levels_f2)
@@ -387,6 +394,10 @@ for design_num=design_num_vec
             
             ersp_curve_roi_fb=[];
             if isempty(levels_f2)
+                
+                narrowband_struct = [];
+                nns = 1;
+                
                 for nf1=1:length(levels_f1)
                         subjs = length(individual_fb_bands{nf1,1});
                         for nsub=1:subjs
@@ -473,14 +484,14 @@ for design_num=design_num_vec
                             end
                             %                     end
                             
-                            narrowband_output.adjusted_frequency_band{nf1,1}(nsub,:)          = [narrowband_output.results.sub.fmin, narrowband_output.results.sub.fmax];
-                            narrowband_output.realign_freq{nf1,1}(nsub)                       = narrowband_output.results.sub.realign_freq;
-                            narrowband_output.realign_freq_value{nf1,1}(nsub)                 = narrowband_output.results.sub.realign_freq;
-                            narrowband_output.realign_freq_value_lat{nf1,1}{nsub}             = narrowband_output.results.sub.realign_freq_value_lat;
+                            narrowband_output.adjusted_frequency_band         = [narrowband_output.results.sub.fmin, narrowband_output.results.sub.fmax];
+                            narrowband_output.realign_freq                       = narrowband_output.results.sub.realign_freq;
+                            narrowband_output.realign_freq_value                 = narrowband_output.results.sub.realign_freq;
+                            narrowband_output.realign_freq_value_lat             = narrowband_output.results.sub.realign_freq_value_lat;
                             
-                            narrowband_output.mean_centroid_group_fb{nf1,1}(nsub)             = narrowband_output.results.group.fb.centroid_mean; ...   mean_centroid_group_fb;
-                                narrowband_output.mean_centroid_sub_realign_fb{nf1,1}(nsub)       = narrowband_output.results.sub.fb.centroid_mean;   ...mean_centroid_sub_realign_fb;
-                                narrowband_output.median_centroid_group_fb{nf1,1}(nsub)           = narrowband_output.results.group.fb.centroid_median;  ...results.group.fb.centroid_median ...median_centroid_group_fb;
+                            narrowband_output.mean_centroid_group_fb             = narrowband_output.results.group.fb.centroid_mean; ...   mean_centroid_group_fb;
+                                narrowband_output.mean_centroid_sub_realign_fb      = narrowband_output.results.sub.fb.centroid_mean;   ...mean_centroid_sub_realign_fb;
+                                narrowband_output.median_centroid_group_fb          = narrowband_output.results.group.fb.centroid_median;  ...results.group.fb.centroid_median ...median_centroid_group_fb;
                                 ...narrowband_output.median_centroid_sub_realign_fb{nf1,nf2}(nsub) = 0; ...narrowband_output.results.sub.fb.centroid_median;  ...median_centroid_sub_realign_fb;
                                 
                             narrowband{nf1,1,nsub}            = narrowband_output;
@@ -500,6 +511,26 @@ for design_num=design_num_vec
                                         fmax                                    = nb.results.nb.band(nband).sub(nsub).fcog.neg + project.postprocess.ersp.frequency_bands(nband).dfmax;
                                 end
                             end
+                            
+                            narrowband_struct.f1(nns)                     = levels_f1(nf1);
+                            narrowband_struct.roi(nns)                    = roi_names(nroi);
+                            narrowband_struct.frequency_band(nns)         = frequency_bands_names(nband);
+                            narrowband_struct.subject(nns)                = list_design_subjects{nf1}(nsub);
+                            narrowband_struct.group_tmin(nns)             = group_tmin;
+                            narrowband_struct.group_tmax(nns)             = group_tmax;
+                            narrowband_struct.group_fmin(nns)             = group_fmin;
+                            narrowband_struct.group_fmax(nns)             = group_fmax ;
+                            narrowband_struct.group_dfmin(nns)            = group_dfmin;
+                            narrowband_struct.group_dfmax(nns)            = group_dfmax;
+                            narrowband_struct.which_realign_measure(nns)  = which_realign_measure_cell(nband);
+                            narrowband_struct.subject_realign_freq(nns)   = narrowband_output.realign_freq;
+                            narrowband_struct.subject_fmin(nns)           = fmin;
+                            narrowband_struct.subject_fmax(nns)           = fmax;
+                            nns = nns +1;
+                            
+                            
+                            
+                            
                         end
                         
                         sel_freqs                           = freqs >= fmin & freqs <= fmax;
@@ -509,6 +540,10 @@ for design_num=design_num_vec
                 end
                 
             else
+                
+                narrowband_struct = [];
+                nns = 1;    
+
                 for nf1=1:length(levels_f1)
                     for nf2=1:length(levels_f2)
                         subjs = length(individual_fb_bands{nf1,nf2});
@@ -596,14 +631,14 @@ for design_num=design_num_vec
                             end
                             %                     end
                             
-                            narrowband_output.adjusted_frequency_band{nf1,nf2}(nsub,:)          = [narrowband_output.results.sub.fmin, narrowband_output.results.sub.fmax];
-                            narrowband_output.realign_freq{nf1,nf2}(nsub)                       = narrowband_output.results.sub.realign_freq;
-                            narrowband_output.realign_freq_value{nf1,nf2}(nsub)                 = narrowband_output.results.sub.realign_freq;
-                            narrowband_output.realign_freq_value_lat{nf1,nf2}{nsub}             = narrowband_output.results.sub.realign_freq_value_lat;
+                            narrowband_output.adjusted_frequency_band         = [narrowband_output.results.sub.fmin, narrowband_output.results.sub.fmax];
+                            narrowband_output.realign_freq                       = narrowband_output.results.sub.realign_freq;
+                            narrowband_output.realign_freq_value                = narrowband_output.results.sub.realign_freq;
+                            narrowband_output.realign_freq_value_lat             = narrowband_output.results.sub.realign_freq_value_lat;
                             
-                            narrowband_output.mean_centroid_group_fb{nf1,nf2}(nsub)             = narrowband_output.results.group.fb.centroid_mean; ...   mean_centroid_group_fb;
-                                narrowband_output.mean_centroid_sub_realign_fb{nf1,nf2}(nsub)       = narrowband_output.results.sub.fb.centroid_mean;   ...mean_centroid_sub_realign_fb;
-                                narrowband_output.median_centroid_group_fb{nf1,nf2}(nsub)           = narrowband_output.results.group.fb.centroid_median;  ...results.group.fb.centroid_median ...median_centroid_group_fb;
+                            narrowband_output.mean_centroid_group_fb            = narrowband_output.results.group.fb.centroid_mean; ...   mean_centroid_group_fb;
+                                narrowband_output.mean_centroid_sub_realign_fb      = narrowband_output.results.sub.fb.centroid_mean;   ...mean_centroid_sub_realign_fb;
+                                narrowband_output.median_centroid_group_fb           = narrowband_output.results.group.fb.centroid_median;  ...results.group.fb.centroid_median ...median_centroid_group_fb;
                                 ...narrowband_output.median_centroid_sub_realign_fb{nf1,nf2}(nsub) = 0; ...narrowband_output.results.sub.fb.centroid_median;  ...median_centroid_sub_realign_fb;
                                 
                             narrowband{nf1,nf2,nsub}            = narrowband_output;
@@ -623,10 +658,33 @@ for design_num=design_num_vec
                                         fmax                                    = nb.results.nb.band(nband).sub(nsub).fcog.neg + project.postprocess.ersp.frequency_bands(nband).dfmax;
                                 end
                             end
+                            
+                            
+                            narrowband_struct.f1(nns)                     = levels_f1(nf1);
+                            narrowband_struct.f2(nns)                     = levels_f1(nf2);
+                            narrowband_struct.roi(nns)                    = roi_names(nroi);
+                            narrowband_struct.frequency_band(nns)         = frequency_bands_names(nband);                           
+                            narrowband_struct.subject(nns)                = list_design_subjects{nf1,nf2}(nsub);
+                            narrowband_struct.group_tmin(nns)             = group_tmin;
+                            narrowband_struct.group_tmax(nns)             = group_tmax;
+                            narrowband_struct.group_fmin(nns)             = group_fmin;
+                            narrowband_struct.group_fmax(nns)             = group_fmax ;
+                            narrowband_struct.group_dfmin(nns)            = group_dfmin;
+                            narrowband_struct.group_dfmax(nns)            = group_dfmax;
+                            narrowband_struct.which_realign_measure(nns)  = which_realign_measure_cell(nband);
+                            narrowband_struct.subject_realign_freq(nns)   = narrowband_output.realign_freq;
+                            narrowband_struct.subject_fmin(nns)           = fmin;
+                            narrowband_struct.subject_fmax(nns)           = fmax;
+                            nns = nns +1;
+                           
+                            
                         end
                         
                         sel_freqs                           = freqs >= fmin & freqs <= fmax;
                         ersp_curve_roi_fb{nf1,nf2}(:,nsub)  = mean(ersp_roi{nf1,nf2}(sel_freqs,:,nsub),1);
+                        
+                                                
+                      
                         end
                     end
                 end
@@ -916,7 +974,17 @@ for design_num=design_num_vec
             ersp_curve_roi_fb_stat.dataroi(nroi).databand(nband).dfinter               = dfinter;
             
             
-            %         ersp_curve_roi_fb_stat.dataroi(nroi).databand(nband).narrowband            = narrowband;
+            ersp_curve_roi_fb_stat.dataroi(nroi).databand(nband).narrowband            = narrowband;
+          
+                    
+             
+            if strcmp(do_narrowband,'ref')||strcmp(do_narrowband,'auto')
+                narrowband_struct = structfun(@transpose,narrowband_struct,'UniformOutput',false);
+                narrowband_struct = struct2table(narrowband_struct);
+                out_file_name = [roi_names{nroi},'_',frequency_bands_names{nband},'_narrowband.txt'];
+                outpath_mat = fullfile(narrowband_dir,out_file_name);
+                writetable(narrowband_struct,outpath_mat,"Delimiter" ,"\t")
+            end
             
             
         end
@@ -966,6 +1034,9 @@ for design_num=design_num_vec
     if  strcmp(which_method_find_extrema,'continuous') ;
         [dataexpcols, dataexp]=text_export_ersp_continuous_struct([out_file_name,'.txt'],ersp_curve_roi_fb_stat);
     end
+    
+    
+  
     
     % if strcmp(time_resolution_mode,'tw')
     %     [dataexpcols, dataexp] = text_export_ersp_onset_offset_sub_struct([out_file_name,'_sub_onset_offset.txt'],ersp_curve_roi_fb_stat);

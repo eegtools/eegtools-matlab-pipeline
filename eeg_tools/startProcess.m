@@ -185,6 +185,11 @@ switch action_name
         % do ica
         result = proj_eeglab_subject_ica(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
         
+    case 'do_amica'
+        % do amica
+        result = proj_eeglab_subject_amica(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
+       
+        
         
     case 'do_remove_ica'
         % remove ics
