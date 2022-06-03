@@ -148,7 +148,14 @@ for ng = vec_select_groups
                     
                     
                     if exist(input_file_name, 'file')
-                        tmpEEG                 = pop_loadset(input_file_name);
+                        input_file_name         = proj_eeglab_subject_get_filename(project, subj_name, get_filename_step, 'custom_suffix', custom_suffix, 'custom_input_folder', custom_input_folder);
+                        try
+                            tmpEEG                     = pop_loadset(input_file_name);
+                        catch
+                            [fpath,fname,fext] = fileparts(input_file_name);
+                            tmpEEG = pop_loadset('filename',[fname,fext],'filepath',fpath);
+                        end
+%                         tmpEEG                 = pop_loadset(input_file_name);
                         tmpEEG = pop_select(tmpEEG,'channel' ,1:project.eegdata.nch_eeg);
                         tmpEEG = eeg_checkset(tmpEEG);
                         ALLEEG = eeg_store(ALLEEG,tmpEEG, CURRENTSET);

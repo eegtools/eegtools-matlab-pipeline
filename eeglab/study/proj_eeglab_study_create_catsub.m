@@ -32,7 +32,7 @@ old = 0;
 study_name          = project.study.filename;
 epochs_path         = project.paths.output_epochs;
 condition_names     = project.epoching.condition_names;
-group_list          = project.subjects.groups;
+group_list_raw          = project.subjects.groups;
 import_out_suffix   = project.import.output_suffix;
 group_names         = project.subjects.group_names;
 
@@ -49,6 +49,15 @@ STUDY = []; CURRENTSTUDY = 0; ALLEEG = []; EEG=[]; CURRENTSET=[];
 if not((isfield(project.study,'catsub')))
     project.study.catsub.reconcatenate = 1;
 end
+
+group_list = group_list_raw;
+for grp=1:length(group_list)
+    sel_subject =  ismember(group_list_raw{grp}, project.subjects.curr_list);
+    selected_subjects = group_list{grp}(sel_subject);
+    group_list{grp} = selected_subjects;
+
+end
+
 %% create the study with the epoched data of all subjects
 
 if project.study.catsub.reconcatenate

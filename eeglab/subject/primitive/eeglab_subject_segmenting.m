@@ -33,17 +33,29 @@ function [EEG] = eeglab_subject_segmenting(input_file_name,input)
    
     
     if length(begin_latencies) == length(end_latencies)
-        
-        if sum(sel_b1) == 1 && sum(sel_b2) == 1
+        if (not(exist(input.output_folder)))
+            mkdir(input.output_folder);
+        end
+        if sum(sel_b1) == sum(sel_b2) 
+            tb = length(input.baseline_lab);
+            for nb = 1:tb
+                if tb == 1
+                    name_baseline = [name_noext,'_','baseline',ext];
+                else
+                    current_baseline_lab = input.baseline_lab{nb};
+                    name_baseline = [name_noext,'_',current_baseline_lab,ext];
+                end
             
+                disp(name_baseline);
             EEG2 = pop_select( EEG, ...
-                'point',[b1_latency b2_latency] );
+                'point',[b1_latency(nb) b2_latency(nb)] );
             EEG2 = pop_saveset(...
                 EEG2, ...
                 'filename',...
-                [name_noext,'_baseline',ext],...
+                name_baseline,...
                 'filepath',...
                 input.output_folder);
+            end
             
         end
         
@@ -52,12 +64,14 @@ function [EEG] = eeglab_subject_segmenting(input_file_name,input)
         
         % per ciascun segmento andiamo a segmentare
         for ns = 1:ts
+            current_label = input.list_label{ns};
+            disp(current_label);
             EEG2 = pop_select( EEG, ...
                 'point',[begin_latencies(ns) end_latencies(ns)] );
             EEG2 = pop_saveset(...
                 EEG2, ...
                 'filename',...
-                [name_noext,'_',input.list_label{ns},ext],...
+                [name_noext,'_',current_label,ext],...
                 'filepath',...
                 input.output_folder);
         end

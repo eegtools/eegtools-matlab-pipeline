@@ -62,7 +62,7 @@ allsub_names = {project.subjects.data.name};
 for subj=1:numsubj
     
     subj_name               = list_select_subjects{subj};
-    sel_group = ismemmber(allsub_names,subj_name);
+    sel_group = ismember(allsub_names,subj_name);
 
     
     input_file_name         = proj_eeglab_subject_get_filename(project, subj_name, get_filename_step, 'custom_suffix', custom_suffix, 'custom_input_folder', custom_input_folder);

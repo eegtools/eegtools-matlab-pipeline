@@ -57,7 +57,7 @@ end
 % totale labels per distingure condizioni: potrebbe essere che
 % semplicemente debba invece caricare diversi spezzoni di un soggetto senza
 % distinguerli/labellizzarli
-tlab = length(project.import.file_label);
+tlab = length(project.import.file_match);
 
 
 
@@ -420,16 +420,17 @@ for subj=1:numsubj
                     error(['unrecognized device (' project.import.acquisition_system ')']);
             end
             
-            
-            if tlab
-                tot_eve = length(EEG.event);
-                for neve = 1:tot_eve
-                    ideve = tot_eve + neve;
-                    EEG.event(ideve) = EEG.event(neve);
-                    EEG.event(ideve).type = [EEG.event(neve).type, '_',project.import.file_label{nfs}];
-                end
+            if not(isempty(project.import.file_label)) && not(isempty(project.import.file_label{nfs}))
+                if tlab
+                    tot_eve = length(EEG.event);
+                    for neve = 1:tot_eve
+                        ideve = tot_eve + neve;
+                        EEG.event(ideve) = EEG.event(neve);
+                        EEG.event(ideve).type = [EEG.event(neve).type, '_',project.import.file_label{nfs}];
+                        
+                    end
             end
-            
+           end 
             
             
             
@@ -469,6 +470,26 @@ for subj=1:numsubj
     
     
     if nfe > 1
+        
+        tot_ch_vec = [ALLEEG2.nbchan];
+        check_ch_vec = unique(tot_ch_vec);
+        if length(check_ch_vec) > 1
+           min_ch = min(check_ch_vec);
+           sel_eeg_min_ch = find(ismember(tot_ch_vec,min_ch));
+           EEG_min_ch = ALLEEG2(sel_eeg_min_ch(1));
+           list_ch_min = {EEG_min_ch.chanlocs.labels};
+           
+           for neeg = 1:length(ALLEEG2)
+               if tot_ch_vec(neeg) > min_ch
+                   current_ch_list = {ALLEEG2(neeg).chanlocs.labels};
+                   intersect_ch_list = intersect(list_ch_min,current_ch_list);
+                   intersect_ch_index = find(ismember(current_ch_list,intersect_ch_list));
+                   ALLEEG2(neeg) = pop_select(ALLEEG2(neeg),'channel',intersect_ch_index);
+               end
+           end
+           
+        end
+        
         OUTEEG = pop_mergeset( ALLEEG2, 1:length(ALLEEG2), 1 );
     else
         OUTEEG = EEG;

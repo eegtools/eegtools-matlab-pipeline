@@ -166,8 +166,8 @@ project.import.montage_list = {...
     'Pz'};
 };
 
-complete_montage = unique([project.import.montage_list{:}]);
-tot_ch = length(complete_montage);
+project.import.complete_montage = unique([project.import.montage_list{:}]);
+tot_ch = length(project.import.complete_montage);
 
 
 %% EXTRACT TRIGGER FROM ONE CHANNEL
@@ -552,11 +552,14 @@ project.preproc.montage_list = {...
                                  'E86', 'E87', 'E88', 'E89', 'E90', 'E91', 'E92', 'E93', 'E94', 'E95', 'E96', 'E97', ...
                                  'E98', 'E99', 'E100', 'E101', 'E102', 'E103', 'E104', 'E105', 'E106', 'E107', 'E108', ...
                                  'E109', 'E110', 'E111', 'E112', 'E113', 'E114', 'E115', 'E116', 'E117', 'E118', 'E119', ...
-                                 'E120', 'E121', 'E122', 'E123', 'E124', 'E125', 'E126', 'E127', 'E128', 'Cz'}
-};
+                                 'E120', 'E121', 'E122', 'E123', 'E124', 'E125', 'E126', 'E127', 'E128', 'Cz'};
+                                {'Fp1', 'Fp2', 'F3', 'F4', 'F7', 'F8', 'T3', 'T4', 'T5',...
+                                  'T6', 'C3', 'C4', 'P3' , 'P4', 'O1', 'O2', 'Fz', 'Cz', ...
+                                  'Pz'};  
+                               };
 
 
-project.preproc.montage_names = { 'BRAINAMP','BIOSEMI','GEODESIC'};
+project.preproc.montage_names = { 'BRAINAMP','BIOSEMI','GEODESIC','EDF'};
 
 project.preproc.interpolate_channels = 'off';   % 'off' disable
 
@@ -871,6 +874,45 @@ project.epoching.condition_names=project.task.events.mrkcode_names;
 if length(project.epoching.condition_names) ~= project.epoching.numcond
     disp('ERROR in project_structure: number of conditions do not coincide !!! please verify')
 end
+
+
+
+% SELECT (eeg and or poligraphic) cannel indices (operates on epoched
+% files)
+project.select_channels.channel_list = 1:65;     
+
+
+%% segmenting do_segments
+
+
+
+project.segmenting.event.baseline_begin = 'B1';
+project.segmenting.event.baseline_end = 'B2';
+
+
+
+project.segmenting.event.list_begin = ...
+{'ST1','ST2','ST3','ST4','ST5','ST6','ST7','ST8'};
+
+
+
+project.segmenting.event.list_end = ...
+{'SP1','SP2','SP3','SP4','SP5','SP6','SP7','SP8'};
+
+
+
+project.segmenting.event.list_label = ...
+{'audio_none-tactile_left',...
+'audio_none-tactile_right',....
+'audio_left-tactile_none',...
+'audio_right-tactile_none',...
+'audio_left-tactile_left',...
+'audio_right-tactile_right',...
+'audio_left-tactile_right',...
+'audio_right-tactile_left'...
+};
+
+
 %% ======================================================================================================
 % H:    SUBJECTS
 % ======================================================================================================
@@ -953,13 +995,27 @@ project.subjects.data(1).bad_ic    = {1,2,5};
 ...project.subjects.data(6).frequency_bands_list = {[4,8];[6,10];[14,20];[20,32]};
 
 
-project.subjects.list               = {project.subjects.data.name};
-project.subjects.numsubj            = length(project.subjects.list);
+project.subjects.list = {project.subjects.data.name};
+project.subjects.numsubj = length(project.subjects.list);
 
-project.subjects.group_names        = {'CC', 'CP'};
-project.subjects.groups             = {{'CC_01_vittoria', 'CC_02_fabio','CC_03_anna', 'CC_04_giacomo', 'CC_05_stefano', 'CC_06_giovanni', 'CC_07_davide', 'CC_08_jonathan', 'CC_09_antonella', 'CC_10_chiara'}; ...
-                                      {'CP_01_riccardo', 'CP_02_ester', 'CP_03_sara', 'CP_04_matteo', 'CP_05_gregorio', 'CP_06_fernando', 'CP_07_roberta', 'CP_08_mattia', 'CP_09_alessia', 'CP_10_livia'} ...
-                                      };
+subject_groups = {project.subjects.data.group};
+project.subjects.group_names = {'sighted', 'blind'};
+
+for ng = 1:length(project.subjects.group_names)
+    current_group = project.subjects.group_names{ng};
+    sel_sub_group = ismember(subject_groups, current_group);
+    list_sub_group = project.subjects.list(sel_sub_group);
+    project.subjects.groups{ng} = list_sub_group;
+end
+
+
+% project.subjects.list               = {project.subjects.data.name};
+% project.subjects.numsubj            = length(project.subjects.list);
+% 
+% project.subjects.group_names        = {'CC', 'CP'};
+% project.subjects.groups             = {{'CC_01_vittoria', 'CC_02_fabio','CC_03_anna', 'CC_04_giacomo', 'CC_05_stefano', 'CC_06_giovanni', 'CC_07_davide', 'CC_08_jonathan', 'CC_09_antonella', 'CC_10_chiara'}; ...
+%                                       {'CP_01_riccardo', 'CP_02_ester', 'CP_03_sara', 'CP_04_matteo', 'CP_05_gregorio', 'CP_06_fernando', 'CP_07_roberta', 'CP_08_mattia', 'CP_09_alessia', 'CP_10_livia'} ...
+%                                       };
                                   
                                   
 % structure containing subjects mean behavioral scores associated to each condition
@@ -1397,8 +1453,14 @@ project.design(1)                   = struct('name',  'ao_control_ungrouped'   ,
 % project.design(4).factor1_levels    = {'scrambled','walker'};
 % project.design(4).factor2_levels    = {'centered','translating'};
 
+%% export trial count for a selected list of conditions
 
-
+project.study.export_epochs_count.cond_list = {...
+    's-s2-1sc-1tc','s-s2-1sc-1tl','s-s2-1sl-1tc','s-s2-1sl-1tl',...
+    't-s2-1sc-1tc','t-s2-1sc-1tl','t-s2-1sl-1tc','t-s2-1sl-1tl',...    
+    's-s1-1sc-1tc','s-s1-1sc-1tl','s-s1-1sl-1tc','s-s1-1sl-1tl',...
+    't-s1-1sc-1tc','t-s1-1sc-1tl','t-s1-1sl-1tc','t-s1-1sl-1tl',...
+     };
   
 
 %% ======================================================================================================
@@ -3047,19 +3109,19 @@ project.brainstorm.stats.correction_dimension           = 'space';
 project.brainstorm.stats.method                         = 'parametric';% 'non-parametric'|'parametric'
 
 
-%% --------------------------------------------------------------------------------------------------------------------------------------------------------------------
-% RESULTS POSTPROCESS & EXPORT
-%--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-% substring used to get and process specific results file
-project.brainstorm.results_processing.process_result_string='twalker_cwalker_wmne_free_surf_tw_average_5_samples_Uniform250';     
-
-project.brainstorm.export.scout_name_inputfile   = ['wmne_free_surf_zscore_norm_scouts' '_' strjoin2(project.brainstorm.postprocess.scouts_names, '_')]; 
-project.brainstorm.export.scout_name_outputfile   = ['wmne_free_surf_zscore_norm_scouts' '_' strjoin2(project.brainstorm.postprocess.scouts_names, '_') '_' strjoin2({project.brainstorm.postprocess.group_time_windows.name}, '_')]; 
-
-
-project.brainstorm.export.spm_vol_downsampling          = 2;
-project.brainstorm.export.spm_time_downsampling         = 1;
+% %% --------------------------------------------------------------------------------------------------------------------------------------------------------------------
+% % RESULTS POSTPROCESS & EXPORT
+% %--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+% 
+% % substring used to get and process specific results file
+% project.brainstorm.results_processing.process_result_string='twalker_cwalker_wmne_free_surf_tw_average_5_samples_Uniform250';     
+% 
+% project.brainstorm.export.scout_name_inputfile   = ['wmne_free_surf_zscore_norm_scouts' '_' strjoin2(project.brainstorm.postprocess.scouts_names, '_')]; 
+% project.brainstorm.export.scout_name_outputfile   = ['wmne_free_surf_zscore_norm_scouts' '_' strjoin2(project.brainstorm.postprocess.scouts_names, '_') '_' strjoin2({project.brainstorm.postprocess.group_time_windows.name}, '_')]; 
+% 
+% 
+% project.brainstorm.export.spm_vol_downsampling          = 2;
+% project.brainstorm.export.spm_time_downsampling         = 1;
 
 
 % ======================================================================================================
@@ -3166,3 +3228,13 @@ project.external_xls.xls_file = '';
 project.external_xls.xls_sheet = '';
 project = project_import_external_xls(project);
 
+
+
+%% import additional subject parameters from external excel file
+%        mark subject column with 'subject' |  'soggetto' |  'subj' |  'sub' NO case sensitive;
+
+project.characterize_events.xls_folder = '';
+project.characterize_events.xls_file = '';
+project.characterize_events.xls_sheet = '';
+project.characterize_events.subject_col_label = 'code';
+project.characterize_events.event_label = {'C','S'};

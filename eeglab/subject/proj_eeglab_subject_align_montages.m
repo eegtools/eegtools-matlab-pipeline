@@ -51,8 +51,12 @@ if not(iscell(list_select_subjects)), list_select_subjects = {list_select_subjec
 subj_name                   = list_select_subjects{1};
 
 input_file_name             = proj_eeglab_subject_get_filename(project, subj_name, get_filename_step, 'custom_suffix', custom_suffix);
-EEG                         = pop_loadset(input_file_name);
-
+try
+    EEG                     = pop_loadset(input_file_name);
+catch
+    [fpath,fname,fext] = fileparts(input_file_name);
+    EEG = pop_loadset('filename',[fname,fext],'filepath',fpath);
+end
 target_montage = {EEG.chanlocs.labels};
 
 indtarget = find(ismember(project.subjects.list,subj_name));
@@ -63,8 +67,12 @@ for subj=ind_select_subjects2align
     subj_name                   = project.subjects.list{subj};
     
     input_file_name             = proj_eeglab_subject_get_filename(project, subj_name, get_filename_step, 'custom_suffix', custom_suffix, 'custom_input_folder', custom_input_folder);
-    EEG                         = pop_loadset(input_file_name);
-    
+    try
+        EEG                     = pop_loadset(input_file_name);
+    catch
+        [fpath,fname,fext] = fileparts(input_file_name);
+        EEG = pop_loadset('filename',[fname,fext],'filepath',fpath);
+    end
     
     %     target_montage = new;
     %     montage2change = old;

@@ -40,13 +40,13 @@ numsubj = length(list_select_subjects);
 vsel_sub = find(ismember(project.subjects.list,list_select_subjects));
 
 % -------------------------------------------------------------------------------------------------------------------------------------
-input_segmenting.baseline_begin = project.segmenting.event.baseline_begin;
-input_segmenting.baseline_end = project.segmenting.event.baseline_end;
-input_segmenting.list_begin = project.segmenting.event.list_begin;
-input_segmenting.list_end = project.segmenting.event.list_end;
-input_segmenting.list_label = project.segmenting.event.list_label;
+input_segmenting.baseline_begin = project.segmenting.baseline_begin;
+input_segmenting.baseline_end = project.segmenting.baseline_end;
+input_segmenting.list_begin = project.segmenting.list_begin;
+input_segmenting.list_end = project.segmenting.list_end;
+input_segmenting.list_label = project.segmenting.list_label;
 input_segmenting.output_folder = project.paths.output_segments;
-
+input_segmenting.baseline_lab = project.segmenting.baseline_lab;
 
 for subj=1:numsubj
     sel_sub = vsel_sub(subj);

@@ -57,10 +57,15 @@ for subj=1:numsubj
             
             if exist(input_file_name, 'file')
                 
-                EEG             = pop_loadset(input_file_name);
+                try
+                    EEG                     = pop_loadset(input_file_name);
+                catch
+                    [fpath,fname,fext] = fileparts(input_file_name);
+                    EEG = pop_loadset('filename',[fname,fext],'filepath',fpath);
+                end
                 EEG2 = pop_select(EEG,'channel', 1:project.eegdata.nch_eeg);
 
-                EEG = pop_saveset( EEG, 'filename',[input_name_noext,'_bckch',input_ext],'filepath',input_path);
+                EEG = pop_saveset( EEG, 'filename',[input_name_noext,'_bckcheeg',input_ext],'filepath',input_path);
                 
                 EEG2 = pop_saveset( EEG2, 'filename',EEG2.filename,'filepath',input_path);
                 

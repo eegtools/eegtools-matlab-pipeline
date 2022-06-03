@@ -1,9 +1,11 @@
 if (strcmp(project.paths.script.project, ...
         'C:\behaviourPlatform\VisuoHaptic\claudio\Loc_Bis_Bimodale_eeg\processing\MATLAB\' ))
-    if exist('test_Loc_Bis_Bimodale_eeg4','file')
+    if exist('test_Loc_Bis_Bimodale_eeg4_brainstorm','file')
 %         test_Loc_Bis_Bimodale_eeg2;
 %           test_Loc_Bis_Bimodale_eeg3;
-test_Loc_Bis_Bimodale_eeg4;
+% test_Loc_Bis_Bimodale_eeg4;
+
+test_Loc_Bis_Bimodale_eeg5_brainstorm;
     end
 end
 
@@ -52,6 +54,28 @@ if (strcmp(project.paths.script.project, ...
 end
 
 
+if (strcmp(project.paths.script.project, ...
+        'C:\behaviourPlatform\VisuoHaptic\claudio\lateblind_abbi_controls\' ))
+    if exist('test_lateblind_abbi_pre2_cluster_controls','file')
+        test_lateblind_abbi_pre2_cluster_controls;
+    end
+    if exist('test_lateblind_abbi_post3_cluster_controls','file')
+        test_lateblind_abbi_post3_cluster_controls;
+    end
+end
+
+% 
+% if (strcmp(project.paths.script.project, ...
+%         'C:\behaviourPlatform\VisuoHaptic\claudio\lateblind_abbi_controls\' ))
+%     if exist('test_lateblind_abbi_pre3_brainstorm_controls','file')
+%         test_lateblind_abbi_pre3_brainstorm_controls;
+%     end
+%     if exist('test_lateblind_abbi_post4_brainstorm_controls','file')
+%         test_lateblind_abbi_post4_brainstorm_controls;
+%     end
+% end
+
+
 
 %% old
 if strcmp(project.paths.script.project,'C:\behaviourPlatform\VisuoHaptic\claudio\acop\')
@@ -70,11 +94,30 @@ end
 
 
 if strcmp(project.paths.script.project,'C:\behaviourPlatform\VisuoHaptic\claudio\bisezione_led_sordi_udenti\')
-    test_bisezione_h_barinstorm
-    test_bisezione_d_brainstrorm
+%     test_bisezione_h_barinstorm
+%     test_bisezione_d_brainstrorm
+% test_bisezione_h_barinstorm2
+%     test_bisezione_d_brainstrorm2
+% test_bisezione_lb_led4_conc10_rev1_srep;
+% test_sordi4_ms_rev1_srep;
+% test_bisezione_h_barinstorm3
+%     test_bisezione_d_brainstrorm3
+test_bisezione_lb_led4_mb;
+test_sordi4_mb;
 end
 
 
+if strcmp(project.paths.script.project,'C:\behaviourPlatform\VisuoHaptic\claudio\bisezione_led_sordi_udenti_correct\')
+%     test_bisezione_h_barinstorm
+%     test_bisezione_d_brainstrorm
+% test_bisezione_h_barinstorm2
+%     test_bisezione_d_brainstrorm2
+% test_bisezione_lb_led4_conc10_rev1_srep_correct;
+% test_sordi4_ms_rev1_srep_correct;
+test_bisezione_lb_led4_mb_correct;
+test_sordi4_mb_correct;
+
+end
 
 
 
@@ -98,7 +141,7 @@ if strcmp(project.paths.script.project,'C:\behaviourPlatform\VisuoHaptic\claudio
 % test_bis_bimodale5; s2 riduce att risp s1 nell'altra corteccia
 
 % test_bis_bimodale9_brainstorm; % ok mappette e tutta analisis di scalpo provoa vedere se riesco a tiraree indiretro sorgenti temporali
-test_bis_bimodale8;
+test_bis_bimodale9;
 end
 
 if strcmp(project.paths.script.project, 'C:\behaviourPlatform\VisuoHaptic\claudio\bisezione_led_controlli\')...

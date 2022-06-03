@@ -121,8 +121,9 @@ try
     if get_menu
         disp(operations_file_path);
         disp(menu_operations);
-    else        
-        for nop = 1:length(operations)
+    else    
+        select_operations = [];
+        for nop = select_operations
             
             operation = operations{nop};
             disp(['Begin ' operation]);

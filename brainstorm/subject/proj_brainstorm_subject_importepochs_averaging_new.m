@@ -1,6 +1,14 @@
 
 function result = proj_brainstorm_subject_importepochs_averaging_new(project, varargin) ... settings_path, protocol_name, input_folder, subj_name, analysis_name, brainstorm_channels_file)
     
+
+% patch the in_fopen_eeglab function (claudio campus patch cla)
+in_fopen_eeglab_m = fullfile(project.paths.framework_root,'eeg_tools','utilities',['in_fopen_eeglab.m']);
+in_fopen_eeglab_dir_brainstorm = fullfile(project.paths.brainstorm,'toolbox','io');
+copyfile(in_fopen_eeglab_m,in_fopen_eeglab_dir_brainstorm);
+
+
+
 iProtocol                   = brainstorm_protocol_open(project.brainstorm.db_name);
 protocol                    = bst_get('ProtocolInfo');
 brainstorm_data_path        = protocol.STUDIES;

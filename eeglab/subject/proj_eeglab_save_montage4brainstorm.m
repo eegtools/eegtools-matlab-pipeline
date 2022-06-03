@@ -59,7 +59,13 @@ for subj=1:numsubj
             
             if exist(input_file_name, 'file')
                 
-                EEG             = pop_loadset(input_file_name);
+                try
+                    EEG                     = pop_loadset(input_file_name);
+                catch
+                    [fpath,fname,fext] = fileparts(input_file_name);
+                    EEG = pop_loadset('filename',[fname,fext],'filepath',fpath);
+                end
+
                 name2 = 'brainstorm_channel_EEGLAB_64_10-10';
                 out_file = fullfile(path, [name2,ext]);
                 locs_eeglab = EEG.chanlocs;

@@ -102,6 +102,10 @@ switch action_name
     case 'do_filter_events'
         proj_eeglab_subject_filter_events(project, 'list_select_subjects', list_select_subjects);
         
+    case 'do_characterize_events'
+        %
+        result = proj_eeglab_subject_characterize_events(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
+  
         
         
     case 'do_remove_segments'
@@ -282,7 +286,10 @@ switch action_name
         
     case 'do_select_eeg_ch'
         result = proj_eeglab_subject_select_eeg_ch(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
-        
+    
+    case 'do_select_ch'
+        result = proj_eeglab_subject_select_ch(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
+           
     case 'do_recover_allch'
         result = proj_eeglab_subject_recover_allch(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
         
@@ -324,7 +331,7 @@ switch action_name
         result = proj_eeglab_subject_microstates(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
         
         %% export erp single trial
-    case 'export_trial_erp_mean'
+    case 'do_export_trial_erp_mean'
         
         result = proj_eeglab_subject_export_trial_erp_mean(project, 'list_select_subjects', list_select_subjects, 'custom_suffix', custom_suffix);
         
@@ -397,7 +404,7 @@ switch action_name
         proj_eeglab_study_plot_roieog_erp_curve(project, stat_analysis_suffix, project.postprocess.erp.mode.continous, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
         
         % TIMEWINDOW: perform (and save) statistics based time windows
-    case 'study_plot_roi_erpeog_curve_tw_group_noalign'
+    case 'study_plot_roieog_erp_curve_tw_group_noalign'
         % analyzes and plots of erp curve for time windows of the selected design
         proj_eeglab_study_plot_roieog_erp_curve(project, stat_analysis_suffix, project.postprocess.erp.mode.tw_group_noalign, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
         
@@ -745,6 +752,14 @@ switch action_name
     case 'study_plot_allch_ersp_curve_fb_baseline'
         proj_eeglab_study_plot_allch_ersp_curve_fb_baseline(project, stat_analysis_suffix, 'design_num_vec', design_num_vec, 'list_select_subjects', list_select_subjects);
         
+    case 'study_export_allch_ersp_single_trial'
+        proj_eeglab_study_export_allch_ersp_single_trial(project,  'list_select_subjects', list_select_subjects);
+      
+    case 'study_export_roi_ersp_single_trial'
+        proj_eeglab_study_export_roi_ersp_single_trial(project,  'list_select_subjects', list_select_subjects);
+    
+    case 'study_export_trial_count'
+        proj_eeglab_study_export_trial_count(project,  'list_select_subjects', list_select_subjects);
         
 end
 %     catch err

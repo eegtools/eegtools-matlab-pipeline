@@ -181,7 +181,10 @@ for subj=1:numsubj
         % compute spectrogram
         current_ch = project.sleep.hume.spectrogram.channelLabels{nch};
         if sum(ismember({EEG.chanlocs.labels},current_ch))
-            h0 = spectrogramRpt_SingleCh(EEG,current_ch, stageStats);
+%             h0 = spectrogramRpt_SingleCh(EEG,current_ch, stageStats);
+            h0 = spectrogramRpt_SingleCh_mean_norm(EEG,current_ch, stageStats);
+            h1 = spectrogramRpt_SingleCh_sum_norm(EEG,current_ch, stageStats);
+            
             close all
         end
     end
