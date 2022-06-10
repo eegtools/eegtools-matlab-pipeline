@@ -58,10 +58,10 @@ copyfile( MicroStats_m, export_MicroStats_m_dir);
 
 % ms_dir=fullfile(plot_dir,'ms');
 % mkdir(ms_dir);
-% 
+%
 % gevtotal_dir=fullfile(plot_dir,'gevtotal');
 % mkdir(gevtotal_dir);
-% 
+%
 % mat_dir=fullfile(plot_dir,'mat');
 % mkdir(mat_dir);
 
@@ -155,7 +155,7 @@ for ng = vec_select_groups
                             [fpath,fname,fext] = fileparts(input_file_name);
                             tmpEEG = pop_loadset('filename',[fname,fext],'filepath',fpath);
                         end
-%                         tmpEEG                 = pop_loadset(input_file_name);
+                        %                         tmpEEG                 = pop_loadset(input_file_name);
                         tmpEEG = pop_select(tmpEEG,'channel' ,1:project.eegdata.nch_eeg);
                         tmpEEG = eeg_checkset(tmpEEG);
                         ALLEEG = eeg_store(ALLEEG,tmpEEG, CURRENTSET);
@@ -210,8 +210,8 @@ for ng = vec_select_groups
                 EEG.xmax = xmax_ms;
                 
                 
-%                 str =  ['microstates','_',microstate_type,'_',project.microstates.suffix];
-%                 str2 = [str,'_',project.subjects.group_names{ng}];
+                %                 str =  ['microstates','_',microstate_type,'_',project.microstates.suffix];
+                %                 str2 = [str,'_',project.subjects.group_names{ng}];
                 EEG = pop_saveset( EEG, 'filename',[str2,'.set'],'filepath',input_path);
                 
                 
@@ -219,20 +219,29 @@ for ng = vec_select_groups
             
             if project.microstates.do_segment
                 
-%                 str =  ['microstates','_',microstate_type,'_',project.microstates.suffix];
-%                 str2 = [str,'_',project.subjects.group_names{ng}];
+                %                 str =  ['microstates','_',microstate_type,'_',project.microstates.suffix];
+                %                 str2 = [str,'_',project.subjects.group_names{ng}];
                 EEG = pop_loadset( 'filename',[str2,'.set'],'filepath',input_path);
                 
-                
-                EEG = pop_micro_segment( EEG, ...
-                    'algorithm', project.microstates.micro_segment.algorithm, ...
-                    'sorting', project.microstates.micro_segment.sorting,...
-                    'normalise', project.microstates.micro_segment.normalise, ...
-                    'Nmicrostates', project.microstates.micro_segment.Nmicrostates,...
-                    'verbose', project.microstates.micro_segment.verbose,...
-                    'determinism', project.microstates.micro_segment.determinism,...
-                    'polarity', project.microstates.micro_segment.polarity );
-                
+                if strcmp(project.microstates.micro_segment.algorithm,'taah') ||...
+                        strcmp(project.microstates.micro_segment.algorithm,'aah')
+                    EEG = pop_micro_segment( EEG, ...
+                        'algorithm', project.microstates.micro_segment.algorithm, ...
+                        'sorting', project.microstates.micro_segment.sorting,...
+                        'normalise', project.microstates.micro_segment.normalise, ...
+                        'Nmicrostates', project.microstates.micro_segment.Nmicrostates,...
+                        'verbose', project.microstates.micro_segment.verbose,...
+                        'determinism', project.microstates.micro_segment.determinism,...
+                        'polarity', project.microstates.micro_segment.polarity );
+                else
+                    EEG = pop_micro_segment( EEG, ...
+                        'algorithm', project.microstates.micro_segment.algorithm, ...
+                        'sorting', project.microstates.micro_segment.sorting,...
+                        'normalise', project.microstates.micro_segment.normalise, ...
+                        'Nmicrostates', project.microstates.micro_segment.Nmicrostates,...
+                        'verbose', project.microstates.micro_segment.verbose...
+                        );
+                end
                 
                 [ALLEEG EEG] = eeg_store(ALLEEG, EEG, CURRENTSET);
                 EEG = pop_saveset( EEG, 'filename',[str2,'.set'],'filepath',input_path);
@@ -241,8 +250,8 @@ for ng = vec_select_groups
                 EEG.xmin = xmin_ms;
                 EEG.xmax = xmax_ms;
                 
-%                 str =  ['microstates','_',microstate_type,'_',project.microstates.suffix];
-%                 str2 = [str,'_',project.subjects.group_names{ng}];
+                %                 str =  ['microstates','_',microstate_type,'_',project.microstates.suffix];
+                %                 str2 = [str,'_',project.subjects.group_names{ng}];
                 EEG = pop_saveset( EEG, 'filename',[str2,'.set'],'filepath',input_path);
                 
                 
@@ -252,15 +261,15 @@ for ng = vec_select_groups
             
             
             if project.microstates.do_viewNmicro
-%                 str =  ['microstates','_',microstate_type,'_',project.microstates.suffix];
-%                 str2 = [str,'_',project.subjects.group_names{ng}];
+                %                 str =  ['microstates','_',microstate_type,'_',project.microstates.suffix];
+                %                 str2 = [str,'_',project.subjects.group_names{ng}];
                 EEG = pop_loadset( 'filename',[str2,'.set'],'filepath',input_path);
                 %open figure to select
                 EEG = pop_micro_selectNmicro( EEG );
             end
             if project.microstates.do_selectNmicro
-%                 str =  ['microstates','_',microstate_type,'_',project.microstates.suffix];
-%                 str2 = [str,'_',project.subjects.group_names{ng}];
+                %                 str =  ['microstates','_',microstate_type,'_',project.microstates.suffix];
+                %                 str2 = [str,'_',project.subjects.group_names{ng}];
                 EEG = pop_loadset( 'filename',[str2,'.set'],'filepath',input_path);
                 EEG = pop_micro_selectNmicro( EEG,...
                     'Nmicro', project.microstates.selectNmicro.Nmicro_spontaneous );
@@ -270,8 +279,8 @@ for ng = vec_select_groups
             end
             
             if project.microstates.do_fit
-%                 str =  ['microstates','_',microstate_type,'_',project.microstates.suffix];
-%                 str2 = [str,'_',project.subjects.group_names{ng}];
+                %                 str =  ['microstates','_',microstate_type,'_',project.microstates.suffix];
+                %                 str2 = [str,'_',project.subjects.group_names{ng}];
                 EEG = pop_loadset( 'filename',[str2,'.set'],'filepath',input_path);
                 
                 % EEG = pop_micro_fit( EEG,...
@@ -287,8 +296,8 @@ for ng = vec_select_groups
                 [ALLEEG EEG] = eeg_store(ALLEEG, EEG, CURRENTSET);
                 
                 
-%                 str =  ['microstates','_',microstate_type,'_',project.microstates.suffix];
-%                 str2 = [str,'_',project.subjects.group_names{ng}];
+                %                 str =  ['microstates','_',microstate_type,'_',project.microstates.suffix];
+                %                 str2 = [str,'_',project.subjects.group_names{ng}];
                 
                 EEG = pop_saveset( EEG, 'filename',[str2,'.set'],'filepath',input_path);
                 
@@ -306,8 +315,8 @@ for ng = vec_select_groups
             
             
             if project.microstates.do_smooth
-%                 str =  ['microstates','_',microstate_type,'_',project.microstates.suffix];
-%                 str2 = [str,'_',project.subjects.group_names{ng}];
+                %                 str =  ['microstates','_',microstate_type,'_',project.microstates.suffix];
+                %                 str2 = [str,'_',project.subjects.group_names{ng}];
                 EEG = pop_loadset( 'filename',[str2,'.set'],'filepath',input_path);
                 
                 EEG = pop_micro_smooth( EEG, ...
@@ -319,8 +328,8 @@ for ng = vec_select_groups
                 
                 [ALLEEG EEG] = eeg_store(ALLEEG, EEG, CURRENTSET);
                 
-%                 str =  ['microstates','_',microstate_type,'_',project.microstates.suffix];
-%                 str2 = [str,'_',project.subjects.group_names{ng}];
+                %                 str =  ['microstates','_',microstate_type,'_',project.microstates.suffix];
+                %                 str2 = [str,'_',project.subjects.group_names{ng}];
                 
                 EEG = pop_saveset( EEG, 'filename',[str2,'.set'],'filepath',input_path);
                 
@@ -335,8 +344,8 @@ for ng = vec_select_groups
             end
             
             if project.microstates.do_stats
-%                 str =  ['microstates','_',microstate_type,'_',project.microstates.suffix];
-%                 str2 = [str,'_',project.subjects.group_names{ng}];
+                %                 str =  ['microstates','_',microstate_type,'_',project.microstates.suffix];
+                %                 str2 = [str,'_',project.subjects.group_names{ng}];
                 EEG = pop_loadset( 'filename',[str2,'.set'],'filepath',input_path);
                 EEG = pop_micro_stats( EEG,...
                     'label_type', project.microstates.micro_stats.label_type,...
@@ -344,8 +353,8 @@ for ng = vec_select_groups
                 
                 [ALLEEG EEG] = eeg_store(ALLEEG, EEG, CURRENTSET);
                 
-%                 str =  ['microstates','_',microstate_type,'_',project.microstates.suffix];
-%                 str2 = [str,'_',project.subjects.group_names{ng}];
+                %                 str =  ['microstates','_',microstate_type,'_',project.microstates.suffix];
+                %                 str2 = [str,'_',project.subjects.group_names{ng}];
                 
                 EEG = pop_saveset( EEG, 'filename',[str2,'.set'],'filepath',input_path);
                 
@@ -515,8 +524,8 @@ for ng = vec_select_groups
                     EEG.xmin = xmin_ms;
                     EEG.xmax = xmax_ms;
                     
-%                     str =  ['microstates','_',microstate_type,'_',project.microstates.suffix];
-%                     str2 = [str,'_',project.subjects.group_names{ng},'_',current_cond_name];
+                    %                     str =  ['microstates','_',microstate_type,'_',project.microstates.suffix];
+                    %                     str2 = [str,'_',project.subjects.group_names{ng},'_',current_cond_name];
                     EEG = pop_saveset( EEG, 'filename',[str2,'.set'],'filepath',input_path);
                     
                     
@@ -524,8 +533,8 @@ for ng = vec_select_groups
                 
                 if project.microstates.do_segment
                     
-%                     str =  ['microstates','_',microstate_type,'_',project.microstates.suffix];
-%                     str2 = [str,'_',project.subjects.group_names{ng},'_',current_cond_name];
+                    %                     str =  ['microstates','_',microstate_type,'_',project.microstates.suffix];
+                    %                     str2 = [str,'_',project.subjects.group_names{ng},'_',current_cond_name];
                     EEG = pop_loadset( 'filename',[str2,'.set'],'filepath',input_path);
                     
                     
@@ -550,8 +559,8 @@ for ng = vec_select_groups
                     EEG.xmax = xmax_ms;
                     
                     
-%                     str =  ['microstates','_',microstate_type,'_',project.microstates.suffix];
-%                     str2 = [str,'_',project.subjects.group_names{ng},'_',current_cond_name];
+                    %                     str =  ['microstates','_',microstate_type,'_',project.microstates.suffix];
+                    %                     str2 = [str,'_',project.subjects.group_names{ng},'_',current_cond_name];
                     EEG = pop_saveset( EEG, 'filename',[str2,'.set'],'filepath',input_path);
                     
                     
@@ -559,8 +568,8 @@ for ng = vec_select_groups
                 
                 
                 if project.microstates.do_viewNmicro
-%                     str =  ['microstates','_',microstate_type,'_',project.microstates.suffix];
-%                     str2 = [str,'_',project.subjects.group_names{ng},'_',current_cond_name];
+                    %                     str =  ['microstates','_',microstate_type,'_',project.microstates.suffix];
+                    %                     str2 = [str,'_',project.subjects.group_names{ng},'_',current_cond_name];
                     EEG = pop_loadset( 'filename',[str2,'.set'],'filepath',input_path);
                     %open figure to select
                     EEG = pop_micro_selectNmicro( EEG );
@@ -568,8 +577,8 @@ for ng = vec_select_groups
                 
                 
                 if project.microstates.do_selectNmicro
-%                     str =  ['microstates','_',microstate_type,'_',project.microstates.suffix];
-%                     str2 = [str,'_',project.subjects.group_names{ng},'_',current_cond_name];
+                    %                     str =  ['microstates','_',microstate_type,'_',project.microstates.suffix];
+                    %                     str2 = [str,'_',project.subjects.group_names{ng},'_',current_cond_name];
                     EEG = pop_loadset( 'filename',[str2,'.set'],'filepath',input_path);
                     
                     EEG = pop_micro_selectNmicro( EEG,...
@@ -589,8 +598,8 @@ for ng = vec_select_groups
                     
                 end
                 if project.microstates.do_fit
-%                     str =  ['microstates','_',microstate_type,'_',project.microstates.suffix];
-%                     str2 = [str,'_',project.subjects.group_names{ng},'_',current_cond_name];
+                    %                     str =  ['microstates','_',microstate_type,'_',project.microstates.suffix];
+                    %                     str2 = [str,'_',project.subjects.group_names{ng},'_',current_cond_name];
                     EEG = pop_loadset( 'filename',[str2,'.set'],'filepath',input_path);
                     
                     EEG = pop_micro_fit( EEG,...
@@ -615,8 +624,8 @@ for ng = vec_select_groups
                 end
                 if project.microstates.do_smooth
                     
-%                     str =  ['microstates','_',microstate_type,'_',project.microstates.suffix];
-%                     str2 = [str,'_',project.subjects.group_names{ng},'_',current_cond_name];
+                    %                     str =  ['microstates','_',microstate_type,'_',project.microstates.suffix];
+                    %                     str2 = [str,'_',project.subjects.group_names{ng},'_',current_cond_name];
                     EEG = pop_loadset( 'filename',[str2,'.set'],'filepath',input_path);
                     
                     EEG = pop_micro_smooth( EEG, ...
@@ -643,8 +652,8 @@ for ng = vec_select_groups
                 
                 if project.microstates.do_stats
                     
-%                     str =  ['microstates','_',microstate_type,'_',project.microstates.suffix];
-%                     str2 = [str,'_',project.subjects.group_names{ng},'_',current_cond_name];
+                    %                     str =  ['microstates','_',microstate_type,'_',project.microstates.suffix];
+                    %                     str2 = [str,'_',project.subjects.group_names{ng},'_',current_cond_name];
                     EEG = pop_loadset( 'filename',[str2,'.set'],'filepath',input_path);
                     
                     
@@ -678,8 +687,8 @@ for ng = vec_select_groups
                     ylim manual
                     ylim(project.microstates.MicroPlotSegments.plot_ylim)
                     
-%                     str =  ['microstates','_',project.microstates.suffix];
-%                     str2 = [str,'_',project.subjects.group_names{ng},'_',current_cond_name];
+                    %                     str =  ['microstates','_',project.microstates.suffix];
+                    %                     str2 = [str,'_',project.subjects.group_names{ng},'_',current_cond_name];
                     
                     suptitle(str2)
                     
@@ -703,16 +712,16 @@ for ng = vec_select_groups
                 
                 if project.microstates.do_backfit
                     
-%                     str =  ['microstates','_',microstate_type,'_',project.microstates.suffix];
-%                     str2 = [str,'_',project.subjects.group_names{ng},'_',current_cond_name];
+                    %                     str =  ['microstates','_',microstate_type,'_',project.microstates.suffix];
+                    %                     str2 = [str,'_',project.subjects.group_names{ng},'_',current_cond_name];
                     [ NewEEG] = pop_loadset( 'filename',[str2,'.set'],'filepath',input_path);
                     
                     eeglab redraw
                     ind_ms_set = tset+1;
                     [ALLEEG EEG] = eeg_store(ALLEEG, NewEEG, ind_ms_set);
                     eeglab redraw
-%                     [ALLEEG EEG CURRENTSET] = pop_newset(ALLEEG, EEG, ind_ms_set,'overwrite','on','gui','off');
-%                     eeglab redraw                    
+                    %                     [ALLEEG EEG CURRENTSET] = pop_newset(ALLEEG, EEG, ind_ms_set,'overwrite','on','gui','off');
+                    %                     eeglab redraw
                     outpath_gevtotal = fullfile(gevtotal_dir,['gevtotal','_',current_cond_name,'.txt']);
                     fid_gevtotal = fopen(outpath_gevtotal, 'a+');
                     fprintf(fid_gevtotal, '%s\t%s\n','subject','gevtotal');
@@ -766,7 +775,7 @@ for ng = vec_select_groups
                         row_epoch = [];
                         col_epoch = [];
                         epoch = [];
-
+                        
                         for nepo = 1:EEG.trials
                             mat_epoch = EEG.microstate.stats.TP(:,:,nepo);
                             tmat = numel(mat_epoch);
@@ -775,14 +784,14 @@ for ng = vec_select_groups
                             [rrow, ccol] = ind2sub(size(EEG.microstate.stats.TP), LIDX);
                             row_epoch = [row_epoch, rrow];
                             col_epoch = [col_epoch, ccol];
-                            epoch = [epoch, repmat(nepo,1,tmat)];                            
+                            epoch = [epoch, repmat(nepo,1,tmat)];
                         end
                         data_mat.epoch = epoch;
                         data_mat.row = row_epoch;
                         data_mat.col = col_epoch;
                         data_mat.TP = TP_epoch;
-
-
+                        
+                        
                         data_mat = structfun(@transpose,data_mat,'UniformOutput',false);
                         data_mat = struct2table(data_mat);
                         outpath_mat = fullfile(mat_dir,[fout,'_',current_cond_name,'_mat','.txt']);
